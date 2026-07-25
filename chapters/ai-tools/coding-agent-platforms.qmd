@@ -1,0 +1,28 @@
+Coding-agent platforms differ more in where they run and how they return work
+than in their chat interfaces. Choose a platform by matching its execution
+model to the task and your repository's security requirements.
+
+#### Common coding-agent platforms
+
+The following catalog is a starting point rather than an endorsement:
+
+| Platform | Primary surface | Typical repository workflow |
+|---|---|---|
+| [GitHub Copilot coding agent](https://github.com/features/copilot/agents) | GitHub issues and pull requests | Assign an issue; review the resulting pull request |
+| [OpenAI Codex](https://openai.com/codex/) | Cloud tasks, app, and command line | Delegate a task in an isolated environment or work locally |
+| [Google Jules](https://jules.google.com/) | Cloud coding agent | Connect a repository and review the proposed changes |
+| [Google Antigravity](https://antigravity.google/) | Agentic development platform | Coordinate coding tasks in a managed development workspace |
+| [Claude Code](https://www.anthropic.com/claude-code) | Terminal, IDE, and cloud | Work interactively or delegate work that returns a pull request |
+| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | Command line | Inspect, edit, and test the current local checkout |
+| [Aider](https://aider.chat/) | Command line | Pair locally with explicit files and Git commits |
+
+Before connecting any platform, check:
+
+- whether code runs locally or in a vendor-managed environment;
+- what repository, network, secret, and tool permissions it receives;
+- whether changes arrive as a reviewable branch or pull request;
+- which model providers and billing arrangements are supported; and
+- whether your organization can retain the required audit trail.
+
+Platform capabilities and commercial terms change quickly. Confirm current
+details in the linked official documentation before adopting one.
