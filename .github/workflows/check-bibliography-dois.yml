@@ -1,10 +1,10 @@
 name: Check Bibliography DOIs
 
-# Thin caller for the shared reusable workflow in d-morrison/gha.
+# Thin caller for the shared reusable workflow in Morrison-Lab/gha.
 # The reusable workflow (and its bundled composite) reproduce the previous
 # standalone behavior: scan every *.bib in the repo and validate each DOI
 # resolves and matches its CrossRef metadata.
-# See https://github.com/d-morrison/gha for inputs and versioning.
+# See https://github.com/Morrison-Lab/gha for inputs and versioning.
 
 on:
   push:
@@ -20,4 +20,4 @@ jobs:
   check-dois:
     permissions:
       contents: read
-    uses: d-morrison/gha/.github/workflows/check-bibliography-dois.yml@v2
+    uses: Morrison-Lab/gha/.github/workflows/check-bibliography-dois.yml@v2

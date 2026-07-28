@@ -1,0 +1,144 @@
+name: Quarto Preview Deploy
+
+# Publishes the preview that `preview.yml` built.
+#
+# `preview.yml` runs on `pull_request`, which gives forks a read-only
+# `GITHUB_TOKEN` — pushing to `gh-pages` from there fails with a 403 for every
+# external contributor. `workflow_run` instead runs in the context of the base
+# repository with a writable token, so the deploy lives here.
+#
+# Security note: this job has write access, so it must never execute code from
+# the pull request. It checks out only the base repository's default branch and
+# otherwise touches nothing but the build artifacts, which are treated as data.
+# The PR number that decides the deploy path comes from a fork-controlled
+# artifact, so it is validated below before it is used.
+on:
+  workflow_run:
+    workflows:
+      - Quarto Preview
+    types:
+      - completed
+
+# Deploys push to a single branch, so let them queue rather than cancel: a
+# cancelled deploy would leave the previous, now-stale preview in place.
+concurrency:
+  group: preview-deploy-${{ github.event.workflow_run.head_repository.full_name }}-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read         # download artifacts from the triggering run
+      contents: write       # push the preview to gh-pages
+      pull-requests: write  # update the sticky preview comment
+    steps:
+      # Needed as a working tree for the git operations the deploy action runs.
+      # `workflow_run` checks out the default branch, not the PR.
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Download preview metadata
+        uses: actions/download-artifact@v8
+        with:
+          name: pr-preview-metadata
+          path: preview-metadata
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # On `pull_request` events the workflow file that runs is the one on the
+      # PR branch, so a fork controls what lands in this artifact. The PR number
+      # becomes part of the `gh-pages` path — and `pr-preview-action` does not
+      # validate it — so an unchecked value could escape the `pr-preview/`
+      # umbrella directory and overwrite the published site. Require digits
+      # only, then confirm the named PR really is the branch that was built.
+      - name: Validate preview metadata
+        id: metadata
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_REPO: ${{ github.event.workflow_run.head_repository.full_name }}
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+        run: |
+          set -euo pipefail
+
+          pr_number=$(tr -d '[:space:]' < preview-metadata/pr-number)
+          deployment_action=$(tr -d '[:space:]' < preview-metadata/deployment-action)
+
+          case "$pr_number" in
+            '' | *[!0-9]*)
+              echo "::error::Refusing to deploy: PR number '$pr_number' is not a positive integer."
+              exit 1
+              ;;
+          esac
+
+          case "$deployment_action" in
+            deploy | remove) ;;
+            *)
+              echo "::error::Refusing to deploy: unknown deployment action '$deployment_action'."
+              exit 1
+              ;;
+          esac
+
+          if ! claimed=$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${pr_number}" \
+            --jq '[.head.repo.full_name // "", .head.ref] | join("#")'); then
+            echo "::error::Refusing to deploy: could not look up PR #${pr_number} in ${GITHUB_REPOSITORY}."
+            exit 1
+          fi
+          if [ "$claimed" != "${HEAD_REPO}#${HEAD_BRANCH}" ]; then
+            echo "::error::Refusing to deploy: this build came from ${HEAD_REPO}#${HEAD_BRANCH}, but it claims PR #${pr_number}, whose head is ${claimed}."
+            exit 1
+          fi
+
+          echo "pr-number=$pr_number" >> "$GITHUB_OUTPUT"
+          echo "deployment-action=$deployment_action" >> "$GITHUB_OUTPUT"
+
+      - name: Download rendered site
+        if: steps.metadata.outputs.deployment-action == 'deploy'
+        uses: actions/download-artifact@v8
+        with:
+          name: pr-preview-site
+          path: _site
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy PR preview
+        id: preview-step
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./_site/
+          action: ${{ steps.metadata.outputs.deployment-action }}
+          pr-number: ${{ steps.metadata.outputs.pr-number }}
+          preview-branch: gh-pages
+          comment: "false"
+          wait-for-pages-deployment: false
+          # The action's default commit messages interpolate `github.event.number`,
+          # which is empty outside a `pull_request` event.
+          deploy-commit-message: "Deploy preview for PR ${{ steps.metadata.outputs.pr-number }} 🛫"
+          remove-commit-message: "Remove preview for PR ${{ steps.metadata.outputs.pr-number }} 🛬"
+
+      # Create sticky comment with preview link
+      # Following https://github.com/rossjrw/pr-preview-action?tab=readme-ov-file#customise-the-sticky-comment
+      - uses: marocchino/sticky-pull-request-comment@v3
+        if: steps.preview-step.outputs.deployment-action == 'deploy' && env.deployment_status == 'success'
+        with:
+          header: pr-preview
+          number_force: ${{ steps.metadata.outputs.pr-number }}
+          recreate: true
+          message: |
+              [PR Preview Action](https://github.com/rossjrw/pr-preview-action) ${{ steps.preview-step.outputs.action-version }}
+              :---:
+              | <p><img src="https://qr.rossjrw.com/?url=${{ steps.preview-step.outputs.preview-url }}" height="100" align="right" alt="QR code for preview link"></p> :rocket: View preview at <br> ${{ steps.preview-step.outputs.preview-url }} <br><br>
+              | <h6>Built to branch [`gh-pages`](${{ github.server_url }}/${{ github.repository }}/tree/gh-pages) at ${{ steps.preview-step.outputs.action-start-time }}. <br> Preview will be ready when the [GitHub Pages deployment](${{ github.server_url }}/${{ github.repository }}/deployments) is complete. <br><br> </h6>
+
+      - uses: marocchino/sticky-pull-request-comment@v3
+        if: steps.preview-step.outputs.deployment-action == 'remove' && env.deployment_status == 'success'
+        with:
+            header: pr-preview
+            number_force: ${{ steps.metadata.outputs.pr-number }}
+            recreate: true
+            message: |
+                [PR Preview Action](https://github.com/rossjrw/pr-preview-action) ${{ steps.preview-step.outputs.action-version }}
+                :---:
+                Preview removed because the pull request was closed.
+                ${{ steps.preview-step.outputs.action-start-time }}
