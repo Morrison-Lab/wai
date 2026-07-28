@@ -6,11 +6,11 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.38">
+  <meta name="generator" content="quarto-1.10.18">
 
   <title>Working with AI – Coding Agents</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -22,10 +22,13 @@
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
     */
-    code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -327,7 +330,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-07-22 00:47:15 (PDT)</p>
+  <p class="date">Last modified: 2026-07-28 12:14:20 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -443,15 +446,15 @@
 <p>The program that runs the core loop — calling the model, parsing tool calls, enforcing permissions, managing the sandbox — is compiled or interpreted source code, the same as any other application. There is no markdown involved here; this layer is what makes a harness a harness, rather than just a prompt someone wrote.</p>
 <h4 id="agent-and-skill-definitions-are-markdown-with-a-front-matter-header">Agent and Skill Definitions Are Markdown with a Front Matter Header</h4>
 <p>An agent’s identity, and a skill’s metadata, are usually just a markdown file with a <a href="https://jekyllrb.com/docs/front-matter/">YAML front matter</a> header. For example, a custom <a href="https://docs.claude.com/en/docs/claude-code/sub-agents">Claude Code subagent</a> defined in <code>.claude/agents/code-reviewer.md</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a></a><span class="co">---</span></span>
-<span id="cb1-2"><a></a><span class="an">name:</span><span class="co"> code-reviewer</span></span>
-<span id="cb1-3"><a></a><span class="an">description:</span><span class="co"> Reviews diffs for bugs and style issues.</span></span>
-<span id="cb1-4"><a></a><span class="an">tools:</span><span class="co"> Read, Grep, Glob</span></span>
-<span id="cb1-5"><a></a><span class="an">model:</span><span class="co"> sonnet</span></span>
-<span id="cb1-6"><a></a><span class="co">---</span></span>
-<span id="cb1-7"><a></a></span>
-<span id="cb1-8"><a></a>You are a meticulous code reviewer. Focus on correctness,</span>
-<span id="cb1-9"><a></a>security, and idiomatic style.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a aria-label="1"></a><span class="co">---</span></span>
+<span id="cb1-2"><a aria-label="2"></a><span class="an">name:</span><span class="co"> code-reviewer</span></span>
+<span id="cb1-3"><a aria-label="3"></a><span class="an">description:</span><span class="co"> Reviews diffs for bugs and style issues.</span></span>
+<span id="cb1-4"><a aria-label="4"></a><span class="an">tools:</span><span class="co"> Read, Grep, Glob</span></span>
+<span id="cb1-5"><a aria-label="5"></a><span class="an">model:</span><span class="co"> sonnet</span></span>
+<span id="cb1-6"><a aria-label="6"></a><span class="co">---</span></span>
+<span id="cb1-7"><a aria-label="7"></a></span>
+<span id="cb1-8"><a aria-label="8"></a>You are a meticulous code reviewer. Focus on correctness,</span>
+<span id="cb1-9"><a aria-label="9"></a>security, and idiomatic style.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The front matter is parsed as structured configuration (name, description, allowed tools, model); the markdown body below it becomes that agent’s system prompt, verbatim. An <a href="#/sec-ai-agent-skills">Agent Skill’s</a> <code>SKILL.md</code> follows the same shape: front matter for discovery metadata, a markdown body for instructions, and an optional folder of bundled scripts or reference files alongside it. No compilation step is involved; the harness reads the file and uses it directly.</p>
 <h4 id="tools-are-a-schema-paired-with-a-handler">Tools Are a Schema Paired with a Handler</h4>
 <p>A tool definition has two parts: a <a href="https://json-schema.org/">JSON Schema</a> describing its parameters, which is the only part the model ever sees, and a handler function, ordinary code that performs the actual action (reading a file, running a command, calling an API). The schema is declarative data; the handler is real software the model never inspects or writes.</p>
@@ -470,23 +473,23 @@
 <p>An agent is not a standalone program that does the reasoning itself. It is an <strong><a href="https://en.wikipedia.org/wiki/Orchestration_(computing)">orchestration</a></strong> program: something closer in shape to a chat client or a build tool than to a compiler or a web server.</p>
 <h4 id="it-is-io-bound-not-compute-bound">It Is I/O-Bound, Not Compute-Bound</h4>
 <p>The actual token prediction happens on remote inference infrastructure, reached over HTTPS. The agent process itself does no heavy computation; it spends almost all its wall-clock time waiting — for a model API response, for a shell command to finish, for a file read. Structurally it is an <strong><a href="https://en.wikipedia.org/wiki/Event_loop">event-loop</a></strong> program, the same category as a network client. Its core loop can be sketched in a few lines:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="co"># Start the conversation with the agent's instructions and the task.</span></span>
-<span id="cb2-2"><a></a>history <span class="op">=</span> [system_prompt, user_message]</span>
-<span id="cb2-3"><a></a></span>
-<span id="cb2-4"><a></a><span class="cf">while</span> <span class="va">True</span>:</span>
-<span id="cb2-5"><a></a>    <span class="co"># Send everything so far to the model, along with what it's allowed to call.</span></span>
-<span id="cb2-6"><a></a>    response <span class="op">=</span> call_model(history, tools<span class="op">=</span>tool_schemas)</span>
-<span id="cb2-7"><a></a>    history.append(response)</span>
-<span id="cb2-8"><a></a></span>
-<span id="cb2-9"><a></a>    <span class="co"># No tool calls means the model gave a final answer -- stop.</span></span>
-<span id="cb2-10"><a></a>    <span class="cf">if</span> <span class="kw">not</span> response.tool_calls:</span>
-<span id="cb2-11"><a></a>        <span class="cf">break</span></span>
-<span id="cb2-12"><a></a></span>
-<span id="cb2-13"><a></a>    <span class="co"># Otherwise, run each requested tool and feed the result back in,</span></span>
-<span id="cb2-14"><a></a>    <span class="co"># so the next model call can see what happened.</span></span>
-<span id="cb2-15"><a></a>    <span class="cf">for</span> call <span class="kw">in</span> response.tool_calls:</span>
-<span id="cb2-16"><a></a>        result <span class="op">=</span> tool_registry[call.name](call.arguments)</span>
-<span id="cb2-17"><a></a>        history.append(result)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a aria-label="1"></a><span class="co"># Start the conversation with the agent's instructions and the task.</span></span>
+<span id="cb2-2"><a aria-label="2"></a>history <span class="op">=</span> [system_prompt, user_message]</span>
+<span id="cb2-3"><a aria-label="3"></a></span>
+<span id="cb2-4"><a aria-label="4"></a><span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb2-5"><a aria-label="5"></a>    <span class="co"># Send everything so far to the model, along with what it's allowed to call.</span></span>
+<span id="cb2-6"><a aria-label="6"></a>    response <span class="op">=</span> call_model(history, tools<span class="op">=</span>tool_schemas)</span>
+<span id="cb2-7"><a aria-label="7"></a>    history.append(response)</span>
+<span id="cb2-8"><a aria-label="8"></a></span>
+<span id="cb2-9"><a aria-label="9"></a>    <span class="co"># No tool calls means the model gave a final answer -- stop.</span></span>
+<span id="cb2-10"><a aria-label="10"></a>    <span class="cf">if</span> <span class="kw">not</span> response.tool_calls:</span>
+<span id="cb2-11"><a aria-label="11"></a>        <span class="cf">break</span></span>
+<span id="cb2-12"><a aria-label="12"></a></span>
+<span id="cb2-13"><a aria-label="13"></a>    <span class="co"># Otherwise, run each requested tool and feed the result back in,</span></span>
+<span id="cb2-14"><a aria-label="14"></a>    <span class="co"># so the next model call can see what happened.</span></span>
+<span id="cb2-15"><a aria-label="15"></a>    <span class="cf">for</span> call <span class="kw">in</span> response.tool_calls:</span>
+<span id="cb2-16"><a aria-label="16"></a>        result <span class="op">=</span> tool_registry[call.name](call.arguments)</span>
+<span id="cb2-17"><a aria-label="17"></a>        history.append(result)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Everything a harness adds — permissions, sandboxing, memory, subagents — is scaffolding wrapped around this loop, not a replacement for it.</p>
 <h4 id="real-open-source-examples">Real Open-Source Examples</h4>
 <p>Because most production coding-agent harnesses are closed source, the clearest way to see this shape in real code is to read an open-source one:</p>
@@ -518,38 +521,38 @@
 <p><strong>Agent to agent: routed through the harness.</strong> When a parent agent spawns a subagent, it does not call that subagent directly. It issues a tool call that the harness’s dispatcher handles by spinning up a fresh instance of its own loop (see <a href="#/sec-ai-agent-implementation" class="quarto-xref">Section&nbsp;4</a>), running it to completion with the subagent’s configuration, and handing the result back to the parent as a tool result. Even “agent calls agent” bottoms out as: parent calls harness, harness instantiates and runs a new agent, harness returns that agent’s output to the parent.</p>
 <h4 id="sketching-the-harnesss-own-loop">Sketching the Harness’s Own Loop</h4>
 <p>The <a href="#/sec-ai-agent-program-kind">agent loop</a> sketched earlier is really just the innermost piece. The harness wraps a bootstrap step and a permission/dispatch layer around it:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="kw">def</span> run_harness():</span>
-<span id="cb3-2"><a></a>    <span class="co"># Load everything the loop will need before any conversation starts.</span></span>
-<span id="cb3-3"><a></a>    tools <span class="op">=</span> load_tool_registry()          <span class="co"># built-ins, plus whatever MCP servers expose</span></span>
-<span id="cb3-4"><a></a>    memory <span class="op">=</span> load_memory(CLAUDE_MD_PATHS) <span class="co"># CLAUDE.md / AGENTS.md, concatenated</span></span>
-<span id="cb3-5"><a></a></span>
-<span id="cb3-6"><a></a>    <span class="co"># The "main session" is just the harness's own loop, run with a default,</span></span>
-<span id="cb3-7"><a></a>    <span class="co"># unrestricted configuration -- not a separate program.</span></span>
-<span id="cb3-8"><a></a>    main_agent <span class="op">=</span> Agent(config<span class="op">=</span>default_config, system_prompt<span class="op">=</span>memory)</span>
-<span id="cb3-9"><a></a>    <span class="cf">return</span> run_agent(main_agent, tools)</span>
-<span id="cb3-10"><a></a></span>
-<span id="cb3-11"><a></a><span class="kw">def</span> run_agent(agent, tools):</span>
-<span id="cb3-12"><a></a>    history <span class="op">=</span> [agent.system_prompt, agent.first_message]</span>
-<span id="cb3-13"><a></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
-<span id="cb3-14"><a></a>        response <span class="op">=</span> call_model(history, tools<span class="op">=</span>agent.tool_schemas)</span>
-<span id="cb3-15"><a></a>        history.append(response)</span>
-<span id="cb3-16"><a></a>        <span class="cf">if</span> <span class="kw">not</span> response.tool_calls:</span>
-<span id="cb3-17"><a></a>            <span class="cf">break</span></span>
-<span id="cb3-18"><a></a>        <span class="cf">for</span> call <span class="kw">in</span> response.tool_calls:</span>
-<span id="cb3-19"><a></a>            <span class="co"># Every tool call passes through the harness's own gate first,</span></span>
-<span id="cb3-20"><a></a>            <span class="co"># regardless of which agent requested it.</span></span>
-<span id="cb3-21"><a></a>            check_permission(call)</span>
-<span id="cb3-22"><a></a></span>
-<span id="cb3-23"><a></a>            <span class="cf">if</span> call.name <span class="op">==</span> <span class="st">"spawn_subagent"</span>:</span>
-<span id="cb3-24"><a></a>                <span class="co"># A subagent is not called directly -- the harness recurses</span></span>
-<span id="cb3-25"><a></a>                <span class="co"># into a fresh instance of this same loop, then hands the</span></span>
-<span id="cb3-26"><a></a>                <span class="co"># finished result back as an ordinary tool result.</span></span>
-<span id="cb3-27"><a></a>                result <span class="op">=</span> run_agent(Agent(call.arguments), tools)</span>
-<span id="cb3-28"><a></a>            <span class="cf">else</span>:</span>
-<span id="cb3-29"><a></a>                result <span class="op">=</span> tools[call.name](call.arguments)</span>
-<span id="cb3-30"><a></a></span>
-<span id="cb3-31"><a></a>            history.append(result)</span>
-<span id="cb3-32"><a></a>    <span class="cf">return</span> history[<span class="op">-</span><span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a aria-label="1"></a><span class="kw">def</span> run_harness():</span>
+<span id="cb3-2"><a aria-label="2"></a>    <span class="co"># Load everything the loop will need before any conversation starts.</span></span>
+<span id="cb3-3"><a aria-label="3"></a>    tools <span class="op">=</span> load_tool_registry()          <span class="co"># built-ins, plus whatever MCP servers expose</span></span>
+<span id="cb3-4"><a aria-label="4"></a>    memory <span class="op">=</span> load_memory(CLAUDE_MD_PATHS) <span class="co"># CLAUDE.md / AGENTS.md, concatenated</span></span>
+<span id="cb3-5"><a aria-label="5"></a></span>
+<span id="cb3-6"><a aria-label="6"></a>    <span class="co"># The "main session" is just the harness's own loop, run with a default,</span></span>
+<span id="cb3-7"><a aria-label="7"></a>    <span class="co"># unrestricted configuration -- not a separate program.</span></span>
+<span id="cb3-8"><a aria-label="8"></a>    main_agent <span class="op">=</span> Agent(config<span class="op">=</span>default_config, system_prompt<span class="op">=</span>memory)</span>
+<span id="cb3-9"><a aria-label="9"></a>    <span class="cf">return</span> run_agent(main_agent, tools)</span>
+<span id="cb3-10"><a aria-label="10"></a></span>
+<span id="cb3-11"><a aria-label="11"></a><span class="kw">def</span> run_agent(agent, tools):</span>
+<span id="cb3-12"><a aria-label="12"></a>    history <span class="op">=</span> [agent.system_prompt, agent.first_message]</span>
+<span id="cb3-13"><a aria-label="13"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb3-14"><a aria-label="14"></a>        response <span class="op">=</span> call_model(history, tools<span class="op">=</span>agent.tool_schemas)</span>
+<span id="cb3-15"><a aria-label="15"></a>        history.append(response)</span>
+<span id="cb3-16"><a aria-label="16"></a>        <span class="cf">if</span> <span class="kw">not</span> response.tool_calls:</span>
+<span id="cb3-17"><a aria-label="17"></a>            <span class="cf">break</span></span>
+<span id="cb3-18"><a aria-label="18"></a>        <span class="cf">for</span> call <span class="kw">in</span> response.tool_calls:</span>
+<span id="cb3-19"><a aria-label="19"></a>            <span class="co"># Every tool call passes through the harness's own gate first,</span></span>
+<span id="cb3-20"><a aria-label="20"></a>            <span class="co"># regardless of which agent requested it.</span></span>
+<span id="cb3-21"><a aria-label="21"></a>            check_permission(call)</span>
+<span id="cb3-22"><a aria-label="22"></a></span>
+<span id="cb3-23"><a aria-label="23"></a>            <span class="cf">if</span> call.name <span class="op">==</span> <span class="st">"spawn_subagent"</span>:</span>
+<span id="cb3-24"><a aria-label="24"></a>                <span class="co"># A subagent is not called directly -- the harness recurses</span></span>
+<span id="cb3-25"><a aria-label="25"></a>                <span class="co"># into a fresh instance of this same loop, then hands the</span></span>
+<span id="cb3-26"><a aria-label="26"></a>                <span class="co"># finished result back as an ordinary tool result.</span></span>
+<span id="cb3-27"><a aria-label="27"></a>                result <span class="op">=</span> run_agent(Agent(call.arguments), tools)</span>
+<span id="cb3-28"><a aria-label="28"></a>            <span class="cf">else</span>:</span>
+<span id="cb3-29"><a aria-label="29"></a>                result <span class="op">=</span> tools[call.name](call.arguments)</span>
+<span id="cb3-30"><a aria-label="30"></a></span>
+<span id="cb3-31"><a aria-label="31"></a>            history.append(result)</span>
+<span id="cb3-32"><a aria-label="32"></a>    <span class="cf">return</span> history[<span class="op">-</span><span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>run_agent</code> is identical in shape to the loop in <a href="#/sec-ai-agent-program-kind" class="quarto-xref">Section&nbsp;6</a>. <code>run_harness</code> and the permission check are the parts that only exist at the harness level, not inside any individual agent. That recursive call — <code>run_agent</code> calling itself for a subagent — is the concrete mechanism behind “agent calls agent, routed through the harness,” described in the previous subsection.</p>
 <h4 id="what-do-you-launch-when-you-type-claude">What Do You Launch When You Type <code>claude</code>?</h4>
 <p>Typing <code>claude</code> at a shell starts the harness process: it initializes the engine — the permission system, the tool registry, MCP client connections, and memory loaded from <code>CLAUDE.md</code>/<code>AGENTS.md</code> files. But the harness does not sit idle waiting for a program to be supplied separately. It immediately instantiates the <strong>default agent</strong> — the “main session” — to handle the interactive conversation: full tool access, a system prompt assembled from the loaded config, no restricted allowlist. That default agent is simply the harness’s baseline configuration for its own loop, not a second thing launched afterward.</p>
@@ -937,10 +940,10 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <li><strong>Then use the appropriate scenario above</strong>: Once you understand the issue, use the specific prompts from Scenario 1 or 2.</li>
 </ol>
 <p><strong>Example workflow:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb4-1"><a></a>1. Prompt: "examine the failing workflow logs and identify the issue"</span>
-<span id="cb4-2"><a></a>2. Copilot responds: "The workflow is failing because of linting errors</span>
-<span id="cb4-3"><a></a>   in src/analysis.R"</span>
-<span id="cb4-4"><a></a>3. Prompt: "fix the linting errors in src/analysis.R"</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb4-1"><a aria-label="1"></a>1. Prompt: "examine the failing workflow logs and identify the issue"</span>
+<span id="cb4-2"><a aria-label="2"></a>2. Copilot responds: "The workflow is failing because of linting errors</span>
+<span id="cb4-3"><a aria-label="3"></a>   in src/analysis.R"</span>
+<span id="cb4-4"><a aria-label="4"></a>3. Prompt: "fix the linting errors in src/analysis.R"</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <h4 id="additional-resources">Additional Resources</h4>
 <ul>
 <li>See the <a href="https://ucd-serg.github.io/lab-manual/continuous-integration.html">UCD-SERG Lab Manual’s continuous integration chapter</a> for setting up GitHub Actions workflows</li>
@@ -1201,23 +1204,23 @@ Table&nbsp;2: Relative advantages of humans and Agents
 </div>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a></a><span class="co"># macOS / Linux: download, review, then run (do not chain these into one command)</span></span>
-<span id="cb5-2"><a></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://ollama.com/install.sh <span class="at">-o</span> install.sh</span>
-<span id="cb5-3"><a></a><span class="fu">less</span> install.sh   <span class="co"># review the script before running it (see caution above)</span></span>
-<span id="cb5-4"><a></a><span class="fu">sh</span> install.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a aria-label="1"></a><span class="co"># macOS / Linux: download, review, then run (do not chain these into one command)</span></span>
+<span id="cb5-2"><a aria-label="2"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://ollama.com/install.sh <span class="at">-o</span> install.sh</span>
+<span id="cb5-3"><a aria-label="3"></a><span class="fu">less</span> install.sh   <span class="co"># review the script before running it (see caution above)</span></span>
+<span id="cb5-4"><a aria-label="4"></a><span class="fu">sh</span> install.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>On Windows, download the installer from <a href="https://ollama.com/download" class="uri">https://ollama.com/download</a>.</p>
 <p><strong>Pull a code-focused model:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a></a><span class="co"># Smaller, faster; works on most machines with a modern GPU or Apple Silicon</span></span>
-<span id="cb6-2"><a></a><span class="ex">ollama</span> pull qwen2.5-coder:7b</span>
-<span id="cb6-3"><a></a></span>
-<span id="cb6-4"><a></a><span class="co"># More capable; larger memory footprint</span></span>
-<span id="cb6-5"><a></a><span class="ex">ollama</span> pull qwen2.5-coder:32b</span>
-<span id="cb6-6"><a></a></span>
-<span id="cb6-7"><a></a><span class="co"># Alternatively, a general-purpose model (70B variant; needs a high-memory GPU)</span></span>
-<span id="cb6-8"><a></a><span class="ex">ollama</span> pull llama3.3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a aria-label="1"></a><span class="co"># Smaller, faster; works on most machines with a modern GPU or Apple Silicon</span></span>
+<span id="cb6-2"><a aria-label="2"></a><span class="ex">ollama</span> pull qwen2.5-coder:7b</span>
+<span id="cb6-3"><a aria-label="3"></a></span>
+<span id="cb6-4"><a aria-label="4"></a><span class="co"># More capable; larger memory footprint</span></span>
+<span id="cb6-5"><a aria-label="5"></a><span class="ex">ollama</span> pull qwen2.5-coder:32b</span>
+<span id="cb6-6"><a aria-label="6"></a></span>
+<span id="cb6-7"><a aria-label="7"></a><span class="co"># Alternatively, a general-purpose model (70B variant; needs a high-memory GPU)</span></span>
+<span id="cb6-8"><a aria-label="8"></a><span class="ex">ollama</span> pull llama3.3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The VRAM each model needs depends on its size and quantization and changes as models are re-quantized—check the <a href="https://ollama.com/library">Ollama model library</a> for current requirements. As a rough guide, smaller (7B) models run on consumer GPUs with around 8 GB of VRAM, while larger (32B and 70B) models need substantially more and may not fit on a single GPU.</p>
 <p><strong>Start the Ollama server:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a></a><span class="ex">ollama</span> serve</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a aria-label="1"></a><span class="ex">ollama</span> serve</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>By default the server listens at <code>http://localhost:11434</code>.</p>
 <h4 id="connecting-positron-assistant-to-ollama">Connecting Positron Assistant to Ollama</h4>
 <p><a href="https://positron.posit.co">Positron</a> supports Ollama natively through the <a href="https://ollama.com/blog/openai-compatibility">OpenAI-compatible API endpoint</a> that Ollama exposes.</p>
@@ -1240,14 +1243,14 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <h4 id="running-an-autonomous-coding-agent-with-aider">Running an Autonomous Coding Agent with Aider</h4>
 <p>The editor integrations above provide inline completion and chat. For an autonomous agent that reads your files, proposes edits across a whole repository, and commits them to git—the local counterpart to a cloud coding agent—<a href="https://aider.chat"><code>aider</code></a> works directly against Ollama.</p>
 <p>Install it in an isolated environment so its dependencies do not collide with other tools:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a></a><span class="co"># Recommended: isolated install with pipx</span></span>
-<span id="cb8-2"><a></a><span class="ex">pipx</span> install aider-chat</span>
-<span id="cb8-3"><a></a></span>
-<span id="cb8-4"><a></a><span class="co"># Or into your user environment with pip</span></span>
-<span id="cb8-5"><a></a><span class="ex">python3</span> <span class="at">-m</span> pip install <span class="at">--user</span> aider-chat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a aria-label="1"></a><span class="co"># Recommended: isolated install with pipx</span></span>
+<span id="cb8-2"><a aria-label="2"></a><span class="ex">pipx</span> install aider-chat</span>
+<span id="cb8-3"><a aria-label="3"></a></span>
+<span id="cb8-4"><a aria-label="4"></a><span class="co"># Or into your user environment with pip</span></span>
+<span id="cb8-5"><a aria-label="5"></a><span class="ex">python3</span> <span class="at">-m</span> pip install <span class="at">--user</span> aider-chat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Point it at Ollama and choose a model with the <code>ollama_chat/</code> prefix, which gives better results in <code>aider</code> than the plain <code>ollama/</code> prefix:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a></a><span class="bu">export</span> <span class="va">OLLAMA_API_BASE</span><span class="op">=</span>http://127.0.0.1:11434</span>
-<span id="cb9-2"><a></a><span class="ex">aider</span> <span class="at">--model</span> ollama_chat/qwen2.5-coder:7b</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a aria-label="1"></a><span class="bu">export</span> <span class="va">OLLAMA_API_BASE</span><span class="op">=</span>http://127.0.0.1:11434</span>
+<span id="cb9-2"><a aria-label="2"></a><span class="ex">aider</span> <span class="at">--model</span> ollama_chat/qwen2.5-coder:7b</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-important callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -1258,50 +1261,50 @@ Table&nbsp;2: Relative advantages of humans and Agents
 </div>
 <div class="callout-content">
 <p>By default Ollama uses a 2048-token context window, which silently truncates your code and makes the model look far less capable than it is. This is the single most common mistake when pairing <code>aider</code> with Ollama. Raise it with a model-settings file at <code>~/.aider.model.settings.yml</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb10-1"><a></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> ollama_chat/qwen2.5-coder:7b</span></span>
-<span id="cb10-2"><a></a><span class="at">  </span><span class="fu">extra_params</span><span class="kw">:</span></span>
-<span id="cb10-3"><a></a><span class="at">    </span><span class="fu">num_ctx</span><span class="kw">:</span><span class="at"> </span><span class="dv">8192</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb10-1"><a aria-label="1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> ollama_chat/qwen2.5-coder:7b</span></span>
+<span id="cb10-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">extra_params</span><span class="kw">:</span></span>
+<span id="cb10-3"><a aria-label="3"></a><span class="at">    </span><span class="fu">num_ctx</span><span class="kw">:</span><span class="at"> </span><span class="dv">8192</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Larger values (16384, 32768) handle bigger files at the cost of more memory; pick the largest your machine can comfortably hold.</p>
 </div>
 </div>
 </div>
 <p>To avoid passing flags every time, set defaults in a config file at <code>~/.aider.conf.yml</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb11-1"><a></a><span class="fu">model</span><span class="kw">:</span><span class="at"> ollama_chat/qwen2.5-coder:7b</span></span>
-<span id="cb11-2"><a></a><span class="fu">set-env</span><span class="kw">:</span></span>
-<span id="cb11-3"><a></a><span class="at">  </span><span class="kw">-</span><span class="at"> OLLAMA_API_BASE=http://127.0.0.1:11434</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb11-1"><a aria-label="1"></a><span class="fu">model</span><span class="kw">:</span><span class="at"> ollama_chat/qwen2.5-coder:7b</span></span>
+<span id="cb11-2"><a aria-label="2"></a><span class="fu">set-env</span><span class="kw">:</span></span>
+<span id="cb11-3"><a aria-label="3"></a><span class="at">  </span><span class="kw">-</span><span class="at"> OLLAMA_API_BASE=http://127.0.0.1:11434</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>aider</code> can also split the work between two models in “architect” mode: a larger model plans the change (the architect), and a second model applies the edits (the editor).</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a></a><span class="ex">aider</span> <span class="at">--architect</span> <span class="dt">\</span></span>
-<span id="cb12-2"><a></a>  <span class="at">--model</span> ollama_chat/qwen2.5-coder:32b <span class="dt">\</span></span>
-<span id="cb12-3"><a></a>  <span class="at">--editor-model</span> ollama_chat/qwen2.5-coder:7b</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a aria-label="1"></a><span class="ex">aider</span> <span class="at">--architect</span> <span class="dt">\</span></span>
+<span id="cb12-2"><a aria-label="2"></a>  <span class="at">--model</span> ollama_chat/qwen2.5-coder:32b <span class="dt">\</span></span>
+<span id="cb12-3"><a aria-label="3"></a>  <span class="at">--editor-model</span> ollama_chat/qwen2.5-coder:7b</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This can improve results on multi-step changes, but on a machine without a strong GPU it roughly doubles the time per turn, because the two models take turns and their weights are swapped in and out of memory. Reserve it for genuinely tricky changes; for small edits, a single model is faster.</p>
 <h4 id="falling-back-between-cloud-and-local-automatically">Falling Back Between Cloud and Local Automatically</h4>
 <p>Air-gapped work aside, the common case is a laptop that is usually online but sometimes is not—on a plane, behind a flaky hospital network, or temporarily rate-limited by a cloud provider. You can keep a coding agent working across these gaps by putting a cloud model and a local model behind one endpoint and falling back automatically.</p>
 <p><a href="https://docs.litellm.ai"><code>LiteLLM</code></a> runs a small local proxy that presents a single OpenAI-compatible endpoint. You give it a primary model and one or more fallbacks; when the primary fails with a retryable error—a rate-limit response (HTTP 429), or a connection error when you are offline—it retries the request on the next model. Pointing your agent at the proxy instead of directly at a provider makes the cloud-to-local switch automatic and invisible to the tool.</p>
 <p>Install the proxy:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a></a><span class="ex">python3</span> <span class="at">-m</span> pip install <span class="at">--user</span> <span class="st">"litellm[proxy]"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a aria-label="1"></a><span class="ex">python3</span> <span class="at">-m</span> pip install <span class="at">--user</span> <span class="st">"litellm[proxy]"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create a config file (for example, <code>~/.litellm/config.yaml</code>) with a cloud primary and a local fallback:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb14-1"><a></a><span class="fu">model_list</span><span class="kw">:</span></span>
-<span id="cb14-2"><a></a><span class="co">  # Cloud primary --- replace with your provider and a current model id</span></span>
-<span id="cb14-3"><a></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">model_name</span><span class="kw">:</span><span class="at"> coder</span></span>
-<span id="cb14-4"><a></a><span class="at">    </span><span class="fu">litellm_params</span><span class="kw">:</span></span>
-<span id="cb14-5"><a></a><span class="at">      </span><span class="fu">model</span><span class="kw">:</span><span class="at"> anthropic/YOUR-MODEL-ID</span></span>
-<span id="cb14-6"><a></a><span class="at">      </span><span class="fu">api_key</span><span class="kw">:</span><span class="at"> os.environ/ANTHROPIC_API_KEY</span></span>
-<span id="cb14-7"><a></a><span class="co">  # Local fallback, served by Ollama</span></span>
-<span id="cb14-8"><a></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">model_name</span><span class="kw">:</span><span class="at"> coder-local</span></span>
-<span id="cb14-9"><a></a><span class="at">    </span><span class="fu">litellm_params</span><span class="kw">:</span></span>
-<span id="cb14-10"><a></a><span class="at">      </span><span class="fu">model</span><span class="kw">:</span><span class="at"> ollama_chat/qwen2.5-coder:7b</span></span>
-<span id="cb14-11"><a></a><span class="at">      </span><span class="fu">api_base</span><span class="kw">:</span><span class="at"> http://localhost:11434</span></span>
-<span id="cb14-12"><a></a></span>
-<span id="cb14-13"><a></a><span class="fu">litellm_settings</span><span class="kw">:</span></span>
-<span id="cb14-14"><a></a><span class="at">  </span><span class="fu">num_retries</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
-<span id="cb14-15"><a></a><span class="at">  </span><span class="fu">fallbacks</span><span class="kw">:</span></span>
-<span id="cb14-16"><a></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">coder</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"coder-local"</span><span class="kw">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb14-1"><a aria-label="1"></a><span class="fu">model_list</span><span class="kw">:</span></span>
+<span id="cb14-2"><a aria-label="2"></a><span class="co">  # Cloud primary --- replace with your provider and a current model id</span></span>
+<span id="cb14-3"><a aria-label="3"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">model_name</span><span class="kw">:</span><span class="at"> coder</span></span>
+<span id="cb14-4"><a aria-label="4"></a><span class="at">    </span><span class="fu">litellm_params</span><span class="kw">:</span></span>
+<span id="cb14-5"><a aria-label="5"></a><span class="at">      </span><span class="fu">model</span><span class="kw">:</span><span class="at"> anthropic/YOUR-MODEL-ID</span></span>
+<span id="cb14-6"><a aria-label="6"></a><span class="at">      </span><span class="fu">api_key</span><span class="kw">:</span><span class="at"> os.environ/ANTHROPIC_API_KEY</span></span>
+<span id="cb14-7"><a aria-label="7"></a><span class="co">  # Local fallback, served by Ollama</span></span>
+<span id="cb14-8"><a aria-label="8"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">model_name</span><span class="kw">:</span><span class="at"> coder-local</span></span>
+<span id="cb14-9"><a aria-label="9"></a><span class="at">    </span><span class="fu">litellm_params</span><span class="kw">:</span></span>
+<span id="cb14-10"><a aria-label="10"></a><span class="at">      </span><span class="fu">model</span><span class="kw">:</span><span class="at"> ollama_chat/qwen2.5-coder:7b</span></span>
+<span id="cb14-11"><a aria-label="11"></a><span class="at">      </span><span class="fu">api_base</span><span class="kw">:</span><span class="at"> http://localhost:11434</span></span>
+<span id="cb14-12"><a aria-label="12"></a></span>
+<span id="cb14-13"><a aria-label="13"></a><span class="fu">litellm_settings</span><span class="kw">:</span></span>
+<span id="cb14-14"><a aria-label="14"></a><span class="at">  </span><span class="fu">num_retries</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
+<span id="cb14-15"><a aria-label="15"></a><span class="at">  </span><span class="fu">fallbacks</span><span class="kw">:</span></span>
+<span id="cb14-16"><a aria-label="16"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">coder</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"coder-local"</span><span class="kw">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Run the proxy, which listens on <code>http://localhost:4000</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a></a><span class="ex">litellm</span> <span class="at">--config</span> ~/.litellm/config.yaml <span class="at">--port</span> 4000</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a aria-label="1"></a><span class="ex">litellm</span> <span class="at">--config</span> ~/.litellm/config.yaml <span class="at">--port</span> 4000</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Then point your agent at the proxy. Because the proxy speaks the OpenAI API, most tools accept it as a custom endpoint. For <code>aider</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a></a><span class="bu">export</span> <span class="va">OPENAI_API_BASE</span><span class="op">=</span>http://localhost:4000/v1</span>
-<span id="cb16-2"><a></a><span class="bu">export</span> <span class="va">OPENAI_API_KEY</span><span class="op">=</span>placeholder   <span class="co"># the proxy needs no key unless you set one</span></span>
-<span id="cb16-3"><a></a><span class="ex">aider</span> <span class="at">--model</span> openai/coder</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a aria-label="1"></a><span class="bu">export</span> <span class="va">OPENAI_API_BASE</span><span class="op">=</span>http://localhost:4000/v1</span>
+<span id="cb16-2"><a aria-label="2"></a><span class="bu">export</span> <span class="va">OPENAI_API_KEY</span><span class="op">=</span>placeholder   <span class="co"># the proxy needs no key unless you set one</span></span>
+<span id="cb16-3"><a aria-label="3"></a><span class="ex">aider</span> <span class="at">--model</span> openai/coder</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Requests now go to the cloud model when it is reachable and fall back to the local model on a rate limit or when you are offline.</p>
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
@@ -1347,10 +1350,10 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <p>A useful pattern:</p>
 <ol type="1">
 <li><p><strong>Pre-pull models</strong> on a login node or a machine with internet access, then copy the model files to the cluster:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a></a><span class="co"># On a machine with internet access</span></span>
-<span id="cb17-2"><a></a><span class="ex">ollama</span> pull qwen2.5-coder:7b</span>
-<span id="cb17-3"><a></a><span class="co"># Ollama stores models in ~/.ollama/models by default</span></span>
-<span id="cb17-4"><a></a><span class="fu">rsync</span> <span class="at">-a</span> ~/.ollama/models/ user@cluster.example.edu:~/.ollama/models/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a aria-label="1"></a><span class="co"># On a machine with internet access</span></span>
+<span id="cb17-2"><a aria-label="2"></a><span class="ex">ollama</span> pull qwen2.5-coder:7b</span>
+<span id="cb17-3"><a aria-label="3"></a><span class="co"># Ollama stores models in ~/.ollama/models by default</span></span>
+<span id="cb17-4"><a aria-label="4"></a><span class="fu">rsync</span> <span class="at">-a</span> ~/.ollama/models/ user@cluster.example.edu:~/.ollama/models/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-warning callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -1361,24 +1364,24 @@ Table&nbsp;2: Relative advantages of humans and Agents
 </div>
 <div class="callout-content">
 <p>Model files are large—<code>qwen2.5-coder:7b</code> is ~4 GB and <code>qwen2.5-coder:32b</code> is ~20 GB—and most HPC home directories have tight quotas (often 10–50 GB). Filling your home directory can break other jobs. Redirect model storage to a scratch or project filesystem with <code>OLLAMA_MODELS</code> and rsync to that path instead:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a></a><span class="co"># On your local machine: copy the models to the cluster scratch filesystem</span></span>
-<span id="cb18-2"><a></a><span class="fu">rsync</span> <span class="at">-a</span> ~/.ollama/models/ user@cluster.example.edu:/scratch/<span class="va">$USER</span>/ollama-models/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a></a><span class="co"># On the cluster: point ollama at that path (export before `ollama serve`)</span></span>
-<span id="cb19-2"><a></a><span class="bu">export</span> <span class="va">OLLAMA_MODELS</span><span class="op">=</span>/scratch/<span class="va">$USER</span>/ollama-models</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a aria-label="1"></a><span class="co"># On your local machine: copy the models to the cluster scratch filesystem</span></span>
+<span id="cb18-2"><a aria-label="2"></a><span class="fu">rsync</span> <span class="at">-a</span> ~/.ollama/models/ user@cluster.example.edu:/scratch/<span class="va">$USER</span>/ollama-models/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a aria-label="1"></a><span class="co"># On the cluster: point ollama at that path (export before `ollama serve`)</span></span>
+<span id="cb19-2"><a aria-label="2"></a><span class="bu">export</span> <span class="va">OLLAMA_MODELS</span><span class="op">=</span>/scratch/<span class="va">$USER</span>/ollama-models</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Set the same <code>OLLAMA_MODELS</code> value before running <code>ollama serve</code> so the server finds the models.</p>
 </div>
 </div>
 </div></li>
 <li><p><strong>Start Ollama on a compute node</strong> (or an interactive session) using the pre-downloaded model files—no internet required. Set <code>OLLAMA_HOST=0.0.0.0</code> so the SSH tunnel from the login node can reach the port:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a></a><span class="va">OLLAMA_HOST</span><span class="op">=</span>0.0.0.0:11434 <span class="ex">ollama</span> serve</span>
-<span id="cb20-2"><a></a><span class="co"># If you redirected model storage (see quota warning above):</span></span>
-<span id="cb20-3"><a></a><span class="co"># OLLAMA_HOST=0.0.0.0:11434 OLLAMA_MODELS=/scratch/$USER/ollama-models ollama serve</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a aria-label="1"></a><span class="va">OLLAMA_HOST</span><span class="op">=</span>0.0.0.0:11434 <span class="ex">ollama</span> serve</span>
+<span id="cb20-2"><a aria-label="2"></a><span class="co"># If you redirected model storage (see quota warning above):</span></span>
+<span id="cb20-3"><a aria-label="3"></a><span class="co"># OLLAMA_HOST=0.0.0.0:11434 OLLAMA_MODELS=/scratch/$USER/ollama-models ollama serve</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If you are on a shared compute node, be aware that binding to <code>0.0.0.0</code> exposes the Ollama port to other users on that host. Scheduler policies vary by site and job type, so confirm whether your job has exclusive node access (request it explicitly when in doubt—e.g., <code>--exclusive</code> in SLURM), or bind only to loopback (<code>OLLAMA_HOST=127.0.0.1:11434</code>) and tunnel from the login node when the node is shared.</p></li>
 <li><p><strong>Forward the port</strong> to your local machine to use your editor’s Ollama integration. Because Ollama is running on a compute node (e.g., <code>gpu-node-01</code>), forward through the login node to that specific host:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a></a><span class="co"># Replace gpu-node-01 with your actual compute node hostname</span></span>
-<span id="cb21-2"><a></a><span class="fu">ssh</span> <span class="at">-L</span> 11434:gpu-node-01:11434 user@cluster.example.edu</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a aria-label="1"></a><span class="co"># Replace gpu-node-01 with your actual compute node hostname</span></span>
+<span id="cb21-2"><a aria-label="2"></a><span class="fu">ssh</span> <span class="at">-L</span> 11434:gpu-node-01:11434 user@cluster.example.edu</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This terminal must stay open for as long as you use the editor’s Ollama integration—closing it tears down the tunnel and silently drops the connection. Alternatively, start the tunnel in the background (non-interactive) so it does not occupy a terminal:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a></a><span class="fu">ssh</span> <span class="at">-N</span> <span class="at">-f</span> <span class="at">-L</span> 11434:gpu-node-01:11434 user@cluster.example.edu</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a aria-label="1"></a><span class="fu">ssh</span> <span class="at">-N</span> <span class="at">-f</span> <span class="at">-L</span> 11434:gpu-node-01:11434 user@cluster.example.edu</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>(<code>-N</code> runs no remote command, <code>-f</code> backgrounds ssh after authenticating.) To stop the tunnel later, match the full SSH command rather than a bare port string—<code>pkill -f "ssh.*-N.*11434:gpu-node-01"</code>—so you don’t accidentally kill unrelated processes whose command line happens to contain that port. Safer still, note the PID when you start it (<code>pgrep -f "11434:gpu-node-01"</code>) and <code>kill</code> that PID directly.</p>
 <p>Then configure your editor to use <code>http://localhost:11434/v1</code> as the base URL.</p></li>
 </ol>
@@ -1658,14 +1661,14 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <p>This section describes the wiring and three errors you are likely to hit.</p>
 <h4 id="wiring-the-extension-to-databricks">Wiring the extension to Databricks</h4>
 <p>Databricks serves models over an OpenAI-compatible endpoint at <code>https://&lt;workspace&gt;.cloud.databricks.com/serving-endpoints</code>. Point the extension at it in VS Code <code>settings.json</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb23-1"><a></a><span class="st">"oaicopilot.baseUrl"</span><span class="er">:</span> <span class="st">"https://&lt;workspace&gt;.cloud.databricks.com/serving-endpoints"</span><span class="er">,</span></span>
-<span id="cb23-2"><a></a><span class="st">"oaicopilot.models"</span><span class="er">:</span> <span class="ot">[</span></span>
-<span id="cb23-3"><a></a>  <span class="fu">{</span></span>
-<span id="cb23-4"><a></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"databricks-claude-sonnet-4-6"</span><span class="fu">,</span></span>
-<span id="cb23-5"><a></a>    <span class="dt">"owned_by"</span><span class="fu">:</span> <span class="st">"databricks"</span><span class="fu">,</span></span>
-<span id="cb23-6"><a></a>    <span class="dt">"apiMode"</span><span class="fu">:</span> <span class="st">"openai"</span></span>
-<span id="cb23-7"><a></a>  <span class="fu">}</span></span>
-<span id="cb23-8"><a></a><span class="ot">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb23-1"><a aria-label="1"></a><span class="st">"oaicopilot.baseUrl"</span><span class="er">:</span> <span class="st">"https://&lt;workspace&gt;.cloud.databricks.com/serving-endpoints"</span><span class="er">,</span></span>
+<span id="cb23-2"><a aria-label="2"></a><span class="st">"oaicopilot.models"</span><span class="er">:</span> <span class="ot">[</span></span>
+<span id="cb23-3"><a aria-label="3"></a>  <span class="fu">{</span></span>
+<span id="cb23-4"><a aria-label="4"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"databricks-claude-sonnet-4-6"</span><span class="fu">,</span></span>
+<span id="cb23-5"><a aria-label="5"></a>    <span class="dt">"owned_by"</span><span class="fu">:</span> <span class="st">"databricks"</span><span class="fu">,</span></span>
+<span id="cb23-6"><a aria-label="6"></a>    <span class="dt">"apiMode"</span><span class="fu">:</span> <span class="st">"openai"</span></span>
+<span id="cb23-7"><a aria-label="7"></a>  <span class="fu">}</span></span>
+<span id="cb23-8"><a aria-label="8"></a><span class="ot">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The <code>id</code> of each model must exactly match the name of a deployed serving endpoint in your workspace. The extension sends <code>id</code> as the OpenAI <code>model</code> field, and Databricks routes <code>POST /serving-endpoints/chat/completions</code> to the endpoint of that name. An <code>id</code> that names no real endpoint fails (see the 404 below).</p>
 <p>To store your token, run <strong>Set OAI Compatible Multi-Provider Apikey</strong> from the Command Palette (<code>Cmd+Shift+P</code> / <code>Ctrl+Shift+P</code>), choose the <code>databricks</code> provider, and paste a Databricks personal access token. The extension keeps it in VS Code’s encrypted secret storage (under <code>oaicopilot.apiKey.databricks</code>) and sends it as an <code>Authorization: Bearer</code> header.</p>
 <h4 id="three-errors-and-why-they-stack">Three errors, and why they stack</h4>
@@ -1737,8 +1740,8 @@ while the selected main agent model is BYOK.</code></pre>
 </ul>
 <p>Without an explicit checkout step, these dependency installation commands will fail because the necessary files won’t be available yet.</p>
 <p><strong>Basic checkout:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb27-1"><a></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Checkout code</span></span>
-<span id="cb27-2"><a></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb27-1"><a aria-label="1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Checkout code</span></span>
+<span id="cb27-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Important:</strong> The Copilot coding agent overrides any <code>fetch-depth</code> value you set in the checkout step. According to <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment">GitHub’s official documentation</a>, this override happens “to allow the agent to rollback commits upon request, while mitigating security risks.” The agent dynamically determines the appropriate fetch depth based on the pull request context.</p>
 <p>While you cannot control the fetch depth used by Copilot, the agent still has access to sufficient git history to perform its work effectively, including comparing changes and understanding the context of your pull request.</p>
 <h4 id="configurable-options">Configurable Options</h4>
@@ -1754,30 +1757,30 @@ while the selected main agent model is BYOK.</code></pre>
 <p>All other workflow settings are ignored by Copilot.</p>
 <h4 id="common-setup-tasks">Common Setup Tasks</h4>
 <p><strong>For Node.js/TypeScript projects:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb28-1"><a></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up Node.js</span></span>
-<span id="cb28-2"><a></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/setup-node@v4</span></span>
-<span id="cb28-3"><a></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb28-4"><a></a><span class="at">    </span><span class="fu">node-version</span><span class="kw">:</span><span class="at"> </span><span class="st">"20"</span></span>
-<span id="cb28-5"><a></a><span class="at">    </span><span class="fu">cache</span><span class="kw">:</span><span class="at"> </span><span class="st">"npm"</span></span>
-<span id="cb28-6"><a></a></span>
-<span id="cb28-7"><a></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install dependencies</span></span>
-<span id="cb28-8"><a></a><span class="at">  </span><span class="fu">run</span><span class="kw">:</span><span class="at"> npm ci</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb28-1"><a aria-label="1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up Node.js</span></span>
+<span id="cb28-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/setup-node@v4</span></span>
+<span id="cb28-3"><a aria-label="3"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb28-4"><a aria-label="4"></a><span class="at">    </span><span class="fu">node-version</span><span class="kw">:</span><span class="at"> </span><span class="st">"20"</span></span>
+<span id="cb28-5"><a aria-label="5"></a><span class="at">    </span><span class="fu">cache</span><span class="kw">:</span><span class="at"> </span><span class="st">"npm"</span></span>
+<span id="cb28-6"><a aria-label="6"></a></span>
+<span id="cb28-7"><a aria-label="7"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install dependencies</span></span>
+<span id="cb28-8"><a aria-label="8"></a><span class="at">  </span><span class="fu">run</span><span class="kw">:</span><span class="at"> npm ci</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>For Python projects:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb29-1"><a></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up Python</span></span>
-<span id="cb29-2"><a></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/setup-python@v5</span></span>
-<span id="cb29-3"><a></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb29-4"><a></a><span class="at">    </span><span class="fu">python-version</span><span class="kw">:</span><span class="at"> </span><span class="st">"3.11"</span></span>
-<span id="cb29-5"><a></a></span>
-<span id="cb29-6"><a></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install dependencies</span></span>
-<span id="cb29-7"><a></a><span class="at">  </span><span class="fu">run</span><span class="kw">:</span><span class="at"> pip install -r requirements.txt</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb29-1"><a aria-label="1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up Python</span></span>
+<span id="cb29-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/setup-python@v5</span></span>
+<span id="cb29-3"><a aria-label="3"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb29-4"><a aria-label="4"></a><span class="at">    </span><span class="fu">python-version</span><span class="kw">:</span><span class="at"> </span><span class="st">"3.11"</span></span>
+<span id="cb29-5"><a aria-label="5"></a></span>
+<span id="cb29-6"><a aria-label="6"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install dependencies</span></span>
+<span id="cb29-7"><a aria-label="7"></a><span class="at">  </span><span class="fu">run</span><span class="kw">:</span><span class="at"> pip install -r requirements.txt</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>For R projects:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb30-1"><a></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up R</span></span>
-<span id="cb30-2"><a></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-r@v2</span></span>
-<span id="cb30-3"><a></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb30-4"><a></a><span class="at">    </span><span class="fu">r-version</span><span class="kw">:</span><span class="at"> </span><span class="st">'release'</span></span>
-<span id="cb30-5"><a></a></span>
-<span id="cb30-6"><a></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install R dependencies</span></span>
-<span id="cb30-7"><a></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-renv@v2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb30-1"><a aria-label="1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up R</span></span>
+<span id="cb30-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-r@v2</span></span>
+<span id="cb30-3"><a aria-label="3"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb30-4"><a aria-label="4"></a><span class="at">    </span><span class="fu">r-version</span><span class="kw">:</span><span class="at"> </span><span class="st">'release'</span></span>
+<span id="cb30-5"><a aria-label="5"></a></span>
+<span id="cb30-6"><a aria-label="6"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install R dependencies</span></span>
+<span id="cb30-7"><a aria-label="7"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-renv@v2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <h4 id="environment-variables-and-secrets">Environment Variables and Secrets</h4>
 <p>To set environment variables for Copilot:</p>
 <ol type="1">
@@ -1792,18 +1795,18 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Setup logs appear in the agent session logs when Copilot starts working. If a step fails, Copilot will skip remaining steps and begin working with the current environment state.</p>
 <h4 id="advanced-configuration">Advanced Configuration</h4>
 <p><strong>Larger runners:</strong> For projects requiring more resources, you can use larger GitHub-hosted runners:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb31-1"><a></a><span class="fu">jobs</span><span class="kw">:</span></span>
-<span id="cb31-2"><a></a><span class="at">  </span><span class="fu">copilot-setup-steps</span><span class="kw">:</span></span>
-<span id="cb31-3"><a></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-4-core</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb31-1"><a aria-label="1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb31-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">copilot-setup-steps</span><span class="kw">:</span></span>
+<span id="cb31-3"><a aria-label="3"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-4-core</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Self-hosted runners (ARC):</strong> For access to internal resources or private registries, use Actions Runner Controller (ARC) self-hosted runners:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb32-1"><a></a><span class="fu">jobs</span><span class="kw">:</span></span>
-<span id="cb32-2"><a></a><span class="at">  </span><span class="fu">copilot-setup-steps</span><span class="kw">:</span></span>
-<span id="cb32-3"><a></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> arc-scale-set-name</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb32-1"><a aria-label="1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb32-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">copilot-setup-steps</span><span class="kw">:</span></span>
+<span id="cb32-3"><a aria-label="3"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> arc-scale-set-name</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Note: When using self-hosted runners, you must disable Copilot’s integrated firewall in repository settings and configure appropriate network security controls.</p>
 <p><strong>Git Large File Storage (LFS):</strong> If your repository uses Git LFS:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb33-1"><a></a><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span>
-<span id="cb33-2"><a></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb33-3"><a></a><span class="at">    </span><span class="fu">lfs</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb33-1"><a aria-label="1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span>
+<span id="cb33-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb33-3"><a aria-label="3"></a><span class="at">    </span><span class="fu">lfs</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <h4 id="further-reading-1">Further Reading</h4>
 <p>For complete details, see <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment">Customizing the development environment for GitHub Copilot coding agent</a>.</p>
 </section></section>
@@ -2110,10 +2113,10 @@ while the selected main agent model is BYOK.</code></pre>
 <p>There are two common routes:</p>
 <ol type="1">
 <li><p><strong>Native installer</strong> (recommended):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a aria-label="1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This installs the binary to <code>~/.local/bin</code>. If your organization’s policy requires it, download and inspect the script before running it rather than piping it straight to <code>bash</code>.</p></li>
 <li><p><strong>npm</strong> (requires <a href="https://nodejs.org/">Node.js</a>):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a></a><span class="ex">npm</span> install <span class="at">-g</span> @anthropic-ai/claude-code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a aria-label="1"></a><span class="ex">npm</span> install <span class="at">-g</span> @anthropic-ai/claude-code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 </ol>
 <div class="callout callout-important callout-titled callout-style-default">
 <div class="callout-body">
@@ -2132,11 +2135,11 @@ while the selected main agent model is BYOK.</code></pre>
 <h4 id="make-sure-your-shell-can-find-claude">Make sure your shell can find <code>claude</code></h4>
 <p>The native binary lives in <code>~/.local/bin</code>. The installer adds this directory to <code>PATH</code> for ordinary shells, but on Windows two things commonly break that.</p>
 <p><strong>MSYS2 does not inherit the Windows <code>PATH</code> by default.</strong> It starts in a “minimal” path mode, so tools installed elsewhere on Windows are invisible to it. Add the binary’s directory explicitly in your <code>~/.zshrc</code> (or <code>~/.bashrc</code>). Because MSYS2’s <code>$HOME</code> is <code>/home/&lt;you&gt;</code> (its own home, not the Windows profile where the installer puts the binary), point <code>PATH</code> at the absolute Windows path:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"/c/Users/&lt;you&gt;/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># MSYS2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a aria-label="1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"/c/Users/&lt;you&gt;/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># MSYS2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>In <strong>Git Bash</strong>, <code>$HOME</code> already is <code>/c/Users/&lt;you&gt;</code> (your Windows user profile), so the shorthand works there:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"</span><span class="va">$HOME</span><span class="st">/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># Git Bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a aria-label="1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"</span><span class="va">$HOME</span><span class="st">/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># Git Bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Rehash after changing <code>PATH</code>.</strong> <code>zsh</code> and <code>bash</code> cache the locations of executables. If you add a directory to <code>PATH</code> in your shell config, the shell may still report <code>command not found</code> <em>even though the directory is on <code>PATH</code></em>, because its command table is stale. Force a rebuild in the same shell right after editing <code>PATH</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a></a><span class="ex">rehash</span>        <span class="co"># zsh; use 'hash -r' in bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a aria-label="1"></a><span class="ex">rehash</span>        <span class="co"># zsh; use 'hash -r' in bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This bites hardest with <a href="https://ohmyz.sh/">oh-my-zsh</a>, which builds zsh’s command table <em>before</em> your custom <code>PATH</code> line runs, so opening a fresh window may not clear the stale <code>command not found</code> on its own until you <code>rehash</code> (or move the <code>PATH</code> line before oh-my-zsh initializes).</p>
 <h4 id="do-not-edit-dotfiles-with-powershell-redirection">Do not edit dotfiles with PowerShell redirection</h4>
 <div class="callout callout-warning callout-titled callout-style-default">
@@ -2158,11 +2161,11 @@ while the selected main agent model is BYOK.</code></pre>
 <p>If you also use the <a href="https://cli.github.com/">GitHub CLI</a> (<code>gh</code>) to push code or open pull requests, <code>gh auth login</code> may fail with:</p>
 <pre><code>could not prompt: … running in MinTTY without pseudo terminal support</code></pre>
 <p>Git Bash and MSYS2 both default to the MinTTY terminal, which can’t host the interactive prompt. Wrap the command with <code>winpty</code>, or run it from PowerShell / Windows Terminal instead:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb42-1"><a></a><span class="ex">winpty</span> gh auth login</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb42-1"><a aria-label="1"></a><span class="ex">winpty</span> gh auth login</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>winpty</code> ships with Git Bash, but in MSYS2 it’s a separate package — install it first with <code>pacman -S winpty</code> if you get <code>command not found</code>.</p>
 <h4 id="verify-the-install">Verify the install</h4>
 <p>Open a <strong>new</strong> terminal window (so it picks up your updated config) and run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb43-1"><a></a><span class="ex">claude</span> <span class="at">--version</span>      <span class="co"># prints the installed version number</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb43-1"><a aria-label="1"></a><span class="ex">claude</span> <span class="at">--version</span>      <span class="co"># prints the installed version number</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If you get a version number, you’re ready to run <code>claude</code> in your project directory. If you get <code>command not found</code>, re-check the two <code>PATH</code> issues above: the directory must be on <code>PATH</code>, and you must <code>rehash</code> (or open a fresh window) after changing it.</p>
 </section></section>
 <section>
@@ -2590,7 +2593,7 @@ window.addEventListener("load", alignEquationAnchorsWithDefault);
         margin: 0,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

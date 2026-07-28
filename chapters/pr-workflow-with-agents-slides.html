@@ -6,8 +6,8 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.38">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
 
   <title>Working with AI – Pull-Request Workflow with Agents</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,10 +19,13 @@
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
     */
-    code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -324,7 +327,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-07-22 00:47:15 (PDT)</p>
+  <p class="date">Last modified: 2026-07-28 12:14:20 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -369,16 +372,16 @@ gh issue comment &lt;N&gt; --body "Working on this --- paws off until I'm done."
 <p>Whenever <code>main</code> has moved ahead of a PR branch you’re working on, <strong>merge <code>main</code> into the PR branch</strong> before the next push or review trigger. Don’t wait for a conflict to surface or for someone to ask.</p>
 <p>This fragment covers the single-branch-vs-<code>main</code> case. When orchestrating a multi-agent <code>ultracode</code> session, merges can happen at more points than that — see <a href="ultracode-merge-conflicts.md"><code>ultracode-merge-conflicts</code></a> for the broader check (worktree-isolated agent branches, concurrent <code>parallel()</code> results) and the note on GitHub’s mergeable indicator not evaluating custom <code>.gitattributes</code> merge drivers.</p>
 <p><strong>Always check for merge conflicts with main before pushing results to remote.</strong> Run this before every push, not just before triggering a review:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a></a><span class="fu">git</span> fetch origin main</span>
-<span id="cb2-2"><a></a><span class="fu">git</span> log <span class="at">--oneline</span> ..origin/main <span class="kw">|</span> <span class="fu">head</span>    <span class="co"># any commits? main is ahead --- merge it in</span></span>
-<span id="cb2-3"><a></a><span class="fu">git</span> merge origin/main</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a aria-label="1"></a><span class="fu">git</span> fetch origin main</span>
+<span id="cb2-2"><a aria-label="2"></a><span class="fu">git</span> log <span class="at">--oneline</span> ..origin/main <span class="kw">|</span> <span class="fu">head</span>    <span class="co"># any commits? main is ahead --- merge it in</span></span>
+<span id="cb2-3"><a aria-label="3"></a><span class="fu">git</span> merge origin/main</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If the push is rejected because <code>main</code> has moved (<code>! [rejected]</code> with <code>(fetch first)</code> or <code>(non-fast-forward)</code>), fetch and merge before retrying — don’t force-push.</p>
 <p>Always do this before triggering a fresh review too, so the reviewer evaluates the PR against current <code>main</code> rather than a stale snapshot.</p>
 <p>Don’t rebase or squash-rewrite a published PR branch unless explicitly asked — a merge commit is the right move because it matches GitHub’s “Update branch” button and preserves the PR history.</p>
 <p>If the merge has conflicts, resolve them, run the project’s standard pre-commit checks (render / lint / spell / tests), commit, then push. Don’t push a half-resolved merge.</p>
 <p><strong>After merging main, re-check version parity.</strong> In R packages with a <code>version-check</code> CI job, the branch’s <code>DESCRIPTION</code> <code>Version:</code> must <em>exceed</em> main’s. A conflict-free merge can silently put them at parity — main advanced (e.g.&nbsp;another PR merged between when you last bumped and now). After every merge of main, compare versions:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a></a><span class="fu">git</span> show origin/main:DESCRIPTION <span class="kw">|</span> <span class="fu">grep</span> ^Version</span>
-<span id="cb3-2"><a></a><span class="fu">grep</span> ^Version DESCRIPTION</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a aria-label="1"></a><span class="fu">git</span> show origin/main:DESCRIPTION <span class="kw">|</span> <span class="fu">grep</span> ^Version</span>
+<span id="cb3-2"><a aria-label="2"></a><span class="fu">grep</span> ^Version DESCRIPTION</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If they match, bump the branch’s <code>Version:</code> by one patch level before pushing.</p>
 <p><strong>Re-check <code>main</code> again right before the final push, not just at the start of a merge.</strong> Resolving a conflict (rerunning generators, fixing prose, updating a CHANGELOG entry) can take long enough for <code>main</code> to advance a second time. A <code>git fetch origin main</code> immediately before <code>git push</code> — after conflict resolution is done, not only before it started — catches that case; an earlier CI failure on a commit you thought was current is a symptom of skipping this second check.</p>
 <p><strong>A conflict-free merge does not mean derived artifacts are in sync.</strong> If your branch regenerates a generated tree (e.g.&nbsp;<code>codex-skills/</code>, a lockfile, rendered docs) and <code>main</code> added a new <em>source</em> input the generator consumes (a new skill, a new dependency), git merges both cleanly — but the generator never ran against the new input on your branch, so its output is missing or stale and the sync check fails on <code>main</code> after both land. After merging <code>main</code>, re-run the generator and commit the result whenever main touched the generator’s inputs — don’t trust the absence of conflicts. (Concretely: merge the PR that adds the new skill <em>first</em>, then sync the wrapper-regenerating branch and rerun <code>scripts/sync-codex-skill-wrappers.py</code> before merging it.)</p>
@@ -837,7 +840,7 @@ window.addEventListener("load", alignEquationAnchorsWithDefault);
         margin: 0,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

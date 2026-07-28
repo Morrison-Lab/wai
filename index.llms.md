@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-07-22 00:47:15 (PDT)
+Last modified: 2026-07-28 12:14:20 (PDT)
 
 This site collects the UCD-SERG lab’s notes on working responsibly and effectively with AI coding assistants: what they are, how to use them, and the policies lab members follow when using them. It was migrated out of the [UCD-SERG Lab Manual](https://ucd-serg.github.io/lab-manual/)’s “Working with AI” chapter, which had grown large enough to deserve a dedicated site. For the lab’s broader coding, reproducibility, and collaboration conventions, see the lab manual itself.
 
