@@ -19,15 +19,51 @@ concurrency:
   group: preview-${{ github.ref }}
   cancel-in-progress: true
 
+# This workflow only *builds* the preview; it never touches `gh-pages`. On a
+# `pull_request` event from a fork GitHub hands out a read-only `GITHUB_TOKEN`
+# no matter what `permissions:` asks for, so deploying from here 403s for any
+# external contributor. The rendered site is uploaded as an artifact instead,
+# and `preview-deploy.yml` (a `workflow_run` workflow, which does get a write
+# token) publishes it.
+permissions:
+  contents: read
+
 jobs:
-  build-deploy:
+  # Records what the deploy workflow should do. Split out from `build` so that
+  # a `closed` event can request preview removal without paying for a full
+  # Quarto render first, and so the label filter lives in exactly one place —
+  # `build` inherits it via `needs`, since a skipped dependency skips dependents.
+  metadata:
     if: |
       (github.event.action != 'labeled' && github.event.action != 'unlabeled') ||
       contains(fromJson('["revealjs","pdf","docx","no-preview-highlights","clear-freezer"]'), github.event.label.name)
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
+    steps:
+      - name: Record preview metadata
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          EVENT_ACTION: ${{ github.event.action }}
+        run: |
+          mkdir -p preview-metadata
+          printf '%s\n' "$PR_NUMBER" > preview-metadata/pr-number
+          if [ "$EVENT_ACTION" = 'closed' ]; then
+            printf 'remove\n' > preview-metadata/deployment-action
+          else
+            printf 'deploy\n' > preview-metadata/deployment-action
+          fi
+
+      - name: Upload preview metadata
+        uses: actions/upload-artifact@v7
+        with:
+          name: pr-preview-metadata
+          path: preview-metadata/
+          if-no-files-found: error
+          retention-days: 1
+
+  build:
+    needs: metadata
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
     env:
       TZ: America/Los_Angeles
     steps:
@@ -190,40 +226,13 @@ jobs:
           path: _freeze
           key: ${{ runner.os }}-quarto-freezer-${{ github.event.pull_request.head.sha }}-${{ github.run_attempt }}
 
-      - name: Deploy PR Preview
-        id: preview-step
-        if: github.event_name == 'pull_request'
-        uses: rossjrw/pr-preview-action@v1
+      - name: Upload rendered site
+        uses: actions/upload-artifact@v7
         with:
-          source-dir: ./_site/
-          # Deploy on label changes too, not just open/reopen/synchronize
-          # The 'auto' action ignores label events, so we explicitly set 'deploy' for non-closed PRs
-          action: ${{ github.event.action == 'closed' && 'remove' || 'deploy' }}
-          preview-branch: gh-pages
-          comment: "false"
-          wait-for-pages-deployment: false
-
-      # Create sticky comment with preview link
-      # Following https://github.com/rossjrw/pr-preview-action?tab=readme-ov-file#customise-the-sticky-comment
-      - uses: marocchino/sticky-pull-request-comment@v3
-        if: steps.preview-step.outputs.deployment-action == 'deploy' && env.deployment_status == 'success'
-        with:
-          header: pr-preview
-          recreate: true
-          message: |
-              [PR Preview Action](https://github.com/rossjrw/pr-preview-action) ${{ steps.preview-step.outputs.action-version }}
-              :---:
-              | <p><img src="https://qr.rossjrw.com/?url=${{ steps.preview-step.outputs.preview-url }}" height="100" align="right" alt="QR code for preview link"></p> :rocket: View preview at <br> ${{ steps.preview-step.outputs.preview-url }} <br><br>
-              | <h6>Built to branch [`gh-pages`](${{ github.server_url }}/${{ github.repository }}/tree/gh-pages) at ${{ steps.preview-step.outputs.action-start-time }}. <br> Preview will be ready when the [GitHub Pages deployment](${{ github.server_url }}/${{ github.repository }}/deployments) is complete. <br><br> </h6>
-
-      - uses: marocchino/sticky-pull-request-comment@v3
-        if: steps.preview-step.outputs.deployment-action == 'remove' && env.deployment_status == 'success'
-        with:
-            header: pr-preview
-            recreate: true
-            message: |
-                [PR Preview Action](https://github.com/rossjrw/pr-preview-action) ${{ steps.preview-step.outputs.action-version }}
-                :---:
-                Preview removed because the pull request was closed.
-                ${{ steps.preview-step.outputs.action-start-time }}
-        
+          name: pr-preview-site
+          path: _site/
+          # Quarto writes dotfiles such as `.nojekyll` into `_site`, and the
+          # default upload skips hidden files.
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
