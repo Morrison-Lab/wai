@@ -330,7 +330,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-07-28 15:13:47 (PDT)</p>
+  <p class="date">Last modified: 2026-07-28 15:35:39 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -376,8 +376,74 @@
 </ul>
 </section></section>
 <section>
-<section id="sec-ai-harnesses" class="title-slide slide level1 center" data-number="3">
-<h1><span class="header-section-number">3</span> What are AI harnesses?</h1>
+<section id="sec-ai-coding-agent-platforms" class="title-slide slide level1 center" data-number="3">
+<h1><span class="header-section-number">3</span> Coding-Agent Platforms</h1>
+
+</section>
+<section class="slide level2">
+
+<p>Coding-agent platforms differ more in where they run and how they return work than in their chat interfaces. Choose a platform by matching its execution model to the task and your repository’s security requirements.</p>
+<h4 id="common-coding-agent-platforms">Common coding-agent platforms</h4>
+<p>The following catalog is a starting point rather than an endorsement:</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Platform</th>
+<th>Primary surface</th>
+<th>Typical repository workflow</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/features/copilot/agents">GitHub Copilot coding agent</a></td>
+<td>GitHub issues and pull requests</td>
+<td>Assign an issue; review the resulting pull request</td>
+</tr>
+<tr class="even">
+<td><a href="https://openai.com/codex/">OpenAI Codex</a></td>
+<td>Cloud tasks, app, and command line</td>
+<td>Delegate a task in an isolated environment or work locally</td>
+</tr>
+<tr class="odd">
+<td><a href="https://jules.google.com/">Google Jules</a></td>
+<td>Cloud coding agent</td>
+<td>Connect a repository and review the proposed changes</td>
+</tr>
+<tr class="even">
+<td><a href="https://antigravity.google/">Google Antigravity</a></td>
+<td>Agentic development platform</td>
+<td>Coordinate coding tasks in a managed development workspace</td>
+</tr>
+<tr class="odd">
+<td><a href="https://www.anthropic.com/claude-code">Claude Code</a></td>
+<td>Terminal, IDE, and cloud</td>
+<td>Work interactively or delegate work that returns a pull request</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/google-gemini/gemini-cli">Gemini CLI</a></td>
+<td>Command line</td>
+<td>Inspect, edit, and test the current local checkout</td>
+</tr>
+<tr class="odd">
+<td><a href="https://aider.chat/">Aider</a></td>
+<td>Command line</td>
+<td>Pair locally with explicit files and Git commits</td>
+</tr>
+</tbody>
+</table>
+<p>Before connecting any platform, check:</p>
+<ul>
+<li>whether code runs locally or in a vendor-managed environment;</li>
+<li>what repository, network, secret, and tool permissions it receives;</li>
+<li>whether changes arrive as a reviewable branch or pull request;</li>
+<li>which model providers and billing arrangements are supported; and</li>
+<li>whether your organization can retain the required audit trail.</li>
+</ul>
+<p>Platform capabilities and commercial terms change quickly. Confirm current details in the linked official documentation before adopting one.</p>
+</section></section>
+<section>
+<section id="sec-ai-harnesses" class="title-slide slide level1 center" data-number="4">
+<h1><span class="header-section-number">4</span> What are AI harnesses?</h1>
 
 </section>
 <section class="slide level2">
@@ -387,7 +453,7 @@
 <p>Most coding-agent harnesses — including the <a href="https://github.com/features/copilot/agents">GitHub Copilot coding agent</a> and <a href="https://claude.com/product/claude-code">Claude Code</a> — share a similar set of layers:</p>
 <ul>
 <li><strong>Core loop</strong>: the <a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview">tool-calling loop</a>, permission and sandboxing model, and context management that keep the agent grounded in your repository.</li>
-<li><strong>Skills</strong>: reusable, named procedures that encode a workflow so it runs the same way every time, instead of being re-improvised in each conversation. See <a href="#/sec-ai-agent-skills" class="quarto-xref">Section&nbsp;20</a>.</li>
+<li><strong>Skills</strong>: reusable, named procedures that encode a workflow so it runs the same way every time, instead of being re-improvised in each conversation. See <a href="#/sec-ai-agent-skills" class="quarto-xref">Section&nbsp;21</a>.</li>
 <li><strong>Subagents</strong>: a way to spin up a worker with a fresh context window for a self-contained piece of research or work, keeping the main conversation’s context focused.</li>
 <li><strong>Multi-agent orchestration</strong>: deterministic fan-out and fan-in across many subagents — for example, running several independent reviewers over a diff and reconciling their findings — for work that is large or benefits from independent verification.</li>
 <li><strong>MCP servers</strong>: the <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> gives a harness typed access to external systems (issue trackers, chat tools, databases) beyond raw shell or API calls.</li>
@@ -403,13 +469,13 @@
 </ul>
 </section></section>
 <section>
-<section id="sec-ai-agent-implementation" class="title-slide slide level1 center" data-number="4">
-<h1><span class="header-section-number">4</span> How Agents Are Structured and Implemented</h1>
+<section id="sec-ai-agent-implementation" class="title-slide slide level1 center" data-number="5">
+<h1><span class="header-section-number">5</span> How Agents Are Structured and Implemented</h1>
 
 </section>
 <section class="slide level2 scrollable">
 
-<p>An <strong>agent</strong> is not part of the harness itself. It is a configuration — a goal, a role, a bounded toolset, and a stopping condition — executed on top of the harness’s core loop (see <a href="#/sec-ai-harnesses" class="quarto-xref">Section&nbsp;3</a>). A single harness can host many different agents at once: a main conversation, and any number of subagents it spawns.</p>
+<p>An <strong>agent</strong> is not part of the harness itself. It is a configuration — a goal, a role, a bounded toolset, and a stopping condition — executed on top of the harness’s core loop (see <a href="#/sec-ai-harnesses" class="quarto-xref">Section&nbsp;4</a>). A single harness can host many different agents at once: a main conversation, and any number of subagents it spawns.</p>
 <h4 id="the-shape-of-an-agent">The Shape of an Agent</h4>
 <p>Structurally, an agent is a small record plus a fresh execution of the harness’s loop:</p>
 <ul>
@@ -435,8 +501,8 @@
 </ul>
 </section></section>
 <section>
-<section id="sec-ai-harness-construction" class="title-slide slide level1 center" data-number="5">
-<h1><span class="header-section-number">5</span> How Harnesses and Agents Are Built</h1>
+<section id="sec-ai-harness-construction" class="title-slide slide level1 center" data-number="6">
+<h1><span class="header-section-number">6</span> How Harnesses and Agents Are Built</h1>
 
 </section>
 <section class="slide level2">
@@ -464,8 +530,8 @@
 <p>Files like this manual, or a repository’s <code>CLAUDE.md</code>/<a href="https://agents.md/"><code>AGENTS.md</code></a>, carry no front matter and no schema. They are concatenated into the system prompt as plain text, and the harness trusts the model to read and follow that prose, the same way it follows any other instruction in its context.</p>
 </section></section>
 <section>
-<section id="sec-ai-agent-program-kind" class="title-slide slide level1 center" data-number="6">
-<h1><span class="header-section-number">6</span> What Kind of Program Is an Agent?</h1>
+<section id="sec-ai-agent-program-kind" class="title-slide slide level1 center" data-number="7">
+<h1><span class="header-section-number">7</span> What Kind of Program Is an Agent?</h1>
 
 </section>
 <section class="slide level2">
@@ -498,7 +564,7 @@
 <li><strong><a href="https://github.com/SWE-agent/SWE-agent">SWE-agent</a></strong> — a research coding-agent harness from Princeton NLP, described in its associated paper.</li>
 <li><strong><a href="https://github.com/All-Hands-AI/OpenHands">OpenHands</a></strong> (formerly OpenDevin) — a general-purpose open-source agent platform.</li>
 </ul>
-<p>Their orchestration code runs to thousands of lines, because that is where the real engineering lives: retries, streaming, permission checks, and state management. A single <em>agent definition</em> running on top of that engine, by contrast, is typically tens of lines (see <a href="#/sec-ai-harness-construction" class="quarto-xref">Section&nbsp;5</a>).</p>
+<p>Their orchestration code runs to thousands of lines, because that is where the real engineering lives: retries, streaming, permission checks, and state management. A single <em>agent definition</em> running on top of that engine, by contrast, is typically tens of lines (see <a href="#/sec-ai-harness-construction" class="quarto-xref">Section&nbsp;6</a>).</p>
 <h4 id="where-it-runs">Where It Runs</h4>
 <ul>
 <li><strong>The harness process</strong>: an ordinary OS process, either on your own machine (CLI mode) or inside an ephemeral, managed cloud container (remote/web mode) that is discarded when the session ends.</li>
@@ -508,17 +574,17 @@
 <p>So an agent’s lifetime is scoped to a single task, not persistent: it starts when given a goal, runs for as long as its loop keeps producing tool calls, and ends the moment a stopping condition fires.</p>
 </section></section>
 <section>
-<section id="sec-ai-harness-agent-relationship" class="title-slide slide level1 center" data-number="7">
-<h1><span class="header-section-number">7</span> How Does a Harness Relate to an Agent?</h1>
+<section id="sec-ai-harness-agent-relationship" class="title-slide slide level1 center" data-number="8">
+<h1><span class="header-section-number">8</span> How Does a Harness Relate to an Agent?</h1>
 
 </section>
 <section class="slide level2">
 
 <p>The relationship between a harness and an agent is closer to an <strong><a href="https://en.wikipedia.org/wiki/Interpreter_(computing)">interpreter</a></strong> running a program than to two peers calling each other.</p>
 <h4 id="does-the-harness-call-the-agent-or-the-agent-call-the-harness">Does the Harness Call the Agent, or the Agent Call the Harness?</h4>
-<p><strong>Harness to agent: not a call, an instantiation.</strong> The harness does not “call” an agent as a subroutine it invokes and waits on. An agent has no code of its own outside the harness’s loop (see <a href="#/sec-ai-agent-program-kind" class="quarto-xref">Section&nbsp;6</a>) — its whole behavior <em>is</em> that loop, running with the agent’s configuration (instructions, tool allowlist, model) loaded in. The harness instantiates and runs an agent, start to termination; it is not a function call with a return address.</p>
+<p><strong>Harness to agent: not a call, an instantiation.</strong> The harness does not “call” an agent as a subroutine it invokes and waits on. An agent has no code of its own outside the harness’s loop (see <a href="#/sec-ai-agent-program-kind" class="quarto-xref">Section&nbsp;7</a>) — its whole behavior <em>is</em> that loop, running with the agent’s configuration (instructions, tool allowlist, model) loaded in. The harness instantiates and runs an agent, start to termination; it is not a function call with a return address.</p>
 <p><strong>Agent to harness: yes, a real call, via tool calls.</strong> While an agent’s loop is running, the model produces a <a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview">tool-call request</a>, and the harness’s dispatcher looks up and executes the matching handler — read a file, run a command, call an API. So the concrete direction of calling is <strong>agent calls harness</strong>, through tool dispatch, not the reverse.</p>
-<p><strong>Agent to agent: routed through the harness.</strong> When a parent agent spawns a subagent, it does not call that subagent directly. It issues a tool call that the harness’s dispatcher handles by spinning up a fresh instance of its own loop (see <a href="#/sec-ai-agent-implementation" class="quarto-xref">Section&nbsp;4</a>), running it to completion with the subagent’s configuration, and handing the result back to the parent as a tool result. Even “agent calls agent” bottoms out as: parent calls harness, harness instantiates and runs a new agent, harness returns that agent’s output to the parent.</p>
+<p><strong>Agent to agent: routed through the harness.</strong> When a parent agent spawns a subagent, it does not call that subagent directly. It issues a tool call that the harness’s dispatcher handles by spinning up a fresh instance of its own loop (see <a href="#/sec-ai-agent-implementation" class="quarto-xref">Section&nbsp;5</a>), running it to completion with the subagent’s configuration, and handing the result back to the parent as a tool result. Even “agent calls agent” bottoms out as: parent calls harness, harness instantiates and runs a new agent, harness returns that agent’s output to the parent.</p>
 <h4 id="sketching-the-harnesss-own-loop">Sketching the Harness’s Own Loop</h4>
 <p>The <a href="#/sec-ai-agent-program-kind">agent loop</a> sketched earlier is really just the innermost piece. The harness wraps a bootstrap step and a permission/dispatch layer around it:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a aria-label="1"></a><span class="kw">def</span> run_harness():</span>
@@ -553,15 +619,15 @@
 <span id="cb3-30"><a aria-label="30"></a></span>
 <span id="cb3-31"><a aria-label="31"></a>            history.append(result)</span>
 <span id="cb3-32"><a aria-label="32"></a>    <span class="cf">return</span> history[<span class="op">-</span><span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><code>run_agent</code> is identical in shape to the loop in <a href="#/sec-ai-agent-program-kind" class="quarto-xref">Section&nbsp;6</a>. <code>run_harness</code> and the permission check are the parts that only exist at the harness level, not inside any individual agent. That recursive call — <code>run_agent</code> calling itself for a subagent — is the concrete mechanism behind “agent calls agent, routed through the harness,” described in the previous subsection.</p>
+<p><code>run_agent</code> is identical in shape to the loop in <a href="#/sec-ai-agent-program-kind" class="quarto-xref">Section&nbsp;7</a>. <code>run_harness</code> and the permission check are the parts that only exist at the harness level, not inside any individual agent. That recursive call — <code>run_agent</code> calling itself for a subagent — is the concrete mechanism behind “agent calls agent, routed through the harness,” described in the previous subsection.</p>
 <h4 id="what-do-you-launch-when-you-type-claude">What Do You Launch When You Type <code>claude</code>?</h4>
 <p>Typing <code>claude</code> at a shell starts the harness process: it initializes the engine — the permission system, the tool registry, MCP client connections, and memory loaded from <code>CLAUDE.md</code>/<code>AGENTS.md</code> files. But the harness does not sit idle waiting for a program to be supplied separately. It immediately instantiates the <strong>default agent</strong> — the “main session” — to handle the interactive conversation: full tool access, a system prompt assembled from the loaded config, no restricted allowlist. That default agent is simply the harness’s baseline configuration for its own loop, not a second thing launched afterward.</p>
 <p>There is no observable moment of “harness running, no agent yet.” The closest analogy is typing <code>python</code> at a shell: it launches the interpreter <em>and</em> drops you straight into a <a href="https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop">REPL</a> evaluating your input, rather than leaving the interpreter idle with nothing loaded. The difference is that the harness’s default “program” is built in (the main-session agent’s configuration), rather than something you must supply. A custom subagent or a <code>.claude/agents/*.md</code> definition, by contrast, <em>is</em> a separate agent, instantiated on demand, mid-session, when the already-running main agent issues a tool call for it.</p>
 <p>So typing <code>claude</code> launches the harness, and that act inherently instantiates the default agent that handles the session: <strong>harness</strong> names the engine and process; <strong>agent</strong> names the particular loop instance and configuration currently running inside it. At startup, those two come into existence together.</p>
 </section></section>
 <section>
-<section id="ai-agents-and-the-technological-singularity" class="title-slide slide level1 center" data-number="8">
-<h1><span class="header-section-number">8</span> AI Agents and the Technological Singularity</h1>
+<section id="ai-agents-and-the-technological-singularity" class="title-slide slide level1 center" data-number="9">
+<h1><span class="header-section-number">9</span> AI Agents and the Technological Singularity</h1>
 
 </section>
 <section class="slide level2">
@@ -592,8 +658,8 @@
 <p>For thoughtful perspectives on AI consciousness and intelligence, see Douglas Hofstadter’s reflections in <a href="https://www.nytimes.com/2023/07/13/opinion/ai-chatgpt-consciousness-hofstadter.html">“I Thought I Was in an AI Apocalypse. Then I Started Looking Closer.”</a></p>
 </section></section>
 <section>
-<section id="relative-advantages-of-ai-and-humans" class="title-slide slide level1 center" data-number="9">
-<h1><span class="header-section-number">9</span> Relative Advantages of AI and Humans</h1>
+<section id="relative-advantages-of-ai-and-humans" class="title-slide slide level1 center" data-number="10">
+<h1><span class="header-section-number">10</span> Relative Advantages of AI and Humans</h1>
 
 </section>
 <section class="slide level2">
@@ -733,8 +799,8 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <p>As these technologies mature, AI agents may become better at tasks requiring contextual understanding and creative problem-solving. This makes it even more important to develop strong supervision and validation skills now, so you can effectively work with increasingly capable AI systems.</p>
 </section></section>
 <section>
-<section id="how-to-work-with-coding-agents" class="title-slide slide level1 center" data-number="10">
-<h1><span class="header-section-number">10</span> How to Work with Coding Agents</h1>
+<section id="how-to-work-with-coding-agents" class="title-slide slide level1 center" data-number="11">
+<h1><span class="header-section-number">11</span> How to Work with Coding Agents</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -811,8 +877,8 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <p>For detailed instructions, see <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent">GitHub Copilot coding agent documentation</a>.</p>
 </section></section>
 <section>
-<section id="useful-prompt-formats" class="title-slide slide level1 center" data-number="11">
-<h1><span class="header-section-number">11</span> Useful Prompt Formats</h1>
+<section id="useful-prompt-formats" class="title-slide slide level1 center" data-number="12">
+<h1><span class="header-section-number">12</span> Useful Prompt Formats</h1>
 
 </section>
 <section class="slide level2">
@@ -870,8 +936,8 @@ Table&nbsp;2: Relative advantages of humans and Agents
 </ul>
 </section></section>
 <section>
-<section id="sec-ai-addressing-failing-workflows" class="title-slide slide level1 center" data-number="12">
-<h1><span class="header-section-number">12</span> Addressing Failing GitHub Actions Workflows</h1>
+<section id="sec-ai-addressing-failing-workflows" class="title-slide slide level1 center" data-number="13">
+<h1><span class="header-section-number">13</span> Addressing Failing GitHub Actions Workflows</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -916,11 +982,11 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <li><strong>Check</strong> that no new secret access or command execution has been added</li>
 <li><strong>Test</strong> in a safe environment if possible</li>
 </ol>
-<p>See <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;14</a> for more details on workflow file security.</p>
+<p>See <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;15</a> for more details on workflow file security.</p>
 </div>
 </div>
 </div>
-<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;22</a> for more guidance.</p>
+<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;23</a> for more guidance.</p>
 <h4 id="scenario-3-uncertain-which-scenario-applies">Scenario 3: Uncertain Which Scenario Applies</h4>
 <p><strong>When to use:</strong> You’re not sure whether the failure is due to code issues or workflow configuration problems.</p>
 <p><strong>Recommended approach:</strong></p>
@@ -947,14 +1013,14 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <h4 id="additional-resources">Additional Resources</h4>
 <ul>
 <li>See the <a href="https://ucd-serg.github.io/lab-manual/continuous-integration.html">UCD-SERG Lab Manual’s continuous integration chapter</a> for setting up GitHub Actions workflows</li>
-<li>See <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;14</a> and <a href="#/sec-ai-benefits-hazards" class="quarto-xref">Section&nbsp;13</a> for security considerations with workflow files</li>
-<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;22</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
+<li>See <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;15</a> and <a href="#/sec-ai-benefits-hazards" class="quarto-xref">Section&nbsp;14</a> for security considerations with workflow files</li>
+<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;23</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
 <li>See the <a href="https://docs.github.com/en/actions">GitHub Actions documentation</a> for workflow syntax and troubleshooting</li>
 </ul>
 </section></section>
 <section>
-<section id="sec-ai-benefits-hazards" class="title-slide slide level1 center" data-number="13">
-<h1><span class="header-section-number">13</span> Benefits and Hazards</h1>
+<section id="sec-ai-benefits-hazards" class="title-slide slide level1 center" data-number="14">
+<h1><span class="header-section-number">14</span> Benefits and Hazards</h1>
 
 </section>
 <section class="slide level2">
@@ -1000,8 +1066,8 @@ Table&nbsp;2: Relative advantages of humans and Agents
 </div>
 </section></section>
 <section>
-<section id="sec-ai-best-practices" class="title-slide slide level1 center" data-number="14">
-<h1><span class="header-section-number">14</span> Best Practices for Safe and Successful Use</h1>
+<section id="sec-ai-best-practices" class="title-slide slide level1 center" data-number="15">
+<h1><span class="header-section-number">15</span> Best Practices for Safe and Successful Use</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -1053,8 +1119,8 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <p>Remember: AI tools are assistants, not replacements for your expertise and judgment. The quality and correctness of your work remains your responsibility.</p>
 </section></section>
 <section>
-<section id="firewall-and-network-configuration" class="title-slide slide level1 center" data-number="15">
-<h1><span class="header-section-number">15</span> Firewall and Network Configuration</h1>
+<section id="firewall-and-network-configuration" class="title-slide slide level1 center" data-number="16">
+<h1><span class="header-section-number">16</span> Firewall and Network Configuration</h1>
 
 </section>
 <section class="slide level2">
@@ -1168,8 +1234,8 @@ Table&nbsp;2: Relative advantages of humans and Agents
 </div>
 </section></section>
 <section>
-<section id="sec-ai-offline" class="title-slide slide level1 center" data-number="16">
-<h1><span class="header-section-number">16</span> Running Coding Agents Offline</h1>
+<section id="sec-ai-offline" class="title-slide slide level1 center" data-number="17">
+<h1><span class="header-section-number">17</span> Running Coding Agents Offline</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -1408,8 +1474,8 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <p>Even with local models, avoid including raw sensitive data in prompts. Work with anonymized or synthetic data wherever possible.</p>
 </section></section>
 <section>
-<section id="sec-ai-copilot-settings" class="title-slide slide level1 center" data-number="17">
-<h1><span class="header-section-number">17</span> Configuring GitHub Copilot Settings</h1>
+<section id="sec-ai-copilot-settings" class="title-slide slide level1 center" data-number="18">
+<h1><span class="header-section-number">18</span> Configuring GitHub Copilot Settings</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -1579,7 +1645,7 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <li><em>What it does</em>: Delegate tasks to Copilot coding agent in repositories where it is enabled</li>
 <li><em>Pros</em>: Autonomous multi-file edits, can execute complex refactoring, runs tests and fixes issues</li>
 <li><em>Cons</em>: Requires careful oversight, can make unwanted changes if instructions unclear</li>
-<li><em>Recommendation</em>: <strong>Enable</strong> (see <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;14</a> for safe usage guidelines)</li>
+<li><em>Recommendation</em>: <strong>Enable</strong> (see <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;15</a> for safe usage guidelines)</li>
 </ul>
 <p><strong>Copilot Memory (Preview):</strong></p>
 <ul>
@@ -1648,11 +1714,11 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <li>Editor preview features (only if comfortable with potential instability)</li>
 <li>Automatic Copilot code review (wait until familiar with review quality)</li>
 </ul>
-<p>Following these guidelines will help establish an effective Copilot configuration. The key is to enable features that add value to your workflow while maintaining awareness that AI assistance requires validation (see <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;14</a>).</p>
+<p>Following these guidelines will help establish an effective Copilot configuration. The key is to enable features that add value to your workflow while maintaining awareness that AI assistance requires validation (see <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;15</a>).</p>
 </section></section>
 <section>
-<section id="sec-ai-byok-vscode" class="title-slide slide level1 center" data-number="18">
-<h1><span class="header-section-number">18</span> Connecting VS Code to a Custom Model Endpoint (BYOK)</h1>
+<section id="sec-ai-byok-vscode" class="title-slide slide level1 center" data-number="19">
+<h1><span class="header-section-number">19</span> Connecting VS Code to a Custom Model Endpoint (BYOK)</h1>
 
 </section>
 <section class="slide level2">
@@ -1709,8 +1775,8 @@ while the selected main agent model is BYOK.</code></pre>
 </div>
 </section></section>
 <section>
-<section id="configuring-the-agent-environment" class="title-slide slide level1 center" data-number="19">
-<h1><span class="header-section-number">19</span> Configuring the Agent Environment</h1>
+<section id="configuring-the-agent-environment" class="title-slide slide level1 center" data-number="20">
+<h1><span class="header-section-number">20</span> Configuring the Agent Environment</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -1811,8 +1877,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>For complete details, see <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment">Customizing the development environment for GitHub Copilot coding agent</a>.</p>
 </section></section>
 <section>
-<section id="sec-ai-agent-skills" class="title-slide slide level1 center" data-number="20">
-<h1><span class="header-section-number">20</span> Agent Skills</h1>
+<section id="sec-ai-agent-skills" class="title-slide slide level1 center" data-number="21">
+<h1><span class="header-section-number">21</span> Agent Skills</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -1850,8 +1916,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>The <a href="https://github.com/d-morrison/ai-config">d-morrison/ai-config</a> repository contains an example of personal Claude Code configuration, including user-level skills and slash commands, synced across machines via Git.</p>
 </section></section>
 <section>
-<section id="sec-ai-claude-cloud-env" class="title-slide slide level1 center" data-number="21">
-<h1><span class="header-section-number">21</span> Claude Code Cloud Environments</h1>
+<section id="sec-ai-claude-cloud-env" class="title-slide slide level1 center" data-number="22">
+<h1><span class="header-section-number">22</span> Claude Code Cloud Environments</h1>
 
 </section>
 <section class="slide level2">
@@ -1886,8 +1952,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>For details, see the <a href="https://code.claude.com/docs/en/claude-code-on-the-web">Claude Code on the web documentation</a> and the <a href="https://code.claude.com/docs/en/commands">slash command reference</a>.</p>
 </section></section>
 <section>
-<section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="22">
-<h1><span class="header-section-number">22</span> When to use a coding agent</h1>
+<section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="23">
+<h1><span class="header-section-number">23</span> When to use a coding agent</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -1896,8 +1962,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.</p>
 <aside><ol class="aside-footnotes"><li id="fn1"><p>2026-01-10</p></li></ol></aside></section></section>
 <section>
-<section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="23">
-<h1><span class="header-section-number">23</span> Editing with <code>.docx</code> files</h1>
+<section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="24">
+<h1><span class="header-section-number">24</span> Editing with <code>.docx</code> files</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -1933,8 +1999,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.</p>
 </section></section>
 <section>
-<section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="24">
-<h1><span class="header-section-number">24</span> Copilot Instructions for this Repository</h1>
+<section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="25">
+<h1><span class="header-section-number">25</span> Copilot Instructions for this Repository</h1>
 
 </section>
 <section class="slide level2">
@@ -1953,8 +2019,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>See this repository’s own <a href="https://github.com/d-morrison/wai/blob/main/.github/copilot-instructions.md"><code>.github/copilot-instructions.md</code></a> for a working example.</p>
 </section></section>
 <section>
-<section id="using-copilot-review-before-human-review" class="title-slide slide level1 center" data-number="25">
-<h1><span class="header-section-number">25</span> Using Copilot Review Before Human Review</h1>
+<section id="using-copilot-review-before-human-review" class="title-slide slide level1 center" data-number="26">
+<h1><span class="header-section-number">26</span> Using Copilot Review Before Human Review</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -1994,8 +2060,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.</p>
 </section></section>
 <section>
-<section id="reviewing-a-copilot-pr-you-didnt-create" class="title-slide slide level1 center" data-number="26">
-<h1><span class="header-section-number">26</span> Reviewing a Copilot PR You Didn’t Create</h1>
+<section id="reviewing-a-copilot-pr-you-didnt-create" class="title-slide slide level1 center" data-number="27">
+<h1><span class="header-section-number">27</span> Reviewing a Copilot PR You Didn’t Create</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -2081,8 +2147,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.</p>
 </section></section>
 <section>
-<section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="27">
-<h1><span class="header-section-number">27</span> Installing Claude Code on Windows</h1>
+<section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="28">
+<h1><span class="header-section-number">28</span> Installing Claude Code on Windows</h1>
 
 </section>
 <section class="slide level2 scrollable">

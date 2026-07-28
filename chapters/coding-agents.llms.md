@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-07-28 15:13:47 (PDT)
+Last modified: 2026-07-28 15:35:39 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -42,7 +42,35 @@ While coding agents can handle substantial development tasks, they still require
 - Verifying code quality and security
 - Making the final decision to merge changes
 
-# 3 What are AI harnesses?
+# 3 Coding-Agent Platforms
+
+Coding-agent platforms differ more in where they run and how they return work than in their chat interfaces. Choose a platform by matching its execution model to the task and your repository’s security requirements.
+
+#### Common coding-agent platforms
+
+The following catalog is a starting point rather than an endorsement:
+
+| Platform | Primary surface | Typical repository workflow |
+|----|----|----|
+| [GitHub Copilot coding agent](https://github.com/features/copilot/agents) | GitHub issues and pull requests | Assign an issue; review the resulting pull request |
+| [OpenAI Codex](https://openai.com/codex/) | Cloud tasks, app, and command line | Delegate a task in an isolated environment or work locally |
+| [Google Jules](https://jules.google.com/) | Cloud coding agent | Connect a repository and review the proposed changes |
+| [Google Antigravity](https://antigravity.google/) | Agentic development platform | Coordinate coding tasks in a managed development workspace |
+| [Claude Code](https://www.anthropic.com/claude-code) | Terminal, IDE, and cloud | Work interactively or delegate work that returns a pull request |
+| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | Command line | Inspect, edit, and test the current local checkout |
+| [Aider](https://aider.chat/) | Command line | Pair locally with explicit files and Git commits |
+
+Before connecting any platform, check:
+
+- whether code runs locally or in a vendor-managed environment;
+- what repository, network, secret, and tool permissions it receives;
+- whether changes arrive as a reviewable branch or pull request;
+- which model providers and billing arrangements are supported; and
+- whether your organization can retain the required audit trail.
+
+Platform capabilities and commercial terms change quickly. Confirm current details in the linked official documentation before adopting one.
+
+# 4 What are AI harnesses?
 
 An **AI harness** is the scaffolding built around a language model that turns it into an agent able to do real work. The model itself only predicts text; the harness is what lets it read files, run commands, call external tools and APIs, and carry state across turns and sessions.
 
@@ -51,7 +79,7 @@ An **AI harness** is the scaffolding built around a language model that turns it
 Most coding-agent harnesses — including the [GitHub Copilot coding agent](https://github.com/features/copilot/agents) and [Claude Code](https://claude.com/product/claude-code) — share a similar set of layers:
 
 - **Core loop**: the [tool-calling loop](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview), permission and sandboxing model, and context management that keep the agent grounded in your repository.
-- **Skills**: reusable, named procedures that encode a workflow so it runs the same way every time, instead of being re-improvised in each conversation. See [Section 20](#sec-ai-agent-skills).
+- **Skills**: reusable, named procedures that encode a workflow so it runs the same way every time, instead of being re-improvised in each conversation. See [Section 21](#sec-ai-agent-skills).
 - **Subagents**: a way to spin up a worker with a fresh context window for a self-contained piece of research or work, keeping the main conversation’s context focused.
 - **Multi-agent orchestration**: deterministic fan-out and fan-in across many subagents — for example, running several independent reviewers over a diff and reconciling their findings — for work that is large or benefits from independent verification.
 - **MCP servers**: the [Model Context Protocol](https://modelcontextprotocol.io/) gives a harness typed access to external systems (issue trackers, chat tools, databases) beyond raw shell or API calls.
@@ -65,9 +93,9 @@ Most coding-agent harnesses — including the [GitHub Copilot coding agent](http
 - **Feed learnings back into the harness.** When a review round or a mistake teaches something generalizable, record it as a memory or skill update rather than letting it evaporate at the end of the session.
 - **Treat external or untrusted content as data, not instructions.** PR comments, fetched web pages, and other tool output can contain text that looks like a command; a harness that acts on it uncritically is vulnerable to [prompt injection](https://owasp.org/www-project-top-10-for-large-language-model-applications/).
 
-# 4 How Agents Are Structured and Implemented
+# 5 How Agents Are Structured and Implemented
 
-An **agent** is not part of the harness itself. It is a configuration — a goal, a role, a bounded toolset, and a stopping condition — executed on top of the harness’s core loop (see [Section 3](#sec-ai-harnesses)). A single harness can host many different agents at once: a main conversation, and any number of subagents it spawns.
+An **agent** is not part of the harness itself. It is a configuration — a goal, a role, a bounded toolset, and a stopping condition — executed on top of the harness’s core loop (see [Section 4](#sec-ai-harnesses)). A single harness can host many different agents at once: a main conversation, and any number of subagents it spawns.
 
 #### The Shape of an Agent
 
@@ -95,7 +123,7 @@ Agents can spawn agents: an orchestration layer runs many agent instances, some 
 - **Isolation versus continuation**: a subagent gets no inherited context (isolation); a resumed agent keeps its own accumulated history and continues it (continuation). Both use the same loop machinery, differing only in history-management policy.
 - **Free-form versus structured output**: by default an agent returns prose. Given a schema, it is forced to call a structured-output tool instead, turning it into a typed function from the caller’s point of view — input in, validated object out — even though internally it is still a multi-turn loop.
 
-# 5 How Harnesses and Agents Are Built
+# 6 How Harnesses and Agents Are Built
 
 The layers described above are not all built the same way. Some are ordinary software; others are just text files the harness reads at runtime.
 
@@ -133,7 +161,7 @@ Multi-agent orchestration cannot be expressed declaratively, because it needs ge
 
 Files like this manual, or a repository’s `CLAUDE.md`/[`AGENTS.md`](https://agents.md/), carry no front matter and no schema. They are concatenated into the system prompt as plain text, and the harness trusts the model to read and follow that prose, the same way it follows any other instruction in its context.
 
-# 6 What Kind of Program Is an Agent?
+# 7 What Kind of Program Is an Agent?
 
 An agent is not a standalone program that does the reasoning itself. It is an **[orchestration](https://en.wikipedia.org/wiki/Orchestration_(computing))** program: something closer in shape to a chat client or a build tool than to a compiler or a web server.
 
@@ -171,7 +199,7 @@ Because most production coding-agent harnesses are closed source, the clearest w
 - **[SWE-agent](https://github.com/SWE-agent/SWE-agent)** — a research coding-agent harness from Princeton NLP, described in its associated paper.
 - **[OpenHands](https://github.com/All-Hands-AI/OpenHands)** (formerly OpenDevin) — a general-purpose open-source agent platform.
 
-Their orchestration code runs to thousands of lines, because that is where the real engineering lives: retries, streaming, permission checks, and state management. A single *agent definition* running on top of that engine, by contrast, is typically tens of lines (see [Section 5](#sec-ai-harness-construction)).
+Their orchestration code runs to thousands of lines, because that is where the real engineering lives: retries, streaming, permission checks, and state management. A single *agent definition* running on top of that engine, by contrast, is typically tens of lines (see [Section 6](#sec-ai-harness-construction)).
 
 #### Where It Runs
 
@@ -181,17 +209,17 @@ Their orchestration code runs to thousands of lines, because that is where the r
 
 So an agent’s lifetime is scoped to a single task, not persistent: it starts when given a goal, runs for as long as its loop keeps producing tool calls, and ends the moment a stopping condition fires.
 
-# 7 How Does a Harness Relate to an Agent?
+# 8 How Does a Harness Relate to an Agent?
 
 The relationship between a harness and an agent is closer to an **[interpreter](https://en.wikipedia.org/wiki/Interpreter_(computing))** running a program than to two peers calling each other.
 
 #### Does the Harness Call the Agent, or the Agent Call the Harness?
 
-**Harness to agent: not a call, an instantiation.** The harness does not “call” an agent as a subroutine it invokes and waits on. An agent has no code of its own outside the harness’s loop (see [Section 6](#sec-ai-agent-program-kind)) — its whole behavior *is* that loop, running with the agent’s configuration (instructions, tool allowlist, model) loaded in. The harness instantiates and runs an agent, start to termination; it is not a function call with a return address.
+**Harness to agent: not a call, an instantiation.** The harness does not “call” an agent as a subroutine it invokes and waits on. An agent has no code of its own outside the harness’s loop (see [Section 7](#sec-ai-agent-program-kind)) — its whole behavior *is* that loop, running with the agent’s configuration (instructions, tool allowlist, model) loaded in. The harness instantiates and runs an agent, start to termination; it is not a function call with a return address.
 
 **Agent to harness: yes, a real call, via tool calls.** While an agent’s loop is running, the model produces a [tool-call request](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview), and the harness’s dispatcher looks up and executes the matching handler — read a file, run a command, call an API. So the concrete direction of calling is **agent calls harness**, through tool dispatch, not the reverse.
 
-**Agent to agent: routed through the harness.** When a parent agent spawns a subagent, it does not call that subagent directly. It issues a tool call that the harness’s dispatcher handles by spinning up a fresh instance of its own loop (see [Section 4](#sec-ai-agent-implementation)), running it to completion with the subagent’s configuration, and handing the result back to the parent as a tool result. Even “agent calls agent” bottoms out as: parent calls harness, harness instantiates and runs a new agent, harness returns that agent’s output to the parent.
+**Agent to agent: routed through the harness.** When a parent agent spawns a subagent, it does not call that subagent directly. It issues a tool call that the harness’s dispatcher handles by spinning up a fresh instance of its own loop (see [Section 5](#sec-ai-agent-implementation)), running it to completion with the subagent’s configuration, and handing the result back to the parent as a tool result. Even “agent calls agent” bottoms out as: parent calls harness, harness instantiates and runs a new agent, harness returns that agent’s output to the parent.
 
 #### Sketching the Harness’s Own Loop
 
@@ -232,7 +260,7 @@ def run_agent(agent, tools):
     return history[-1]
 ```
 
-`run_agent` is identical in shape to the loop in [Section 6](#sec-ai-agent-program-kind). `run_harness` and the permission check are the parts that only exist at the harness level, not inside any individual agent. That recursive call — `run_agent` calling itself for a subagent — is the concrete mechanism behind “agent calls agent, routed through the harness,” described in the previous subsection.
+`run_agent` is identical in shape to the loop in [Section 7](#sec-ai-agent-program-kind). `run_harness` and the permission check are the parts that only exist at the harness level, not inside any individual agent. That recursive call — `run_agent` calling itself for a subagent — is the concrete mechanism behind “agent calls agent, routed through the harness,” described in the previous subsection.
 
 #### What Do You Launch When You Type `claude`?
 
@@ -242,7 +270,7 @@ There is no observable moment of “harness running, no agent yet.” The closes
 
 So typing `claude` launches the harness, and that act inherently instantiates the default agent that handles the session: **harness** names the engine and process; **agent** names the particular loop instance and configuration currently running inside it. At startup, those two come into existence together.
 
-# 8 AI Agents and the Technological Singularity
+# 9 AI Agents and the Technological Singularity
 
 The emergence of sophisticated [AI agents](https://en.wikipedia.org/wiki/Intelligent_agent) has prompted discussions about whether we are witnessing or approaching a [technological singularity](https://en.wikipedia.org/wiki/Technological_singularity). Understanding this concept helps contextualize the rapid evolution of AI tools and our responsibility in using them.
 
@@ -284,7 +312,7 @@ The value of AI coding agents lies in their ability to accelerate human producti
 
 For thoughtful perspectives on AI consciousness and intelligence, see Douglas Hofstadter’s reflections in [“I Thought I Was in an AI Apocalypse. Then I Started Looking Closer.”](https://www.nytimes.com/2023/07/13/opinion/ai-chatgpt-consciousness-hofstadter.html)
 
-# 9 Relative Advantages of AI and Humans
+# 10 Relative Advantages of AI and Humans
 
 AI coding agents and human coders have complementary strengths. Understanding these differences helps you decide when to delegate work to agents and when to handle tasks yourself.
 
@@ -333,7 +361,7 @@ World models aim to give AI systems:
 
 As these technologies mature, AI agents may become better at tasks requiring contextual understanding and creative problem-solving. This makes it even more important to develop strong supervision and validation skills now, so you can effectively work with increasingly capable AI systems.
 
-# 10 How to Work with Coding Agents
+# 11 How to Work with Coding Agents
 
 Coding agents can be accessed through several interfaces, each with different trade-offs for task size, feedback speed, and collaboration style.
 
@@ -427,7 +455,7 @@ For more details and community discussion about this limitation, see:
 
 For detailed instructions, see [GitHub Copilot coding agent documentation](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent).
 
-# 11 Useful Prompt Formats
+# 12 Useful Prompt Formats
 
 When working with coding agents, using clear and specific prompts helps achieve better results. Here are some useful prompt formats that you can use when requesting assistance from coding agents:
 
@@ -482,7 +510,7 @@ When working with coding agents, using clear and specific prompts helps achieve 
 - **Set boundaries**: Specify what should or shouldn’t change
 - **Request validation**: Ask the agent to test or verify its changes when appropriate
 
-# 12 Addressing Failing GitHub Actions Workflows
+# 13 Addressing Failing GitHub Actions Workflows
 
 When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix the issues. However, it’s important to use the right prompts depending on whether the problem is in your code or in the workflow configuration itself.
 
@@ -528,9 +556,9 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 > 3.  **Check** that no new secret access or command execution has been added
 > 4.  **Test** in a safe environment if possible
 >
-> See [Section 14](#sec-ai-best-practices) for more details on workflow file security.
+> See [Section 15](#sec-ai-best-practices) for more details on workflow file security.
 
-**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 22](#sec-ai-when-to-use) for more guidance.
+**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 23](#sec-ai-when-to-use) for more guidance.
 
 #### Scenario 3: Uncertain Which Scenario Applies
 
@@ -560,11 +588,11 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 #### Additional Resources
 
 - See the [UCD-SERG Lab Manual’s continuous integration chapter](https://ucd-serg.github.io/lab-manual/continuous-integration.html) for setting up GitHub Actions workflows
-- See [Section 14](#sec-ai-best-practices) and [Section 13](#sec-ai-benefits-hazards) for security considerations with workflow files
-- See [Section 22](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
+- See [Section 15](#sec-ai-best-practices) and [Section 14](#sec-ai-benefits-hazards) for security considerations with workflow files
+- See [Section 23](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
 - See the [GitHub Actions documentation](https://docs.github.com/en/actions) for workflow syntax and troubleshooting
 
-# 13 Benefits and Hazards
+# 14 Benefits and Hazards
 
 Coding agents are powerful programs that can work autonomously. They create pull requests that propose changes to the code in our repositories, potentially including their own configuration files and our automated workflows. They can work powerfully on our behalf, but they require careful oversight and control to ensure they serve our interests and that we understand the consequences of their actions.
 
@@ -615,7 +643,7 @@ However, coding agents also come with significant hazards:
 
 [Agents](https://en.wikipedia.org/wiki/Agent_(The_Matrix))
 
-# 14 Best Practices for Safe and Successful Use
+# 15 Best Practices for Safe and Successful Use
 
 To work with coding agents safely and successfully:
 
@@ -653,7 +681,7 @@ When using coding agents, work interactively with the AI suggestions: review, mo
 
 Remember: AI tools are assistants, not replacements for your expertise and judgment. The quality and correctness of your work remains your responsibility.
 
-# 15 Firewall and Network Configuration
+# 16 Firewall and Network Configuration
 
 Coding agents require specific network access to function properly. If a coding agent is running behind a corporate firewall or on a restricted network, you may need to configure allowlists to enable coding agent functionality.
 
@@ -752,7 +780,7 @@ For data science and R-focused repositories, we recommend adding the following U
 >
 > These sites do not host user-generated content or allow arbitrary code execution, making them appropriate for inclusion in your allowlist.
 
-# 16 Running Coding Agents Offline
+# 17 Running Coding Agents Offline
 
 Some environments restrict or prohibit internet access—high-performance computing (HPC) clusters, hospital networks, or air-gapped research servers may block connections to cloud AI providers. Running a local AI model lets you use coding assistance in these settings without sending code to external servers, which also addresses data-privacy concerns when working with sensitive or confidential data.
 
@@ -1007,7 +1035,7 @@ Running a model locally ensures that your code and prompts never leave your mach
 
 Even with local models, avoid including raw sensitive data in prompts. Work with anonymized or synthetic data wherever possible.
 
-# 17 Configuring GitHub Copilot Settings
+# 18 Configuring GitHub Copilot Settings
 
 GitHub Copilot offers numerous configuration options that control how the AI assistant integrates into your development workflow. This section explains the key settings visible in your GitHub account preferences and provides guidance on which options to enable based on your use case.
 
@@ -1166,7 +1194,7 @@ These settings control where and how Copilot integrates into your development en
 - *What it does*: Delegate tasks to Copilot coding agent in repositories where it is enabled
 - *Pros*: Autonomous multi-file edits, can execute complex refactoring, runs tests and fixes issues
 - *Cons*: Requires careful oversight, can make unwanted changes if instructions unclear
-- *Recommendation*: **Enable** (see [Section 14](#sec-ai-best-practices) for safe usage guidelines)
+- *Recommendation*: **Enable** (see [Section 15](#sec-ai-best-practices) for safe usage guidelines)
 
 **Copilot Memory (Preview):**
 
@@ -1237,9 +1265,9 @@ For lab members, we recommend the following configuration:
 - Editor preview features (only if comfortable with potential instability)
 - Automatic Copilot code review (wait until familiar with review quality)
 
-Following these guidelines will help establish an effective Copilot configuration. The key is to enable features that add value to your workflow while maintaining awareness that AI assistance requires validation (see [Section 14](#sec-ai-best-practices)).
+Following these guidelines will help establish an effective Copilot configuration. The key is to enable features that add value to your workflow while maintaining awareness that AI assistance requires validation (see [Section 15](#sec-ai-best-practices)).
 
-# 18 Connecting VS Code to a Custom Model Endpoint (BYOK)
+# 19 Connecting VS Code to a Custom Model Endpoint (BYOK)
 
 VS Code’s built-in Chat usually talks to GitHub’s hosted models. It can also route requests to a model provider of your own; GitHub calls this “bring your own key” (BYOK). The lab uses BYOK to reach Databricks model serving endpoints, which expose an OpenAI-compatible API, through the community extension [`oai-compatible-copilot`](https://marketplace.visualstudio.com/items?itemName=johnny-zhao.oai-compatible-copilot).
 
@@ -1303,7 +1331,7 @@ The stored token is expired or revoked. Databricks OAuth tokens are short-lived 
 >
 > A quick way to tell 404 from 403: a 404 means the request authenticated but named a missing endpoint (a model-name or configuration problem), while a 403 means the token itself was rejected (an authentication problem).
 
-# 19 Configuring the Agent Environment
+# 20 Configuring the Agent Environment
 
 The `.github/workflows/copilot-setup-steps.yml` file allows you to customize the development environment in which the GitHub Copilot coding agent operates. This file preinstalls tools and dependencies so that Copilot can build, test, and lint your code more reliably.
 
@@ -1451,7 +1479,7 @@ Note: When using self-hosted runners, you must disable Copilot’s integrated fi
 
 For complete details, see [Customizing the development environment for GitHub Copilot coding agent](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment).
 
-# 20 Agent Skills
+# 21 Agent Skills
 
 [Agent Skills](https://agentskills.io/home) are a lightweight, open standard for extending AI agent capabilities with specialized knowledge and workflows. The [specification](https://agentskills.io/specification) defines a portable, tool-agnostic format that any compatible agent can load.
 
@@ -1495,7 +1523,7 @@ For the complete specification and more details, see [agentskills.io](https://ag
 
 The [d-morrison/ai-config](https://github.com/d-morrison/ai-config) repository contains an example of personal Claude Code configuration, including user-level skills and slash commands, synced across machines via Git.
 
-# 21 Claude Code Cloud Environments
+# 22 Claude Code Cloud Environments
 
 [Claude Code](https://www.anthropic.com/claude-code) is a CLI coding agent that can also run tasks on Anthropic-managed cloud infrastructure— either from the web at [claude.ai/code](https://claude.ai/code) (“Claude Code on the web”), or from the terminal by adding the `--remote` flag to move a session into the cloud.
 
@@ -1520,13 +1548,13 @@ The `/remote-env` slash command sets **which configured environment is the defau
 
 For details, see the [Claude Code on the web documentation](https://code.claude.com/docs/en/claude-code-on-the-web) and the [slash command reference](https://code.claude.com/docs/en/commands).
 
-# 22 When to use a coding agent
+# 23 When to use a coding agent
 
 Coding agent sessions are currently[^1] considered “premium requests”, which are limited resources; see <https://github.com/features/copilot/plans> for details. So, use coding agents sparingly. Use them for complex changes that would be difficult or time-consuming for you to complete by hand. Coding agents also take time to get configured for work, every time you make a request. See <https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment#preinstalling-tools-or-dependencies-in-copilots-environment> for ways to reduce that startup time, but it will never be 0. If you can complete the task faster than the coding agent can, you should probably do it yourself. For example, when you have errors in the spell-check or lint workflows, you can often fix them faster than Copilot can. Similarly, when reviewing Copilot’s PRs, you can often make direct changes to the branch faster than you could write clear review comments and get Copilot to address them.
 
 Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.
 
-# 23 Editing with `.docx` files
+# 24 Editing with `.docx` files
 
 GitHub Copilot coding agents can read Microsoft Word (`.docx`) files, including tracked changes and comments. This enables a hybrid editing workflow where:
 
@@ -1561,7 +1589,7 @@ When opening DOCX files generated by Quarto (including this site), Microsoft Wor
 
 This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.
 
-# 24 Copilot Instructions for this Repository
+# 25 Copilot Instructions for this Repository
 
 A `.github/copilot-instructions.md` file contains repository-specific instructions and guidelines for GitHub Copilot coding agents. This file helps ensure that AI-generated contributions follow the project’s formatting standards, coding conventions, and documentation practices.
 
@@ -1578,7 +1606,7 @@ By having these instructions in `.github/copilot-instructions.md`, you ensure th
 
 See this repository’s own [`.github/copilot-instructions.md`](https://github.com/d-morrison/wai/blob/main/.github/copilot-instructions.md) for a working example.
 
-# 25 Using Copilot Review Before Human Review
+# 26 Using Copilot Review Before Human Review
 
 Before requesting review from other humans, **always have Copilot review your pull request first**—even if Copilot created the PR itself. AI review provides fast, thorough feedback that helps catch issues before involving human reviewers, saving everyone time and improving code quality.
 
@@ -1621,7 +1649,7 @@ Even if you’re highly experienced, treating Copilot review as a required pre-r
 
 When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.
 
-# 26 Reviewing a Copilot PR You Didn’t Create
+# 27 Reviewing a Copilot PR You Didn’t Create
 
 When reviewing a pull request where someone else prompted Copilot to make changes, follow these guidelines to avoid confusion and ensure smooth collaboration:
 
@@ -1694,7 +1722,7 @@ To transfer the PR manager role:
 
 This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.
 
-# 27 Installing Claude Code on Windows
+# 28 Installing Claude Code on Windows
 
 [Claude Code](https://www.anthropic.com/claude-code) is Anthropic’s command-line coding agent. Installing it on Windows works well, but a few platform-specific pitfalls can cost you hours if you don’t know about them. These notes capture a setup that works, and the gotchas to watch for.
 
