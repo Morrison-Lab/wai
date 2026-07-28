@@ -21,6 +21,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/what-are-ai-coding-agents.qmd >}}
 
+# Coding-Agent Platforms {#sec-ai-coding-agent-platforms}
+
+{{< include ai-tools/coding-agent-platforms.qmd >}}
+
 # What are AI harnesses? {#sec-ai-harnesses}
 
 {{< include ai-tools/what-are-ai-harnesses.qmd >}}
