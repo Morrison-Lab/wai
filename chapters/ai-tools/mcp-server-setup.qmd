@@ -121,7 +121,7 @@ reproduces the bare-`Bearer ` bug you just finished diagnosing.
 #### Toolsets are opt-in, and the default may omit what you need
 
 A server does not necessarily expose everything it can do.
-GitHub's exposes a default group,
+GitHub's server exposes a default group,
 and that default carries **no continuous-integration access at all** ---
 no workflow runs, no job logs, no re-run trigger.
 
@@ -134,11 +134,14 @@ Request the extra group explicitly:
 GITHUB_TOOLSETS=default,actions
 ```
 
-Verify the change rather than assuming it,
-and confirm it is *additive* ---
-a toolset selection replaces the default rather than extending it,
-so an incorrectly written value can silently *remove* tools.
-Compare the tool list before and after.
+Note that the selection **replaces** the default rather than extending it,
+which is why the value above names `default` explicitly.
+Writing `actions` alone would silently trade away every default tool
+for the four you asked for ---
+a net *loss* that looks like a successful configuration change.
+
+So compare the tool list before and after,
+and confirm the count went up rather than sideways.
 
 #### Verify with a real call, and expect to restart
 
