@@ -182,8 +182,21 @@ jobs:
             it, and the PR conversation is where the latest review lands
             anyway). Omit this draft when the PR is clean (nothing to fix).
 
-          # `gh pr comment` is narrowed to `create` so the reviewer can post
-          # a top-level summary but can't edit or delete prior review
-          # comments (each run leaves a fresh comment; history stays).
+          # `gh pr comment` must NOT be narrowed to `create` -- there is no
+          # such subcommand. `gh pr comment` takes a number and flags
+          # (`gh pr comment <n> --body ...`), so `Bash(gh pr comment create:*)`
+          # matches nothing the reviewer can actually run: it silently blocked
+          # posting entirely rather than restricting it. The run still goes
+          # GREEN, which is worse than a red check because nothing signals the
+          # review is missing. Observed on #25: `permission_denials_count: 1`,
+          # `num_turns: 5`, $0.21 spent, zero comments posted.
+          #
+          # The original intent -- let the reviewer post a summary but not
+          # edit or delete earlier ones (`--edit-last`, `--delete-last`) --
+          # is sound, but Bash permission patterns match a command prefix and
+          # cannot exclude a later flag, so it is not expressible this way.
+          # Nothing is lost by widening: the narrow form granted no posting
+          # AND no protection, since a reviewer that cannot post cannot edit
+          # or delete either. See #28.
           claude_args: |
-            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment create:*)"
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*)"
