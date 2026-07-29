@@ -1,0 +1,168 @@
+The [Model Context Protocol](https://modelcontextprotocol.io/) (MCP)
+is how a harness gains typed access to external systems.
+Configuring a server is usually a one-line command.
+Diagnosing one that *silently* isn't working is the part worth writing down,
+because the common failure mode produces no error at all ---
+only a quiet absence of tools you assumed were there.
+
+::: {.callout-note}
+These notes were written in July 2026,
+from a real diagnosis on a Linux machine.
+As with the rest of this chapter,
+treat the specifics with caution ---
+harness internals and vendor defaults change quickly.
+:::
+
+#### Installed is not registered
+
+A server binary sitting on disk is not available to your agent.
+The harness knows only what its configuration declares,
+so installing
+[`github-mcp-server`](https://github.com/github/github-mcp-server)
+and *registering* it are two separate acts.
+Skipping the second is easy to miss,
+because the first one felt like the hard part.
+
+The check is one command:
+
+```sh
+claude mcp list
+```
+
+#### A broken server can occupy the name your working one wanted
+
+This is the failure worth knowing about,
+and it is nastier than a missing entry,
+because `claude mcp list` shows you something that looks right.
+
+Plugin marketplaces can register servers of their own.
+An official GitHub plugin may install a **remote** server
+under exactly the name you meant to give your **local** one.
+The listing then reports a `github` server that is not your setup at all,
+and the local binary you installed goes unregistered and unnoticed.
+
+So read the listing for the *transport and address*,
+not just the name:
+
+```
+plugin:github:github: https://api.githubcopilot.com/mcp/ (HTTP) - X Failed to
+connect - HTTP 400: ... Authorization header is badly formatted
+```
+
+An `(HTTP)` entry pointing at a vendor URL is a remote server.
+A local one shows a command path instead.
+
+#### 400 and 401 mean different things
+
+The status code is the whole diagnosis here,
+and it is easy to skim past.
+
+The configuration a plugin ships may hardcode a credential placeholder:
+
+```json
+{"headers": {"Authorization": "Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}"}}
+```
+
+If that variable has no value when the harness starts,
+the header goes out as a bare `Bearer ` with nothing after it.
+That is **malformed**, not **unauthorized**:
+
+- **401** means the server read your token and rejected it ---
+  a real credential problem: expired, wrong scopes, wrong account.
+- **400** means no token was ever substituted ---
+  a *configuration* problem, and no amount of re-issuing tokens will fix it.
+
+Chasing a 400 as though it were a 401
+sends you to the token-minting page for a problem that lives in a config file.
+
+#### Supply credentials without storing a token
+
+The obvious registration bakes a token straight into harness config:
+
+```sh
+claude mcp add github -e GITHUB_PERSONAL_ACCESS_TOKEN=<pat> -- <server> stdio
+```
+
+That writes a live credential to a config file in plain text,
+and pins you to one token that will eventually expire.
+
+A launch wrapper avoids both.
+It reads the credential at start time from a tool that already holds one,
+so nothing is stored
+and the server follows whatever account you are currently logged in as:
+
+```sh
+#!/bin/sh
+set -eu
+
+GITHUB_TOOLSETS="${GITHUB_TOOLSETS:-default,actions}"
+export GITHUB_TOOLSETS
+
+GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token)"
+if [ -z "$GITHUB_PERSONAL_ACCESS_TOKEN" ]; then
+  echo "empty token; run 'gh auth login'" >&2
+  exit 1
+fi
+export GITHUB_PERSONAL_ACCESS_TOKEN
+
+exec "$HOME/.local/bin/github-mcp-server" stdio "$@"
+```
+
+Register the wrapper rather than the binary:
+
+```sh
+claude mcp add --scope user github -- ~/.local/bin/github-mcp-server-stdio
+```
+
+Note the explicit failure when the token comes back empty.
+A wrapper that silently exports an empty string
+reproduces the bare-`Bearer ` bug you just finished diagnosing.
+
+#### Toolsets are opt-in, and the default may omit what you need
+
+A server does not necessarily expose everything it can do.
+GitHub's exposes a default group,
+and that default carries **no continuous-integration access at all** ---
+no workflow runs, no job logs, no re-run trigger.
+
+If your workflow involves driving pull requests to a clean state,
+that omission matters,
+because reading check status is most of the job.
+Request the extra group explicitly:
+
+```sh
+GITHUB_TOOLSETS=default,actions
+```
+
+Verify the change rather than assuming it,
+and confirm it is *additive* ---
+a toolset selection replaces the default rather than extending it,
+so an incorrectly written value can silently *remove* tools.
+Compare the tool list before and after.
+
+#### Verify with a real call, and expect to restart
+
+Two habits close this out.
+
+**Verify by calling, not by reading a list.**
+A tool appearing in the registry proves the harness parsed a config file.
+It does not prove the server started,
+authenticated,
+or can reach the API.
+One cheap identity call plus one read
+(for GitHub: `get_me`, then listing pull requests on a repo you know)
+proves the whole path end to end.
+
+**Expect the tools to be missing until you restart.**
+MCP servers connect when a session starts,
+so a server registered mid-session is inert for the rest of it.
+This is a common false alarm:
+the registration worked,
+and the tools genuinely are not there yet.
+
+Finally, note which new tools can *write*.
+A re-run or dispatch tool can trigger CI,
+and permissive permission modes will not prompt before it does.
+Treat those the way you would treat a merge ---
+something a human authorizes,
+not something an agent does in passing.

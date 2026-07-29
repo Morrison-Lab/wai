@@ -125,6 +125,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/installing-claude-code-windows.qmd >}}
 
+# Setting up MCP servers {#sec-ai-mcp-server-setup}
+
+{{< include ai-tools/mcp-server-setup.qmd >}}
+
 # References {.unnumbered}
 
 ::: {#refs}
