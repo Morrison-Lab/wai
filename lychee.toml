@@ -29,4 +29,9 @@ exclude = [
   "https://127.0.0.1.*",
   # quarto.org is a trusted site but may be unreachable from CI runners
   "https://quarto.org/.*",
+  # An authenticated MCP API endpoint, quoted as sample `claude mcp list`
+  # output in chapters/ai-tools/mcp-server-setup.qmd. It is not a link a
+  # reader follows, and 401 is its correct reply to an unauthenticated
+  # request, so there is nothing here to fix by editing the URL.
+  "https://api.githubcopilot.com/mcp/?.*",
 ]
