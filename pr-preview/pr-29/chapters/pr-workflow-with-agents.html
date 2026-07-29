@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Pull-Request Workflow with Agents – Working with AI</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-aced932c6eb97d642153b8e218288f9f.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-aced932c6eb97d642153b8e218288f9f.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-aced932c6eb97d642153b8e218288f9f.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-b8f6ca1bdf893ce31028d1d7b4695d0b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-49e631b100ec914cbc6cd41fc8e6038e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-b8f6ca1bdf893ce31028d1d7b4695d0b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+div.callout-exm.callout {
+  border-left-color: #6A1B9A;
+}
+div.callout-exm.callout-style-default .callout-header {
+  background-color: rgba(106, 27, 154, 0.13);
+}
+div.callout-exm .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-exm.callout-style-default .callout-icon::before, div.callout-exm.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%236A1B9A" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+div.callout-cor.callout {
+  border-left-color: #00838F;
+}
+div.callout-cor.callout-style-default .callout-header {
+  background-color: rgba(0, 131, 143, 0.13);
+}
+div.callout-cor .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-cor.callout-style-default .callout-icon::before, div.callout-cor.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%2300838F" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+div.callout-prp.callout {
+  border-left-color: #827717;
+}
+div.callout-prp.callout-style-default .callout-header {
+  background-color: rgba(130, 119, 23, 0.13);
+}
+div.callout-prp .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-prp.callout-style-default .callout-icon::before, div.callout-prp.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23827717" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+div.callout-solution.callout {
+  border-left-color: #4E342E;
+}
+div.callout-solution.callout-style-default .callout-header {
+  background-color: rgba(78, 52, 46, 0.13);
+}
+div.callout-solution .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-solution.callout-style-default .callout-icon::before, div.callout-solution.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%234E342E" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+div.callout-def.callout {
+  border-left-color: #1B5E20;
+}
+div.callout-def.callout-style-default .callout-header {
+  background-color: rgba(27, 94, 32, 0.13);
+}
+div.callout-def .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-def.callout-style-default .callout-icon::before, div.callout-def.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%231B5E20" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+div.callout-remark.callout {
+  border-left-color: #AD1457;
+}
+div.callout-remark.callout-style-default .callout-header {
+  background-color: rgba(173, 20, 87, 0.13);
+}
+div.callout-remark .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-remark.callout-style-default .callout-icon::before, div.callout-remark.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23AD1457" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+div.callout-exr.callout {
+  border-left-color: #FFA500;
+}
+div.callout-exr.callout-style-default .callout-header {
+  background-color: rgba(255, 165, 0, 0.13);
+}
+div.callout-exr .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-exr.callout-style-default .callout-icon::before, div.callout-exr.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23FFA500" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+div.callout-lem.callout {
+  border-left-color: #1565C0;
+}
+div.callout-lem.callout-style-default .callout-header {
+  background-color: rgba(21, 101, 192, 0.13);
+}
+div.callout-lem .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-lem.callout-style-default .callout-icon::before, div.callout-lem.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%231565C0" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+div.callout-proof.callout {
+  border-left-color: #37474F;
+}
+div.callout-proof.callout-style-default .callout-header {
+  background-color: rgba(55, 71, 79, 0.13);
+}
+div.callout-proof .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-proof.callout-style-default .callout-icon::before, div.callout-proof.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%2337474F" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+div.callout-cnj.callout {
+  border-left-color: #558B2F;
+}
+div.callout-cnj.callout-style-default .callout-header {
+  background-color: rgba(85, 139, 47, 0.13);
+}
+div.callout-cnj .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-cnj.callout-style-default .callout-icon::before, div.callout-cnj.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23558B2F" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+</style>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Working with AI</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-chapters" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Chapters</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-chapters">    
+        <li>
+    <a class="dropdown-item" href="../chapters/ai-use-policies.html">
+ <span class="dropdown-text">Policies for Using AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../chapters/coding-agents.html">
+ <span class="dropdown-text">Coding Agents</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../chapters/pr-workflow-with-agents.html">
+ <span class="dropdown-text">Pull-Request Workflow with Agents</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/d-morrison/wai"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#file-an-issue-before-starting" id="toc-file-an-issue-before-starting" class="nav-link active" data-scroll-target="#file-an-issue-before-starting"><span class="header-section-number">1</span> File an Issue Before Starting</a></li>
+  <li><a href="#claim-a-pr-or-issue-before-working-on-it" id="toc-claim-a-pr-or-issue-before-working-on-it" class="nav-link" data-scroll-target="#claim-a-pr-or-issue-before-working-on-it"><span class="header-section-number">2</span> Claim a PR or Issue Before Working on It</a></li>
+  <li><a href="#keep-your-branch-synced-with-main" id="toc-keep-your-branch-synced-with-main" class="nav-link" data-scroll-target="#keep-your-branch-synced-with-main"><span class="header-section-number">3</span> Keep Your Branch Synced with Main</a></li>
+  <li><a href="#driving-a-pull-request-to-clean" id="toc-driving-a-pull-request-to-clean" class="nav-link" data-scroll-target="#driving-a-pull-request-to-clean"><span class="header-section-number">4</span> Driving a Pull Request to Clean</a></li>
+  <li><a href="#sec-fully-clean" id="toc-sec-fully-clean" class="nav-link" data-scroll-target="#sec-fully-clean"><span class="header-section-number">5</span> What “Fully Clean” Means</a></li>
+  <li><a href="#address-every-in-scope-review-comment" id="toc-address-every-in-scope-review-comment" class="nav-link" data-scroll-target="#address-every-in-scope-review-comment"><span class="header-section-number">6</span> Address Every In-Scope Review Comment</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/d-morrison/wai/edit/main/chapters/pr-workflow-with-agents.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/d-morrison/wai/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/d-morrison/wai/blob/main/chapters/pr-workflow-with-agents.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="pr-workflow-with-agents-slides.html"><i class="bi bi-file-slides"></i>RevealJS</a></li><li><a href="pr-workflow-with-agents-handout.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="pr-workflow-with-agents.docx"><i class="bi bi-file-word"></i>MS Word</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Pull-Request Workflow with Agents</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">Last modified: <mark class="preview-text-changed">2026-07-29</mark> <mark class="preview-text-changed">11:49:52</mark> (PDT)</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>The practices below apply whether you are driving an agent’s work or doing the work yourself. They keep parallel sessions from colliding and keep a pull request moving toward a clean, mergeable state.</p>
+<section id="file-an-issue-before-starting" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> File an Issue Before Starting</h1>
+<p>When starting a <strong>new</strong> piece of work, go <strong>issue-first</strong>: before branching, editing, or opening a PR, make sure a tracking issue exists. Search the tracker first; if no open issue covers the task, <strong>file one</strong> (<code>gh issue create</code> / <code>glab issue create</code>), then proceed. Never jump straight into a PR without a tracking issue behind it.</p>
+<p>The issue is the durable record of intent, scope, and “done” criteria — it gives reviewers context, lets the PR auto-close it via <code>Closes #N</code>, and keeps the work discoverable even if the PR stalls. Skip only when the task is already tracked by an open issue.</p>
+<p>When the issue is a <strong>bug report</strong>, include a minimal reproducible example (a reprex — <a href="https://reprex.tidyverse.org/" class="uri">https://reprex.tidyverse.org/</a>) whenever you can. A reprex is what a maintainer needs to confirm and fix the bug, and it’s what they’ll ask for anyway, so providing it up front saves a round trip. The <code>reprexes</code> skill helps reduce the problem to a minimal, self-contained example.</p>
+<p>When filing an issue that contains a list of independent subissues, file each subissue as a child issue linked under the parent (GitHub sub-issues feature: <code>mcp__github__sub_issue_write</code> in remote sessions, or <code>gh api</code> with the sub-issues endpoint in local sessions).</p>
+</section>
+<section id="claim-a-pr-or-issue-before-working-on-it" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Claim a PR or Issue Before Working on It</h1>
+<p>Before starting a work session on a GitHub PR or issue — i.e.&nbsp;before fetching the branch, making edits, or invoking an automated review cycle — post a brief comment on the PR/issue so other people and any automated review bots know not to start a conflicting parallel session.</p>
+<p>Use:</p>
+<pre><code>gh pr comment &lt;N&gt; --body "Working on this --- paws off until I'm done."
+gh issue comment &lt;N&gt; --body "Working on this --- paws off until I'm done."</code></pre>
+<p>Then proceed with the work. After the session ends (PR merged, issue closed, or work otherwise paused), follow up with a closing comment so the PR/issue is unclaimed for the next person.</p>
+<p>Skip the claim step if the most recent comment already says you are working on it. This applies to any task that will push commits to a PR branch or run iterative review loops. It does <strong>not</strong> apply to read-only inspection (showing a PR, checking status, explaining a diff) — those don’t risk a parallel session.</p>
+<p>This includes a PR <strong>you opened yourself</strong>: in repos with an active <code>@claude</code> agent (<code>claude.yml</code>), the agent can push commits to your branch on PR activity — e.g.&nbsp;merging <code>main</code> in — and collide with your in-flight push, so claim early to flag the branch as actively worked. (See <code>memories/github-actions.md</code>, “<span class="citation" data-cites="claude">(<a href="#ref-claude" role="doc-biblioref"><strong>claude?</strong></a>)</span> CI action”, for the collision-recovery steps.)</p>
+<p>When starting work from an issue, follow the claim comment with an immediate draft PR — see <a href="pr-on-claim.md"><code>pr-on-claim</code></a> for the mechanics. An open PR is a stronger “in-flight” signal than a comment alone.</p>
+<p><strong>Verify a mid-task “already done” claim against real PR state before trusting or redoing it.</strong> A PR you claimed and are actively driving can still gain commits from a <strong>second, independently-running session</strong> under the same account — a <code>&lt;github-webhook-activity&gt;</code> review-comment-reply event can describe work (“Addressed… Pushed in <code>&lt;sha&gt;</code>”) that this session never did. Don’t assume it’s fabricated or injected, and don’t reflexively redo the same fix: cross-check the PR’s actual commit list (<code>gh pr view --json commits</code> / <code>pull_request_read</code> <code>get_commits</code>) and review threads before either (a) trusting the claim, or (b) starting the same fix yourself. If a commit with that SHA genuinely exists, authored close to when the event arrived, treat it as confirmation a live parallel session owns this PR right now — stop pushing further speculative fixes yourself, and, if genuinely in doubt, ask whether to keep driving or step back, rather than racing the other session’s pushes. This gap is distinct from the initial claim check above: it’s not about claiming a PR before starting, but about <strong>re-verifying you’re still the sole active driver</strong> once work has been under way for a while — especially when you picked up the PR mid-session (e.g.&nbsp;by answering a diagnostic question about it) rather than through the normal claim-then-branch flow, so no fresh “paws off” check ever ran right before you started pushing. (<code>d-morrison/gha#286</code>, 2026-07-24: a webhook event delivered a review-comment reply attributed to <code>d-morrison</code> reading exactly like a Claude-authored reply, claiming a fix “Addressed… Pushed in 3fb8c5b” that this session hadn’t made; verified real via <code>get_commits</code> before proceeding — a second live session, not injection.)</p>
+<p><strong>Handing off mid-task to another agent, on user request (“finish what you’re doing, then relinquish holds; I’ll put another agent on them”):</strong> don’t just stop — leave the next agent a clean starting point. On each claimed PR/issue: (1) post a status comment on the PR itself distinguishing what’s <strong>done</strong> from what’s genuinely <strong>not done</strong> (the actual point of the issue, not just the side-fixes found along the way) and any blocker still open, so the next agent doesn’t have to re-derive it from the diff; (2) post the closing/unclaim comment on the issue per the pattern above; (3) <code>unsubscribe_pr_activity</code> (or stop babysitting locally) so you don’t keep auto-fixing a PR you no longer own; (4) stop any background watch/poll task tied to that work (e.g.&nbsp;a <code>ScheduleWakeup</code> or a <code>Monitor</code>/background-Bash wait) so it doesn’t fire into a session that’s moved on. A merge-conflict-free <code>git status</code> and a pushed branch are not enough on their own — the status comment is what makes the handoff legible. (ucdavis/bcs <code>gia</code> session, 2026-07-06: handed off PRs #310 and #311 mid-implementation this way, each blocked on the same slow <code>renv::restore()</code>.)</p>
+</section>
+<section id="keep-your-branch-synced-with-main" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Keep Your Branch Synced with Main</h1>
+<p>Whenever <code>main</code> has moved ahead of a PR branch you’re working on, <strong>merge <code>main</code> into the PR branch</strong> before the next push or review trigger. Don’t wait for a conflict to surface or for someone to ask.</p>
+<p>This fragment covers the single-branch-vs-<code>main</code> case. When orchestrating a multi-agent <code>ultracode</code> session, merges can happen at more points than that — see <a href="ultracode-merge-conflicts.md"><code>ultracode-merge-conflicts</code></a> for the broader check (worktree-isolated agent branches, concurrent <code>parallel()</code> results) and the note on GitHub’s mergeable indicator not evaluating custom <code>.gitattributes</code> merge drivers.</p>
+<p><strong>Always check for merge conflicts with main before pushing results to remote.</strong> Run this before every push, not just before triggering a review:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> fetch origin main</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> log <span class="at">--oneline</span> ..origin/main <span class="kw">|</span> <span class="fu">head</span>    <span class="co"># any commits? main is ahead --- merge it in</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> merge origin/main</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If the push is rejected because <code>main</code> has moved (<code>! [rejected]</code> with <code>(fetch first)</code> or <code>(non-fast-forward)</code>), fetch and merge before retrying — don’t force-push.</p>
+<p>Always do this before triggering a fresh review too, so the reviewer evaluates the PR against current <code>main</code> rather than a stale snapshot.</p>
+<p>Don’t rebase or squash-rewrite a published PR branch unless explicitly asked — a merge commit is the right move because it matches GitHub’s “Update branch” button and preserves the PR history.</p>
+<p>If the merge has conflicts, resolve them, run the project’s standard pre-commit checks (render / lint / spell / tests), commit, then push. Don’t push a half-resolved merge.</p>
+<p><strong>After merging main, re-check version parity.</strong> In R packages with a <code>version-check</code> CI job, the branch’s <code>DESCRIPTION</code> <code>Version:</code> must <em>exceed</em> main’s. A conflict-free merge can silently put them at parity — main advanced (e.g.&nbsp;another PR merged between when you last bumped and now). After every merge of main, compare versions:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> fetch origin main</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> show origin/main:DESCRIPTION <span class="kw">|</span> <span class="fu">grep</span> ^Version</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> ^Version DESCRIPTION</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If they match, bump the branch’s <code>Version:</code> by one patch level before pushing.</p>
+<p><strong>Re-check <code>main</code> again right before the final push, not just at the start of a merge.</strong> Resolving a conflict (rerunning generators, fixing prose, updating a CHANGELOG entry) can take long enough for <code>main</code> to advance a second time. A <code>git fetch origin main</code> immediately before <code>git push</code> — after conflict resolution is done, not only before it started — catches that case; an earlier CI failure on a commit you thought was current is a symptom of skipping this second check.</p>
+<p><strong>A conflict-free merge does not mean derived artifacts are in sync.</strong> If your branch regenerates a generated tree (e.g.&nbsp;<code>codex-skills/</code>, a lockfile, rendered docs) and <code>main</code> added a new <em>source</em> input the generator consumes (a new skill, a new dependency), git merges both cleanly — but the generator never ran against the new input on your branch, so its output is missing or stale and the sync check fails on <code>main</code> after both land. After merging <code>main</code>, re-run the generator and commit the result whenever main touched the generator’s inputs — don’t trust the absence of conflicts. (Concretely: merge the PR that adds the new skill <em>first</em>, then sync the wrapper-regenerating branch and rerun <code>scripts/sync-codex-skill-wrappers.py</code> before merging it.)</p>
+<p><strong>A CI failure on a brand-new PR’s very first commit (e.g.&nbsp;the empty claim-commit from <code>pr-on-claim</code>) is a signal to check <code>main</code>’s position before debugging the failure itself.</strong> A local checkout that sat around since before the session started can already be many commits behind <code>main</code> — the failure (a stale generated-tree check, a check <code>main</code> has since added or dropped) often isn’t a real problem with your change at all, just <code>main</code> having moved. <code>git fetch origin main &amp;&amp; git log --oneline ..origin/main</code> first; if <code>main</code> is ahead, merge it in and re-run the checks before treating the failure as something to fix in the diff. (<code>stack-prs</code> #359: an empty-commit draft PR failed <code>validate</code> on a stale <code>codex-skills/</code> generated tree, and the <code>require-changelog</code> job on a newly-added <code>CHANGELOG.md</code> requirement from PR #354 — both were <code>main</code> having advanced past a checkout that predated the session, not a defect in the new skill.)</p>
+<p><strong>The same staleness trap has a silent variant with no CI failure to flag it: a worktree/branch named after a PR’s followup can still be based on a <code>main</code> from before that PR actually merged.</strong> A worktree directory or branch name suggesting “after PR #N” (e.g.&nbsp;<code>pr-N-followup-...</code>) is not proof the branch’s actual base commit postdates #N’s merge — it can have been created earlier and simply named for its intended purpose. Trusting that naming, then reasoning from <code>git show &lt;hash&gt;</code> for a commit found via <code>git log --all</code> (which lists every reachable commit across all refs, not just your branch’s ancestry) can make content look present when it isn’t actually in your branch yet. Verify with <code>git log --oneline HEAD..origin/main</code> or by reading the actual blob your branch would produce (<code>git show HEAD:&lt;path&gt;</code>, or the working tree itself before assuming what it contains), not a commit hash pulled from <code>--all</code>. If <code>main</code> has moved, merge it in before building further edits on the assumption the missing content exists. (<code>ai-config#637</code>: a worktree named <code>pr-636-followup-...</code> was cut from a <code>main</code> snapshot that predated #636’s own merge; an edit referencing “the bullet above” – added by #636 – was written and committed before the bullet actually existed on the branch, caught only when <code>git push</code> reported <code>main has moved</code> and the subsequent merge produced a real conflict.)</p>
+<p><strong>A real conflict inside a file whose logic is also copied elsewhere (an extracted script, a doc example) needs the copy re-synced too, not just the conflicted file resolved.</strong> When a PR extracts inline logic (e.g.&nbsp;a workflow step’s shell block) into a standalone script for testability, and <code>main</code> independently changes that same inline logic while the PR is open, resolving the merge conflict in the workflow file is not enough — the extracted script must be updated to match <code>main</code>’s new logic exactly, or the PR silently reverts <code>main</code>’s fix the moment it merges. Diff the extracted copy against <code>main</code>’s current inline version line-for-line (strip indentation, <code>diff</code>) to confirm an exact match, not just “looks about right.” If the PR carries tests against the extracted copy (fixtures, unit tests), add regression coverage for whatever <code>main</code>’s change fixed — the merge is the natural moment to catch a gap the original PR’s tests didn’t anticipate, and to prove the new fixtures actually catch the regression (temporarily revert the fix, confirm the test fails, then restore). (gha#176: <code>main</code> landed #173’s lenient verdict-matching fix to <code>claude-code-review.yml</code>’s inline fail-check logic while a PR extracting that same logic to <code>scripts/check-review-execution.sh</code> was still open; the conflict resolution updated the script to match verbatim and added two new fixtures for #173’s specific fix, verified to fail against the pre-fix logic.)</p>
+<p><strong>When <code>main</code> DELETES a file your branch references, resolving the marked conflict is not enough — grep the whole tree for the deleted path.</strong> Git only conflicts where both sides edited the same lines, so a merge that brings in a deletion flags the file that <em>used</em> the thing, and nothing else. Any other reference to the deleted path — a docstring citing it as precedent, a comment, a doc cross-reference — merges cleanly and silently becomes a dangling reference, because those files were never in the conflict’s scope. After resolving any merge that removed a file, run <code>grep -rn "&lt;deleted-path&gt;"</code> across the repo and re-point or reword each hit; then distinguish live references (must be fixed) from historical citations of the removal itself (correct as-is, leave them). This is the deletion counterpart to the extracted-copy case above: there the logic moved and a copy went stale, here it vanished and the pointers went dead. (ai-config#696: <code>main</code> retired <code>scripts/check-new-line-breaks.py</code> via #703 while the PR was open. The <code>validate.yml</code> conflict was visible and resolved, but <code>scripts/check-memory-file-size.py</code>’s docstring cited the deleted script as its advisory-exit-code precedent — a file the conflict never touched, caught only by grepping for the path afterward.)</p>
+<p><strong>A textual conflict in a skill file can be the symptom of a conceptual duplicate, not just competing edits to the same line.</strong> When merging <code>main</code> into a branch that’s authoring a new skill, if the conflict lands in a <code>## Relationship to other skills</code> section (or <code>main</code> added an entirely new skill in the same territory), that’s a signal to re-run <code>skill-builder</code>’s Step 0 judgment — not just resolve the diff mechanically. Compare the new skill against whatever landed on <code>main</code>: are they the same concern (fold into one, redirect), or genuinely distinct (cross-link both directions so neither reads as an unexplained near-duplicate)? <code>skill-builder</code>’s in-flight-work scan only runs once, at the start; <code>main</code> can grow a colliding skill in the time a PR is open, so the check has to be repeated at merge time too. (PR #352’s <code>check-info-quality</code> landed alongside <code>#344</code>’s independently-authored <code>fact-check-prose</code> this way — distinct enough to keep both, resolved by adding an explicit boundary in each skill’s Relationship section rather than consolidating.)</p>
+<p><strong>The same collision can land before you write a line, and then it produces no conflict at all — just duplicated work nobody flags.</strong> The bullet above catches a duplicate at merge time, via a conflict. When <code>main</code> gains the colliding content while your change is still <em>planned</em> rather than written, there is nothing to conflict with: you write the duplicate, push it, and the review has to argue you out of content that was already redundant on arrival. So re-run the dupe check after any fetch that brings in new commits, not only at merge — a plan researched an hour ago was researched against a different <code>main</code>.</p>
+<p>The cheap version is to read what actually arrived rather than only the count: <code>git log --oneline &lt;old&gt;..origin/main</code> plus <code>git diff --stat</code> over the same range, then ask whether any of it covers something still on your list. In a session that loads skills or plugins from the repo, a new one appearing in the session’s own skill listing is the same signal arriving for free.</p>
+<p>This is a <em>timing</em> gap, and it composes with the <em>scope</em> gap rather than replacing it. <a href="check-open-prs-before-duplicating.md"><code>check-open-prs-before-duplicating</code></a> covers work that is still in flight, unmerged, and therefore invisible to any check against <code>main</code>; run that one too, since a duplicate is just as wasted whether the collision has landed yet or not. Both checks share the same weakness — each runs once, at the start, and answers for the moment it ran.</p>
+<p>Dropping the planned work is the cheap outcome, so record why in the issue and the PR body rather than deleting it silently — otherwise the next person re-proposes it. (ai-config#774, 2026-07-28: a planned <code>profile-before-optimising</code> fragment was mooted by <code>skills/measure-performance</code>, which merged via #762 during the session and covered the same two chapters — including the specific gap the fragment was meant to fill. It surfaced only because the new skill appeared in the session’s skill list after a routine fast-forward; the plan had been written before it existed. Dropped before implementation, with the reasoning recorded in both the issue and the PR body, and the neighbouring fragments cross-linked to the skill instead.)</p>
+<p><strong>Two PRs that each append a new terminal numbered subsection to the same file (e.g.&nbsp;<code>### 5. ...</code> in a <code>CLAUDE.md</code> review-guidelines list) will conflict on merge even when neither side’s content actually disagrees.</strong> This isn’t an editorial clash — it’s two authors both writing to “the next number” at the same insertion point. Resolve by keeping <strong>both</strong> additions and renumbering sequentially from the collision point on, not by dropping either side; then grep the file for any other place that names the old numbering (a cross-reference, an index). This is also a reason <a href="fully-clean.md"><code>fully-clean</code></a>’s CI-green-and-review-clean verdict is a snapshot, not a mergeability guarantee — <code>main</code> can pick up its own append in the same spot after your last review round, so a PR can go from “reviewed clean” to “needs a merge conflict resolved” with no defect in its own diff. Before reporting a PR ready to merge, re-check with <code>git fetch origin main</code> plus the <code>git merge-tree</code> command from <code>resolve-conflicts</code>, not just a cached <code>mergeable</code> flag or an earlier green CI run. (gha#211: <code>main</code> merged #209’s own new <code>### 5. Check for AI-generated prose tells</code> subsection between this PR’s clean review and its actual merge — <code>git merge-tree</code> surfaced a real conflict that neither PR’s own CI nor review status had flagged, since neither had rerun since <code>main</code> advanced.)</p>
+<p><strong>After merging a PR that extracts an inline block into a reusable unit (a composite action, a shared script/function), check other open PRs that still edit that same inline block — your merge just broke their textual diff, even though their intended change is usually trivial to re-apply to the new location.</strong> This is the mirror image of the case above: there, you’re the one resyncing after <code>main</code> moved a copy of your logic; here, <em>you</em> are the one who moved the logic, so the burden of noticing and fixing the resulting conflict falls on you, not on the sibling PR’s author waiting to hit it. Don’t wait for that PR’s own merge/CI to surface the conflict — check every open PR touching the same file right after your extraction merges: <code>git merge-tree "$(git merge-base origin/main origin/&lt;sibling-branch&gt;)" origin/main origin/&lt;sibling-branch&gt;</code> (or <code>gh pr diff &lt;N&gt;</code> against the new <code>main</code>) shows whether it still applies cleanly. Re-apply the sibling PR’s actual semantic change (not a mechanical <code>--theirs</code>) to the new location, verify with a direct diff that the extracted unit now differs from <code>main</code> by exactly that PR’s intended change and nothing else, then push to their branch and flag what you did in a PR comment. (gha#201 extracted <code>claude-code-review.yml</code>’s <code>claude_args</code> block into a new <code>run-claude-review-attempt</code> composite action to support a retry; gha#202, open in parallel, edited that same inline block to allowlist <code>WebFetch</code>/ <code>Bash(curl:*)</code>. Proactively rebasing #202 and re-applying its allowlist change to the new composite action — rather than leaving its author to discover a conflict — let it merge within the hour instead of stalling.)</p>
+<p><strong>An add/add conflict on a <em>shared config file</em> usually means two PRs independently fixed the same root cause — reconcile the reasoning, don’t just pick a side.</strong> This generalizes the skill-file case above beyond skills: a repo-wide CI/lint/build config fix (a new tool config file, a workflow tweak) is exactly the kind of change multiple sessions or bots are likely to attempt in parallel once a check starts failing on <code>main</code> for everyone. When the conflict is a whole-file add/add (not just competing edits to an existing file), read both sides’ reasoning — code comments, commit messages, the PR discussion — before resolving; usually one side’s explanation is more complete (covers a case the other missed, cites the tool’s actual constraint) and should win outright rather than mechanically merging fragments of both. Re-diff the PR against <code>origin/main</code> after resolving to confirm the PR’s remaining changes are its own original scope, not a reintroduction of what the other, now-merged PR already added. (<code>d-morrison/altdoc#7</code> vs <code>#18</code>: both independently added a <code>jarl.toml</code> excluding the same fixture directory for the same <code>jarl-check</code> failure; <code>#18</code> merged first, <code>#7</code>’s merge conflicted on the new file, resolved by keeping <code>#18</code>’s more detailed comment and re-confirming <code>#7</code>’s diff against <code>main</code> was back down to just its own four files. This same “append-collision” pattern struck a third time one insertion point over: this bullet and the two above it were each added by independent PRs landing in quick succession, all appending after the same “PR #352’s <code>check-info-quality</code>…” paragraph — resolved, per the guidance above, by keeping all three rather than picking one.)</p>
+<p><strong>A <code>dirty</code> <code>mergeable_state</code> on a bot-opened PR can mean a sibling PR already closed the same issue, not just that <code>main</code> drifted.</strong> An issue-triggered <code>@claude</code> workflow can fire twice on the same issue in quick succession (a duplicate dispatch, or two people independently routing the same request), producing two independent PRs that both fully resolve it — including adding the identical new file. The second PR’s merge conflict is an add/add on that new file, and it looks like ordinary main-drift, but treating it that way and mechanically resolving in favor of “ours” silently reintroduces a duplicate the other PR’s merge already published. Before resolving, check the PR’s linked issue for <strong>other</strong> cross-referenced PRs/closing events — if one already merged and closed it, diff the conflicting file against <code>main</code>: if it’s the sibling PR’s already-published version, keep <code>main</code>’s content and keep only this PR’s genuinely distinct remainder (a piece the sibling PR never did), rather than re-adding a second copy. (<code>ai-config#501</code>: issue #500 was independently resolved twice — <code>#502</code> merged first, adding <code>shared/writing/math-derivation-steps.md</code> and closing #500, but never wiring it into <code>CLAUDE.md</code>; <code>#501</code> added a second copy of the same fragment plus the missing <code>CLAUDE.md</code> wiring. Resolved by keeping <code>main</code>’s published fragment and <code>#501</code>’s wiring, turning a <code>dirty</code> merge into a clean <code>+8/-0</code> diff.)</p>
+<p><strong>A merge into a growing numbered list (e.g.&nbsp;<code>gha</code>’s <code>CLAUDE.md</code> “Code review guidelines” section) can produce zero blank lines between two adjacent headings even with no textual conflict — lint catches it, git doesn’t.</strong> When a section is a hotspot several PRs independently append items to (each PR adding its own <code>### N.</code> block at the end), a clean three-way merge can still splice one PR’s closing line directly against the next PR’s heading with no blank line between them — this doesn’t produce a <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> conflict marker (git resolves it as a straightforward insertion), so it’s easy to push without noticing. <code>markdownlint</code>’s MD022 (blanks-around-headings) is what actually catches it, as a CI failure with no proximate code change to explain it. Re-run the repo’s markdown lint (or at minimum re-read the diff around every <code>### N.</code> boundary you didn’t personally write) after any merge that touches a shared growing list, not just after a merge with conflicts. (gha#208: an out-of-band merge from <code>main</code> — done by a different session, not the one that opened the PR — landed a new item 7 directly against the PR’s own item 6 with no blank line; <code>lint-markdown</code>’s MD022 failed with no conflict marker anywhere in the diff to point at.)</p>
+<p><strong>The same splice happens to LIST ITEMS, and there <code>markdownlint</code> most likely does NOT catch it — so nothing turns red at all.</strong> The case above is a heading spliced against preceding text, which MD022 decides. The changelog case is a <em>bullet</em> spliced onto the previous item’s continuation line:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>  <span class="in">`data-raw/precompute-true-effects-chunk.R`</span> (#429).</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>The <span class="in">`docs`</span> workflow's "Build site" step no longer times out intermittently.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>That is a valid <strong>tight</strong> list item, so a list in which every other entry is blank-line separated silently starts mixing tight and loose items and renders inconsistently. <code>markdownlint</code>’s blanks-around-lists rule governs the boundaries <em>of</em> a list, not the gaps <em>between</em> its items, and no default rule enforces consistent looseness within one list — so unlike the heading case, CI stays green and only a human reading the merged section notices.</p>
+<p>Check it mechanically instead of by eye; one line decides it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'prev !~ /^[[:space:]]*$/ &amp;&amp; /^[*+\-] / {print FILENAME":"NR": "$0} {prev=$0}'</span> NEWS.md</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Use <code>[[:space:]]*</code> rather than a bare <code>/^$/</code> — a whitespace-only preceding line is not a violation and produces false positives. The pattern <code>[*+\-]</code> covers all three common Markdown unordered-list markers; <code>^\*</code> alone would miss <code>-</code> and <code>+</code> bullets.</p>
+<p>Two consequences. Run this after any merge into a changelog or other growing bulleted list, alongside the heading check above. And note that a <code>merge=union</code> driver on such a file (see <a href="../../skills/configure-gitattributes/SKILL.md"><code>configure-gitattributes</code></a>) <em>increases</em> the rate of this defect, since union resolves an append collision by keeping both sides with no conflict to review — so confirm a detector is wired into CI before enabling one, not after. (ucdavis/bcs#422/#430, 2026-07-26: a clean three-way merge spliced one PR’s <code>## Bug fixes</code> bullet against another’s; the check above then found <strong>four</strong> pre-existing instances in the same <code>NEWS.md</code>, in a repo that had no Markdown linting at all.)</p>
+<p><strong>A commit claiming “I’ve pulled main and resolved the merge conflicts” can be lying — verify it actually merged before trusting the claim.</strong> A genuine conflict-resolution commit is a merge commit (two parents); a commit that just hand-edits files to <em>look</em> resolved, without running a real <code>git merge</code>, is an ordinary single-parent commit — and it never actually incorporates whatever new state of <code>main</code> prompted the “resolve conflicts” request in the first place. This is easy to miss because GitHub’s own <code>mergeable</code>/<code>mergeStateStatus</code> fields don’t distinguish the two: both look identical from the PR page until you check the commit graph. Verify with <code>git show -s --format="%P" &lt;commit&gt;</code> — one hash means no real merge happened, regardless of what the commit message says. If a branch needed conflict resolution more than once and each attempt claimed success but the PR still shows <code>CONFLICTING</code>, check every “resolved conflicts” commit in its history this way before trying yet another resolution attempt on top of a foundation that was never actually re-merged. (<code>Lacaedemon/sparta#1070</code>, 2026-07-27: an automated PR-authoring agent pushed two consecutive commits both titled “Resolve merge conflicts”, each claiming to have pulled <code>main</code>; both were single-parent commits that never touched <code>main</code>’s actual current state, so the PR kept showing <code>CONFLICTING</code> no matter how many times the agent “fixed” it. A real <code>git merge origin/main</code> — the first one actually run against this branch in three attempts — surfaced the genuine conflicts and resolved them for good.)</p>
+</section>
+<section id="driving-a-pull-request-to-clean" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Driving a Pull Request to Clean</h1>
+<p>Whenever you are working a PR/MR, run the full <strong>ARDI</strong> loop by default, without being asked: <strong>A</strong>ddress every flagged item, <strong>R</strong>ebut findings that are wrong, <strong>D</strong>efer out-of-scope items to tracked issues, then <strong>I</strong>terate with a fresh review — repeating until the latest review is <strong>fully clean</strong>. Don’t stop at “review-clean, just needs approval” and hand triage back; keep the cycle going until it’s genuinely clean.</p>
+<p>The loop’s terminal action is to <strong>report the PR ready, not to merge it</strong>. Merging is human-gated — it happens only on an explicit human “merge it” (the <code>merge-it</code> skill), never as a step ARDI takes on its own. So when you carry a PR across a <code>ScheduleWakeup</code> or <code>/loop</code> wait, <strong>never</strong> bake a self-merge directive like “if clean and CI green, merge it” into the wakeup/loop prompt: a scheduled prompt fires back as a user-role turn, so a self-authored “merge it” only <em>looks</em> like human approval (and Claude Code’s auto-mode classifier will rightly deny it as a self-authored merge). Drive to fully clean, report ready, and leave the merge — and any other destructive one-off, e.g.&nbsp;a <code>gh workflow run</code> that force-pushes — for explicit human authorization.</p>
+<p>Because the loop ends there, <strong>the clean verdict is also where <code>ums</code> runs</strong> — don’t hold the pass for the merge, which is on the human’s clock rather than this session’s and may land after a <code>/clear</code> or not at all. See <code>CLAUDE.md</code>’s “Run UMS proactively, as learnings accumulate”; the merge-time pass in <code>post-merge</code> then only has to cover what the merge itself taught.</p>
+<p>The one exception: if the human has explicitly granted the <code>mwc</code> (merge-when-confident) session permission, that grant is a live human instruction, not a self-authored one, so baking a self-merge step into a wakeup/loop prompt is fine for the rest of that session. See <a href="../../skills/mwc/SKILL.md"><code>mwc</code></a> for the grant’s scope and limits.</p>
+<p>In the <strong>clear-all family</strong> (<code>ardia</code>, <code>gia</code>, <code>gii</code>, <code>gip</code>), “report ready, don’t merge” gates only the merge — it does <strong>not</strong> pause the sweep. A clean-but-unmerged PR is not a stop; move to the next item, and stack it when it isn’t naturally independent of that PR. See <a href="stack-dont-pause.md"><code>stack-dont-pause</code></a>.</p>
+<p><strong>Self-review against the project’s own stated conventions before every push, not just the first — and don’t just re-read the criteria, actually run the applicable review skills against your own diff and iterate on what they find, the same ARD cycle you’d run against an external reviewer’s findings.</strong> Don’t treat the review bot as the mechanism that discovers a project’s documented conventions — self-apply them first. When a project’s own <code>CLAUDE.md</code> (or equivalent agent doc) already states specific criteria — a DRY/no-duplication rule, a doc-sync checklist for a new input, a changelog-category rule, a citation requirement, a “new logic needs test coverage” norm, a prose-quality check like <code>fact-check-prose</code>, <code>fix-forward-references</code>, or <code>detect-informal-definitions</code> — a first-pass implementation checked only against feature correctness forces the review loop to spend a round re-deriving what the project’s own docs already said. Before every push, re-read the project’s own stated review criteria and actually invoke the review skills/checks it names against the diff (not just recall them from memory), the same way an external reviewer would apply them. Address every finding your own self-review surfaces — fix, rebut, or defer, exactly like the ARD step above — before the push goes out; a self-review that finds issues and pushes anyway has only moved the round to the external reviewer instead of skipping it. Repeat until your own self-review pass is clean, then push. (<a href="https://github.com/d-morrison/gha/issues/219">gha#219</a>/<a href="https://github.com/d-morrison/gha/pull/220">#220</a>: one review round surfaced five findings — a DRY duplication, an incomplete-coverage doc overclaim, a wrong changelog category, an uncited claim, and missing test coverage for new logic — all catchable this way, since each was a direct match against gha’s own <code>CLAUDE.md</code> conventions, not new information the review surfaced.)</p>
+<p><strong>Proactively self-correct a technical claim you already told a reviewer, the moment further testing shows it was wrong — don’t wait for the reviewer to catch it.</strong> If you stated a rationale (an approach is safe, a risk doesn’t apply, a backstop exists) and then discover through your own follow-up verification that it’s false, post the correction with the actual evidence immediately, rather than leaving the stale claim standing until a review round re-raises it. This keeps the review loop converging instead of churning on a claim you already know is wrong. (<a href="https://github.com/d-morrison/rme/pull/989">d-morrison/rme#989</a> / <a href="https://github.com/ucdavis/epi204/pull/363">ucdavis/epi204#363</a>: after telling both reviewers <code>references.bib</code> didn’t share <code>CLAUDE.md</code>’s union-merge corruption risk, a follow-up merge simulation showed it does — posted the correction with repro steps on both PRs before either reviewer re-raised it.)</p>
+<p><strong>A fix is not “pushed” until it is on the PR’s head commit — verify with a SHA comparison before telling a reviewer you pushed it.</strong> From inside a session, an edited working tree and a pushed commit feel identical, so a round that edits the files, writes the reply, and never runs <code>git push</code> produces a reply asserting a fix that does not exist on the branch. Nothing contradicts it: CI reports green, because it correctly validated the older head; the next review round reviews code without the fix; and the session’s own recollection of having made the change agrees with the reply. That makes it worse than an ordinary wrong claim — it is a false statement about <em>state</em>, which a reviewer has no reason to doubt and no cheap way to check. Before posting any reply that asserts a push, compare <code>git rev-parse HEAD</code> against the PR’s own <code>head.sha</code> (<code>pull_request_read</code> <code>get</code>); if they differ, push first, then reply naming the real SHA. Run the same comparison in every periodic check-in on a PR you are babysitting, since the failure is silent and survives each round until something explicitly looks for it. This is the <a href="algorithmatize-checks.md"><code>algorithmatize-checks</code></a> rule applied to your own claims: two SHAs decide it exactly, so never substitute recollection. (d-morrison/altdoc#54, 2026-07-25: two review fixes were edited locally and a PR comment said they were “addressed in the latest push”; the head sat at the pre-fix commit for over an hour, with 14 green checks validating a branch carrying neither fix, until a scheduled check-in compared the SHAs.)</p>
+<p><strong>When the change affects downstream consumers, validate it against a real consumer repo before reporting the PR ready — a package’s own test fixtures are built to exercise its code, not to resemble the packages that will actually use it.</strong> Fixtures are minimal by construction and tend to share one shape, so whole branches of new code can be structurally unreachable from them. A real consumer brings the input variety fixtures lack, and it is usually one clone plus one command to check.</p>
+<p>Three classes of gap this catches, none of them findable in a fixture:</p>
+<ul>
+<li><strong>Input shapes no fixture happens to contain.</strong> A real package carries metadata the fixtures never needed — an entry of a different kind, an extra tag, an unusual name — so a branch written for it has never actually run on real input.</li>
+<li><strong>Message formatting under real counts.</strong> Fixtures usually trip the plural path; a real repo hitting the same code with exactly one item exercises the singular wording, which no test asserted.</li>
+<li><strong>The migration/upgrade path, as opposed to the fresh-install path.</strong> This is the one fixtures can never reach: a fixture is created new by the test, so it always gets the current templates. An existing consumer has the <em>old</em> config, and whether the feature reaches it at all is a different question from whether it works. Verify the claim in the changelog by running the documented migration step, rather than describing it.</li>
+</ul>
+<p>Do it against a throwaway copy and push nothing to the consumer; the deliverable is evidence in the PR, not a change there. Record what the run covered in a PR comment, so a reviewer can see which paths real input reached. (d-morrison/altdoc#34: running the new reference-index generator against <code>d-morrison/rpt</code> covered a <code>\docType{package}</code> topic, the singular form of a missing-topic warning, and the documented “existing settings files do not pick this up automatically” caveat — confirmed by the page generating while <code>grep -c reference.html docs/index.html</code> returned <code>0</code>. None of the three were reachable from the repo’s own fixture packages.)</p>
+<p><strong>Verify a blocker you assert in a PR body or a reply, with the same rigor you apply to a reviewer’s claims — a stated blocker becomes a premise other people build on.</strong> The reviewer-facing checks above all point outward: verify the suggestion, verify the literal, verify the push landed. The inward case is easier to miss, because a limit you hit yourself feels like an observation rather than a claim. It is still a claim, and writing it into a PR body publishes it as settled fact: a reviewer reading “the pinned tool is unavailable in this sandbox” will reason from it, recommend a follow-up around it, and never re-test it, so one unverified sentence quietly redirects the review. Before asserting that something is unavailable, blocked, or impossible here, actually attempt it once — an install, a fetch, a single command — and say what you tried. A negative result from one incidental symptom (a failed version query, a single 403) is evidence the thing is not <em>already set up</em>, not evidence it cannot be. When a blocker you published turns out to be false, correct it where it was published, not only in the thread that surfaced it. (d-morrison/altdoc#76, 2026-07-27: the PR body said roxygen2 8.0.0 — the version <code>DESCRIPTION</code> pins — was unavailable, inferred from one failed <code>packageVersion()</code> call with no install attempted. The review built a “this may need a follow-up” recommendation on top of it. A single <code>install.packages()</code> disproved it, and the regeneration landed in the same round the finding did.)</p>
+<p><strong>A blocker that was true when you published it can stop being true while the PR is open, and withdrawing it is your job, not the reviewer’s.</strong> The bullet above covers a blocker that was never true. This is the harder case, because the caveat was correct and diligent when written, so nothing about it reads as a defect later — and a sentence saying “this could not be checked” is one nobody re-checks, least of all the reviewer, who has no way to know the environment moved. It keeps steering the review regardless: a verdict can repeat the caveat back as an accepted limitation, which makes the stale claim look corroborated. So when the cause of a blocker changes — a host unblocked, a tool installed, a quota reset, a dependency published — re-run the check and withdraw the caveat where it was published, saying explicitly that it is withdrawn rather than quietly deleting the sentence. A reader who saw the original needs to know it was retested, not be left wondering whether it was ever true. (ai-config#774, 2026-07-28: the PR body said four <code>adv-r.hadley.nz</code> anchors could not be verified because the host was egress-blocked, which was accurate when written. The host was unblocked mid-session, and all 16 URLs then verified 200 with every anchor resolving. The review had already absorbed the caveat — it listed those anchors as “unverified per the PR body’s own caveat … not a new finding” — so leaving it would have shipped a limitation that no longer existed, blessed by a reviewer who could not have known.)</p>
+<p><strong>An instruction’s own suggested code is not exempt from the project-conventions self-review above.</strong> The self-review rule assumes you wrote the diff; a snippet handed to you in an issue, a task description, or a design doc slips past it, because adopting someone else’s suggestion does not feel like authoring. It is authoring — once pushed, it is your diff, and the project’s conventions bind it exactly as they bind anything you wrote yourself. Run the same convention check over borrowed code before pushing it, especially when the suggestion is a plausible-looking one-liner and the convention it breaks is documented rather than linted. (d-morrison/altdoc#73: the issue proposed ending a function with a bare trailing <code>hashes</code>, which reads as a fix for the fragility it names but is still an implicit return, so a statement added after it silently becomes the return value. The lab manual asks for an explicit <code>return()</code> regardless. Review caught it; the project’s own stated convention would have, one step earlier.)</p>
+<p><strong>When the code path under test has a staging or transform step between input and output, a passing unit suite is not evidence it works — exercise the real path once.</strong> Fixtures instantiate the shape the test author had in mind, so a wrong assumption about <em>where</em> the code runs is invisible to every one of them: the tests and the bug share the assumption. This is the same gap the downstream-consumer rule above covers, one level in — there the missing variety is the consumer’s input, here it is the pipeline’s own directory layout, timing, or intermediate representation. One real invocation is usually cheap, and it tests the assumption the fixtures encode rather than re-confirming it. (d-morrison/altdoc#76: a guard checked for the copied logo under <code>docs/</code>, but the <code>quarto_website</code> path stages into <code>_quarto/</code> first, so the logo line was dropped on every render of the one generator the feature wired up. Seventeen unit assertions passed throughout; one throwaway render found it immediately.)</p>
+<p><strong>When new code branches on a third-party tool’s behavior, read that tool’s own config or docs for the specific behavior — don’t infer it from what the tool broadly does.</strong> The bullet above covers your own pipeline’s layout; this one covers the tools that pipeline drives. An inference of the form “it builds HTML, so link to <code>.html</code>” is exactly the shape that feels too obvious to check, and a tool’s defaults routinely contradict it. Two properties make this worse than an ordinary wrong guess. The inference usually lands in a branch your own fixtures cannot reach — you have no fixture for someone else’s renderer — so the test suite agrees with you. And it produces output that is well-formed and plausible (a link, a path, a flag), so a reviewer skimming the diff has nothing to catch, and the failure surfaces only in a consumer’s published site. Name the setting you are relying on, and check its actual default before writing the branch. (d-morrison/altdoc#78, 2026-07-27: a generator-to-extension map gave mkdocs <code>.html</code>, reasoning that mkdocs compiles Markdown to HTML. Its <code>use_directory_urls</code> default is <code>TRUE</code>, so it serves <code>/man/foo/</code> and never <code>/man/foo.html</code> — every reference link the feature emitted for that generator would have 404’d.&nbsp;Caught in review, not by the 39 tests.)</p>
+<p><strong>A regression test written alongside a fix can lock the bug in rather than catch it — assert the two paths that diverge, not the one you just touched.</strong> A test authored in the same pass as the code tends to record what the code <em>does</em>, because you run it, see it pass, and move on. That is usually harmless. It becomes a lock when the fixture is thin enough that the buggy and the correct path produce the <em>same</em> output: the assertion then encodes the degraded result as intent, and every later reviewer reads a green suite as evidence the behavior was chosen. The next round’s finding lands on your test, not just your code.</p>
+<p>The tell is the same each time: <strong>a fixture missing the input variety that makes the two paths differ.</strong> So when a bug is an asymmetry — nested versus top-level, second render versus first, one generator versus another — build the fixture so both sides are present and assert them together. Either side alone is unfalsifiable, since the case that reveals the bug is the <em>comparison</em>. Then prove it: revert the fix and confirm the new test actually fails. A regression test never seen to fail is a guess about what it covers. (d-morrison/altdoc#78, 2026-07-27: twice. A <code>.pdf</code> vignette test asserted the entry’s extension but never its label, so an extension leaking into the label passed; and a nested-article test built no source tree, so top-level and nested resolved identically and a nested-only title bug was pinned as expected output. Both were found by review reading the test, not the code.)</p>
+<p><strong>A systematic audit done by skimming is worse than the one-at-a-time version it replaces.</strong> Batching a check — “rather than wait for the next round to find divergence number four, compare all four at once” — is the right instinct, and it inverts if each lookup gets less care than it would have alone. Two things make the batched form more dangerous, not less. Its output is usually a claim recorded somewhere durable (a comment, a doc, a table), so an error is published rather than merely held; and it arrives labelled <em>audited</em>, which is precisely the word that stops the next reader from checking. A wrong comment in a block written to prevent a specific future change invites that change while appearing to forbid it. Concretely: when the thing being audited is a function, grep for the function, not for a pattern in its file — a file with several functions will hand you the first match, which is often not the one you mean. Name the function in whatever you write down, so the claim stays checkable. (d-morrison/altdoc#78, 2026-07-27: a commit written to get ahead of a one-finding-per-round loop claimed mkdocs’ sidebar matched only <code>\.md</code>. It matches <code>\.md$|\.pdf$</code>; the grep had returned a different function 120 lines above the sidebar builder in the same file. Caught by the very next review round.)</p>
+<p><strong>Adding an explanation supersedes whatever the file already said about the same thing, so re-read the older passage — your own diff is the likeliest source of a contradiction nobody flags.</strong> The sync rules in <a href="address-every-comment.md"><code>address-every-comment</code></a> all fire on an external trigger: a reviewer quotes a phrase, or behavior changes and a changelog goes stale. This one has no trigger at all. You add a paragraph explaining that something was misunderstood, and the note recording the original misunderstanding sits a few lines below, still stating it as fact. Nothing conflicts, no check fires, and both passages read plausibly on their own — but a reader who reaches the older one first comes away with exactly the belief the new text was written to remove.</p>
+<p>The tell is a diff that adds an explanation, a correction, or a “what this actually means” paragraph near existing prose. Re-read the surrounding passage as a whole rather than diffing your addition in isolation, and treat a historical record (“we observed N of X”) as a claim your explanation may have just falsified. When the older passage recorded a <em>different</em> session’s observation, correct it with reasoning that stands on its own rather than restating it as though you had seen it — an inference presented as an observation is the same defect one level up. (ai-config#770, 2026-07-28: an added explanation established that seven reported orphans were misclassifications, while the note two lines below went on calling them “already deleted from the repo.” Caught by review, in the same hunk as the text that contradicted it.)</p>
+<p><strong>And when the explanation you add is a <em>mechanism</em> claim, test the class it distinguishes, not just the sample in front of you.</strong> The bullet above is about contradicting old text; this is about the new text being unfalsifiable on the evidence you gathered. A classifier validated on a population containing no positive instance of the class it is supposed to catch will report a clean result either way, so “it returned zero” is not evidence it works — it is the same missing-input-variety tell the regression-test bullet above describes, moved from a fixture to a diagnostic. Ask what a true positive would look like, confirm one exists in what you tested, and if none does, say so instead of claiming the mechanism separates the cases. (ai-config#770, same day: a <code>git log -- skills/&lt;name&gt;</code> probe was said to separate “deleted from the repo” from “never ours” <em>exactly</em>, on the evidence that it reported zero false orphans. The repo contained no deleted-but-still-installed skill at all, so there was nothing for it to get wrong; and <code>git rev-parse --is-shallow-repository</code> returned <code>true</code>, meaning anything deleted before the shallow boundary would have been silently misread as harness-provided. The claim went into a PR reply before either check was run, and ai-config#765 had independently reached the correct conclusion.)</p>
+</section>
+<section id="sec-fully-clean" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> What “Fully Clean” Means</h1>
+<p>“Fully clean” is the terminal state the ARDI review loop drives toward. A PR/MR is <strong>fully clean</strong> when <strong>both</strong> of these hold:</p>
+<ol type="1">
+<li><strong>All CI workflows and check runs are green AND completed.</strong> Every workflow and check run passes — not just the required checks and not just the review job. “Green” means finished with a passing outcome (success or skipped), not merely “currently reporting green while still running” — never treat a workflow or check run that’s still queued or in progress as clean, even if nothing has failed yet. <strong>A reviewer’s posted verdict does not mean the review check has finished, so don’t let a clean verdict stand in for criterion 1 on its own job.</strong> The bot posts its comment and then its run keeps going (bookkeeping steps, a cost tally, the gate job that consumes its result), so a full <code>Ready for merge</code> comment can sit on the PR for minutes while <code>claude-review</code> still reads <code>in_progress</code> and the <code>require-review</code> gate is still <code>queued</code>. Reading the verdict and moving straight to “clean” skips the very state this criterion exists to catch. The gap runs the other way from the stub-review case below: there the check is green and the verdict is missing, here the verdict is real and the check is unfinished. Re-read the check runs after the verdict lands, not just before. (ai-config#712, 2026-07-24: the round-2 verdict posted at <code>04:06</code>, about two minutes before its own <code>claude-review</code> job completed at <code>04:06:56</code> and <code>require-review</code> at <code>04:07:03</code>.) (The exact field names and casing for these states differ by API surface — REST’s check-runs endpoint returns lowercase <code>status</code>/<code>conclusion</code> strings like <code>completed</code>/<code>success</code>, while <code>gh pr checks</code>/GraphQL’s rollup returns uppercase <code>state</code> values like <code>SUCCESS</code>; don’t hard-code one casing when scripting a check.) <strong>A raw Actions workflow run and a check run are not the same thing, and the usual lookups (<code>gh pr checks</code>, <code>get_check_runs</code>) only cover check runs (plus legacy commit statuses) — not every workflow run necessarily produces one.</strong> A workflow run that’s blocked on <code>action_required</code> (e.g.&nbsp;pending manual approval) before any job starts can complete with zero jobs and consequently zero check runs, making it invisible to a check-runs-only poll. This normally doesn’t affect mergeability (GitHub’s branch-protection required-checks gate operates on checks, not raw workflow runs, so a check-run-less run can’t be wired as required), but if something about a PR’s CI state looks off despite <code>gh pr checks</code> reporting all-clear, cross-check the raw workflow runs before trusting the checks-only view. <strong><code>gh run list --commit &lt;head-sha&gt;</code> is not a reliable substitute for this cross-check on its own</strong>: it returns every attempt for that SHA (including superseded/cancelled re-runs, so an old failed attempt can look like an outstanding blocker), and a run triggered by <code>issue_comment</code> or a <code>workflow_dispatch</code> invoked without an explicit <code>ref</code> can be recorded against the default branch’s SHA rather than the PR’s head SHA and be missed by a <code>--commit</code> filter entirely. Neither <code>--commit</code> nor <code>--branch</code> is fully reliable for this, because GitHub itself does not record a reliable PR linkage for these trigger types: an <code>issue_comment</code>-triggered run on this very PR (#635, run 29967418653) recorded <code>head_branch: main</code> and an empty <code>pull_requests</code> array via the raw REST API (<code>GET /repos/{owner}/{repo}/actions/runs/{id}</code>) — verified directly, not assumed — so no single filter (commit, branch, or the API’s own PR-linkage field) reliably narrows these runs to the ones for this PR. Treat this cross-check as best-effort: <code>gh run list -R &lt;repo&gt; --workflow &lt;name&gt;</code> (unfiltered, or windowed by approximate timestamp) and eyeball for anomalies near when the PR activity happened, rather than trusting any one filtered command to be exhaustive. This includes non-gating checks like the Coverage / codecov job: don’t merge around a red Coverage run just because it isn’t a required check, unless there’s a specific, stated reason for that merge (the project wants to maintain decent coverage, so a red Coverage job is a real signal to fix, not to ignore). <strong><code>codecov/patch</code> is a separate check from the repo’s own Coverage workflow job, and both must be green.</strong> The Coverage job runs the coverage-instrumented test suite; <code>codecov/patch</code> is the Codecov service’s own status check, gating the PR’s DIFF against a minimum patch-coverage percentage — a repo can have a fully green Coverage job while <code>codecov/patch</code> still fails (uncovered new lines in the diff). When delegating implement-a-PR work to a subagent, name this check explicitly in the brief (“ensure <code>codecov/patch</code> passes, not just the test suite”) — a subagent that only runs the local test suite and checks it’s green has no way to know it also needs to check a service-side status check unless told.</li>
+<li><strong>The latest review is totally clean:</strong> no nits, and every item that wasn’t directly <strong>Addressed</strong> is either <strong>Deferred</strong> to a tracked follow-up issue, or <strong>Rebutted with a rebuttal that actually convinced the reviewer</strong> — i.e.&nbsp;the reviewer did <em>not</em> re-raise it on the next round. A rebuttal the reviewer still disputes does <strong>not</strong> count as clean. That review must be a genuine posted verdict at the current head commit, from an external reviewer if one is reachable — self-review is a fallback for when no working external reviewer is available, never a substitute once one is (see the <code>ardi</code> skill’s step 2 for the availability-recheck procedure). Re-check availability right before declaring clean, not just at whichever round self-review first started; an inferred “probably clean” from green CI and resolved threads does not satisfy this.</li>
+</ol>
+<p><strong>A clean CI run and a clean review verdict are a snapshot, not a standing guarantee of mergeability.</strong> <code>main</code> can advance after your last check — including gaining its own independent addition that collides with yours (see <code>sync-with-main.md</code>’s “two PRs append the same numbered subsection” case) — so re-verify the branch still merges cleanly against current <code>main</code> before reporting a PR ready, not just trust the last green run.</p>
+<p><strong>Re-check version parity in that same sweep, not only conflict-freedom.</strong> <a href="sync-with-main.md"><code>sync-with-main</code></a> already covers comparing <code>DESCRIPTION</code> versions <em>after merging <code>main</code> in</em>. The case that rule misses is the one with no merge at all: <code>main</code> advances on its own after your last review round and lands on the branch’s exact version, so an R package’s <code>version-check</code> job (which requires the branch to <em>exceed</em> <code>main</code>) goes from green to red with nothing to point at. There is no conflict, no failing check yet, and no warning — the last run passed because <code>main</code> was still a version behind when it ran. So the declare-ready sweep needs both <code>git merge-tree</code> for conflicts and a direct version comparison; either one alone reports a PR ready that isn’t. (<code>UCD-SERG/serocalculator#392</code>, 2026-07-25: the final pre-declaration check found <code>main</code> had reached <code>1.4.1.9016</code>, exactly the branch’s version, minutes after a clean <code>Ready for merge</code> verdict on an otherwise all-green head.)</p>
+<p><strong>Threads:</strong> at fully-clean, every <strong>inline</strong> review thread is resolved, and the only conversation left open is the final all-clear exchange — the reviewer’s all-clear comment and your reply to it. (The all-clear is usually a top-level PR comment, not an inline thread.) Check this mechanically rather than from a memory of which threads you replied to. Which field name to look for depends on the surface: the GitHub MCP tool <code>pull_request_read</code> <code>get_review_comments</code> returns thread objects under a <code>review_threads</code> key with snake_case <code>is_resolved</code>/<code>is_outdated</code>, while a raw <code>gh api graphql</code> <code>reviewThreads</code> query — what <a href="../../skills/resolve-pr-threads/SKILL.md"><code>resolve-pr-threads</code></a>, <code>pr-status</code>, and <code>ard</code> use — returns camelCase <code>isResolved</code>/<code>isOutdated</code>. Both are correct on their own surface; this is the same REST-vs-GraphQL casing split the check-state paragraph above already warns about, so read the response you actually get rather than assuming one spelling. Either way, sweeping for the unresolved ones is the entire check. An <strong>outdated</strong> thread (<code>is_outdated: true</code> — the code it anchored to has since changed) still counts as unresolved: addressing a finding and resolving its thread are separate actions, and only the second clears this criterion. An addressed-but-unresolved thread reads as outstanding work to every later reviewer, which is exactly what this criterion exists to prevent.</p>
+<p><strong>One finding can own two threads, so sweep by thread id rather than by finding.</strong> When a reviewer re-raises an item you already answered, the re-raise often opens a <strong>new</strong> thread instead of continuing the original — same file, same line, same finding, different <code>threadId</code>. Resolving the one you remember replying to therefore leaves a second thread behind, and it is easy to miss twice over: it is usually marked <code>is_outdated: true</code> (the line it anchored to has since changed), and your own memory of the exchange says the item was settled. Neither of those clears it. Re-read the thread list before declaring clean and resolve every entry whose <code>is_resolved</code> is false, whatever you recall about the finding it carries; reply on the second thread too, pointing at the first, so a reader landing on either one sees the resolution. (<code>d-morrison/altdoc#61</code>, 2026-07-25: the round-4 re-raise of an unused fixture parameter opened <code>PRRT_...TyfeQ</code> alongside the original <code>PRRT_...TyeRc</code>; resolving the original left the re-raise outstanding, caught only by a mechanical sweep of all seven threads.)</p>
+<p><strong>Deadlock -&gt; escalate to a human.</strong> If you and the reviewer(s) can’t reach consensus on an item (a rebuttal was exchanged and neither side is budging), don’t loop forever and don’t unilaterally override the reviewer — request a <strong>human reviewer</strong>, <code>@</code>-mention them in a comment summarizing the impasse, and surface the open item.</p>
+<p><strong>An automated reviewer’s verdict on a disputed factual/technical claim is not stable across independent runs, even with identical evidence available each time.</strong> Don’t treat one round’s “settled, no need to keep arguing” as durable: the very same review job, re-triggered later with no new code changes, can re-raise a claim it previously retracted — and then retract it again on a subsequent run — purely from re-deriving the question differently each time, not from anything changing in the PR. This means a rebuttal thread’s outcome (however many rounds of citations and counter-citations) doesn’t itself resolve a genuine deadlock the way a human’s decision does; only escalating per the bullet above actually settles it. The one thing that DOES help going forward: fold the authoritative citation/evidence directly into the code or doc being reviewed (a comment, not just a PR conversation reply) — a fresh reviewer run re-deriving the claim from scratch is more likely to find the citation sitting right next to what it’s evaluating than to dig through prior thread history for it, though even that is not a guarantee against a bot that ignores context already in front of it. (Sparta#852, 2026-07-14: the same <code>@claude</code> review job’s independent runs on this PR gave three different verdicts on the identical <code>gitglossary(7)</code>-backed pathspec claim across three re-triggers with no intervening code change to the claim itself — “settled, accurate” -&gt; “backwards, needs more work” -&gt; “accurate after all, retracting my own prior finding” — resolved only once the human merged it directly rather than by winning the argument with the bot.)</p>
+<p><strong>A review job’s pass/fail conclusion can diverge from whether a genuine clean verdict was actually posted — check both directions, not just the check’s color.</strong> The familiar direction: a green review job that posted only a stub with no verdict (a stalled/crashed review run) is NOT a clean verdict — re-trigger and read the actual comment before trusting green. The inverse, easy to miss: a review job reporting FAILURE can still have posted a complete, genuine “Ready for merge” verdict with real findings-review content — some guard scripts that gate the job’s own pass/fail on detecting a verdict string can misfire and report failure even though a full review ran and passed. Read the posted comment body, not just the check conclusion, before concluding a PR is or isn’t clean. If the check is a <strong>required</strong> check and you’ve independently confirmed the posted content is genuinely clean, that is still not authorization to merge past it yourself — a required check failing is exactly the “stop and ask” case even under a merge-when-confident grant (see <code>mwc</code>’s scope note); report the evidence and let the human decide whether to override, fix the guard script, or relax branch protection. (Learned on sparta#590/#594/#598, 2026-07-02: two independent PRs hit the inverse misfire in the same session, and an attempt to merge past the required check on verified-clean content was correctly blocked by the harness’s own permission system.)</p>
+<p><strong>A third case, distinct from either misfire above: some checks are designed to NEVER fail regardless of their own posted content, so their green color carries zero signal at all.</strong> A CI-runner-relative benchmark check that gates a soft threshold (e.g.&nbsp;“regressed beyond 20% vs.&nbsp;baseline”) may deliberately report success/pass at the GitHub-check level even when it posts a <code>:warning:</code> regression comment, precisely because the project has decided that threshold is “a human call, not an auto-block” rather than a hard gate. <code>gh pr checks</code> (or the equivalent status API) showing this check as PASS is consequently not evidence there is nothing to look at — it only means the check ran, not that its content was clean. Read the check’s own posted comment body every time, the same discipline the review-job case above already demands, but don’t expect the check’s pass/fail conclusion to ever flip for this class of check even on a real, large regression. (Sparta#995/#998/#999, 2026-07-19: <code>gh pr checks</code> reported <code>benchmark</code> as PASS across three separate PRs while the actual posted comment showed regressions of 45%, 38.8%, and 36.9% respectively against the CI-runner baseline — two were real, fixable redundant-computation bugs; the third traced to a stale baseline that predated an earlier PR’s own accepted cost increase and hadn’t been refreshed yet, since the refresh workflow only runs on a weekly schedule, not on every main push.)</p>
+<p><strong>A fourth case: a review job can post a syntactically valid, confidently stated verdict that is nonetheless invalid because it rests on a hallucinated premise about the PR’s own state — not a stub (no verdict) and not a misfire (guard-script/check-conclusion mismatch), but a fabricated fact baked into an otherwise well-formed review.</strong> A reviewer that infers PR state from a commit message rather than querying the PR’s actual <code>state</code>/<code>merged</code> API fields can mistake a routine <code>Merge remote-tracking branch 'origin/main' into &lt;PR-branch&gt;</code> commit — pushed to resolve a sync conflict on the still-open PR branch itself — for evidence the <em>PR</em> was merged into <code>main</code>, and confidently report “PR is closed, no action taken” while never actually reviewing the diff. This reads exactly like a legitimate all-clear (a <code>### Verdict</code> section is present, the job reports success), so the stub-detection guards described in CLAUDE.md’s “Do the review yourself when the <span class="citation" data-cites="claude">(<a href="#ref-claude" role="doc-biblioref"><strong>claude?</strong></a>)</span> workflow doesn’t produce a verdict” section don’t catch it. Sanity-check any surprising verdict — especially “nothing to review” or “already merged/closed” — against the PR’s real API state before trusting it, and re-trigger for a genuine review rather than accepting a verdict-shaped comment built on a false premise. (gha#293/gha#295, 2026-07-24: after a merge-conflict-resolution push, the re-triggered <code>claude-code-review</code> run reported “The PR is closed — it was merged as commit <code>db11634</code>” even though the PR was still open and <code>db11634</code> was only the PR branch’s own merge-with-main commit; re-triggering once more produced a genuine review of the actual diff.)</p>
+<p><strong>A fifth case, and the one that decides what “reachable” means in criterion 2 above: an external reviewer can decline to review at all, posting a refusal in the shape of a review.</strong> Unlike the four cases above — all of which are a review that ran and produced something misleading — this is a reviewer that never ran, and says so in a <code>COMMENTED</code> review whose whole body is the refusal (e.g.&nbsp;Copilot’s <em>“unable to review this pull request because the user who requested the review has reached their quota limit”</em>). Three consequences for driving a PR to fully clean:</p>
+<ul>
+<li><strong>A refusing reviewer is not “reachable,”</strong> so criterion 2’s external-verdict requirement falls to whichever external reviewer <em>is</em> working. Don’t stall a PR waiting for a reviewer that is refusing — but don’t quietly downgrade to self-review either while another external reviewer is answering normally.</li>
+<li><strong>Reviewers fail independently.</strong> One can be quota-dead while another reviews the same head normally, so check each one rather than generalizing from the first refusal.</li>
+<li><strong>Keep re-requesting each round anyway.</strong> A quota resets on its own schedule, so a reviewer that refused a few pushes ago can come back mid-session — which is exactly what criterion 2’s “re-check availability right before declaring clean” is for. Say so explicitly when reporting a PR ready: name which reviewer’s verdict the clean call rests on, and which one never weighed in at this head.</li>
+</ul>
+<p>The mechanics of detecting a refusal (it arrives as a posted review, not an API error, so the request call’s success proves nothing) are in <a href="../../memories/github.md"><code>memories/github.md</code></a>’s GitHub MCP tools section. (<code>ucdavis/rampp#111</code>, 2026-07-24/25: Copilot refused three times across two heads for quota while <code>claude-review</code> posted genuine verdicts at both; the PR was reported clean — and merged — on <code>claude-review</code>’s verdict, with Copilot’s absence stated in the ready-for-merge comment rather than papered over.)</p>
+<p><strong>A sixth case runs the other way from all five above: the review is genuine and complete, but the workflow posts the reviewer’s own tool invocation instead of the review body.</strong> The comment opens with a literal <code>gh pr comment &lt;N&gt; --repo &lt;owner&gt;/&lt;repo&gt; --body "$(cat &lt;&lt;'EOF'</code> and closes with <code>EOF\n)"</code>, wrapping a real, correct verdict as unrendered text — the model emitted a shell command as its final response and the workflow posted that string verbatim. Nothing is lost, and the same body usually also lands as a properly-rendered sibling comment, so the PR carries the review twice. Two reasons not to shrug at it: a comment opening with a raw <code>gh</code> invocation reads as a broken run, so a human is likely to discount a review that actually passed; and a verdict-detecting guard script (<code>check-review-execution.sh</code>) is now matching against a shell command rather than prose, which can misfire into a needless stub-retry and a second full review’s cost. Read the body and extract the verdict from inside the heredoc rather than re-triggering. (<code>UCD-SERG/serocalculator#392</code>, 2026-07-25; filed as <a href="https://github.com/d-morrison/gha/issues/312"><code>d-morrison/gha#312</code></a>, which proposes unwrapping the pattern before posting.)</p>
+</section>
+<section id="address-every-in-scope-review-comment" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Address Every In-Scope Review Comment</h1>
+<p>When iterating on a PR with a reviewer, <strong>address every in-scope flagged item</strong>, regardless of severity label. The reviewer’s “Not a blocker”, “minor”, “nit”, “optional”, “consider”, or “if you want” labels are for prioritization, not a free pass for the implementer.</p>
+<p>For each flagged item, do exactly one of:</p>
+<ol type="1">
+<li><strong>Fix it in this PR.</strong> The default path — most nits are 1–3 line changes.</li>
+<li><strong>Defer.</strong> Only when the fix expands the PR’s scope (new feature, broader refactor, separate concern), the requester has explicitly said this PR shouldn’t grow, or the flagged content isn’t actually yours to fix here (see the <code>main</code>-sync case below). File a follow-up issue and reference it in a PR comment so the item isn’t lost — except in the <code>main</code>-sync case, where the “follow-up” is fixing it on <code>main</code> directly, not a new issue.</li>
+</ol>
+<p>Then trigger another review and repeat until the PR is <strong>fully clean</strong> — zero flagged items under any heading, no “non-blocking”, “harmless”, “minor observation”, or “could improve” sections. “Looks good” / “no findings” / “approved” with no follow-on bullets is the bar. Resolve every inline review thread along the way, leaving only the final all-clear exchange.</p>
+<p><strong>Always resolve an inline thread the moment its comment is successfully addressed</strong> — the fix pushed and a reply posted naming it — in the same pass, whatever workflow you’re in: a formal <code>ard</code>/<code>ardi</code> round, a CI-monitor nudge, or a one-off fix outside any loop. Addressing without resolving leaves a thread that reads as outstanding work to every later reviewer, blocks <a href="fully-clean.md"><code>fully-clean</code></a>’s every-inline-thread-resolved criterion, and drags stale noise into the next review round. The per-disposition settlement rules in <code>ard</code> step 4b still govern the exceptions: a <strong>Rebut</strong> stays open until the reviewer drops it, and an <strong>Address</strong> you’re not confident fully settles the concern gets a reply asking for confirmation instead of a resolve. The <code>resolve-pr-threads</code> skill sweeps any stragglers, but it’s a backstop — resolve-on-address is the default, not a cleanup step.</p>
+<p>Do <strong>not</strong> report “ready to merge with one minor nit noted” / “harmless as-is” / “can address if you want” — that hedging just pushes triage back to the requester. If after 3–4 rounds the reviewer keeps generating new nits each cycle (asymptotic noise), surface that and ask whether to keep going or accept the current state.</p>
+<p><strong>Noise is per-item, not per-round — don’t stop the whole loop over one recurring flag.</strong> A long-running PR can have both real findings (worth fixing every round) and one specific item the reviewer re-raises verbatim round after round even though it’s already deferred/tracked (e.g.&nbsp;a file-length guideline already split into a follow-up issue). Keep fixing every <em>new</em> finding as it appears — don’t let the recurring item make you stop processing genuinely new ones. But stop re-litigating <em>that one item</em> every round: reply once pointing at the tracked issue, and hold on it specifically rather than re-deferring it on each pass. Surface the pattern to the user (which item, how many rounds, where it’s tracked) and let them decide whether to resolve it now (e.g.&nbsp;do the split) or leave it as accepted recurring noise — don’t decide unilaterally to either keep re-processing it or silently drop it. (rme#706 ran 100+ review rounds: each round’s <em>new</em> findings — a missing derivation step, a missing i.i.d. hypothesis, an unverified citation locator — got fixed every time; the one recurring file-length flag got a single reply-and-hold each round until the user weighed in.)</p>
+<p><strong>When a finding is a pattern (a formatting/style rule broken in one spot), apply it everywhere it recurs in the same file, not just the flagged line.</strong> A reviewer that flags one inconsistent list-item format is telling you about the rule, not just that one item — fix every occurrence in the same file that breaks it in the same pass, rather than waiting for the reviewer to flag each occurrence in a separate round. Re-scan the whole changed file for the same pattern before pushing the fix.</p>
+<p><strong>When a prose fix changes wording that’s also paraphrased elsewhere in the same PR (a CHANGELOG entry, a PR description, a cross-reference), sync that copy too.</strong> A CHANGELOG entry written before the review lands often quotes or paraphrases the exact phrase a reviewer later flags; fixing the source prose but leaving the paraphrase stale reintroduces the same wording issue one file over. Grep the diff for the flagged phrase before considering the finding closed. (ai-config#373: fixed “routing/dispatch site” in the skill per review, but the CHANGELOG entry still said it until a follow-up commit.)</p>
+<p><strong>The same sync is needed when the review fix is to CODE BEHAVIOR rather than to wording — and that case is easier to miss, because nothing about fixing a bug points at the changelog.</strong> The rule above fires on a recognizable trigger: a reviewer quotes a phrase, so you go looking for that phrase. A behavior finding gives you no phrase to grep. You change the code, update the PR body’s description of what it now does, and the <code>NEWS.md</code>/<code>CHANGELOG.md</code> entry — written before the review, in prose that described the <em>old</em> behavior correctly — goes on asserting it. Every later round then reviews a diff whose changelog contradicts its own code, and no reviewer flags it, since each file reads plausibly on its own. The shipped result is worse than a stale paraphrase: a user reading the release notes is told the opposite of what the release does. So after any Address that changes behavior, re-read the PR’s changelog entry against the new behavior — not just the code and the PR body. Fold it into the same pre-push self-review pass <a href="ardi.md"><code>ardi</code></a> already requires; a changelog entry is a claim about the diff, so <a href="../writing/fact-check-prose.md"><code>fact-check-prose</code></a> applies to it exactly as it applies to any other prose in the PR. (d-morrison/altdoc#78, 2026-07-27: review round 2 established that mkdocs serves <code>/man/foo/</code>, not <code>/man/foo.html</code>; the code and the PR body were corrected that round, while <code>NEWS.md</code> kept saying links point at <code>.html</code> under “<code>mkdocs</code> and <code>quarto_website</code>” through two further clean review rounds. Caught by a <code>main</code>-sync merge conflict that happened to land in that entry — not by any review, and not by any check.)</p>
+<p><strong>A flagged item that came in via a <code>main</code>-sync merge, not your own diff, is still a Defer — just one where the follow-up is fixing it on <code>main</code> directly, not filing a per-PR issue.</strong> This is not the ARD skill’s “Acknowledge” disposition: <code>skills/ard/SKILL.md</code> reserves Acknowledge for praise or a no-ask observation, and explicitly warns against stretching it to dodge a real finding — a redundant config line a reviewer flags is a real finding with an implied fix request, so it needs a real disposition, not a label that means “no change requested.” When a reviewer flags something (a redundant config line, a stale pattern) inside a file your branch only touches because you merged <code>main</code> in to resolve a conflict, check provenance before fixing it: <code>git log</code>/<code>git blame</code> the flagged line, or just compare against <code>origin/main</code>’s current content. If it’s identical to <code>main</code>, “fixing” it on your branch alone doesn’t fix anything — it just makes your branch disagree with <code>main</code> on unrelated content the next person to touch that file will have to reconcile again. Reply agreeing the finding is correct but out of scope for this PR, and leave it for whoever owns that file’s actual content to fix on <code>main</code> directly — no follow-up issue needed, since the fix target is <code>main</code> itself, not this PR’s own change. (<code>UCD-SERG/serocalculator#503</code>: a review flagged <code>.Rbuildignore</code>’s <code>^\.posit/assistant$</code> as redundant with the existing <code>^\.posit$</code> pattern above it — both lines had landed together in an already-merged <code>main</code> commit (#579), picked up via a routine <code>main</code>-sync merge, not introduced by #503’s own diff. Deferred to <code>main</code> instead of fixed on the branch.)</p>
+<p><strong>This generalizes to a skill’s own inline restatement of a fragment it links to.</strong> A <code>SKILL.md</code> that links a backing <code>shared/</code> fragment for the full detail often <em>also</em> restates the fragment’s approach or word list inline (in its <code>description</code> field, or a short procedure-step summary) so a reader doesn’t have to open the linked file. Fixing a bug in the fragment doesn’t automatically fix these inline restatements — they’re a second, independent copy of the same claim, and a review round after the fragment fix can catch them going stale exactly like a CHANGELOG paraphrase does. Grep the whole PR diff for the fixed phrase/word-list, not just the fragment file, before considering a fragment fix complete. (<code>ai-config#507</code>: fixing <code>forward-references.md</code>’s regex left <code>fix-forward-references/SKILL.md</code>’s own <code>description</code> field and Step 2 summary describing the old, already-fixed approach — caught in a second review round.)</p>
+<p><strong>A bot that re-raises an item as “not addressed” may simply not have seen your reply — check the timestamps before treating it as an impasse.</strong> An automated reviewer gathers the PR’s comments once, when its run starts. A rebuttal posted after that snapshot is invisible to it, so the next round reports the item as still open and unaddressed even though a substantive reply is sitting in the thread. The tell is a re-raise that repeats the original finding verbatim and speaks only to whether the <em>code</em> changed, without engaging any argument you made. Before escalating, compare your reply’s timestamp against the review run’s <code>started_at</code> (<code>gh run view &lt;id&gt; --json startedAt</code>, or the <code>started_at</code> field each run carries in <code>get_check_runs</code> when <code>gh</code> is absent): if the reply landed after the run began, it is a stale re-raise, not a genuine disagreement. Reply once pointing at the earlier rebuttal (link it directly — the next run will see it), and don’t count that round toward the rebuttal-didn’t-convince-them test in <code>fully-clean.md</code>.</p>
+<p>The ordering fix is cheap: when a round is Rebut-only, post the rebuttal <strong>before</strong> anything that triggers the next review (a push, an <code>@claude</code> mention), so it is in the snapshot the next run reads. When a round mixes Address and Rebut, post the rebuttals first and push the code second, for the same reason. (d-morrison/altdoc#34: a <code>\pkg{}</code> rendering rebuttal carrying a <code>pandoc</code> run that disproved the finding’s implied hazard was posted about a minute before the follow-up review job started; that review reported the item “wasn’t addressed in <code>9398d5d</code>” and re-posted the identical suggestion.)</p>
+<p><strong>A finding can be right while its <code>suggestion</code> block is wrong — verify the suggested literal before applying it.</strong> A GitHub <code>```suggestion</code> block is one-click-appliable, which is exactly what makes an unverified one dangerous: the surrounding prose argues for a change you agree with, so the concrete replacement rides in on that agreement without being checked itself. Treat any file path, version, flag, or command inside a suggestion as a claim to verify, not as text to accept — the same standard <a href="../writing/fact-check-prose.md"><code>fact-check-prose</code></a> applies to the diff. Accepting a bad literal is worse than ignoring the finding, because it publishes a specific wrong value under the reviewer’s apparent authority. When the suggestion is wrong but its point stands, fix the underlying issue your own way and say in the reply why the suggested form was set aside — silently deviating reads as having missed it. (ai-config#726: a review correctly flagged that a <code>&lt;path&gt;</code> placeholder didn’t say where a script came from, but suggested <code>&lt;path-to-gha-checkout&gt;/check-new-line-breaks.py</code> — one directory level too high, since the composite action’s directory and the script inside it share a name. <code>git ls-files</code> in the gha checkout settled it in one command. Applying the suggestion verbatim would have documented a nonexistent path in the entry whose whole purpose is getting someone to run that script.)</p>
+<p><strong>The same check applies to a fix a reviewer describes in prose rather than in a <code>suggestion</code> block, and the sharpest test is the reviewer’s own example.</strong> A finding that ships a concrete repro case has handed you a test fixture: run the proposed fix against that very case before adopting it. A reviewer reasoning about a fix in the abstract can propose one that is directionally right and still insufficient – it closes the failure mode they named while leaving the case they cited broken – and adopting it verbatim converts their partial diagnosis into your shipped bug, with the review thread reading as though the item were settled. When the proposed fix falls short, prefer eliminating the failure mode outright over layering another patch onto it, and post the evidence (the fix applied to their example, and what it still produces) rather than just asserting it was insufficient. (gha#318, 2026-07-26: a review correctly found that a heredoc-terminator regex lacked an end-of-line anchor, and suggested adding one. Tested against the reviewer’s own indented-<code>EOF</code> example, the suggested anchor still truncated the body, because the terminator’s leading <code>[ \t]*</code> accepted a space-indented closing line real bash rejects. Matching whole lines against the tag – how bash itself ends a heredoc – removed the whole lazy-quantifier/anchor failure mode instead of narrowing it; the reply carried the failing output of the suggested form.)</p>
+<p><strong>And the mirror case: a finding can be wrong on its stated grounds while still pointing at something real.</strong> The two bullets above check the reviewer’s <em>fix</em>; this one checks their <em>premise</em>. A confidently reasoned factual claim – this pattern is valid, that value is in range, this call is safe – invites one of two lazy responses: accept it because it sounds authoritative, or dismiss the whole item once you notice the claim is false. Both lose information, because a reviewer usually arrives at a wrong premise while looking at something that genuinely bothered them.</p>
+<p>So reproduce the claim before answering it, and answer the concern separately from the premise. When the premise turns out to be false, say so with the command and its output rather than by assertion, and then address what prompted it anyway – a reader who tested your example and got a different result has a real problem even if their explanation of it was wrong. Expect the corrected mechanism to be more useful than the original text: a premise worth disputing usually sits on something you had not fully explained. (ai-config#756, 2026-07-28: a review held that <code>[\x{2014}]</code> is valid PCRE and so could not produce the “code point value too large” error the fragment described, and proposed an out-of-range <code>[\x{110000}]</code> instead. Running it showed the original failing exactly as written – the cause is the locale, since PCRE in non-UTF mode rejects any <code>\x{}</code> above <code>0xFF</code>, and the same command succeeds under <code>LC_ALL=C.UTF-8</code>. The proposed replacement would have been worse, failing unconditionally and hiding that environment-dependence, which is the whole reason the swallowed error is dangerous. The reviewer’s actual worry – that a reader might not reproduce it – was right, and sharper than stated.)</p>
+<p><strong>When a finding cites a source, read the cited source before reproducing anything – it is the cheaper instrument, and it is the one that can show the finding backwards rather than merely unsupported.</strong> The bullet above says to reproduce the claim. That is right, and it is the second thing to do when a citation is on the table, because reproduction tests the <em>behavior</em> while the citation tests the <em>reasoning</em>, and only the second can catch a finding whose own evidence contradicts it. A citation is also the most persuasive part of a review and the least likely to be checked: a linked changelog entry reads as settled fact, so the finding inherits authority it never earned, and a one-click <code>suggestion</code> block turns that borrowed authority into an applied edit.</p>
+<p>Grep the cited document for the mechanism the finding names. One command usually decides it, which makes this an <a href="algorithmatize-checks.md"><code>algorithmatize-checks</code></a> case rather than a judgment call, and a fabricated mechanism produces a clean zero-hit result that is hard to argue with. Then quote the entry in the reply rather than paraphrasing the disagreement, and reproduce the behavior as the independent second leg.</p>
+<p>Do not stop at winning the point. A finding that misread a source usually did so because the claim it questioned had nothing checkable next to it, so fold the citation into the file itself, per <a href="fully-clean.md"><code>fully-clean</code></a>’s note that a fresh review run re-derives from scratch and will not read the thread. (ai-config#762, 2026-07-28: a review held that <code>htmlwidgets::saveWidget(selfcontained = TRUE)</code> no longer needs pandoc, citing htmlwidgets 1.6.0 as having “switched to <code>base64enc::dataURI()</code>”, and supplied a suggestion block deleting the <code>rmarkdown::pandoc_available()</code> gate. <code>grep -inE 'pandoc|base64'</code> over that NEWS file returned six pandoc hits and zero base64 hits, and the 1.6.0 entry says the path “now uses the <code>{rmarkdown}</code> package to discover and call pandoc” – so the citation established the opposite of the finding, and incidentally made the gate the <em>same lookup</em> htmlwidgets performs rather than a proxy for it. Applying the suggestion would have removed the only warning before a hard error, in the one step that exists for running headless. The reviewer accepted the rebuttal on the next round and called its own prior claim a hallucination.)</p>
+<p><strong>When a reviewer hedges a finding because it depends on code it cannot see, check whether <em>you</em> can see it — the hedge is an invitation, not a verdict.</strong> Automated reviewers work from the diff, so a finding that turns on a reusable workflow, a dependency’s internals, or another repo’s behavior arrives with language like “moderate rather than high confidence”, “depends on behavior not visible in this diff”, or “worth the author confirming intent”. That hedge is a fact about the <em>reviewer’s</em> visibility, not about how likely the finding is. You frequently have access it lacks: the repo cloned locally, a pinned dependency vendored in, or permission to fetch the source.</p>
+<p>Reading it converts a maybe into a settled yes or no, and that changes the disposition. Confirmed, it earns a fix or a precisely-scoped follow-up issue with the mechanism recorded; disproved, it earns a Rebut with evidence instead of a vague “I think this is fine”. Either way the next reader is spared re-deriving it. Quote the specific lines you checked, since a follow-up issue that merely repeats the reviewer’s hedge is barely more useful than the review comment it came from.</p>
+<p>(<code>UCD-SERG/serodynamics#274</code>, 2026-07-28: a review flagged possible duplicate review dispatch at moderate confidence, explicitly because the reusable workflow in <code>d-morrison/gha</code> was not visible to it. That repo was cloned locally. Reading both matchers showed the reusable fires on <code>@claude[[:space:]]+review</code> and the local job on a punctuation-tolerant superset, so the plainest phrasing — <code>@claude review</code> — matches both and dispatches twice. The follow-up issue could then record the exact overlap table and note that the upstream gap motivating the local job had since been closed, making “broaden upstream, delete the local job” a real option.)</p>
+</section>
+<section id="references" class="level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+<div id="refs" role="list">
+
+</div>
+
+
+<!-- -->
+
+<script>
+const theoremLikeClasses = new Set([
+  "thm",
+  "theorem",
+  "lem",
+  "lemma",
+  "cor",
+  "corollary",
+  "prp",
+  "proposition",
+  "cnj",
+  "conjecture",
+  "def",
+  "definition",
+  "exm",
+  "example",
+  "exr",
+  "exercise",
+  "proof",
+  "remark",
+  "solution"
+]);
+const inlineAnchorSeparator = "\u00A0";
+const maxAnchorRetryAttempts = 5;
+const anchorRetryDelayMs = 50;
+
+const isTheoremLikeDiv = (div) =>
+  Array.from(div.classList).some((className) => theoremLikeClasses.has(className));
+
+const addTheoremLikeDivAnchors = () => {
+  for (const theoremDiv of window.document.querySelectorAll("div[id]")) {
+    if (!isTheoremLikeDiv(theoremDiv)) {
+      continue;
+    }
+
+    if (!theoremDiv.classList.contains("anchored")) {
+      theoremDiv.classList.add("anchored");
+    }
+
+    if (!theoremDiv.dataset.anchorId) {
+      theoremDiv.dataset.anchorId = theoremDiv.id;
+    }
+  }
+};
+
+const ensureSectionHeadingAnchorAttributes = () => {
+  for (const sectionHeading of window.document.querySelectorAll(
+    "section[id] > h1, section[id] > h2, section[id] > h3, section[id] > h4, section[id] > h5, section[id] > h6"
+  )) {
+    if (!sectionHeading.classList.contains("anchored")) {
+      sectionHeading.classList.add("anchored");
+    }
+
+    if (!sectionHeading.dataset.anchorId) {
+      sectionHeading.dataset.anchorId = sectionHeading.parentElement.id;
+    }
+  }
+};
+
+const normalizeInternalAnchorLinkIcons = () => {
+  for (const link of window.document.querySelectorAll(
+    "a.anchorjs-link, a.quarto-xref"
+  )) {
+    if (link.classList.contains("quarto-xref")) {
+      link.classList.add("no-external");
+      link.classList.remove("external");
+      continue;
+    }
+
+    const href = link.getAttribute("href") || "";
+    if (!href.startsWith("#")) {
+      continue;
+    }
+
+    link.classList.add("no-external");
+    link.classList.remove("external");
+  }
+};
+
+const moveTheoremDivAnchorsInline = () => {
+  let hasPendingAnchors = false;
+
+  for (const theoremDiv of window.document.querySelectorAll("div[id]")) {
+    if (!isTheoremLikeDiv(theoremDiv)) {
+      continue;
+    }
+
+    const theoremTitle = theoremDiv.querySelector(".theorem-title");
+    if (!theoremTitle) {
+      continue;
+    }
+
+    const anchorLink = Array.from(
+      theoremDiv.querySelectorAll("a.anchorjs-link")
+    ).find((link) => {
+      const href = link.getAttribute("href") || "";
+      return href === `#${theoremDiv.id}` || href.endsWith(`#${theoremDiv.id}`);
+    });
+
+    if (anchorLink && anchorLink.parentElement === theoremTitle) {
+      continue;
+    }
+
+    if (!anchorLink) {
+      hasPendingAnchors = true;
+      continue;
+    }
+
+    anchorLink.classList.remove("external");
+    theoremTitle.append(inlineAnchorSeparator);
+    theoremTitle.append(anchorLink);
+  }
+
+  return hasPendingAnchors;
+};
+
+const moveTheoremDivAnchorsInlineWithRetry = (
+  attemptsRemaining = maxAnchorRetryAttempts
+) => {
+  const hasPendingAnchors = moveTheoremDivAnchorsInline();
+  if (hasPendingAnchors && attemptsRemaining > 0) {
+    window.setTimeout(() => {
+      moveTheoremDivAnchorsInlineWithRetry(attemptsRemaining - 1);
+    }, anchorRetryDelayMs);
+  }
+};
+
+if (window.document.readyState === "loading") {
+  window.document.addEventListener("DOMContentLoaded", () => {
+    addTheoremLikeDivAnchors();
+    ensureSectionHeadingAnchorAttributes();
+    normalizeInternalAnchorLinkIcons();
+    moveTheoremDivAnchorsInlineWithRetry();
+  });
+} else {
+  addTheoremLikeDivAnchors();
+  ensureSectionHeadingAnchorAttributes();
+  normalizeInternalAnchorLinkIcons();
+  moveTheoremDivAnchorsInlineWithRetry();
+}
+
+window.addEventListener("load", () => {
+  normalizeInternalAnchorLinkIcons();
+  moveTheoremDivAnchorsInlineWithRetry();
+});
+</script>
+
+<script>
+const defaultAnchorIconFallback = "#";
+
+function getDefaultAnchorTemplate() {
+  const defaultAnchor = document.querySelector("a.anchorjs-link[data-anchorjs-icon]");
+  if (!defaultAnchor) {
+    return null;
+  }
+
+  return {
+    icon: defaultAnchor.getAttribute("data-anchorjs-icon"),
+    style: defaultAnchor.getAttribute("style")
+  };
+}
+
+function alignEquationAnchorWithDefault(anchor, template) {
+  if (!anchor) {
+    return;
+  }
+
+  anchor.classList.remove("external");
+
+  if (template && template.icon) {
+    anchor.setAttribute("data-anchorjs-icon", template.icon);
+    anchor.textContent = "";
+  } else if (!anchor.textContent) {
+    anchor.textContent = defaultAnchorIconFallback;
+  }
+
+  if (template && template.style) {
+    anchor.setAttribute("style", template.style);
+  } else {
+    anchor.removeAttribute("style");
+  }
+}
+
+function alignEquationAnchorsWithDefault() {
+  const template = getDefaultAnchorTemplate();
+  document.querySelectorAll("a.equation-anchor").forEach(function (anchor) {
+    alignEquationAnchorWithDefault(anchor, template);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const equations = document.querySelectorAll("span[id^='eq-']");
+  equations.forEach(function (equation) {
+    if (equation.querySelector(".equation-anchor")) {
+      return;
+    }
+
+    if (!equation.querySelector(".math.display")) {
+      return;
+    }
+
+    const id = equation.getAttribute("id");
+    if (!id) {
+      return;
+    }
+
+    equation.classList.add("equation-anchor-target");
+
+    const anchor = document.createElement("a");
+    anchor.className = "equation-anchor anchorjs-link";
+    anchor.href = "#" + id;
+    anchor.setAttribute("aria-label", "Permalink to this equation");
+    equation.appendChild(anchor);
+  });
+
+  alignEquationAnchorsWithDefault();
+});
+
+window.addEventListener("load", alignEquationAnchorsWithDefault);
+</script>
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const cellDetails = window.document.querySelectorAll(".cell details.code-fold");
+        for (let i=0; i<cellDetails.length; i++) {
+          const details = cellDetails[i];
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell div.sourceCode.cell-code");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/d-morrison\.github\.io\/wai\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // default icon
+            link.classList.add("external");
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Pull-Request Workflow with Agents"</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">  html: default</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">  revealjs:</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">    output-file: pr-workflow-with-agents-slides.html</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">  pdf:</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">    output-file: pr-workflow-with-agents-handout.pdf</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">  docx:</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">    output-file: pr-workflow-with-agents.docx</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="an">preview-changed:</span><span class="co"> true</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>The practices below apply whether you are driving an agent's work or doing the</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>work yourself. They keep parallel sessions from colliding and keep a pull</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>request moving toward a clean, mergeable state.</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="fu"># File an Issue Before Starting</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>{{&lt; include ../.ai-config/shared/workflow/issue-first.md &gt;}}</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="fu"># Claim a PR or Issue Before Working on It</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>{{&lt; include ../.ai-config/shared/workflow/claim-pr.md &gt;}}</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="fu"># Keep Your Branch Synced with Main</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>{{&lt; include ../.ai-config/shared/workflow/sync-with-main.md &gt;}}</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="fu"># Driving a Pull Request to Clean</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>{{&lt; include ../.ai-config/shared/workflow/ardi.md &gt;}}</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="fu"># What "Fully Clean" Means {#sec-fully-clean}</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>{{&lt; include ../.ai-config/shared/workflow/fully-clean.md &gt;}}</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="fu"># Address Every In-Scope Review Comment</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>{{&lt; include ../.ai-config/shared/workflow/address-every-comment.md &gt;}}</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a><span class="fu"># References {.unnumbered}</span></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Built with <a href="https://quarto.org/">Quarto</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/d-morrison/wai/edit/main/chapters/pr-workflow-with-agents.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/d-morrison/wai/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/d-morrison/wai/blob/main/chapters/pr-workflow-with-agents.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
