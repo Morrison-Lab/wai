@@ -1,0 +1,10 @@
+# Working with AI
+
+> UCD-SERG lab notes on working with AI coding assistants: policies, coding agents, and PR workflow
+
+## Pages
+
+- [Working with AI](https://d-morrison.github.io/wai/index.llms.md)
+- [Coding Agents](https://d-morrison.github.io/wai/chapters/coding-agents.llms.md)
+- [Policies for Using AI](https://d-morrison.github.io/wai/chapters/ai-use-policies.llms.md)
+- [Pull-Request Workflow with Agents](https://d-morrison.github.io/wai/chapters/pr-workflow-with-agents.llms.md)
