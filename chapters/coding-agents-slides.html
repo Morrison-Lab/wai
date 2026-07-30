@@ -330,7 +330,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-07-29 12:53:55 (PDT)</p>
+  <p class="date">Last modified: 2026-07-29 19:02:52 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -2233,6 +2233,82 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Open a <strong>new</strong> terminal window (so it picks up your updated config) and run:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb43-1"><a aria-label="1"></a><span class="ex">claude</span> <span class="at">--version</span>      <span class="co"># prints the installed version number</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If you get a version number, you’re ready to run <code>claude</code> in your project directory. If you get <code>command not found</code>, re-check the two <code>PATH</code> issues above: the directory must be on <code>PATH</code>, and you must <code>rehash</code> (or open a fresh window) after changing it.</p>
+</section></section>
+<section>
+<section id="sec-ai-mcp-server-setup" class="title-slide slide level1 center" data-number="29">
+<h1><span class="header-section-number">29</span> Setting up MCP servers</h1>
+
+</section>
+<section class="slide level2">
+
+<p>The <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> (MCP) is how a harness gains typed access to external systems. Configuring a server is usually a one-line command. Diagnosing one that <em>silently</em> isn’t working is the part worth writing down, because the common failure mode produces no error at all — only a quiet absence of tools you assumed were there.</p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>These notes were written in July 2026, from a real diagnosis on a Linux machine. As with the rest of this chapter, treat the specifics with caution — harness internals and vendor defaults change quickly.</p>
+</div>
+</div>
+</div>
+<h4 id="installed-is-not-registered">Installed is not registered</h4>
+<p>A server binary sitting on disk is not available to your agent. The harness knows only what its configuration declares, so installing <a href="https://github.com/github/github-mcp-server"><code>github-mcp-server</code></a> and <em>registering</em> it are two separate acts. Skipping the second is easy to miss, because the first one felt like the hard part.</p>
+<p>The check is one command:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb44-1"><a aria-label="1"></a><span class="ex">claude</span> mcp list</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<h4 id="a-broken-server-can-occupy-the-name-your-working-one-wanted">A broken server can occupy the name your working one wanted</h4>
+<p>This is the failure worth knowing about, and it is nastier than a missing entry, because <code>claude mcp list</code> shows you something that looks right.</p>
+<p>Plugin marketplaces can register servers of their own. An official GitHub plugin may install a <strong>remote</strong> server under exactly the name you meant to give your <strong>local</strong> one. The listing then reports a <code>github</code> server that is not your setup at all, and the local binary you installed goes unregistered and unnoticed.</p>
+<p>So read the listing for the <em>transport and address</em>, not just the name:</p>
+<pre><code>plugin:github:github: https://api.githubcopilot.com/mcp/ (HTTP) - X Failed to
+connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
+<p>An <code>(HTTP)</code> entry pointing at a vendor URL is a remote server. A local one shows a command path instead.</p>
+<h4 id="and-401-mean-different-things">400 and 401 mean different things</h4>
+<p>The status code is the whole diagnosis here, and it is easy to skim past.</p>
+<p>The configuration a plugin ships may hardcode a credential placeholder:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb46-1"><a aria-label="1"></a><span class="fu">{</span><span class="dt">"headers"</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">"Authorization"</span><span class="fu">:</span> <span class="st">"Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}"</span><span class="fu">}}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If that variable has no value when the harness starts, the header goes out as a bare <code>Bearer</code> with nothing after it. That is <strong>malformed</strong>, not <strong>unauthorized</strong>:</p>
+<ul>
+<li><strong>401</strong> means the server read your token and rejected it — a real credential problem: expired, wrong scopes, wrong account.</li>
+<li><strong>400</strong> means no token was ever substituted — a <em>configuration</em> problem, and no amount of re-issuing tokens will fix it.</li>
+</ul>
+<p>Chasing a 400 as though it were a 401 sends you to the token-minting page for a problem that lives in a config file.</p>
+<h4 id="supply-credentials-without-storing-a-token">Supply credentials without storing a token</h4>
+<p>The obvious registration bakes a token straight into harness config:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><a aria-label="1"></a><span class="ex">claude</span> mcp add github <span class="at">-e</span> GITHUB_PERSONAL_ACCESS_TOKEN=<span class="op">&lt;</span>pat<span class="op">&gt;</span> -- <span class="op">&lt;</span>server<span class="op">&gt;</span> stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>That writes a live credential to a config file in plain text, and pins you to one token that will eventually expire.</p>
+<p>A launch wrapper avoids both. It reads the credential at start time from a tool that already holds one, so nothing is stored and the server follows whatever account you are currently logged in as:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb48-1"><a aria-label="1"></a><span class="co">#!/bin/sh</span></span>
+<span id="cb48-2"><a aria-label="2"></a><span class="bu">set</span> <span class="at">-eu</span></span>
+<span id="cb48-3"><a aria-label="3"></a></span>
+<span id="cb48-4"><a aria-label="4"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_TOOLSETS</span><span class="op">:-</span>default,actions<span class="va">}</span><span class="st">"</span></span>
+<span id="cb48-5"><a aria-label="5"></a><span class="bu">export</span> <span class="va">GITHUB_TOOLSETS</span></span>
+<span id="cb48-6"><a aria-label="6"></a></span>
+<span id="cb48-7"><a aria-label="7"></a><span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="op">=</span><span class="st">"</span><span class="va">$(</span><span class="ex">gh</span> auth token<span class="va">)</span><span class="st">"</span></span>
+<span id="cb48-8"><a aria-label="8"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb48-9"><a aria-label="9"></a>  <span class="bu">echo</span> <span class="st">"empty token; run 'gh auth login'"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb48-10"><a aria-label="10"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb48-11"><a aria-label="11"></a><span class="cf">fi</span></span>
+<span id="cb48-12"><a aria-label="12"></a><span class="bu">export</span> <span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span></span>
+<span id="cb48-13"><a aria-label="13"></a></span>
+<span id="cb48-14"><a aria-label="14"></a><span class="bu">exec</span> <span class="st">"</span><span class="va">$HOME</span><span class="st">/.local/bin/github-mcp-server"</span> stdio <span class="st">"</span><span class="va">$@</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Register the wrapper rather than the binary:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb49-1"><a aria-label="1"></a><span class="ex">claude</span> mcp add <span class="at">--scope</span> user github <span class="at">--</span> ~/.local/bin/github-mcp-server-stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Note the explicit failure when the token comes back empty. A wrapper that silently exports an empty string reproduces the bare-<code>Bearer</code> bug you just finished diagnosing.</p>
+<h4 id="toolsets-are-opt-in-and-the-default-may-omit-what-you-need">Toolsets are opt-in, and the default may omit what you need</h4>
+<p>A server does not necessarily expose everything it can do. GitHub’s server exposes a default group, and that default carries <strong>no continuous-integration access at all</strong> — no workflow runs, no job logs, no re-run trigger.</p>
+<p>If your workflow involves driving pull requests to a clean state, that omission matters, because reading check status is most of the job. Request the extra group explicitly:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb50-1"><a aria-label="1"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span>default,actions</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Note that the selection <strong>replaces</strong> the default rather than extending it, which is why the value above names <code>default</code> explicitly. Writing <code>actions</code> alone would silently trade away every default tool for the four you asked for — a net <em>loss</em> that looks like a successful configuration change.</p>
+<p>So compare the tool list before and after, and confirm the count went up rather than sideways.</p>
+<h4 id="verify-with-a-real-call-and-expect-to-restart">Verify with a real call, and expect to restart</h4>
+<p>Two habits close this out.</p>
+<p><strong>Verify by calling, not by reading a list.</strong> A tool appearing in the registry proves the harness parsed a config file. It does not prove the server started, authenticated, or can reach the API. One cheap identity call plus one read (for GitHub: <code>get_me</code>, then listing pull requests on a repo you know) proves the whole path end to end.</p>
+<p><strong>Expect the tools to be missing until you restart.</strong> MCP servers connect when a session starts, so a server registered mid-session is inert for the rest of it. This is a common false alarm: the registration worked, and the tools genuinely are not there yet.</p>
+<p>Finally, note which new tools can <em>write</em>. A re-run or dispatch tool can trigger CI, and permissive permission modes will not prompt before it does. Treat those the way you would treat a merge — something a human authorizes, not something an agent does in passing.</p>
 </section></section>
 <section>
 <section id="references" class="title-slide slide level1 unnumbered center">
