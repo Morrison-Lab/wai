@@ -72,8 +72,9 @@ Three properties matter when you write one:
 `AGENTS.md` is stewarded by the Agentic AI Foundation under the Linux Foundation,
 and it is worth being precise about what it standardizes:
 a filename, a location, and a nearest-file-wins precedence rule.
-Its own FAQ answers "are there required fields?" with
-"No. AGENTS.md is just standard Markdown."
+Asked whether there are any required fields,
+its own FAQ answers that there are none ---
+"AGENTS.md is just standard Markdown."
 So two agents reading the same file are guaranteed to *see* the same text
 and guaranteed nothing about acting on it alike.
 
