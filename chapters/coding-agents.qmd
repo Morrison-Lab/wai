@@ -97,6 +97,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/agent-skills.qmd >}}
 
+# Customizing an Agent {#sec-ai-customization}
+
+{{< include ai-tools/customizing-agents.qmd >}}
+
 # Claude Code Cloud Environments {#sec-ai-claude-cloud-env}
 
 {{< include ai-tools/claude-code-cloud-environments.qmd >}}
