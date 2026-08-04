@@ -152,10 +152,11 @@ If you keep a personal copy of something the repository also defines,
 which one wins depends on which mechanism you chose.
 
 **An @-mention picks the worker, not the words.**
-Naming a subagent guarantees which one runs,
-but "your full message still goes to Claude, which writes the subagent's task prompt
-based on what you asked."
-The mention controls the delegate, not the delegation.
+Naming a subagent guarantees which one runs.
+It does not hand that subagent your sentence:
+
+> Your full message still goes to Claude, which writes the subagent's task prompt based on what you asked.
+> The @-mention controls which subagent Claude invokes, not what prompt it receives.
 
 #### Hooks: The Part the Model Cannot Talk Its Way Around
 
@@ -165,9 +166,11 @@ They are
 [defined in JSON settings files](https://code.claude.com/docs/en/hooks)
 rather than in Markdown,
 and they run as shell commands, HTTP calls, or LLM prompts
-at fixed points in the harness's lifecycle:
+at fixed points in the harness's lifecycle.
+The [page on instruction files](https://code.claude.com/docs/en/memory)
+draws the contrast plainly:
 
-> Hooks execute as shell commands at fixed lifecycle events and apply regardless of what Claude decides.
+> Hooks execute as shell commands at fixed lifecycle events and apply regardless of what Claude decides to do.
 
 An event fires,
 a matcher selects which handlers apply
