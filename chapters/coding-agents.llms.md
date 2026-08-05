@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-04 17:01:52 (PDT)
+Last modified: 2026-08-05 16:27:49 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -558,7 +558,7 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 >
 > See [Section 15](#sec-ai-best-practices) for more details on workflow file security.
 
-**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 23](#sec-ai-when-to-use) for more guidance.
+**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 24](#sec-ai-when-to-use) for more guidance.
 
 #### Scenario 3: Uncertain Which Scenario Applies
 
@@ -589,7 +589,7 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 
 - See the [UCD-SERG Lab Manual’s continuous integration chapter](https://ucd-serg.github.io/lab-manual/continuous-integration.html) for setting up GitHub Actions workflows
 - See [Section 15](#sec-ai-best-practices) and [Section 14](#sec-ai-benefits-hazards) for security considerations with workflow files
-- See [Section 23](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
+- See [Section 24](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
 - See the [GitHub Actions documentation](https://docs.github.com/en/actions) for workflow syntax and troubleshooting
 
 # 14 Benefits and Hazards
@@ -1521,9 +1521,149 @@ Skills package procedural knowledge and team-specific context into portable, ver
 
 For the complete specification and more details, see [agentskills.io](https://agentskills.io/home).
 
-The [d-morrison/ai-config](https://github.com/d-morrison/ai-config) repository contains an example of personal Claude Code configuration, including user-level skills and slash commands, synced across machines via Git.
+A skill is one of several ways to customize an agent, and not always the right one. [Section 22](#sec-ai-customization) compares it against:
 
-# 22 Claude Code Cloud Environments
+- instruction files
+- subagents
+- hooks
+- permissions
+
+That section also explains why Claude Code’s custom slash commands are now skills themselves.
+
+The [Morrison-Lab/ai-config](https://github.com/Morrison-Lab/ai-config) repository contains an example of personal Claude Code configuration, including user-level skills, hooks, and subagents, synced across machines via Git.
+
+# 22 Customizing an Agent
+
+[Section 21](#sec-ai-agent-skills) describes one way to extend an agent. It is not the only one, and a lab that knows only that one tends to write every customization as a skill, including the ones that should have been something else.
+
+This section maps the whole surface. The mechanisms differ less in what you can write in them — most are Markdown with a [YAML front matter](https://jekyllrb.com/docs/front-matter/) header, as [Section 6](#sec-ai-harness-construction) describes — than in **when they fire and who decides**.
+
+#### The Question That Picks the Mechanism
+
+Ask two things about the behavior you want:
+
+- **Who triggers it?** You, by typing something; the model, by judging it relevant; or the harness, on a fixed event.
+- **What happens if the model disagrees?** Some mechanisms are advice the model may ignore. Others are enforced by the harness whatever the model decides.
+
+That second question is the one people get wrong, and Claude Code’s own documentation is blunt about it. Instruction files are [described](https://code.claude.com/docs/en/memory) as “context, not enforced configuration”, delivered “as a user message after the system prompt”, so “there’s no guarantee of strict compliance.” The same page names the remedy:
+
+> To block an action regardless of what Claude decides, use a PreToolUse hook instead.
+
+A rule you cannot afford to have ignored does not belong in a `CLAUDE.md`.
+
+#### Instruction Files: Always-On Context
+
+`CLAUDE.md` and [`AGENTS.md`](https://agents.md/) are prose the harness loads at the start of a session, with no front matter and no schema ([Section 6](#sec-ai-harness-construction)).
+
+Three properties matter when you write one:
+
+- **Files concatenate; they do not override.** Claude Code [walks up the directory tree](https://code.claude.com/docs/en/memory) from the working directory, and “all discovered files are concatenated into context rather than overriding each other”, ordered from the filesystem root down. A project file does not replace your personal one.
+- **Imports exist, and they skip code spans.** The `@path/to/import` syntax pulls in another file, recursively, to a maximum depth of four hops. Paths resolve relative to the importing file. To *mention* a path without importing it, wrap it in backticks — import parsing skips fenced code blocks and code spans.
+- **The two filenames are not interchangeable.** Claude Code [reads `CLAUDE.md`, not `AGENTS.md`](https://code.claude.com/docs/en/memory), and recommends a `CLAUDE.md` whose first line is `@AGENTS.md` so both tools read one source. A symlink works on macOS and Linux; on Windows it needs Administrator privileges or Developer Mode, so the import is the portable choice. GitHub Copilot, by contrast, [reads all of](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions) `AGENTS.md`, `CLAUDE.md`, and `GEMINI.md`.
+
+`AGENTS.md` is stewarded by the Agentic AI Foundation under the Linux Foundation, and it is worth being precise about what it standardizes: a filename, a location, and a nearest-file-wins precedence rule. Asked whether there are any required fields, its own FAQ answers that there are none — “AGENTS.md is just standard Markdown.” So two agents reading the same file are guaranteed to *see* the same text and guaranteed nothing about acting on it alike.
+
+#### Skills, and the Commands That Became Them
+
+The distinction most people still draw here is out of date. Claude Code’s documentation [states](https://code.claude.com/docs/en/skills):
+
+> **Custom commands have been merged into skills.** A file at `.claude/commands/deploy.md` and a skill at `.claude/skills/deploy/SKILL.md` both create `/deploy` and work the same way.
+
+Existing `.claude/commands/` files keep working, and if a command and a skill share a name, the skill wins. So “slash command versus skill” is now a question about **an older file layout versus a newer one**, not about two different capabilities.
+
+What did *not* collapse is the invocation question. It moved into front matter, where it is now set per skill rather than implied by which directory the file sits in:
+
+| Front matter                     | You can invoke | The model can invoke |
+|----------------------------------|----------------|----------------------|
+| *(default)*                      | yes            | yes                  |
+| `disable-model-invocation: true` | yes            | no                   |
+| `user-invocable: false`          | no             | yes                  |
+
+This is the setting to think hardest about. A skill the model cannot invoke will never fire unless someone remembers it exists; a skill the model *can* invoke costs context on every turn, because its description sits in the listing whether or not it is ever used. Note also that `user-invocable` controls menu visibility rather than access: to block programmatic invocation, use `disable-model-invocation`.
+
+The portable core is small and worth knowing exactly. The [Agent Skills specification](https://agentskills.io/specification) requires precisely two front matter fields — `name` and `description` — and says of the body that there are no format restrictions. Everything past that is a vendor extension: Claude Code’s own docs describe invocation control, subagent execution, and dynamic context injection as extensions to the standard. Portability is therefore real but shallow: the folder and its metadata travel, and how much of the *behavior* travels depends on how alike two agents happen to be.
+
+One concrete sign that the format genuinely crosses vendors: GitHub Copilot [looks for skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills) in `.github/skills`, `.agents/skills`, and `.claude/skills` — a competitor’s directory name.
+
+#### Subagents: Delegating to a Fresh Context
+
+[Section 5](#sec-ai-agent-implementation) and [Section 8](#sec-ai-harness-agent-relationship) cover what a subagent *is* and how the harness runs one. The authoring question is narrower: a subagent is a single Markdown file with front matter in `.claude/agents/` (project) or `~/.claude/agents/` (personal), whose body becomes that agent’s entire system prompt.
+
+Two details are easy to get wrong.
+
+**Precedence runs the opposite way from skills.** For subagents, a project definition [outranks](https://code.claude.com/docs/en/sub-agents) a personal one. For skills, personal [outranks](https://code.claude.com/docs/en/skills) project. If you keep a personal copy of something the repository also defines, which one wins depends on which mechanism you chose.
+
+**An @-mention picks the worker, not the words.** Naming a subagent guarantees which one runs. It does not hand that subagent your sentence:
+
+> Your full message still goes to Claude, which writes the subagent’s task prompt based on what you asked. The @-mention controls which subagent Claude invokes, not what prompt it receives.
+
+#### Hooks: The Part the Model Cannot Talk Its Way Around
+
+Hooks are the mechanism this manual has not previously covered, and the one that changes what a customization is *worth*. They are [defined in JSON settings files](https://code.claude.com/docs/en/hooks) rather than in Markdown, and they run as shell commands, HTTP calls, or LLM prompts at fixed points in the harness’s lifecycle. The [page on instruction files](https://code.claude.com/docs/en/memory) draws the contrast plainly:
+
+> Hooks execute as shell commands at fixed lifecycle events and apply regardless of what Claude decides to do.
+
+An event fires, a matcher selects which handlers apply (by tool name, for instance), and the harness passes the handler JSON describing the event. Documented events include `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `Stop`, and `SessionEnd`, among a longer list; consult the reference rather than this page for the current set.
+
+The practical rule: anything stated as “always” or “never” in a `CLAUDE.md` is a candidate to become a hook. Prose asks; a `PreToolUse` hook decides.
+
+#### Settings and Permissions: The Boundary Around All of It
+
+Settings live in `~/.claude/settings.json` (user), `.claude/settings.json` (project, shared), and `.claude/settings.local.json` (project, private), with a managed-policy layer above them for organizations. The [precedence](https://code.claude.com/docs/en/settings) runs managed, then command-line arguments, then local, then project, then user.
+
+One exception deserves emphasis, because it is the opposite of what the ladder implies:
+
+> Permission rules behave differently because they merge across scopes rather than override.
+
+Rules are written as `Tool(specifier)` — for example `Bash(npm run test *)`, `Read(./.env)`, or `Skill(commit)` — and sorted into `allow`, `ask`, and `deny`. Because a project’s rules merge with yours rather than replacing them, a repository can tighten what you allow, and cannot quietly loosen it.
+
+#### MCP Servers Are a Different Axis Entirely
+
+Everything above changes what the agent *knows or must do*. An [MCP](https://modelcontextprotocol.io/) server changes what it *can reach*: typed tools, data resources, and reusable templates exposed over a standard protocol. The specification is explicit that it “does not dictate how AI applications use LLMs or manage the provided context.”
+
+So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. [Section 30](#sec-ai-mcp-server-setup) covers configuration and its failure modes.
+
+#### Choosing
+
+| If you want to… | Use | Fires when |
+|----|----|----|
+| State a convention that should color everything | `CLAUDE.md` / `AGENTS.md` | every session, as context |
+| Package a procedure the model should notice on its own | a skill | the model judges it relevant |
+| Package a procedure *you* will invoke by name | a skill with `disable-model-invocation` | you type `/name` |
+| Hand off self-contained work to a fresh context | a subagent | the model delegates, or you @-mention |
+| Enforce something regardless of the model | a hook | a lifecycle event |
+| Constrain what may run at all | permissions in settings | every tool call |
+| Give the agent access to an external system | an MCP server | the model calls the tool |
+
+#### What Travels Between Tools
+
+| Mechanism | Portable? | Evidence |
+|----|----|----|
+| Agent Skills (`SKILL.md`) | yes, in format | open standard with a published specification, adopted across many products |
+| `AGENTS.md` | yes, as a filename | standardizes location and precedence, not schema |
+| MCP servers | yes | open protocol with multiple independent clients |
+| `CLAUDE.md` | by courtesy | a vendor filename that GitHub Copilot also reads |
+| `.github/copilot-instructions.md` | no | GitHub Copilot only |
+| `.github/instructions/*.instructions.md` | no | GitHub Copilot only, and not on every Copilot surface |
+| `*.prompt.md` prompt files | no | [Copilot only](https://docs.github.com/en/copilot/concepts/response-customization), and “only available in VS Code, Visual Studio, and JetBrains IDEs” |
+| Hooks, settings, permissions | no | each harness defines its own |
+
+The lesson for a lab is to keep the portable layer carrying the meaning. Conventions belong in `AGENTS.md` and skills, which survive a change of tool; hooks and permissions are worth writing, and are worth writing as enforcement of rules that are also stated somewhere portable.
+
+#### A Worked Example
+
+The [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config) repository is one lab member’s configuration, versioned and synced across machines. Counting its `main` branch on 4 August 2026 — `git ls-tree -d --name-only origin/main skills/ | wc -l`, and the equivalent for the other directories — it carries:
+
+- 177 skill directories
+- 1 file under `commands/`, from before the merge described above
+- 21 hook scripts, registered across `UserPromptSubmit`, `PreToolUse`, and `Stop`
+- 7 subagent definitions
+
+That distribution is itself the argument. Nearly everything is a skill, because a skill is the mechanism the model can reach for unprompted. The hooks are few and specific, because each one exists to make a rule that was being forgotten impossible to forget.
+
+This repository is a smaller example of the same idea: it carries a `.github/copilot-instructions.md` for conventions that apply everywhere, plus path-scoped files under `.github/instructions/` whose `applyTo` globs attach them only when you edit a matching file.
+
+# 23 Claude Code Cloud Environments
 
 [Claude Code](https://www.anthropic.com/claude-code) is a CLI coding agent that can also run tasks on Anthropic-managed cloud infrastructure— either from the web at [claude.ai/code](https://claude.ai/code) (“Claude Code on the web”), or from the terminal by adding the `--remote` flag to move a session into the cloud.
 
@@ -1548,13 +1688,13 @@ The `/remote-env` slash command sets **which configured environment is the defau
 
 For details, see the [Claude Code on the web documentation](https://code.claude.com/docs/en/claude-code-on-the-web) and the [slash command reference](https://code.claude.com/docs/en/commands).
 
-# 23 When to use a coding agent
+# 24 When to use a coding agent
 
 Coding agent sessions are currently[^1] considered “premium requests”, which are limited resources; see <https://github.com/features/copilot/plans> for details. So, use coding agents sparingly. Use them for complex changes that would be difficult or time-consuming for you to complete by hand. Coding agents also take time to get configured for work, every time you make a request. See <https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment#preinstalling-tools-or-dependencies-in-copilots-environment> for ways to reduce that startup time, but it will never be 0. If you can complete the task faster than the coding agent can, you should probably do it yourself. For example, when you have errors in the spell-check or lint workflows, you can often fix them faster than Copilot can. Similarly, when reviewing Copilot’s PRs, you can often make direct changes to the branch faster than you could write clear review comments and get Copilot to address them.
 
 Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.
 
-# 24 Editing with `.docx` files
+# 25 Editing with `.docx` files
 
 GitHub Copilot coding agents can read Microsoft Word (`.docx`) files, including tracked changes and comments. This enables a hybrid editing workflow where:
 
@@ -1589,7 +1729,7 @@ When opening DOCX files generated by Quarto (including this site), Microsoft Wor
 
 This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.
 
-# 25 Copilot Instructions for this Repository
+# 26 Copilot Instructions for this Repository
 
 A `.github/copilot-instructions.md` file contains repository-specific instructions and guidelines for GitHub Copilot coding agents. This file helps ensure that AI-generated contributions follow the project’s formatting standards, coding conventions, and documentation practices.
 
@@ -1606,7 +1746,7 @@ By having these instructions in `.github/copilot-instructions.md`, you ensure th
 
 See this repository’s own [`.github/copilot-instructions.md`](https://github.com/d-morrison/wai/blob/main/.github/copilot-instructions.md) for a working example.
 
-# 26 Using Copilot Review Before Human Review
+# 27 Using Copilot Review Before Human Review
 
 Before requesting review from other humans, **always have Copilot review your pull request first**—even if Copilot created the PR itself. AI review provides fast, thorough feedback that helps catch issues before involving human reviewers, saving everyone time and improving code quality.
 
@@ -1649,7 +1789,7 @@ Even if you’re highly experienced, treating Copilot review as a required pre-r
 
 When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.
 
-# 27 Reviewing a Copilot PR You Didn’t Create
+# 28 Reviewing a Copilot PR You Didn’t Create
 
 When reviewing a pull request where someone else prompted Copilot to make changes, follow these guidelines to avoid confusion and ensure smooth collaboration:
 
@@ -1722,7 +1862,7 @@ To transfer the PR manager role:
 
 This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.
 
-# 28 Installing Claude Code on Windows
+# 29 Installing Claude Code on Windows
 
 [Claude Code](https://www.anthropic.com/claude-code) is Anthropic’s command-line coding agent. Installing it on Windows works well, but a few platform-specific pitfalls can cost you hours if you don’t know about them. These notes capture a setup that works, and the gotchas to watch for.
 
@@ -1822,7 +1962,7 @@ claude --version      # prints the installed version number
 
 If you get a version number, you’re ready to run `claude` in your project directory. If you get `command not found`, re-check the two `PATH` issues above: the directory must be on `PATH`, and you must `rehash` (or open a fresh window) after changing it.
 
-# 29 Setting up MCP servers
+# 30 Setting up MCP servers
 
 The [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) is how a harness gains typed access to external systems. Configuring a server is usually a one-line command. Diagnosing one that *silently* isn’t working is the part worth writing down, because the common failure mode produces no error at all — only a quiet absence of tools you assumed were there.
 

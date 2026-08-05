@@ -330,7 +330,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-08-04 17:01:52 (PDT)</p>
+  <p class="date">Last modified: 2026-08-05 16:27:49 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -986,7 +986,7 @@ Table&nbsp;2: Relative advantages of humans and Agents
 </div>
 </div>
 </div>
-<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;23</a> for more guidance.</p>
+<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;24</a> for more guidance.</p>
 <h4 id="scenario-3-uncertain-which-scenario-applies">Scenario 3: Uncertain Which Scenario Applies</h4>
 <p><strong>When to use:</strong> You’re not sure whether the failure is due to code issues or workflow configuration problems.</p>
 <p><strong>Recommended approach:</strong></p>
@@ -1014,7 +1014,7 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <ul>
 <li>See the <a href="https://ucd-serg.github.io/lab-manual/continuous-integration.html">UCD-SERG Lab Manual’s continuous integration chapter</a> for setting up GitHub Actions workflows</li>
 <li>See <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;15</a> and <a href="#/sec-ai-benefits-hazards" class="quarto-xref">Section&nbsp;14</a> for security considerations with workflow files</li>
-<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;23</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
+<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;24</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
 <li>See the <a href="https://docs.github.com/en/actions">GitHub Actions documentation</a> for workflow syntax and troubleshooting</li>
 </ul>
 </section></section>
@@ -1913,11 +1913,225 @@ while the selected main agent model is BYOK.</code></pre>
 </ul>
 <h4 id="further-reading-2">Further Reading</h4>
 <p>For the complete specification and more details, see <a href="https://agentskills.io/home">agentskills.io</a>.</p>
-<p>The <a href="https://github.com/d-morrison/ai-config">d-morrison/ai-config</a> repository contains an example of personal Claude Code configuration, including user-level skills and slash commands, synced across machines via Git.</p>
+<p>A skill is one of several ways to customize an agent, and not always the right one. <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;22</a> compares it against:</p>
+<ul>
+<li>instruction files</li>
+<li>subagents</li>
+<li>hooks</li>
+<li>permissions</li>
+</ul>
+<p>That section also explains why Claude Code’s custom slash commands are now skills themselves.</p>
+<p>The <a href="https://github.com/Morrison-Lab/ai-config">Morrison-Lab/ai-config</a> repository contains an example of personal Claude Code configuration, including user-level skills, hooks, and subagents, synced across machines via Git.</p>
 </section></section>
 <section>
-<section id="sec-ai-claude-cloud-env" class="title-slide slide level1 center" data-number="22">
-<h1><span class="header-section-number">22</span> Claude Code Cloud Environments</h1>
+<section id="sec-ai-customization" class="title-slide slide level1 center" data-number="22">
+<h1><span class="header-section-number">22</span> Customizing an Agent</h1>
+
+</section>
+<section class="slide level2">
+
+<p><a href="#/sec-ai-agent-skills" class="quarto-xref">Section&nbsp;21</a> describes one way to extend an agent. It is not the only one, and a lab that knows only that one tends to write every customization as a skill, including the ones that should have been something else.</p>
+<p>This section maps the whole surface. The mechanisms differ less in what you can write in them — most are Markdown with a <a href="https://jekyllrb.com/docs/front-matter/">YAML front matter</a> header, as <a href="#/sec-ai-harness-construction" class="quarto-xref">Section&nbsp;6</a> describes — than in <strong>when they fire and who decides</strong>.</p>
+<h4 id="the-question-that-picks-the-mechanism">The Question That Picks the Mechanism</h4>
+<p>Ask two things about the behavior you want:</p>
+<ul>
+<li><strong>Who triggers it?</strong> You, by typing something; the model, by judging it relevant; or the harness, on a fixed event.</li>
+<li><strong>What happens if the model disagrees?</strong> Some mechanisms are advice the model may ignore. Others are enforced by the harness whatever the model decides.</li>
+</ul>
+<p>That second question is the one people get wrong, and Claude Code’s own documentation is blunt about it. Instruction files are <a href="https://code.claude.com/docs/en/memory">described</a> as “context, not enforced configuration”, delivered “as a user message after the system prompt”, so “there’s no guarantee of strict compliance.” The same page names the remedy:</p>
+<blockquote>
+<p>To block an action regardless of what Claude decides, use a PreToolUse hook instead.</p>
+</blockquote>
+<p>A rule you cannot afford to have ignored does not belong in a <code>CLAUDE.md</code>.</p>
+<h4 id="instruction-files-always-on-context">Instruction Files: Always-On Context</h4>
+<p><code>CLAUDE.md</code> and <a href="https://agents.md/"><code>AGENTS.md</code></a> are prose the harness loads at the start of a session, with no front matter and no schema (<a href="#/sec-ai-harness-construction" class="quarto-xref">Section&nbsp;6</a>).</p>
+<p>Three properties matter when you write one:</p>
+<ul>
+<li><strong>Files concatenate; they do not override.</strong> Claude Code <a href="https://code.claude.com/docs/en/memory">walks up the directory tree</a> from the working directory, and “all discovered files are concatenated into context rather than overriding each other”, ordered from the filesystem root down. A project file does not replace your personal one.</li>
+<li><strong>Imports exist, and they skip code spans.</strong> The <code>@path/to/import</code> syntax pulls in another file, recursively, to a maximum depth of four hops. Paths resolve relative to the importing file. To <em>mention</em> a path without importing it, wrap it in backticks — import parsing skips fenced code blocks and code spans.</li>
+<li><strong>The two filenames are not interchangeable.</strong> Claude Code <a href="https://code.claude.com/docs/en/memory">reads <code>CLAUDE.md</code>, not <code>AGENTS.md</code></a>, and recommends a <code>CLAUDE.md</code> whose first line is <code>@AGENTS.md</code> so both tools read one source. A symlink works on macOS and Linux; on Windows it needs Administrator privileges or Developer Mode, so the import is the portable choice. GitHub Copilot, by contrast, <a href="https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions">reads all of</a> <code>AGENTS.md</code>, <code>CLAUDE.md</code>, and <code>GEMINI.md</code>.</li>
+</ul>
+<p><code>AGENTS.md</code> is stewarded by the Agentic AI Foundation under the Linux Foundation, and it is worth being precise about what it standardizes: a filename, a location, and a nearest-file-wins precedence rule. Asked whether there are any required fields, its own FAQ answers that there are none — “AGENTS.md is just standard Markdown.” So two agents reading the same file are guaranteed to <em>see</em> the same text and guaranteed nothing about acting on it alike.</p>
+<h4 id="skills-and-the-commands-that-became-them">Skills, and the Commands That Became Them</h4>
+<p>The distinction most people still draw here is out of date. Claude Code’s documentation <a href="https://code.claude.com/docs/en/skills">states</a>:</p>
+<blockquote>
+<p><strong>Custom commands have been merged into skills.</strong> A file at <code>.claude/commands/deploy.md</code> and a skill at <code>.claude/skills/deploy/SKILL.md</code> both create <code>/deploy</code> and work the same way.</p>
+</blockquote>
+<p>Existing <code>.claude/commands/</code> files keep working, and if a command and a skill share a name, the skill wins. So “slash command versus skill” is now a question about <strong>an older file layout versus a newer one</strong>, not about two different capabilities.</p>
+<p>What did <em>not</em> collapse is the invocation question. It moved into front matter, where it is now set per skill rather than implied by which directory the file sits in:</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Front matter</th>
+<th>You can invoke</th>
+<th>The model can invoke</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><em>(default)</em></td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr class="even">
+<td><code>disable-model-invocation: true</code></td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="odd">
+<td><code>user-invocable: false</code></td>
+<td>no</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table>
+<p>This is the setting to think hardest about. A skill the model cannot invoke will never fire unless someone remembers it exists; a skill the model <em>can</em> invoke costs context on every turn, because its description sits in the listing whether or not it is ever used. Note also that <code>user-invocable</code> controls menu visibility rather than access: to block programmatic invocation, use <code>disable-model-invocation</code>.</p>
+<p>The portable core is small and worth knowing exactly. The <a href="https://agentskills.io/specification">Agent Skills specification</a> requires precisely two front matter fields — <code>name</code> and <code>description</code> — and says of the body that there are no format restrictions. Everything past that is a vendor extension: Claude Code’s own docs describe invocation control, subagent execution, and dynamic context injection as extensions to the standard. Portability is therefore real but shallow: the folder and its metadata travel, and how much of the <em>behavior</em> travels depends on how alike two agents happen to be.</p>
+<p>One concrete sign that the format genuinely crosses vendors: GitHub Copilot <a href="https://docs.github.com/en/copilot/concepts/agents/about-agent-skills">looks for skills</a> in <code>.github/skills</code>, <code>.agents/skills</code>, and <code>.claude/skills</code> — a competitor’s directory name.</p>
+<h4 id="subagents-delegating-to-a-fresh-context">Subagents: Delegating to a Fresh Context</h4>
+<p><a href="#/sec-ai-agent-implementation" class="quarto-xref">Section&nbsp;5</a> and <a href="#/sec-ai-harness-agent-relationship" class="quarto-xref">Section&nbsp;8</a> cover what a subagent <em>is</em> and how the harness runs one. The authoring question is narrower: a subagent is a single Markdown file with front matter in <code>.claude/agents/</code> (project) or <code>~/.claude/agents/</code> (personal), whose body becomes that agent’s entire system prompt.</p>
+<p>Two details are easy to get wrong.</p>
+<p><strong>Precedence runs the opposite way from skills.</strong> For subagents, a project definition <a href="https://code.claude.com/docs/en/sub-agents">outranks</a> a personal one. For skills, personal <a href="https://code.claude.com/docs/en/skills">outranks</a> project. If you keep a personal copy of something the repository also defines, which one wins depends on which mechanism you chose.</p>
+<p><strong>An @-mention picks the worker, not the words.</strong> Naming a subagent guarantees which one runs. It does not hand that subagent your sentence:</p>
+<blockquote>
+<p>Your full message still goes to Claude, which writes the subagent’s task prompt based on what you asked. The @-mention controls which subagent Claude invokes, not what prompt it receives.</p>
+</blockquote>
+<h4 id="hooks-the-part-the-model-cannot-talk-its-way-around">Hooks: The Part the Model Cannot Talk Its Way Around</h4>
+<p>Hooks are the mechanism this manual has not previously covered, and the one that changes what a customization is <em>worth</em>. They are <a href="https://code.claude.com/docs/en/hooks">defined in JSON settings files</a> rather than in Markdown, and they run as shell commands, HTTP calls, or LLM prompts at fixed points in the harness’s lifecycle. The <a href="https://code.claude.com/docs/en/memory">page on instruction files</a> draws the contrast plainly:</p>
+<blockquote>
+<p>Hooks execute as shell commands at fixed lifecycle events and apply regardless of what Claude decides to do.</p>
+</blockquote>
+<p>An event fires, a matcher selects which handlers apply (by tool name, for instance), and the harness passes the handler JSON describing the event. Documented events include <code>SessionStart</code>, <code>UserPromptSubmit</code>, <code>PreToolUse</code>, <code>PostToolUse</code>, <code>Stop</code>, and <code>SessionEnd</code>, among a longer list; consult the reference rather than this page for the current set.</p>
+<p>The practical rule: anything stated as “always” or “never” in a <code>CLAUDE.md</code> is a candidate to become a hook. Prose asks; a <code>PreToolUse</code> hook decides.</p>
+<h4 id="settings-and-permissions-the-boundary-around-all-of-it">Settings and Permissions: The Boundary Around All of It</h4>
+<p>Settings live in <code>~/.claude/settings.json</code> (user), <code>.claude/settings.json</code> (project, shared), and <code>.claude/settings.local.json</code> (project, private), with a managed-policy layer above them for organizations. The <a href="https://code.claude.com/docs/en/settings">precedence</a> runs managed, then command-line arguments, then local, then project, then user.</p>
+<p>One exception deserves emphasis, because it is the opposite of what the ladder implies:</p>
+<blockquote>
+<p>Permission rules behave differently because they merge across scopes rather than override.</p>
+</blockquote>
+<p>Rules are written as <code>Tool(specifier)</code> — for example <code>Bash(npm run test *)</code>, <code>Read(./.env)</code>, or <code>Skill(commit)</code> — and sorted into <code>allow</code>, <code>ask</code>, and <code>deny</code>. Because a project’s rules merge with yours rather than replacing them, a repository can tighten what you allow, and cannot quietly loosen it.</p>
+<h4 id="mcp-servers-are-a-different-axis-entirely">MCP Servers Are a Different Axis Entirely</h4>
+<p>Everything above changes what the agent <em>knows or must do</em>. An <a href="https://modelcontextprotocol.io/">MCP</a> server changes what it <em>can reach</em>: typed tools, data resources, and reusable templates exposed over a standard protocol. The specification is explicit that it “does not dictate how AI applications use LLMs or manage the provided context.”</p>
+<p>So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;30</a> covers configuration and its failure modes.</p>
+<h4 id="choosing">Choosing</h4>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>If you want to…</th>
+<th>Use</th>
+<th>Fires when</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>State a convention that should color everything</td>
+<td><code>CLAUDE.md</code> / <code>AGENTS.md</code></td>
+<td>every session, as context</td>
+</tr>
+<tr class="even">
+<td>Package a procedure the model should notice on its own</td>
+<td>a skill</td>
+<td>the model judges it relevant</td>
+</tr>
+<tr class="odd">
+<td>Package a procedure <em>you</em> will invoke by name</td>
+<td>a skill with <code>disable-model-invocation</code></td>
+<td>you type <code>/name</code></td>
+</tr>
+<tr class="even">
+<td>Hand off self-contained work to a fresh context</td>
+<td>a subagent</td>
+<td>the model delegates, or you @-mention</td>
+</tr>
+<tr class="odd">
+<td>Enforce something regardless of the model</td>
+<td>a hook</td>
+<td>a lifecycle event</td>
+</tr>
+<tr class="even">
+<td>Constrain what may run at all</td>
+<td>permissions in settings</td>
+<td>every tool call</td>
+</tr>
+<tr class="odd">
+<td>Give the agent access to an external system</td>
+<td>an MCP server</td>
+<td>the model calls the tool</td>
+</tr>
+</tbody>
+</table>
+<h4 id="what-travels-between-tools">What Travels Between Tools</h4>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Mechanism</th>
+<th>Portable?</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Agent Skills (<code>SKILL.md</code>)</td>
+<td>yes, in format</td>
+<td>open standard with a published specification, adopted across many products</td>
+</tr>
+<tr class="even">
+<td><code>AGENTS.md</code></td>
+<td>yes, as a filename</td>
+<td>standardizes location and precedence, not schema</td>
+</tr>
+<tr class="odd">
+<td>MCP servers</td>
+<td>yes</td>
+<td>open protocol with multiple independent clients</td>
+</tr>
+<tr class="even">
+<td><code>CLAUDE.md</code></td>
+<td>by courtesy</td>
+<td>a vendor filename that GitHub Copilot also reads</td>
+</tr>
+<tr class="odd">
+<td><code>.github/copilot-instructions.md</code></td>
+<td>no</td>
+<td>GitHub Copilot only</td>
+</tr>
+<tr class="even">
+<td><code>.github/instructions/*.instructions.md</code></td>
+<td>no</td>
+<td>GitHub Copilot only, and not on every Copilot surface</td>
+</tr>
+<tr class="odd">
+<td><code>*.prompt.md</code> prompt files</td>
+<td>no</td>
+<td><a href="https://docs.github.com/en/copilot/concepts/response-customization">Copilot only</a>, and “only available in VS Code, Visual Studio, and JetBrains IDEs”</td>
+</tr>
+<tr class="even">
+<td>Hooks, settings, permissions</td>
+<td>no</td>
+<td>each harness defines its own</td>
+</tr>
+</tbody>
+</table>
+<p>The lesson for a lab is to keep the portable layer carrying the meaning. Conventions belong in <code>AGENTS.md</code> and skills, which survive a change of tool; hooks and permissions are worth writing, and are worth writing as enforcement of rules that are also stated somewhere portable.</p>
+<h4 id="a-worked-example">A Worked Example</h4>
+<p>The <a href="https://github.com/Morrison-Lab/ai-config"><code>Morrison-Lab/ai-config</code></a> repository is one lab member’s configuration, versioned and synced across machines. Counting its <code>main</code> branch on 4 August 2026 — <code>git ls-tree -d --name-only origin/main skills/ | wc -l</code>, and the equivalent for the other directories — it carries:</p>
+<ul>
+<li>177 skill directories</li>
+<li>1 file under <code>commands/</code>, from before the merge described above</li>
+<li>21 hook scripts, registered across <code>UserPromptSubmit</code>, <code>PreToolUse</code>, and <code>Stop</code></li>
+<li>7 subagent definitions</li>
+</ul>
+<p>That distribution is itself the argument. Nearly everything is a skill, because a skill is the mechanism the model can reach for unprompted. The hooks are few and specific, because each one exists to make a rule that was being forgotten impossible to forget.</p>
+<p>This repository is a smaller example of the same idea: it carries a <code>.github/copilot-instructions.md</code> for conventions that apply everywhere, plus path-scoped files under <code>.github/instructions/</code> whose <code>applyTo</code> globs attach them only when you edit a matching file.</p>
+</section></section>
+<section>
+<section id="sec-ai-claude-cloud-env" class="title-slide slide level1 center" data-number="23">
+<h1><span class="header-section-number">23</span> Claude Code Cloud Environments</h1>
 
 </section>
 <section class="slide level2">
@@ -1952,8 +2166,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>For details, see the <a href="https://code.claude.com/docs/en/claude-code-on-the-web">Claude Code on the web documentation</a> and the <a href="https://code.claude.com/docs/en/commands">slash command reference</a>.</p>
 </section></section>
 <section>
-<section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="23">
-<h1><span class="header-section-number">23</span> When to use a coding agent</h1>
+<section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="24">
+<h1><span class="header-section-number">24</span> When to use a coding agent</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -1962,8 +2176,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.</p>
 <aside><ol class="aside-footnotes"><li id="fn1"><p>2026-01-10</p></li></ol></aside></section></section>
 <section>
-<section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="24">
-<h1><span class="header-section-number">24</span> Editing with <code>.docx</code> files</h1>
+<section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="25">
+<h1><span class="header-section-number">25</span> Editing with <code>.docx</code> files</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -1999,8 +2213,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.</p>
 </section></section>
 <section>
-<section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="25">
-<h1><span class="header-section-number">25</span> Copilot Instructions for this Repository</h1>
+<section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="26">
+<h1><span class="header-section-number">26</span> Copilot Instructions for this Repository</h1>
 
 </section>
 <section class="slide level2">
@@ -2019,8 +2233,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>See this repository’s own <a href="https://github.com/d-morrison/wai/blob/main/.github/copilot-instructions.md"><code>.github/copilot-instructions.md</code></a> for a working example.</p>
 </section></section>
 <section>
-<section id="using-copilot-review-before-human-review" class="title-slide slide level1 center" data-number="26">
-<h1><span class="header-section-number">26</span> Using Copilot Review Before Human Review</h1>
+<section id="using-copilot-review-before-human-review" class="title-slide slide level1 center" data-number="27">
+<h1><span class="header-section-number">27</span> Using Copilot Review Before Human Review</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -2060,8 +2274,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.</p>
 </section></section>
 <section>
-<section id="reviewing-a-copilot-pr-you-didnt-create" class="title-slide slide level1 center" data-number="27">
-<h1><span class="header-section-number">27</span> Reviewing a Copilot PR You Didn’t Create</h1>
+<section id="reviewing-a-copilot-pr-you-didnt-create" class="title-slide slide level1 center" data-number="28">
+<h1><span class="header-section-number">28</span> Reviewing a Copilot PR You Didn’t Create</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -2147,8 +2361,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.</p>
 </section></section>
 <section>
-<section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="28">
-<h1><span class="header-section-number">28</span> Installing Claude Code on Windows</h1>
+<section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="29">
+<h1><span class="header-section-number">29</span> Installing Claude Code on Windows</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -2235,8 +2449,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>If you get a version number, you’re ready to run <code>claude</code> in your project directory. If you get <code>command not found</code>, re-check the two <code>PATH</code> issues above: the directory must be on <code>PATH</code>, and you must <code>rehash</code> (or open a fresh window) after changing it.</p>
 </section></section>
 <section>
-<section id="sec-ai-mcp-server-setup" class="title-slide slide level1 center" data-number="29">
-<h1><span class="header-section-number">29</span> Setting up MCP servers</h1>
+<section id="sec-ai-mcp-server-setup" class="title-slide slide level1 center" data-number="30">
+<h1><span class="header-section-number">30</span> Setting up MCP servers</h1>
 
 </section>
 <section class="slide level2">
