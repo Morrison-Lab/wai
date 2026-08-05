@@ -38,6 +38,10 @@ as best practices and capabilities continue to evolve.
   what language models, coding agents, and harnesses are; how to work with
   them; benefits, hazards, and best practices; and configuring your
   environment
+- [**Orchestrating Teams of Agents**](chapters/agent-orchestration.qmd):
+  when running several agents at once is worth the cost, what we already use
+  for it, and how three outside orchestrators (Agent Teams, Inflexa, TORQCLAW)
+  compare
 - [**Pull-Request Workflow with Agents**](chapters/pr-workflow-with-agents.qmd):
   filing issues, claiming work, and driving a pull request to a clean,
   mergeable state

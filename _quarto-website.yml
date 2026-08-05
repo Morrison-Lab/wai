@@ -41,6 +41,8 @@ website:
             href: chapters/ai-use-policies.qmd
           - text: "Coding Agents"
             href: chapters/coding-agents.qmd
+          - text: "Orchestrating Teams of Agents"
+            href: chapters/agent-orchestration.qmd
           - text: "Pull-Request Workflow with Agents"
             href: chapters/pr-workflow-with-agents.qmd
     right:
