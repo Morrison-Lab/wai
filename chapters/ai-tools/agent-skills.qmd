@@ -57,11 +57,15 @@ see [agentskills.io](https://agentskills.io/home).
 
 A skill is one of several ways to customize an agent,
 and not always the right one.
-@sec-ai-customization compares it against instruction files,
-subagents,
-hooks,
-and permissions,
-and explains why Claude Code's custom slash commands are now skills themselves.
+@sec-ai-customization compares it against:
+
+- instruction files
+- subagents
+- hooks
+- permissions
+
+That section also explains why Claude Code's custom slash commands are now
+skills themselves.
 
 The [Morrison-Lab/ai-config](https://github.com/Morrison-Lab/ai-config) repository
 contains an example of personal Claude Code configuration,
