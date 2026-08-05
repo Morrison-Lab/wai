@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-04 17:08:23 (PDT)
+Last modified: 2026-08-04 17:22:39 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -1521,7 +1521,14 @@ Skills package procedural knowledge and team-specific context into portable, ver
 
 For the complete specification and more details, see [agentskills.io](https://agentskills.io/home).
 
-A skill is one of several ways to customize an agent, and not always the right one. [Section 22](#sec-ai-customization) compares it against instruction files, subagents, hooks, and permissions, and explains why Claude Code’s custom slash commands are now skills themselves.
+A skill is one of several ways to customize an agent, and not always the right one. [Section 22](#sec-ai-customization) compares it against:
+
+- instruction files
+- subagents
+- hooks
+- permissions
+
+That section also explains why Claude Code’s custom slash commands are now skills themselves.
 
 The [Morrison-Lab/ai-config](https://github.com/Morrison-Lab/ai-config) repository contains an example of personal Claude Code configuration, including user-level skills, hooks, and subagents, synced across machines via Git.
 
