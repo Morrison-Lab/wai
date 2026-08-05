@@ -1,0 +1,98 @@
+@sec-ai-customization describes *which* mechanism a customization should use.
+This section is about the step after that decision:
+how a config like a shared instruction repository
+actually reaches a machine,
+and how a broken install fails.
+
+Two agents can load the identical instruction corpus and still behave differently,
+because behavior depends not only on what the config says
+but on how it is installed where the agent runs.
+An install problem is quiet by construction ---
+nothing errors, the work still gets done,
+and a capability simply goes missing with no message that it existed.
+
+#### Two Ways the Same Config Reaches a Machine
+
+A repository of skills, hooks, and instruction files can be delivered two ways,
+and they are alternatives rather than layers.
+
+- **As a plugin.**
+  You enable the repository as a plugin from a marketplace,
+  and the harness loads its skills, commands, and hooks directly
+  from the plugin's own checkout at session start.
+  It refreshes when the marketplace updates.
+- **As a per-machine install.**
+  You symlink (or copy) the repository's children into `~/.claude/` ---
+  `skills/`, `shared/`, `memories/`, `hooks/`, and `CLAUDE.md` ---
+  and register the hooks into `~/.claude/settings.json` by hand or with a script.
+
+The trap is running both at once.
+The plugin path and the settings-file path carry different command strings,
+so the harness keeps both,
+and every hook fires twice.
+This fails in the safe direction ---
+a doubled guard warns or blocks twice, it never goes missing ---
+which is exactly why it is easy to leave in place unnoticed.
+Pick one path.
+
+#### The `~/.claude` Layout
+
+On a symlink-capable system,
+the children of `~/.claude` are symlinks into a working checkout of the repository,
+so a `git pull` in that checkout refreshes every skill and rule for free.
+Windows Git Bash is the exception:
+its `ln -s` falls back to real copies,
+so a pull does not propagate and the copies must be re-synced.
+
+Two health checks answer two different questions,
+and a clean answer to one says nothing about the other.
+
+- **Files.**
+  Does `~/.claude/hooks/<script>` still track the checkout,
+  or has it drifted, gone missing, or become a dangling link?
+- **Bindings.**
+  Does `settings.json` actually invoke that script on an event?
+
+A guard can be a perfectly linked file that is registered to nothing,
+and an unregistered guard and a guard with nothing to block
+produce the same output: none.
+So verify both, and read the two results separately.
+
+#### One Plugin Per Capability
+
+Enabling the *same* repository as a plugin from two marketplaces ---
+a personal fork and a lab org, say ---
+loads its whole skill set into every session twice.
+That is not just untidy.
+A large instruction corpus is already a substantial share of a session's context,
+and a duplicated one can push a session far enough over
+the model's context limit to break subagent delegation,
+because a subagent inherits its parent's context
+and cannot start if that context alone exceeds the limit.
+Keep one copy enabled.
+
+#### Failure Modes and Their Symptoms
+
+A broken install rarely announces itself; you read it backward from a symptom.
+
+- **A stale hook reference blocks the tool it guards.**
+  A `settings.json` entry pointing at a hook script that no longer exists
+  errors before the guarded tool runs,
+  so every call to that tool fails with the hook's error rather than the tool's output.
+  A `PreToolUse` hook on `Bash` that references a missing script,
+  for instance, blocks *all* shell commands until the entry is removed.
+- **A dangling symlink silently drops a file.**
+  A `~/.claude` child symlinked into a temporary worktree or a since-deleted clone
+  becomes a dead link when that directory is removed,
+  and the instructions or agent definition it provided quietly stop loading.
+- **A check run against the wrong checkout cries wolf.**
+  A verification that compares the installed copies against a stale
+  or unintended checkout can report every entry as misdirected.
+  That is a false alarm from a check aimed at the wrong target, not a fleet of real problems;
+  re-run it against the checkout the install is actually anchored to before acting.
+
+The common thread is that the install layer is a real surface,
+distinct from the content of the config,
+with its own failure modes and its own checks.
+When an agent behaves as though a rule or skill you wrote does not exist,
+suspect the install before you suspect the rule.
