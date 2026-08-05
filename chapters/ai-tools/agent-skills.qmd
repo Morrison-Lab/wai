@@ -55,6 +55,18 @@ This gives agents:
 For the complete specification and more details,
 see [agentskills.io](https://agentskills.io/home).
 
-The [d-morrison/ai-config](https://github.com/d-morrison/ai-config) repository
+A skill is one of several ways to customize an agent,
+and not always the right one.
+@sec-ai-customization compares it against:
+
+- instruction files
+- subagents
+- hooks
+- permissions
+
+That section also explains why Claude Code's custom slash commands are now
+skills themselves.
+
+The [Morrison-Lab/ai-config](https://github.com/Morrison-Lab/ai-config) repository
 contains an example of personal Claude Code configuration,
-including user-level skills and slash commands, synced across machines via Git.
+including user-level skills, hooks, and subagents, synced across machines via Git.
