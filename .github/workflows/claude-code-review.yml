@@ -168,12 +168,13 @@ jobs:
                - Spell-check / link-check failures are fixed at the source
                  (wordlist or content) rather than suppressed.
 
-            **Post line-specific findings as inline review comments** anchored
-            to the relevant line(s) — use the inline-comment tool, not a prose
-            list in the summary. Reserve the top-level summary comment for a
-            brief overall verdict plus any finding not tied to a specific line;
-            don't restate each inline comment there. Skip generic praise — be
-            concrete. If the PR looks clean, say so briefly.
+            **Post findings in the top-level review comment as a concrete
+            list, each anchored to a `path:line` reference** so the author can
+            jump to it. This job runs in agent mode (track_progress: false),
+            where the inline-comment tool is not available, so line-specific
+            findings go in the summary rather than as inline comments. Lead
+            with a brief overall verdict, then the findings. Skip generic
+            praise -- be concrete. If the PR looks clean, say so briefly.
 
             When you post findings, end the top-level summary with a
             ready-to-paste draft of the PR comment the author would send to
@@ -209,4 +210,4 @@ jobs:
           # AND no protection, since a reviewer that cannot post cannot edit
           # or delete either. See #28.
           claude_args: |
-            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*)"
+            --allowedTools "Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*)"
