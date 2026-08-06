@@ -40,7 +40,8 @@ Pick one path.
 On a symlink-capable system,
 the children of `~/.claude` are symlinks into a working checkout of the repository,
 so a `git pull` in that checkout refreshes every skill and rule for free.
-Windows Git Bash is the exception:
+Windows Git Bash is the common exception:
+without symlink privileges configured (Developer Mode, or `MSYS=winsymlinks:nativestrict`),
 its `ln -s` falls back to real copies,
 so a pull does not propagate and the copies must be re-synced.
 
@@ -67,8 +68,9 @@ That is not just untidy.
 A large instruction corpus is already a substantial share of a session's context,
 and a duplicated one can push a session far enough over
 the model's context limit to break subagent delegation,
-because a subagent inherits its parent's context
-and cannot start if that context alone exceeds the limit.
+because a subagent's session independently loads
+that same duplicated skill set at start,
+and that alone can exceed the limit before any work begins.
 Keep one copy enabled.
 
 #### Failure Modes and Their Symptoms
