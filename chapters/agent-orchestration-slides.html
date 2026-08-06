@@ -9,7 +9,7 @@
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.10.18">
 
-  <title>Working with AI – Policies for Using AI</title>
+  <title>Working with AI – Orchestrating Teams of Agents</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -256,7 +256,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Policies for Using AI</h1>
+  <h1 class="title">Orchestrating Teams of Agents</h1>
 
 <div class="quarto-title-authors">
 </div>
@@ -265,153 +265,221 @@
 </section>
 <section class="slide level2">
 
-<p><a href="https://en.wikipedia.org/wiki/AI-assisted_software_development">AI-powered coding assistants</a> can dramatically accelerate and improve your work, but they require careful and responsible use. Lab members who use AI tools must adhere to the following guidelines.</p>
+<p>A single coding agent works one problem at a time. <em>Orchestration</em> is the step up from that: running several agents at once and coordinating their work. This chapter explains when orchestration is worth the added cost, describes what our lab already uses for it, and evaluates three outside “agent orchestrator” projects that lab members have asked about.</p>
 <div class="callout callout-warning callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Technology in Rapid Evolution</strong></p>
+<p><strong>A fast-moving, opinionated snapshot</strong></p>
 </div>
 <div class="callout-content">
-<p>As of early 2026, AI coding assistant technology is changing extremely rapidly, and we are just beginning to figure out how to use these tools effectively ourselves. All information on this site should be taken with extra caution, as best practices and capabilities continue to evolve.</p>
+<p>As of early 2026, this space is changing weekly. The tools below are young, and the star counts, version numbers, and “experimental” labels quoted here were true when this chapter was written (August 2026) and will drift. The verdicts are the lab’s current opinion, not settled fact. Re-check before acting on any of them.</p>
 </div>
 </div>
 </div>
 </section>
 <section>
-<section id="responsibility-for-validation" class="title-slide slide level1 center" data-number="1">
-<h1><span class="header-section-number">1</span> Responsibility for validation</h1>
+<section id="sec-orch-when" class="title-slide slide level1 center" data-number="1">
+<h1><span class="header-section-number">1</span> When Orchestration Helps</h1>
 
 </section>
 <section class="slide level2">
 
-<p><strong>You are fully responsible for checking and validating all AI-generated code and content.</strong> AI tools can make mistakes, generate insecure code, produce incorrect logic, or suggest approaches that are inappropriate for our specific research context. Before using any AI-generated code:</p>
-<ul class="task-list">
-<li><label><input type="checkbox">Carefully review the code to ensure you understand what it does</label></li>
-<li><label><input type="checkbox">Test the code thoroughly to verify it works as expected</label></li>
-<li><label><input type="checkbox">Verify that the logic is appropriate for your specific use case</label></li>
-<li><label><input type="checkbox">Check that the code follows our lab’s coding standards and best practices</label></li>
-<li><label><input type="checkbox">Ensure the code does not introduce security vulnerabilities or data privacy issues</label></li>
+<p>Orchestration pays off when work splits into pieces that can run at the same time without waiting on each other. The strongest cases are:</p>
+<ul>
+<li><strong>Research and review</strong>: several agents investigate different angles at once, then compare and challenge each other’s findings.</li>
+<li><strong>Independent implementation</strong>: each agent owns a separate module, file set, or task.</li>
+<li><strong>Adversarial verification</strong>: agents test competing hypotheses in parallel and converge faster than one agent anchoring on its first guess.</li>
 </ul>
-<div class="callout callout-warning callout-titled callout-style-default">
+<p>Orchestration is not free. Every extra agent has its own context window and spends tokens independently, so cost grows with the number of agents, and coordination overhead grows too. For sequential work, edits to the same file, or tasks with many dependencies, a single agent is cheaper and simpler. The question for any orchestration tool is not “is it impressive?” but “what does it add to what we already do?”</p>
+</section></section>
+<section>
+<section id="sec-orch-baseline" class="title-slide slide level1 center" data-number="2">
+<h1><span class="header-section-number">2</span> What We Already Use</h1>
+
+</section>
+<section class="slide level2">
+
+<p>Our lab already orchestrates agents, using <a href="https://www.anthropic.com/claude-code">Claude Code</a> plus the conventions in our <a href="https://github.com/Morrison-Lab/ai-config"><code>ai-config</code></a> repository. The pieces are:</p>
+<ul>
+<li><strong>Subagents</strong>: a session spawns focused helper agents for search, review, or verification. Each has its own context window and reports its result back to the main session.</li>
+<li><strong>The <code>Workflow</code> fan-out tool</strong>: a deterministic script that spreads work across many agents in parallel (for example, one reviewer per dimension of a pull request), with token budgets and verification stages built in.</li>
+<li><strong>Git worktrees</strong>: isolated checkouts that let parallel sessions edit a repository without clobbering each other.</li>
+<li><strong>Hooks and permissions</strong>: guardrails that gate risky actions, scope tool access, and enforce lab rules mechanically.</li>
+<li><strong>Reusable GitHub Actions workflows</strong> (in <a href="https://github.com/Morrison-Lab/gha"><code>Morrison-Lab/gha</code></a>): the automated review-and-merge workflow for pull requests.</li>
+</ul>
+<p>This baseline matters because it is the yardstick for everything below. A new orchestrator is useful to us only if it does something this stack does not already do well.</p>
+</section></section>
+<section>
+<section id="sec-orch-agent-teams" class="title-slide slide level1 center" data-number="3">
+<h1><span class="header-section-number">3</span> Claude Code Agent Teams</h1>
+
+</section>
+<section class="slide level2">
+
+<p><a href="https://code.claude.com/docs/en/agent-teams">Agent Teams</a> <span class="citation" data-cites="claude_agent_teams">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026</a>)</span> is the built-in Anthropic feature for coordinating several Claude Code sessions. One session acts as the <strong>lead</strong>, and it spawns <strong>teammates</strong>, each a full, independent Claude Code session with its own context window. Teammates coordinate through a shared task list and a mailbox, and, unlike subagents, they can message each other directly rather than only reporting back to the lead.</p>
+<p>The intended uses match the strong cases in <a href="#/sec-orch-when" class="quarto-xref">Section&nbsp;1</a>: parallel code review, competing-hypothesis debugging, new modules owned by different teammates, and changes that span several layers of a codebase. As of August 2026 the feature is <strong>experimental</strong> and off by default; it is enabled with the <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS</code> environment variable. It carries real limits: teammates do not survive session resumption, a session has exactly one team, teammates cannot spawn their own teammates, and token use is much higher than a single session.</p>
+<div class="callout callout-tip callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Warning</strong></p>
+<p><strong>Useful to us? Yes, worth trying</strong></p>
 </div>
 <div class="callout-content">
-<p>Never blindly use AI-generated code without fully understanding it. If you don’t completely understand what the AI has suggested, take the time to learn or ask a colleague for help.</p>
+<p>Agent Teams is a native extension of the tool we already live in, so it is the lowest-friction option here. It complements, rather than replaces, our subagents, <code>Workflow</code> fan-out, and worktree parallelism: teammates that talk to each other suit adversarial review and debugging, where our subagents (which only report back) are weaker. Treat it as a feature to experiment with on research and review tasks, not a platform to adopt, and mind the token cost and the experimental limits.</p>
 </div>
 </div>
 </div>
 </section></section>
 <section>
-<section id="sec-ai-disclosure" class="title-slide slide level1 center" data-number="2">
-<h1><span class="header-section-number">2</span> Disclosure of AI use</h1>
+<section id="sec-orch-inflexa" class="title-slide slide level1 center" data-number="4">
+<h1><span class="header-section-number">4</span> Inflexa</h1>
 
 </section>
 <section class="slide level2">
 
-<p><strong>You must clearly state whenever you have used AI tools in your work.</strong> This is essential for transparency and reproducibility. Specifically:</p>
-<ul>
-<li>In code comments, note when AI tools were used to generate or significantly modify code</li>
-<li>In commit messages, mention if AI tools assisted with the changes</li>
-<li>In manuscripts and reports, acknowledge AI tool usage in the methods or acknowledgments section</li>
-<li>In presentations, disclose AI assistance when relevant</li>
-</ul>
-<p>Example code comment:</p>
-<pre><code># The following function was generated with assistance from GitHub Copilot
-# and has been reviewed and tested to ensure correctness</code></pre>
+<p><a href="https://github.com/inflexa-ai/inflexa">Inflexa</a> <span class="citation" data-cites="inflexa">(<a href="#/references" role="doc-biblioref" onclick="">Inflexa 2026</a>)</span> calls itself “the open-source orchestrator for computational biology.” It is a local-first command-line tool that turns a plain-language biological question into code you can read and run, executes that code in a sandboxed <a href="https://www.docker.com/">Docker</a> container, and records signed provenance for every step in a local database. It reads scientific literature, queries dozens of biological databases, and runs analyses in Python and R environments. It is model-agnostic: you bring your own key for Claude, an OpenAI-compatible endpoint, or a local model.</p>
+<p>Inflexa is released under the permissive <strong>Apache-2.0</strong> license. Its open-source command-line tool is the full product, not a trial; the separate commercial offering only adds hosted infrastructure, team collaboration, and managed compute. As of August 2026 it is young but actively developed (around 30 stars), and its analysis “skill packs” are omics- and translational-medicine-focused (transcriptomics, proteomics, pharmacokinetics, drug repurposing, statistical modeling).</p>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Useful to us? Yes, worth evaluating</strong></p>
+</div>
+<div class="callout-content">
+<p>Of the three outside tools, Inflexa is the most relevant to our actual research. Its priorities are ours: reproducible analysis in R and Python, provenance on every step, and no data leaving the machine. It is worth a real trial on a lab dataset, and its provenance and sandboxing design is a useful reference for our own reproducibility tooling. Two cautions: it is early, and its skill packs are aimed at omics rather than serology or infectious-disease epidemiology, so adopting it as a dependency now would be premature. Evaluate first; contribute a domain skill pack if the fit turns out to be good.</p>
+</div>
+</div>
+</div>
 </section></section>
 <section>
-<section id="attribution-of-sources" class="title-slide slide level1 center" data-number="3">
-<h1><span class="header-section-number">3</span> Attribution of sources</h1>
+<section id="sec-orch-torqclaw" class="title-slide slide level1 center" data-number="5">
+<h1><span class="header-section-number">5</span> TORQCLAW</h1>
 
 </section>
 <section class="slide level2">
 
-<p><strong>When using AI tools to generate content that borrows from or adapts existing sources, you must ensure proper attribution.</strong> AI tools sometimes paraphrase or adapt content from documentation, guides, or other resources without clearly indicating the original source. It is your responsibility to:</p>
-<ul>
-<li>Ask the AI tool to identify and properly cite sources when it borrows or adapts content</li>
-<li>Verify that any content the AI generates includes appropriate citations</li>
-<li>Add citations yourself if the AI fails to do so</li>
-<li>Follow appropriate attribution practices for the type of content (code comments, documentation, academic writing, etc.)</li>
-</ul>
-<p>When instructing AI tools to create documentation or written content, explicitly request that they provide proper attribution for any borrowed or adapted material. For example: “Please quote from and paraphrase [source], with proper attribution” rather than simply asking it to summarize information on a topic.</p>
+<p><a href="https://github.com/pilotwaffle/TORQCLAW">TORQCLAW</a> <span class="citation" data-cites="torqclaw">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">pilotwaffle</span> 2026</a>)</span> is a “governed local and cloud AI-agent control plane.” It is a <a href="https://www.typescriptlang.org/">TypeScript</a> gateway, router, and console user interface wrapped around a forked Python execution engine, adding a governance layer between an agent’s request and its action: approval gates, budget caps, spending receipts, and capability and path scoping over <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> (MCP) tools. It runs local models through <a href="https://ollama.com/">Ollama</a> and falls back to a frontier model when needed.</p>
+<p>As of August 2026 it is a single-author, early-stage project (a few stars, a completed “Phase 1” prototype). Critically, it ships <strong>with no license file</strong>, which under default copyright means all rights are reserved: we could not legally fork, vendor, or reuse its code even if we wanted to.</p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Useful to us? Not for adoption</strong></p>
+</div>
+<div class="callout-content">
+<p>TORQCLAW fails three ways for our purposes. It is unlicensed, so we cannot legally build on it. It is domain-agnostic agent <em>infrastructure</em>, not tooling for our research. And the governance ideas it centers on, approval gates, capability scoping, and cost limits, we already implement directly through Claude Code permissions and hooks, MCP scoping, and the <code>Workflow</code> tool’s token budgets. At most, its design documents are worth skimming as a catalog of agent-governance patterns.</p>
+</div>
+</div>
+</div>
 </section></section>
 <section>
-<section id="sec-ai-journal-articles" class="title-slide slide level1 center" data-number="4">
-<h1><span class="header-section-number">4</span> Using AI for Journal Articles</h1>
+<section id="sec-orch-comparison" class="title-slide slide level1 center" data-number="6">
+<h1><span class="header-section-number">6</span> Comparison</h1>
 
 </section>
-<section class="slide level2 scrollable">
+<section class="slide level2">
 
-<p>When using AI tools to help develop journal articles and other academic writing, you must take special care to ensure transparency, maintain intellectual ownership, and avoid plagiarism. The following practices help achieve these goals.</p>
-<h4 id="establish-a-clear-track-record">Establish a Clear Track Record</h4>
-<p><strong>Working with AI through GitHub creates valuable documentation of your contributions versus the AI’s.</strong> This track record can be crucial if reviewers or editors question your use of AI tools.</p>
-<p>GitHub Pull Requests and Issues provide:</p>
+<p>The table below places the three outside tools against our current stack. “Relevance to us” is the bottom line and follows directly from the rows above it.</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dimension</th>
+<th>Claude Code + <code>ai-config</code> (ours)</th>
+<th>Agent Teams</th>
+<th>Inflexa</th>
+<th>TORQCLAW</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>What it is</td>
+<td>Our current agent stack</td>
+<td>Multi-session teammates</td>
+<td>Computational-biology orchestrator</td>
+<td>Governed agent control plane</td>
+</tr>
+<tr class="even">
+<td>Primary domain</td>
+<td>General coding and research</td>
+<td>General coding and research</td>
+<td>Computational biology</td>
+<td>General agent infrastructure</td>
+</tr>
+<tr class="odd">
+<td>License</td>
+<td>Reusable across our repos</td>
+<td>Anthropic product</td>
+<td>Apache-2.0 (permissive)</td>
+<td>None (all rights reserved)</td>
+</tr>
+<tr class="even">
+<td>Maturity (2026)</td>
+<td>In daily use</td>
+<td>Experimental, off by default</td>
+<td>Young, active</td>
+<td>Early prototype, one author</td>
+</tr>
+<tr class="odd">
+<td>Execution model</td>
+<td>Subagents, <code>Workflow</code>, worktrees</td>
+<td>Lead plus independent teammates</td>
+<td>Sandboxed Docker, R and Python</td>
+<td>TypeScript gateway, Python engine</td>
+</tr>
+<tr class="even">
+<td>Governance built in</td>
+<td>Hooks, permissions, budgets</td>
+<td>Inherits Claude Code permissions</td>
+<td>Sandbox, signed provenance</td>
+<td>Approval gates, budgets, receipts</td>
+</tr>
+<tr class="odd">
+<td>Local-first</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes (Ollama, cloud fallback)</td>
+</tr>
+<tr class="even">
+<td>Relevance to us</td>
+<td>The baseline</td>
+<td>Try it</td>
+<td>Evaluate it</td>
+<td>Pass; reference only</td>
+</tr>
+</tbody>
+</table>
+</section></section>
+<section>
+<section id="sec-orch-recommendation" class="title-slide slide level1 center" data-number="7">
+<h1><span class="header-section-number">7</span> Recommendation</h1>
+
+</section>
+<section class="slide level2">
+
+<p>For the lab, as of August 2026:</p>
 <ul>
-<li><strong>Attribution clarity</strong>: Each commit shows exactly who (you or <code>@copilot</code>) made which changes</li>
-<li><strong>Audit trail</strong>: The full conversation history shows your instructions and the AI’s responses</li>
-<li><strong>Intellectual ownership</strong>: Your prompts and guidance demonstrate that the core ideas are yours</li>
-<li><strong>Transparency</strong>: Reviewers can see that you actively supervised and validated all AI contributions</li>
+<li><strong>Try Agent Teams</strong> on a research or review task where parallel, arguing agents would beat one agent working alone. It is native to our tooling and the cheapest to experiment with, as long as the token cost is watched.</li>
+<li><strong>Evaluate Inflexa</strong> on a real dataset. It is the most domain-aligned option and openly licensed, and even if we do not adopt it, its provenance-and-sandbox design informs our own reproducibility work.</li>
+<li><strong>Pass on TORQCLAW</strong> for adoption. It is unlicensed, off-domain, and centered on governance we already have.</li>
 </ul>
-<p>This transparency protects you if journal reviewers are skeptical about or opposed to AI use in research. You can point to the PR history to demonstrate that you maintained control and responsibility for the work.</p>
-<h4 id="write-out-your-core-ideas-in-prompts">Write Out Your Core Ideas in Prompts</h4>
-<p><strong>Make your prompts explicit and detailed to establish that the ideas originate from you, not from the AI.</strong></p>
-<p>When requesting AI assistance with academic writing:</p>
-<ul>
-<li>State your research question, hypothesis, or argument clearly</li>
-<li>Outline the structure and key points you want to make</li>
-<li>Specify the evidence or data you want to include</li>
-<li>Describe the logic connecting your points</li>
-<li>Explain the interpretation or conclusions you want to draw</li>
-</ul>
-<p><strong>Example of a good prompt:</strong></p>
-<blockquote>
-<p>I need help writing the discussion section for a study on social determinants of health. My core argument is that [your specific argument]. The key findings I want to discuss are: [list findings]. I want to interpret these findings as suggesting [your interpretation]. Please help me draft this section while preserving these core ideas and citing relevant literature.</p>
-</blockquote>
-<p>This approach creates clear evidence that the intellectual content came from you, while the AI helped with expression, organization, and literature integration.</p>
-<p><strong>Avoid vague prompts</strong> like “write a discussion section about my results” that give the AI too much creative control and make it unclear whose ideas are being presented.</p>
-<h4 id="request-explicit-source-attribution">Request Explicit Source Attribution</h4>
-<p><strong>Always instruct AI tools to identify and cite their sources to prevent unknowing plagiarism.</strong></p>
-<p>AI language models are trained on vast amounts of text, including published research. While they don’t have direct access to their training data during generation, they may produce text that closely resembles or paraphrases existing work without providing attribution. This creates a plagiarism risk.</p>
-<p><strong>Best practices:</strong></p>
-<ul>
-<li>Explicitly ask the AI to cite sources for any borrowed or adapted content</li>
-<li>Request that the AI indicate when it is drawing from specific works</li>
-<li>Verify that generated text includes proper citations</li>
-<li>Add citations yourself if the AI fails to provide them</li>
-<li>Cross-check AI-generated content against the cited sources to ensure accuracy</li>
-</ul>
-<p><strong>Example request:</strong></p>
-<blockquote>
-<p>Please help me write this section, and explicitly cite any sources you draw from or adapt. If you’re paraphrasing from specific papers, identify them clearly so I can verify the citations.</p>
-</blockquote>
-<p>Remember that even with these precautions, you must still verify the accuracy and appropriateness of any AI-generated citations, as AI tools can sometimes generate plausible-but-incorrect references (“hallucinate” citations).</p>
-<h4 id="example-workflow">Example Workflow</h4>
-<p>A GitHub issue-and-pull-request workflow makes this transparency practical:</p>
-<ol type="1">
-<li><strong>Core ideas stated clearly</strong>: An issue describing the specific concepts you want covered (for example, transparency through GitHub, writing explicit prompts, requesting source attribution)</li>
-<li><strong>Detailed instructions</strong>: Guidance in the issue or your prompts specifies what content should be created and how it should be structured</li>
-<li><strong>Transparent record</strong>: The commit and PR history shows what was human-directed versus AI-generated</li>
-<li><strong>Demonstrated accountability</strong>: The pull request provides a full audit trail of all changes</li>
-</ol>
-<p>When developing content for journal articles, a similar workflow creates documentation that demonstrates responsible AI use and intellectual ownership. You can point to your GitHub history to show reviewers that you directed the AI rather than simply accepting its output.</p>
-<h4 id="additional-considerations">Additional Considerations</h4>
-<p>When using AI for academic writing, also remember to:</p>
-<ul>
-<li><strong>Disclose AI use</strong>: Follow journal policies on acknowledging AI assistance (see <a href="#/sec-ai-disclosure" class="quarto-xref">Section&nbsp;2</a>)</li>
-<li><strong>Maintain responsibility</strong>: You are accountable for all content, including AI-generated text</li>
-<li><strong>Verify accuracy</strong>: Always fact-check AI-generated claims and citations</li>
-<li><strong>Preserve your voice</strong>: Ensure the writing reflects your thinking and style, not just AI’s patterns</li>
-<li><strong>Follow ethical guidelines</strong>: Comply with your institution’s and journals’ policies on AI use</li>
-</ul>
-<p>These practices help you benefit from AI assistance while maintaining the integrity, originality, and credibility of your academic work.</p>
+<p>None of these replaces our current Claude Code and <code>ai-config</code> practice. Agent Teams extends it, Inflexa is a candidate research tool alongside it, and TORQCLAW is, for now, only a reference.</p>
 </section></section>
 <section>
 <section id="references" class="title-slide slide level1 unnumbered center">
@@ -420,8 +488,16 @@
 </section>
 <section class="slide level2 smaller scrollable" id="references">
 
-<div id="refs" role="list">
-
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-claude_agent_teams" class="csl-entry" role="listitem">
+Anthropic. 2026. <em>Orchestrate Teams of Claude Code Sessions</em>. Documentation. <a href="https://code.claude.com/docs/en/agent-teams">https://code.claude.com/docs/en/agent-teams</a>.
+</div>
+<div id="ref-inflexa" class="csl-entry" role="listitem">
+Inflexa. 2026. <em>Inflexa: The Open-Source Orchestrator for Computational Biology</em>. Software. <a href="https://github.com/inflexa-ai/inflexa">https://github.com/inflexa-ai/inflexa</a>.
+</div>
+<div id="ref-torqclaw" class="csl-entry" role="listitem">
+<span class="nocase">pilotwaffle</span>. 2026. <em>TORQCLAW: A Governed Local and Cloud AI-Agent Control Plane</em>. Software. <a href="https://github.com/pilotwaffle/TORQCLAW">https://github.com/pilotwaffle/TORQCLAW</a>.
+</div>
 </div>
 
 
