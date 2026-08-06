@@ -37,7 +37,7 @@ on:
 # of the now-stale diff so only the freshest review runs (and posts a
 # comment). Plain `cancel-in-progress: true` is safe here: this job is
 # read-only. It runs in agent mode (track_progress: false, below), which
-# honors the read-only `claude_args` tool set (inline comments plus
+# honors the read-only `claude_args` tool set (just
 # `gh pr view/diff/comment`, no commit or push), so it never pushes a fix
 # and can't trigger the self-cancellation that rme had to guard against
 # with a conditional expression (see d-morrison/rme#817; and #43 for why
@@ -69,7 +69,7 @@ jobs:
       PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
     permissions:
       contents: read
-      pull-requests: write  # post review + inline comments
+      pull-requests: write  # post the top-level review summary comment
       issues: read
       id-token: write       # required by claude-code-action for the App-token
                             # exchange it performs even with OAuth auth
@@ -131,10 +131,12 @@ jobs:
           # `claude_args` --disallowedTools can't stop it either, since tag
           # mode ignores claude_args tool restrictions entirely. Agent mode
           # honors the read-only `claude_args` below and never injects push
-          # tools, so the reviewer stays read-only as intended; the cost is
-          # no auto-generated progress-checklist comment (findings still
-          # post via the inline-comment tool and `gh pr comment`). Dispatched
-          # runs already ran agent mode, and track_progress is rejected for
+          # tools, so the reviewer stays read-only as intended. The cost is
+          # no progress-checklist comment and no inline comments (agent mode
+          # doesn't initialize the inline-comment tool -- see
+          # anthropics/claude-code-action#635); findings post as a path:line
+          # list in the top-level `gh pr comment` instead. Dispatched runs
+          # already ran agent mode, and track_progress is rejected for
           # workflow_dispatch anyway (see d-morrison/rme#818).
           track_progress: false
           prompt: |
