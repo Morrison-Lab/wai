@@ -101,6 +101,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/customizing-agents.qmd >}}
 
+# How the Config Reaches a Machine {#sec-ai-config-install}
+
+{{< include ai-tools/claude-code-config-install.qmd >}}
+
 # Claude Code Cloud Environments {#sec-ai-claude-cloud-env}
 
 {{< include ai-tools/claude-code-cloud-environments.qmd >}}

@@ -49,6 +49,9 @@ rulesets
 subagent
 subagents
 submodule
+symlink
+symlinked
+symlinks
 toolset
 toolsets
 uarto
