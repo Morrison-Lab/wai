@@ -68,7 +68,7 @@ That is not just untidy.
 A large instruction corpus is already a substantial share of a session's context,
 and a duplicated one can push a session far enough over
 the model's context limit to break subagent delegation,
-because a subagent's session independently loads
+because a subagent independently re-loads
 that same duplicated skill set at start,
 and that alone can exceed the limit before any work begins.
 Keep one copy enabled.
