@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-05 16:39:48 (PDT)
+Last modified: 2026-08-05 17:43:13 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -1680,7 +1680,7 @@ The trap is running both at once. The plugin path and the settings-file path car
 
 #### The `~/.claude` Layout
 
-On a symlink-capable system, the children of `~/.claude` are symlinks into a working checkout of the repository, so a `git pull` in that checkout refreshes every skill and rule for free. Windows Git Bash is the exception: its `ln -s` falls back to real copies, so a pull does not propagate and the copies must be re-synced.
+On a symlink-capable system, the children of `~/.claude` are symlinks into a working checkout of the repository, so a `git pull` in that checkout refreshes every skill and rule for free. Windows Git Bash is the common exception: without symlink privileges configured (Developer Mode, or `MSYS=winsymlinks:nativestrict`), its `ln -s` falls back to real copies, so a pull does not propagate and the copies must be re-synced.
 
 Two health checks answer two different questions, and a clean answer to one says nothing about the other.
 
@@ -1691,7 +1691,7 @@ A guard can be a perfectly linked file that is registered to nothing, and an unr
 
 #### One Plugin Per Capability
 
-Enabling the *same* repository as a plugin from two marketplaces — a personal fork and a lab org, say — loads its whole skill set into every session twice. That is not just untidy. A large instruction corpus is already a substantial share of a session’s context, and a duplicated one can push a session far enough over the model’s context limit to break subagent delegation, because a subagent inherits its parent’s context and cannot start if that context alone exceeds the limit. Keep one copy enabled.
+Enabling the *same* repository as a plugin from two marketplaces — a personal fork and a lab org, say — loads its whole skill set into every session twice. That is not just untidy. A large instruction corpus is already a substantial share of a session’s context, and a duplicated one can push a session far enough over the model’s context limit to break subagent delegation, because a subagent independently re-loads that same duplicated skill set at start, and that alone can exceed the limit before any work begins. Keep one copy enabled.
 
 #### Failure Modes and Their Symptoms
 
