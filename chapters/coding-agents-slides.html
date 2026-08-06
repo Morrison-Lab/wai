@@ -330,7 +330,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-08-05 17:30:25 (PDT)</p>
+  <p class="date">Last modified: 2026-08-05 18:40:33 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -986,7 +986,7 @@ Table&nbsp;2: Relative advantages of humans and Agents
 </div>
 </div>
 </div>
-<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;24</a> for more guidance.</p>
+<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;25</a> for more guidance.</p>
 <h4 id="scenario-3-uncertain-which-scenario-applies">Scenario 3: Uncertain Which Scenario Applies</h4>
 <p><strong>When to use:</strong> You’re not sure whether the failure is due to code issues or workflow configuration problems.</p>
 <p><strong>Recommended approach:</strong></p>
@@ -1014,7 +1014,7 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <ul>
 <li>See the <a href="https://ucd-serg.github.io/lab-manual/continuous-integration.html">UCD-SERG Lab Manual’s continuous integration chapter</a> for setting up GitHub Actions workflows</li>
 <li>See <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;15</a> and <a href="#/sec-ai-benefits-hazards" class="quarto-xref">Section&nbsp;14</a> for security considerations with workflow files</li>
-<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;24</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
+<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;25</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
 <li>See the <a href="https://docs.github.com/en/actions">GitHub Actions documentation</a> for workflow syntax and troubleshooting</li>
 </ul>
 </section></section>
@@ -2012,7 +2012,7 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Rules are written as <code>Tool(specifier)</code> — for example <code>Bash(npm run test *)</code>, <code>Read(./.env)</code>, or <code>Skill(commit)</code> — and sorted into <code>allow</code>, <code>ask</code>, and <code>deny</code>. Because a project’s rules merge with yours rather than replacing them, a repository can tighten what you allow, and cannot quietly loosen it.</p>
 <h4 id="mcp-servers-are-a-different-axis-entirely">MCP Servers Are a Different Axis Entirely</h4>
 <p>Everything above changes what the agent <em>knows or must do</em>. An <a href="https://modelcontextprotocol.io/">MCP</a> server changes what it <em>can reach</em>: typed tools, data resources, and reusable templates exposed over a standard protocol. The specification is explicit that it “does not dictate how AI applications use LLMs or manage the provided context.”</p>
-<p>So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;30</a> covers configuration and its failure modes.</p>
+<p>So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;31</a> covers configuration and its failure modes.</p>
 <h4 id="choosing">Choosing</h4>
 <table class="caption-top">
 <colgroup>
@@ -2130,8 +2130,43 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This repository is a smaller example of the same idea: it carries a <code>.github/copilot-instructions.md</code> for conventions that apply everywhere, plus path-scoped files under <code>.github/instructions/</code> whose <code>applyTo</code> globs attach them only when you edit a matching file.</p>
 </section></section>
 <section>
-<section id="sec-ai-claude-cloud-env" class="title-slide slide level1 center" data-number="23">
-<h1><span class="header-section-number">23</span> Claude Code Cloud Environments</h1>
+<section id="sec-ai-config-install" class="title-slide slide level1 center" data-number="23">
+<h1><span class="header-section-number">23</span> How the Config Reaches a Machine</h1>
+
+</section>
+<section class="slide level2">
+
+<p><a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;22</a> describes <em>which</em> mechanism a customization should use. This section is about the step after that decision: how a config like a shared instruction repository actually reaches a machine, and how a broken install fails.</p>
+<p>Two agents can load the identical instruction corpus and still behave differently, because behavior depends not only on what the config says but on how it is installed where the agent runs. An install problem is quiet by construction — nothing errors, the work still gets done, and a capability simply goes missing with no message that it existed.</p>
+<h4 id="two-ways-the-same-config-reaches-a-machine">Two Ways the Same Config Reaches a Machine</h4>
+<p>A repository of skills, hooks, and instruction files can be delivered two ways, and they are alternatives rather than layers.</p>
+<ul>
+<li><strong>As a plugin.</strong> You enable the repository as a plugin from a marketplace, and the harness loads its skills, commands, and hooks directly from the plugin’s own checkout at session start. It refreshes when the marketplace updates.</li>
+<li><strong>As a per-machine install.</strong> You symlink (or copy) the repository’s children into <code>~/.claude/</code> — <code>skills/</code>, <code>shared/</code>, <code>memories/</code>, <code>hooks/</code>, and <code>CLAUDE.md</code> — and register the hooks into <code>~/.claude/settings.json</code> by hand or with a script.</li>
+</ul>
+<p>The trap is running both at once. The plugin path and the settings-file path carry different command strings, so the harness keeps both, and every hook fires twice. This fails in the safe direction — a doubled guard warns or blocks twice, it never goes missing — which is exactly why it is easy to leave in place unnoticed. Pick one path.</p>
+<h4 id="the-.claude-layout">The <code>~/.claude</code> Layout</h4>
+<p>On a symlink-capable system, the children of <code>~/.claude</code> are symlinks into a working checkout of the repository, so a <code>git pull</code> in that checkout refreshes every skill and rule for free. Windows Git Bash is the common exception: without symlink privileges configured (Developer Mode, or <code>MSYS=winsymlinks:nativestrict</code>), its <code>ln -s</code> falls back to real copies, so a pull does not propagate and the copies must be re-synced.</p>
+<p>Two health checks answer two different questions, and a clean answer to one says nothing about the other.</p>
+<ul>
+<li><strong>Files.</strong> Does <code>~/.claude/hooks/&lt;script&gt;</code> still track the checkout, or has it drifted, gone missing, or become a dangling link?</li>
+<li><strong>Bindings.</strong> Does <code>settings.json</code> actually invoke that script on an event?</li>
+</ul>
+<p>A guard can be a perfectly linked file that is registered to nothing, and an unregistered guard and a guard with nothing to block produce the same output: none. So verify both, and read the two results separately.</p>
+<h4 id="one-plugin-per-capability">One Plugin Per Capability</h4>
+<p>Enabling the <em>same</em> repository as a plugin from two marketplaces — a personal fork and a lab org, say — loads its whole skill set into every session twice. That is not just untidy. A large instruction corpus is already a substantial share of a session’s context, and a duplicated one can push a session far enough over the model’s context limit to break subagent delegation, because a subagent independently re-loads that same duplicated skill set at start, and that alone can exceed the limit before any work begins. Keep one copy enabled.</p>
+<h4 id="failure-modes-and-their-symptoms">Failure Modes and Their Symptoms</h4>
+<p>A broken install rarely announces itself; you read it backward from a symptom.</p>
+<ul>
+<li><strong>A stale hook reference blocks the tool it guards.</strong> A <code>settings.json</code> entry pointing at a hook script that no longer exists errors before the guarded tool runs, so every call to that tool fails with the hook’s error rather than the tool’s output. A <code>PreToolUse</code> hook on <code>Bash</code> that references a missing script, for instance, blocks <em>all</em> shell commands until the entry is removed.</li>
+<li><strong>A dangling symlink silently drops a file.</strong> A <code>~/.claude</code> child symlinked into a temporary worktree or a since-deleted clone becomes a dead link when that directory is removed, and the instructions or agent definition it provided quietly stop loading.</li>
+<li><strong>A check run against the wrong checkout cries wolf.</strong> A verification that compares the installed copies against a stale or unintended checkout can report every entry as misdirected. That is a false alarm from a check aimed at the wrong target, not a fleet of real problems; re-run it against the checkout the install is actually anchored to before acting.</li>
+</ul>
+<p>The common thread is that the install layer is a real surface, distinct from the content of the config, with its own failure modes and its own checks. When an agent behaves as though a rule or skill you wrote does not exist, suspect the install before you suspect the rule.</p>
+</section></section>
+<section>
+<section id="sec-ai-claude-cloud-env" class="title-slide slide level1 center" data-number="24">
+<h1><span class="header-section-number">24</span> Claude Code Cloud Environments</h1>
 
 </section>
 <section class="slide level2">
@@ -2166,8 +2201,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>For details, see the <a href="https://code.claude.com/docs/en/claude-code-on-the-web">Claude Code on the web documentation</a> and the <a href="https://code.claude.com/docs/en/commands">slash command reference</a>.</p>
 </section></section>
 <section>
-<section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="24">
-<h1><span class="header-section-number">24</span> When to use a coding agent</h1>
+<section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="25">
+<h1><span class="header-section-number">25</span> When to use a coding agent</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -2176,8 +2211,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.</p>
 <aside><ol class="aside-footnotes"><li id="fn1"><p>2026-01-10</p></li></ol></aside></section></section>
 <section>
-<section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="25">
-<h1><span class="header-section-number">25</span> Editing with <code>.docx</code> files</h1>
+<section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="26">
+<h1><span class="header-section-number">26</span> Editing with <code>.docx</code> files</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -2213,8 +2248,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.</p>
 </section></section>
 <section>
-<section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="26">
-<h1><span class="header-section-number">26</span> Copilot Instructions for this Repository</h1>
+<section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="27">
+<h1><span class="header-section-number">27</span> Copilot Instructions for this Repository</h1>
 
 </section>
 <section class="slide level2">
@@ -2233,8 +2268,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>See this repository’s own <a href="https://github.com/d-morrison/wai/blob/main/.github/copilot-instructions.md"><code>.github/copilot-instructions.md</code></a> for a working example.</p>
 </section></section>
 <section>
-<section id="using-copilot-review-before-human-review" class="title-slide slide level1 center" data-number="27">
-<h1><span class="header-section-number">27</span> Using Copilot Review Before Human Review</h1>
+<section id="using-copilot-review-before-human-review" class="title-slide slide level1 center" data-number="28">
+<h1><span class="header-section-number">28</span> Using Copilot Review Before Human Review</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -2274,8 +2309,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.</p>
 </section></section>
 <section>
-<section id="reviewing-a-copilot-pr-you-didnt-create" class="title-slide slide level1 center" data-number="28">
-<h1><span class="header-section-number">28</span> Reviewing a Copilot PR You Didn’t Create</h1>
+<section id="reviewing-a-copilot-pr-you-didnt-create" class="title-slide slide level1 center" data-number="29">
+<h1><span class="header-section-number">29</span> Reviewing a Copilot PR You Didn’t Create</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -2361,8 +2396,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.</p>
 </section></section>
 <section>
-<section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="29">
-<h1><span class="header-section-number">29</span> Installing Claude Code on Windows</h1>
+<section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="30">
+<h1><span class="header-section-number">30</span> Installing Claude Code on Windows</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -2449,8 +2484,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>If you get a version number, you’re ready to run <code>claude</code> in your project directory. If you get <code>command not found</code>, re-check the two <code>PATH</code> issues above: the directory must be on <code>PATH</code>, and you must <code>rehash</code> (or open a fresh window) after changing it.</p>
 </section></section>
 <section>
-<section id="sec-ai-mcp-server-setup" class="title-slide slide level1 center" data-number="30">
-<h1><span class="header-section-number">30</span> Setting up MCP servers</h1>
+<section id="sec-ai-mcp-server-setup" class="title-slide slide level1 center" data-number="31">
+<h1><span class="header-section-number">31</span> Setting up MCP servers</h1>
 
 </section>
 <section class="slide level2">
