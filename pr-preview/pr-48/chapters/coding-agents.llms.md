@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-08 08:12:06 (PDT)
+Last modified: 2026-08-08 08:21:29 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -2188,7 +2188,7 @@ set -eu
 
 SERVER="${GITHUB_MCP_SERVER_BIN:-$(command -v github-mcp-server || true)}"
 if [ -z "$SERVER" ]; then
-  echo "github-mcp-server not on PATH; brew install github-mcp-server" >&2
+  echo "github-mcp-server not on PATH; install it or set GITHUB_MCP_SERVER_BIN" >&2
   exit 1
 fi
 
