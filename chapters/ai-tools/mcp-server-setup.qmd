@@ -101,8 +101,8 @@ and the break only shows up later, as a silent absence of tools.
 That is one more reason to prefer the binary path above.
 
 Because the binary's location differs by platform and by installer,
-don't hardcode it in the wrapper below.
-Resolve it from `PATH` instead,
+a launch wrapper should resolve it from `PATH`
+rather than hardcode it,
 with an override for the case where it isn't on one.
 
 #### Supply credentials without storing a token
@@ -191,11 +191,11 @@ the count moving the right direction, as the check above expects.
 
 #### `subscribe_pr_activity` isn't a local-server tool
 
-Other workflow notes in this book name `subscribe_pr_activity`
+Workflow guidance written for remote or web agent sessions
+sometimes names `subscribe_pr_activity`
 as the way to watch a pull request's activity.
 It doesn't appear in a locally-run GitHub MCP server,
-under any toolset combination ---
-it looks to be specific to remote or web sessions.
+under any toolset combination.
 
 The local analogues are
 `manage_notification_subscription` and
