@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-08 08:21:29 (PDT)
+Last modified: 2026-08-08 08:38:41 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -2168,7 +2168,7 @@ That installs to `/opt/homebrew/bin` on Apple silicon (`/usr/local/bin` under In
 
 The official install guide leads with a Docker recipe instead, and it has a catch worth knowing before you follow it: `docker` being on `PATH` does not mean the daemon is running. With Docker Desktop stopped, the server fails to connect to the Docker API, and that failure surfaces at *server start*, not at registration — so `claude mcp add` succeeds, and the break only shows up later, as a silent absence of tools. That is one more reason to prefer the binary path above.
 
-Because the binary’s location differs by platform and by installer, don’t hardcode it in the wrapper below. Resolve it from `PATH` instead, with an override for the case where it isn’t on one.
+Because the binary’s location differs by platform and by installer, a launch wrapper should resolve it from `PATH` rather than hardcode it, with an override for the case where it isn’t on one.
 
 #### Supply credentials without storing a token
 
@@ -2229,7 +2229,7 @@ So compare the tool list before and after, and confirm the count went up rather 
 
 #### `subscribe_pr_activity` isn’t a local-server tool
 
-Other workflow notes in this book name `subscribe_pr_activity` as the way to watch a pull request’s activity. It doesn’t appear in a locally-run GitHub MCP server, under any toolset combination — it looks to be specific to remote or web sessions.
+Workflow guidance written for remote or web agent sessions sometimes names `subscribe_pr_activity` as the way to watch a pull request’s activity. It doesn’t appear in a locally-run GitHub MCP server, under any toolset combination.
 
 The local analogues are `manage_notification_subscription` and `manage_repository_notification_subscription`. Reach for those instead when working from a local harness.
 
