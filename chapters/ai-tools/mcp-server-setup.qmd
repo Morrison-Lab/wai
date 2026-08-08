@@ -161,7 +161,7 @@ GitHub's server exposes a default group,
 and that default carries **no continuous-integration access at all** ---
 no workflow runs, no job logs, no re-run trigger.
 As of this writing (server v1.7.0)
-those four tools are
+the actions toolset's four tools are
 `actions_get`, `actions_list`, `actions_run_trigger`, and `get_job_logs` ---
 the exact names have moved around across releases,
 so treat this list as a snapshot rather than a promise.
