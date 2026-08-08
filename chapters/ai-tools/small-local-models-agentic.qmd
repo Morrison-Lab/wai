@@ -1,0 +1,327 @@
+@sec-ai-offline covers the mechanics of running a model on your own hardware:
+installing Ollama,
+wiring up an editor,
+and driving `aider` against a local endpoint.
+This section is about a narrower and harder question sitting on top of that setup:
+which local model to pick,
+and how to let it work **autonomously** ---
+making a sequence of edits, commits, and tool calls with no human approving each step ---
+without the loop quietly going wrong.
+
+::: {.callout-warning}
+#### A fast-moving, opinionated snapshot
+
+As of August 2026,
+the open-weight coding-model landscape changes monthly:
+new releases,
+new quantizations,
+and new benchmark numbers appear faster than any static page can track.
+The model names, sizes, and figures below were verified against each
+model's own listing at the time this section was written,
+not against benchmark round-ups,
+and they will drift.
+Re-check the source links before choosing a model for a new project,
+and re-benchmark on your own tasks rather than trusting a published score ---
+your repository's mix of languages and idioms is not the benchmark's.
+:::
+
+#### The honest catch
+
+Small models make more per-step mistakes than frontier cloud models:
+a slightly wrong function signature,
+a hallucinated package,
+a test edited to pass instead of a bug fixed.
+A human working alongside a small model catches most of these immediately.
+An **autonomous** loop does not have that human in it,
+so a small error on step 3 becomes the premise for steps 4 through 40,
+and the mistakes compound rather than cancel out.
+
+This is the reason **small + local + fully autonomous** is the hardest
+combination to run safely,
+and the reason this section spends most of its length on structure
+rather than on model selection.
+The fix is not a bigger local model ---
+that only raises the error rate at which the same compounding problem
+starts to bite.
+The fix is bounding the loop so that a compounding error is caught and
+stopped early,
+covered under
+[Guardrails for autonomy](#guardrails-for-autonomy) below.
+
+#### Model landscape
+
+Prefer a model explicitly trained for **tool calling and agentic use**
+over a general chat or plain code-completion model:
+an agentic loop depends on the model reliably emitting well-formed tool
+calls and stopping when it has finished a step,
+not only on writing plausible code.
+A handful of open-weight families currently fit that description well
+enough to run an autonomous loop against:
+
+| Family | Sizes worth running locally | License | Best for |
+|---|---|---|---|
+| [Qwen2.5-Coder / Qwen3-Coder](https://ollama.com/library/qwen3-coder) | 7B, 14B, 32B dense; 30B-A3B mixture-of-experts | Apache 2.0 | General-purpose agentic coding across languages |
+| [Devstral Small](https://ollama.com/library/devstral) | 24B | Apache 2.0 | Purpose-built for coding agents (multi-file edits, tool use) |
+| [Codestral](https://ollama.com/library/codestral) | 22B | [Mistral AI Non-Production License](https://mistral.ai/licenses/MNPL-0.1.md) | Fill-in-the-middle completion, not redistribution in a product |
+| [DeepSeek-Coder-V2](https://ollama.com/library/deepseek-coder-v2) | 16B (Lite) mixture-of-experts | [DeepSeek Model License](https://github.com/deepseek-ai/DeepSeek-Coder-V2/blob/main/LICENSE-MODEL) (commercial use permitted, own terms) | A capable, low-VRAM mixture-of-experts option |
+| [GLM-4.x](https://ollama.com/library/glm-4.6) | Flagship models are large MoE (over 100B total parameters) | MIT | Strong agentic benchmarks, but sized for a workstation or rented GPU, not a laptop |
+
+Qwen3-Coder's 30B-A3B tag is a mixture-of-experts model:
+30B total parameters,
+but only about 3.3B active per token.
+VRAM at rest is set by the total,
+not the active count ---
+every expert has to stay resident in memory even though only a
+fraction fires on any given token ---
+which is why the tag still needs roughly 19 GB at 4-bit quantization,
+in line with its 30B total rather than its 3.3B active count.
+What the small active count buys is speed:
+inference runs closer to a 3--4B model's pace despite the larger
+memory footprint.
+Codestral's license is worth reading before you rely on it:
+Mistral's Non-Production License permits local evaluation but not
+production or commercial deployment ---
+fine for trying it out,
+not fine for a lab pipeline that runs unattended.
+
+As a practical floor,
+treat the 24--32B tier at 4-bit quantization as the smallest size that
+holds up across a multi-step autonomous loop without frequent
+tool-call errors.
+Below that,
+a model is still useful as an assistant you supervise turn by turn
+(@sec-ai-offline covers exactly that setup),
+but it is not yet a safe choice to leave unattended.
+
+#### Hardware tiers
+
+| VRAM (or unified memory) | Model tier | Autonomy |
+|---|---|---|
+| ~8 GB | 7--8B | Assistant only --- keep a human reviewing every step |
+| ~12--16 GB | 14--24B | Entry point for a bounded autonomous loop |
+| ~24 GB+ | 30--32B, with context headroom | Comfortable autonomy at the practical floor above |
+| Apple-silicon unified memory (32 GB+) | Same tiers as above, generally slower per token | Well suited to an overnight batch job where wall-clock time matters less |
+
+These are rough guides,
+not guarantees:
+VRAM headroom for context length matters as much as VRAM for the
+weights themselves,
+and a long-running agentic loop accumulates a long conversation history
+that eats into that headroom as it runs.
+Check the current requirements on the model's own listing
+(the [Ollama model library](https://ollama.com/library) states them per
+tag) rather than a rule of thumb,
+since quantization schemes change.
+
+#### Routed architectures: a planner and an executor
+
+@sec-ai-offline already shows the mechanics of splitting a task between
+two local models with `aider --architect`:
+a larger model plans the change,
+and a smaller one applies the edits.
+The same split has a name in the research literature and a stronger
+motivating argument than "it's faster":
+Belcak and NVIDIA's small-language-model research group argue that
+most of what an agent does in a loop
+is "a small number of specialized tasks repetitively and with
+little variation" ---
+reading a diff,
+running a test,
+formatting a commit message ---
+and that a small model is "sufficiently powerful, inherently more
+suitable, and necessarily more economical" for that work
+[@slm_agentic_ai].
+A large model earns its cost only on the steps that genuinely need
+broad, general reasoning:
+deciding *what* to change and why.
+
+Two shapes of this pattern are worth knowing:
+
+- **All-local**: a single strong local model (30--32B) does both
+  planning and execution,
+  which is simplest to set up and is the right default for a laptop
+  or workstation with one GPU.
+- **Local planner, local executor**: a 30--32B planner drafts each
+  step and a 7--8B executor applies it,
+  trading some plan quality for throughput ---
+  worthwhile mainly on hardware that cannot comfortably hold two
+  copies of a 32B model at once.
+- **Cloud planner, local executor**: a frontier cloud model plans and
+  a local model executes,
+  which keeps the bulk of file contents on your own machine while
+  still using strong reasoning for the decisions that matter most.
+  This is a hybrid rather than a fully local setup ---
+  see the LiteLLM fallback pattern in @sec-ai-offline for one way to
+  wire a cloud-with-local-fallback endpoint,
+  which composes with this split.
+
+None of these routing choices substitutes for the guardrails below.
+A well-chosen planner still hands off to an executor that can make a
+per-step mistake,
+and the loop still needs a way to catch that.
+
+#### Guardrails for autonomy {#guardrails-for-autonomy}
+
+::: {.callout-important}
+#### Errors compound in an unattended loop
+
+A frontier cloud model makes fewer per-step mistakes than a small
+local one,
+but the risk that matters here is not the per-step error rate on its
+own ---
+it is that **autonomous** mode removes the human who would otherwise
+catch a mistake before it becomes the premise for the next ten steps.
+Structure the loop so that a mistake is caught by something other than
+a human watching in real time,
+or do not leave a small model fully unattended.
+:::
+
+The mitigation for a higher per-step error rate is not a better model;
+it is a loop that cannot silently drift far from a known-good state.
+Five patterns do most of the work,
+and each is deliberately mechanical rather than judgment-based ---
+the whole point is that they do not depend on the model noticing its
+own mistake:
+
+1. **Verification gates after every step.**
+   Run something that actually exercises the change ---
+   the test suite,
+   `quarto render`,
+   a linter,
+   `R CMD check` ---
+   after each edit,
+   and treat a non-zero exit as a hard stop for that step,
+   not a suggestion.
+   The environment's pass/fail signal is the judge,
+   never the model's own claim that it "should work now."
+2. **Capped blast radius.**
+   Run the loop in an isolated Git worktree
+   (see the [`worktree`](https://git-scm.com/docs/git-worktree)
+   feature),
+   and commit after every step that passes its gate ---
+   never after a batch of several.
+   A commit-per-green-step history means the worst outcome of a bad
+   step is one commit to roll back,
+   not an unreviewable pile of changes.
+3. **Bounded loops.**
+   Cap the total number of iterations and,
+   separately,
+   the number of *consecutive* failed gates.
+   Hitting either cap should stop the loop and report what it tried,
+   not retry indefinitely ---
+   a model that fails the same gate three times in a row is not going
+   to succeed on the fourth attempt without a different approach,
+   and a different approach is a decision for a human to make.
+4. **Decomposition into specified, testable units, done up front.**
+   Break the work into steps that each have a checkable definition of
+   done before the loop starts,
+   rather than handing the model one large, open-ended goal.
+   A step with a clear pass/fail test is exactly the shape a small
+   model handles well;
+   an open-ended goal is exactly the shape that invites drift.
+5. **Full logging.**
+   Keep every prompt, tool call, and gate result the loop produced,
+   so a run that stopped (or that a human later distrusts) can be
+   reviewed after the fact rather than re-run blind.
+
+These are the guardrails as a reader-facing rationale.
+The concrete gate wiring ---
+an `ai-config` skill that launches a capped, worktree-isolated local
+loop,
+and a `gha` reusable workflow that runs one against a pull request
+using this repository's own lint, spellcheck, and render checks as its
+gates ---
+is tracked separately;
+see [Companion work](#companion-work) below.
+
+#### Stack-specific notes
+
+This site's own stack ---
+R,
+Python,
+Quarto,
+Julia,
+GitHub Actions YAML,
+and Markdown ---
+is largely about producing *verifiable* artifacts:
+a script that runs,
+a document that renders,
+a workflow that passes.
+That is exactly the property that makes a narrow, checkable sub-task
+safe for an autonomous small-model loop,
+but the safety margin is not the same across languages:
+
+| Language / format | Autonomy dial | Notes |
+|---|---|---|
+| Python, Markdown, GitHub Actions YAML | Loosest leash | Well represented in training data; a syntax or lint check is a strong gate on its own |
+| R | Tighter gates | Watch for non-tidyverse idioms and unfamiliar use of S4 or Reference (R5) classes; a model trained mostly on Python code can default to non-idiomatic R |
+| Quarto (`.qmd`) | `quarto render` as the pass/fail judge | Have the model edit a known-good `_quarto.yml` rather than authoring one from scratch --- a render failure is a strong, cheap gate |
+| Julia | Shortest leash, strongest model, tightest test gate | The weakest training coverage of this stack's languages, so treat any unattended Julia change as higher risk by default |
+
+None of this changes the guardrails above;
+it changes how tightly you set them ---
+a smaller step size,
+a lower consecutive-failure cap,
+or simply keeping a human in the loop for Julia while letting a
+Markdown fix run unattended.
+
+#### Fine-tuning: closing the idiom gap
+
+A local model's non-idiomatic R or Julia,
+noted in the stack-specific table above,
+is a training-data problem rather than a capability problem:
+the model has seen far less R and Julia than Python,
+not that it is incapable of writing either.
+Two lighter options are worth trying before fine-tuning anything:
+
+- **Retrieval**, giving the model your own package's existing R or
+  Julia code as context so it has concrete idiom to imitate.
+- **Prompting**, stating the conventions directly ---
+  this repository's own `CLAUDE.md` and
+  `.github/copilot-instructions.md` are examples of exactly that.
+
+When those are not enough,
+**LoRA** (Low-Rank Adaptation) and its 4-bit variant **QLoRA** are the
+standard way to close an idiom gap without retraining a whole model.
+Both freeze the pretrained weights and train a small set of additional
+low-rank matrices on top,
+which cuts the trainable parameter count by orders of magnitude
+compared to full fine-tuning [@lora].
+QLoRA adds 4-bit quantization of the frozen weights on top of that,
+which is what actually shrinks the memory footprint enough to
+fine-tune a mid-sized model on a single consumer GPU
+[@qlora].
+[Hugging Face's PEFT library](https://huggingface.co/docs/peft) is the
+common tooling entry point;
+the specifics of running it against this lab's own repositories belong
+in `ai-config`,
+not here.
+
+Whatever you fine-tune on,
+keep a held-out evaluation set of real tasks from your own codebase
+that the training data never touched,
+and re-check it after every fine-tuning run --- a model that has
+memorized its training examples will look better on paper than it
+performs on the next genuinely new task.
+
+#### Companion work {#companion-work}
+
+This page explains the reasoning;
+it does not implement a launcher or a CI gate.
+Two companion issues carry the runnable parts, each linking back here
+for rationale:
+
+- **[`ai-config` #1292](https://github.com/Morrison-Lab/ai-config/issues/1292)**:
+  a skill that configures and launches a local
+  autonomous loop --- model choice, an Ollama or `llama.cpp` endpoint,
+  and the guardrail caps above.
+- **[`gha` #436](https://github.com/Morrison-Lab/gha/issues/436)**:
+  a reusable workflow, a sibling to this repository's own
+  `claude.yml`,
+  that runs a small/self-hosted-model agent against a pull request,
+  wiring this site's existing checks as the loop's verification gates:
+
+  - spellcheck
+  - link check
+  - non-standard-characters
+  - bibliography DOIs
