@@ -68,9 +68,16 @@ enough to run an autonomous loop against:
 
 Qwen3-Coder's 30B-A3B tag is a mixture-of-experts model:
 30B total parameters,
-but only about 3.3B active per token,
-which is why it fits in roughly 19 GB at 4-bit quantization despite the
-larger headline size.
+but only about 3.3B active per token.
+VRAM at rest is set by the total,
+not the active count ---
+every expert has to stay resident in memory even though only a
+fraction fires on any given token ---
+which is why the tag still needs roughly 19 GB at 4-bit quantization,
+in line with its 30B total rather than its 3.3B active count.
+What the small active count buys is speed:
+inference runs closer to a 3--4B model's pace despite the larger
+memory footprint.
 Codestral's license is worth reading before you rely on it:
 Mistral's Non-Production License permits local evaluation but not
 production or commercial deployment ---
@@ -231,6 +238,7 @@ see [Companion work](#companion-work) below.
 
 This site's own stack ---
 R,
+Python,
 Quarto,
 Julia,
 GitHub Actions YAML,
@@ -311,6 +319,9 @@ for rationale:
   a reusable workflow, a sibling to this repository's own
   `claude.yml`,
   that runs a small/self-hosted-model agent against a pull request,
-  wiring this site's existing checks
-  (spellcheck, link check, non-standard-characters, bibliography DOIs)
-  as the loop's verification gates.
+  wiring this site's existing checks as the loop's verification gates:
+
+  - spellcheck
+  - link check
+  - non-standard-characters
+  - bibliography DOIs
