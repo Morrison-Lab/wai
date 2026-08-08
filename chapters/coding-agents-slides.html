@@ -330,7 +330,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-08-05 20:30:48 (PDT)</p>
+  <p class="date">Last modified: 2026-08-08 07:40:02 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -453,7 +453,7 @@
 <p>Most coding-agent harnesses — including the <a href="https://github.com/features/copilot/agents">GitHub Copilot coding agent</a> and <a href="https://claude.com/product/claude-code">Claude Code</a> — share a similar set of layers:</p>
 <ul>
 <li><strong>Core loop</strong>: the <a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview">tool-calling loop</a>, permission and sandboxing model, and context management that keep the agent grounded in your repository.</li>
-<li><strong>Skills</strong>: reusable, named procedures that encode a workflow so it runs the same way every time, instead of being re-improvised in each conversation. See <a href="#/sec-ai-agent-skills" class="quarto-xref">Section&nbsp;21</a>.</li>
+<li><strong>Skills</strong>: reusable, named procedures that encode a workflow so it runs the same way every time, instead of being re-improvised in each conversation. See <a href="#/sec-ai-agent-skills" class="quarto-xref">Section&nbsp;22</a>.</li>
 <li><strong>Subagents</strong>: a way to spin up a worker with a fresh context window for a self-contained piece of research or work, keeping the main conversation’s context focused.</li>
 <li><strong>Multi-agent orchestration</strong>: deterministic fan-out and fan-in across many subagents — for example, running several independent reviewers over a diff and reconciling their findings — for work that is large or benefits from independent verification.</li>
 <li><strong>MCP servers</strong>: the <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> gives a harness typed access to external systems (issue trackers, chat tools, databases) beyond raw shell or API calls.</li>
@@ -986,7 +986,7 @@ Table&nbsp;2: Relative advantages of humans and Agents
 </div>
 </div>
 </div>
-<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;25</a> for more guidance.</p>
+<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;26</a> for more guidance.</p>
 <h4 id="scenario-3-uncertain-which-scenario-applies">Scenario 3: Uncertain Which Scenario Applies</h4>
 <p><strong>When to use:</strong> You’re not sure whether the failure is due to code issues or workflow configuration problems.</p>
 <p><strong>Recommended approach:</strong></p>
@@ -1014,7 +1014,7 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <ul>
 <li>See the <a href="https://ucd-serg.github.io/lab-manual/continuous-integration.html">UCD-SERG Lab Manual’s continuous integration chapter</a> for setting up GitHub Actions workflows</li>
 <li>See <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;15</a> and <a href="#/sec-ai-benefits-hazards" class="quarto-xref">Section&nbsp;14</a> for security considerations with workflow files</li>
-<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;25</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
+<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;26</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
 <li>See the <a href="https://docs.github.com/en/actions">GitHub Actions documentation</a> for workflow syntax and troubleshooting</li>
 </ul>
 </section></section>
@@ -1474,8 +1474,208 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <p>Even with local models, avoid including raw sensitive data in prompts. Work with anonymized or synthetic data wherever possible.</p>
 </section></section>
 <section>
-<section id="sec-ai-copilot-settings" class="title-slide slide level1 center" data-number="18">
-<h1><span class="header-section-number">18</span> Configuring GitHub Copilot Settings</h1>
+<section id="sec-ai-small-local-models" class="title-slide slide level1 center" data-number="18">
+<h1><span class="header-section-number">18</span> Small, Local Models for Autonomous Agentic Coding</h1>
+
+</section>
+<section class="slide level2 scrollable">
+
+<p><a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;17</a> covers the mechanics of running a model on your own hardware: installing Ollama, wiring up an editor, and driving <code>aider</code> against a local endpoint. This section is about a narrower and harder question sitting on top of that setup: which local model to pick, and how to let it work <strong>autonomously</strong> — making a sequence of edits, commits, and tool calls with no human approving each step — without the loop quietly going wrong.</p>
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>A fast-moving, opinionated snapshot</strong></p>
+</div>
+<div class="callout-content">
+<p>As of August 2026, the open-weight coding-model landscape changes monthly: new releases, new quantizations, and new benchmark numbers appear faster than any static page can track. The model names, sizes, and figures below were verified against each model’s own listing at the time this section was written, not against benchmark round-ups, and they will drift. Re-check the source links before choosing a model for a new project, and re-benchmark on your own tasks rather than trusting a published score — your repository’s mix of languages and idioms is not the benchmark’s.</p>
+</div>
+</div>
+</div>
+<h4 id="the-honest-catch">The honest catch</h4>
+<p>Small models make more per-step mistakes than frontier cloud models: a slightly wrong function signature, a hallucinated package, a test edited to pass instead of a bug fixed. A human working alongside a small model catches most of these immediately. An <strong>autonomous</strong> loop does not have that human in it, so a small error on step 3 becomes the premise for steps 4 through 40, and the mistakes compound rather than cancel out.</p>
+<p>This is the reason <strong>small + local + fully autonomous</strong> is the hardest combination to run safely, and the reason this section spends most of its length on structure rather than on model selection. The fix is not a bigger local model — that only raises the error rate at which the same compounding problem starts to bite. The fix is bounding the loop so that a compounding error is caught and stopped early, covered under <a href="#/guardrails-for-autonomy">Guardrails for autonomy</a> below.</p>
+<h4 id="model-landscape">Model landscape</h4>
+<p>Prefer a model explicitly trained for <strong>tool calling and agentic use</strong> over a general chat or plain code-completion model: an agentic loop depends on the model reliably emitting well-formed tool calls and stopping when it has finished a step, not only on writing plausible code. A handful of open-weight families currently fit that description well enough to run an autonomous loop against:</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Family</th>
+<th>Sizes worth running locally</th>
+<th>License</th>
+<th>Best for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://ollama.com/library/qwen3-coder">Qwen2.5-Coder / Qwen3-Coder</a></td>
+<td>7B, 14B, 32B dense; 30B-A3B mixture-of-experts</td>
+<td>Apache 2.0</td>
+<td>General-purpose agentic coding across languages</td>
+</tr>
+<tr class="even">
+<td><a href="https://ollama.com/library/devstral">Devstral Small</a></td>
+<td>24B</td>
+<td>Apache 2.0</td>
+<td>Purpose-built for coding agents (multi-file edits, tool use)</td>
+</tr>
+<tr class="odd">
+<td><a href="https://ollama.com/library/codestral">Codestral</a></td>
+<td>22B</td>
+<td><a href="https://mistral.ai/licenses/MNPL-0.1.md">Mistral AI Non-Production License</a></td>
+<td>Fill-in-the-middle completion, not redistribution in a product</td>
+</tr>
+<tr class="even">
+<td><a href="https://ollama.com/library/deepseek-coder-v2">DeepSeek-Coder-V2</a></td>
+<td>16B (Lite) mixture-of-experts</td>
+<td><a href="https://github.com/deepseek-ai/DeepSeek-Coder-V2/blob/main/LICENSE-MODEL">DeepSeek Model License</a> (commercial use permitted, own terms)</td>
+<td>A capable, low-VRAM mixture-of-experts option</td>
+</tr>
+<tr class="odd">
+<td><a href="https://ollama.com/library/glm-4.6">GLM-4.x</a></td>
+<td>Flagship models are large MoE (over 100B total parameters)</td>
+<td>MIT</td>
+<td>Strong agentic benchmarks, but sized for a workstation or rented GPU, not a laptop</td>
+</tr>
+</tbody>
+</table>
+<p>Qwen3-Coder’s 30B-A3B tag is a mixture-of-experts model: 30B total parameters, but only about 3.3B active per token. VRAM at rest is set by the total, not the active count — every expert has to stay resident in memory even though only a fraction fires on any given token — which is why the tag still needs roughly 19 GB at 4-bit quantization, in line with its 30B total rather than its 3.3B active count. What the small active count buys is speed: inference runs closer to a 3–4B model’s pace despite the larger memory footprint. Codestral’s license is worth reading before you rely on it: Mistral’s Non-Production License permits local evaluation but not production or commercial deployment — fine for trying it out, not fine for a lab pipeline that runs unattended.</p>
+<p>As a practical floor, treat the 24–32B tier at 4-bit quantization as the smallest size that holds up across a multi-step autonomous loop without frequent tool-call errors. Below that, a model is still useful as an assistant you supervise turn by turn (<a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;17</a> covers exactly that setup), but it is not yet a safe choice to leave unattended.</p>
+<h4 id="hardware-tiers">Hardware tiers</h4>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>VRAM (or unified memory)</th>
+<th>Model tier</th>
+<th>Autonomy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>~8 GB</td>
+<td>7–8B</td>
+<td>Assistant only — keep a human reviewing every step</td>
+</tr>
+<tr class="even">
+<td>~12–16 GB</td>
+<td>14–24B</td>
+<td>Entry point for a bounded autonomous loop</td>
+</tr>
+<tr class="odd">
+<td>~24 GB+</td>
+<td>30–32B, with context headroom</td>
+<td>Comfortable autonomy at the practical floor above</td>
+</tr>
+<tr class="even">
+<td>Apple-silicon unified memory (32 GB+)</td>
+<td>Same tiers as above, generally slower per token</td>
+<td>Well suited to an overnight batch job where wall-clock time matters less</td>
+</tr>
+</tbody>
+</table>
+<p>These are rough guides, not guarantees: VRAM headroom for context length matters as much as VRAM for the weights themselves, and a long-running agentic loop accumulates a long conversation history that eats into that headroom as it runs. Check the current requirements on the model’s own listing (the <a href="https://ollama.com/library">Ollama model library</a> states them per tag) rather than a rule of thumb, since quantization schemes change.</p>
+<h4 id="routed-architectures-a-planner-and-an-executor">Routed architectures: a planner and an executor</h4>
+<p><a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;17</a> already shows the mechanics of splitting a task between two local models with <code>aider --architect</code>: a larger model plans the change, and a smaller one applies the edits. The same split has a name in the research literature and a stronger motivating argument than “it’s faster”: Belcak and NVIDIA’s small-language-model research group argue that most of what an agent does in a loop is “a small number of specialized tasks repetitively and with little variation” — reading a diff, running a test, formatting a commit message — and that a small model is “sufficiently powerful, inherently more suitable, and necessarily more economical” for that work <span class="citation" data-cites="slm_agentic_ai">(<a href="#/references" role="doc-biblioref" onclick="">Belcak et al. 2025</a>)</span>. A large model earns its cost only on the steps that genuinely need broad, general reasoning: deciding <em>what</em> to change and why.</p>
+<p>Two shapes of this pattern are worth knowing:</p>
+<ul>
+<li><strong>All-local</strong>: a single strong local model (30–32B) does both planning and execution, which is simplest to set up and is the right default for a laptop or workstation with one GPU.</li>
+<li><strong>Local planner, local executor</strong>: a 30–32B planner drafts each step and a 7–8B executor applies it, trading some plan quality for throughput — worthwhile mainly on hardware that cannot comfortably hold two copies of a 32B model at once.</li>
+<li><strong>Cloud planner, local executor</strong>: a frontier cloud model plans and a local model executes, which keeps the bulk of file contents on your own machine while still using strong reasoning for the decisions that matter most. This is a hybrid rather than a fully local setup — see the LiteLLM fallback pattern in <a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;17</a> for one way to wire a cloud-with-local-fallback endpoint, which composes with this split.</li>
+</ul>
+<p>None of these routing choices substitutes for the guardrails below. A well-chosen planner still hands off to an executor that can make a per-step mistake, and the loop still needs a way to catch that.</p>
+<h4 id="guardrails-for-autonomy">Guardrails for autonomy</h4>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Errors compound in an unattended loop</strong></p>
+</div>
+<div class="callout-content">
+<p>A frontier cloud model makes fewer per-step mistakes than a small local one, but the risk that matters here is not the per-step error rate on its own — it is that <strong>autonomous</strong> mode removes the human who would otherwise catch a mistake before it becomes the premise for the next ten steps. Structure the loop so that a mistake is caught by something other than a human watching in real time, or do not leave a small model fully unattended.</p>
+</div>
+</div>
+</div>
+<p>The mitigation for a higher per-step error rate is not a better model; it is a loop that cannot silently drift far from a known-good state. Five patterns do most of the work, and each is deliberately mechanical rather than judgment-based — the whole point is that they do not depend on the model noticing its own mistake:</p>
+<ol type="1">
+<li><strong>Verification gates after every step.</strong> Run something that actually exercises the change — the test suite, <code>quarto render</code>, a linter, <code>R CMD check</code> — after each edit, and treat a non-zero exit as a hard stop for that step, not a suggestion. The environment’s pass/fail signal is the judge, never the model’s own claim that it “should work now.”</li>
+<li><strong>Capped blast radius.</strong> Run the loop in an isolated Git worktree (see the <a href="https://git-scm.com/docs/git-worktree"><code>worktree</code></a> feature), and commit after every step that passes its gate — never after a batch of several. A commit-per-green-step history means the worst outcome of a bad step is one commit to roll back, not an unreviewable pile of changes.</li>
+<li><strong>Bounded loops.</strong> Cap the total number of iterations and, separately, the number of <em>consecutive</em> failed gates. Hitting either cap should stop the loop and report what it tried, not retry indefinitely — a model that fails the same gate three times in a row is not going to succeed on the fourth attempt without a different approach, and a different approach is a decision for a human to make.</li>
+<li><strong>Decomposition into specified, testable units, done up front.</strong> Break the work into steps that each have a checkable definition of done before the loop starts, rather than handing the model one large, open-ended goal. A step with a clear pass/fail test is exactly the shape a small model handles well; an open-ended goal is exactly the shape that invites drift.</li>
+<li><strong>Full logging.</strong> Keep every prompt, tool call, and gate result the loop produced, so a run that stopped (or that a human later distrusts) can be reviewed after the fact rather than re-run blind.</li>
+</ol>
+<p>These are the guardrails as a reader-facing rationale. The concrete gate wiring — an <code>ai-config</code> skill that launches a capped, worktree-isolated local loop, and a <code>gha</code> reusable workflow that runs one against a pull request using this repository’s own lint, spellcheck, and render checks as its gates — is tracked separately; see <a href="#/companion-work">Companion work</a> below.</p>
+<h4 id="stack-specific-notes">Stack-specific notes</h4>
+<p>This site’s own stack — R, Python, Quarto, Julia, GitHub Actions YAML, and Markdown — is largely about producing <em>verifiable</em> artifacts: a script that runs, a document that renders, a workflow that passes. That is exactly the property that makes a narrow, checkable sub-task safe for an autonomous small-model loop, but the safety margin is not the same across languages:</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Language / format</th>
+<th>Autonomy dial</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Python, Markdown, GitHub Actions YAML</td>
+<td>Loosest leash</td>
+<td>Well represented in training data; a syntax or lint check is a strong gate on its own</td>
+</tr>
+<tr class="even">
+<td>R</td>
+<td>Tighter gates</td>
+<td>Watch for non-tidyverse idioms and unfamiliar use of S4 or Reference (R5) classes; a model trained mostly on Python code can default to non-idiomatic R</td>
+</tr>
+<tr class="odd">
+<td>Quarto (<code>.qmd</code>)</td>
+<td><code>quarto render</code> as the pass/fail judge</td>
+<td>Have the model edit a known-good <code>_quarto.yml</code> rather than authoring one from scratch — a render failure is a strong, cheap gate</td>
+</tr>
+<tr class="even">
+<td>Julia</td>
+<td>Shortest leash, strongest model, tightest test gate</td>
+<td>The weakest training coverage of this stack’s languages, so treat any unattended Julia change as higher risk by default</td>
+</tr>
+</tbody>
+</table>
+<p>None of this changes the guardrails above; it changes how tightly you set them — a smaller step size, a lower consecutive-failure cap, or simply keeping a human in the loop for Julia while letting a Markdown fix run unattended.</p>
+<h4 id="fine-tuning-closing-the-idiom-gap">Fine-tuning: closing the idiom gap</h4>
+<p>A local model’s non-idiomatic R or Julia, noted in the stack-specific table above, is a training-data problem rather than a capability problem: the model has seen far less R and Julia than Python, not that it is incapable of writing either. Two lighter options are worth trying before fine-tuning anything:</p>
+<ul>
+<li><strong>Retrieval</strong>, giving the model your own package’s existing R or Julia code as context so it has concrete idiom to imitate.</li>
+<li><strong>Prompting</strong>, stating the conventions directly — this repository’s own <code>CLAUDE.md</code> and <code>.github/copilot-instructions.md</code> are examples of exactly that.</li>
+</ul>
+<p>When those are not enough, <strong>LoRA</strong> (Low-Rank Adaptation) and its 4-bit variant <strong>QLoRA</strong> are the standard way to close an idiom gap without retraining a whole model. Both freeze the pretrained weights and train a small set of additional low-rank matrices on top, which cuts the trainable parameter count by orders of magnitude compared to full fine-tuning <span class="citation" data-cites="lora">(<a href="#/references" role="doc-biblioref" onclick="">Hu et al. 2021</a>)</span>. QLoRA adds 4-bit quantization of the frozen weights on top of that, which is what actually shrinks the memory footprint enough to fine-tune a mid-sized model on a single consumer GPU <span class="citation" data-cites="qlora">(<a href="#/references" role="doc-biblioref" onclick="">Dettmers et al. 2023</a>)</span>. <a href="https://huggingface.co/docs/peft">Hugging Face’s PEFT library</a> is the common tooling entry point; the specifics of running it against this lab’s own repositories belong in <code>ai-config</code>, not here.</p>
+<p>Whatever you fine-tune on, keep a held-out evaluation set of real tasks from your own codebase that the training data never touched, and re-check it after every fine-tuning run — a model that has memorized its training examples will look better on paper than it performs on the next genuinely new task.</p>
+<h4 id="companion-work">Companion work</h4>
+<p>This page explains the reasoning; it does not implement a launcher or a CI gate. Two companion issues carry the runnable parts, each linking back here for rationale:</p>
+<ul>
+<li><p><strong><a href="https://github.com/Morrison-Lab/ai-config/issues/1292"><code>ai-config</code> #1292</a></strong>: a skill that configures and launches a local autonomous loop — model choice, an Ollama or <code>llama.cpp</code> endpoint, and the guardrail caps above.</p></li>
+<li><p><strong><a href="https://github.com/Morrison-Lab/gha/issues/436"><code>gha</code> #436</a></strong>: a reusable workflow, a sibling to this repository’s own <code>claude.yml</code>, that runs a small/self-hosted-model agent against a pull request, wiring this site’s existing checks as the loop’s verification gates:</p>
+<ul>
+<li>spellcheck</li>
+<li>link check</li>
+<li>non-standard-characters</li>
+<li>bibliography DOIs</li>
+</ul></li>
+</ul>
+</section></section>
+<section>
+<section id="sec-ai-copilot-settings" class="title-slide slide level1 center" data-number="19">
+<h1><span class="header-section-number">19</span> Configuring GitHub Copilot Settings</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -1717,8 +1917,8 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <p>Following these guidelines will help establish an effective Copilot configuration. The key is to enable features that add value to your workflow while maintaining awareness that AI assistance requires validation (see <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;15</a>).</p>
 </section></section>
 <section>
-<section id="sec-ai-byok-vscode" class="title-slide slide level1 center" data-number="19">
-<h1><span class="header-section-number">19</span> Connecting VS Code to a Custom Model Endpoint (BYOK)</h1>
+<section id="sec-ai-byok-vscode" class="title-slide slide level1 center" data-number="20">
+<h1><span class="header-section-number">20</span> Connecting VS Code to a Custom Model Endpoint (BYOK)</h1>
 
 </section>
 <section class="slide level2">
@@ -1775,8 +1975,8 @@ while the selected main agent model is BYOK.</code></pre>
 </div>
 </section></section>
 <section>
-<section id="configuring-the-agent-environment" class="title-slide slide level1 center" data-number="20">
-<h1><span class="header-section-number">20</span> Configuring the Agent Environment</h1>
+<section id="configuring-the-agent-environment" class="title-slide slide level1 center" data-number="21">
+<h1><span class="header-section-number">21</span> Configuring the Agent Environment</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -1877,8 +2077,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>For complete details, see <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment">Customizing the development environment for GitHub Copilot coding agent</a>.</p>
 </section></section>
 <section>
-<section id="sec-ai-agent-skills" class="title-slide slide level1 center" data-number="21">
-<h1><span class="header-section-number">21</span> Agent Skills</h1>
+<section id="sec-ai-agent-skills" class="title-slide slide level1 center" data-number="22">
+<h1><span class="header-section-number">22</span> Agent Skills</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -1913,7 +2113,7 @@ while the selected main agent model is BYOK.</code></pre>
 </ul>
 <h4 id="further-reading-2">Further Reading</h4>
 <p>For the complete specification and more details, see <a href="https://agentskills.io/home">agentskills.io</a>.</p>
-<p>A skill is one of several ways to customize an agent, and not always the right one. <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;22</a> compares it against:</p>
+<p>A skill is one of several ways to customize an agent, and not always the right one. <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;23</a> compares it against:</p>
 <ul>
 <li>instruction files</li>
 <li>subagents</li>
@@ -1924,13 +2124,13 @@ while the selected main agent model is BYOK.</code></pre>
 <p>The <a href="https://github.com/Morrison-Lab/ai-config">Morrison-Lab/ai-config</a> repository contains an example of personal Claude Code configuration, including user-level skills, hooks, and subagents, synced across machines via Git.</p>
 </section></section>
 <section>
-<section id="sec-ai-customization" class="title-slide slide level1 center" data-number="22">
-<h1><span class="header-section-number">22</span> Customizing an Agent</h1>
+<section id="sec-ai-customization" class="title-slide slide level1 center" data-number="23">
+<h1><span class="header-section-number">23</span> Customizing an Agent</h1>
 
 </section>
 <section class="slide level2">
 
-<p><a href="#/sec-ai-agent-skills" class="quarto-xref">Section&nbsp;21</a> describes one way to extend an agent. It is not the only one, and a lab that knows only that one tends to write every customization as a skill, including the ones that should have been something else.</p>
+<p><a href="#/sec-ai-agent-skills" class="quarto-xref">Section&nbsp;22</a> describes one way to extend an agent. It is not the only one, and a lab that knows only that one tends to write every customization as a skill, including the ones that should have been something else.</p>
 <p>This section maps the whole surface. The mechanisms differ less in what you can write in them — most are Markdown with a <a href="https://jekyllrb.com/docs/front-matter/">YAML front matter</a> header, as <a href="#/sec-ai-harness-construction" class="quarto-xref">Section&nbsp;6</a> describes — than in <strong>when they fire and who decides</strong>.</p>
 <h4 id="the-question-that-picks-the-mechanism">The Question That Picks the Mechanism</h4>
 <p>Ask two things about the behavior you want:</p>
@@ -2012,7 +2212,7 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Rules are written as <code>Tool(specifier)</code> — for example <code>Bash(npm run test *)</code>, <code>Read(./.env)</code>, or <code>Skill(commit)</code> — and sorted into <code>allow</code>, <code>ask</code>, and <code>deny</code>. Because a project’s rules merge with yours rather than replacing them, a repository can tighten what you allow, and cannot quietly loosen it.</p>
 <h4 id="mcp-servers-are-a-different-axis-entirely">MCP Servers Are a Different Axis Entirely</h4>
 <p>Everything above changes what the agent <em>knows or must do</em>. An <a href="https://modelcontextprotocol.io/">MCP</a> server changes what it <em>can reach</em>: typed tools, data resources, and reusable templates exposed over a standard protocol. The specification is explicit that it “does not dictate how AI applications use LLMs or manage the provided context.”</p>
-<p>So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;31</a> covers configuration and its failure modes.</p>
+<p>So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;32</a> covers configuration and its failure modes.</p>
 <h4 id="choosing">Choosing</h4>
 <table class="caption-top">
 <colgroup>
@@ -2130,13 +2330,13 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This repository is a smaller example of the same idea: it carries a <code>.github/copilot-instructions.md</code> for conventions that apply everywhere, plus path-scoped files under <code>.github/instructions/</code> whose <code>applyTo</code> globs attach them only when you edit a matching file.</p>
 </section></section>
 <section>
-<section id="sec-ai-config-install" class="title-slide slide level1 center" data-number="23">
-<h1><span class="header-section-number">23</span> How the Config Reaches a Machine</h1>
+<section id="sec-ai-config-install" class="title-slide slide level1 center" data-number="24">
+<h1><span class="header-section-number">24</span> How the Config Reaches a Machine</h1>
 
 </section>
 <section class="slide level2">
 
-<p><a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;22</a> describes <em>which</em> mechanism a customization should use. This section is about the step after that decision: how a config like a shared instruction repository actually reaches a machine, and how a broken install fails.</p>
+<p><a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;23</a> describes <em>which</em> mechanism a customization should use. This section is about the step after that decision: how a config like a shared instruction repository actually reaches a machine, and how a broken install fails.</p>
 <p>Two agents can load the identical instruction corpus and still behave differently, because behavior depends not only on what the config says but on how it is installed where the agent runs. An install problem is quiet by construction — nothing errors, the work still gets done, and a capability simply goes missing with no message that it existed.</p>
 <h4 id="two-ways-the-same-config-reaches-a-machine">Two Ways the Same Config Reaches a Machine</h4>
 <p>A repository of skills, hooks, and instruction files can be delivered two ways, and they are alternatives rather than layers.</p>
@@ -2165,8 +2365,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>The common thread is that the install layer is a real surface, distinct from the content of the config, with its own failure modes and its own checks. When an agent behaves as though a rule or skill you wrote does not exist, suspect the install before you suspect the rule.</p>
 </section></section>
 <section>
-<section id="sec-ai-claude-cloud-env" class="title-slide slide level1 center" data-number="24">
-<h1><span class="header-section-number">24</span> Claude Code Cloud Environments</h1>
+<section id="sec-ai-claude-cloud-env" class="title-slide slide level1 center" data-number="25">
+<h1><span class="header-section-number">25</span> Claude Code Cloud Environments</h1>
 
 </section>
 <section class="slide level2">
@@ -2201,8 +2401,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>For details, see the <a href="https://code.claude.com/docs/en/claude-code-on-the-web">Claude Code on the web documentation</a> and the <a href="https://code.claude.com/docs/en/commands">slash command reference</a>.</p>
 </section></section>
 <section>
-<section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="25">
-<h1><span class="header-section-number">25</span> When to use a coding agent</h1>
+<section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="26">
+<h1><span class="header-section-number">26</span> When to use a coding agent</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -2211,8 +2411,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.</p>
 <aside><ol class="aside-footnotes"><li id="fn1"><p>2026-01-10</p></li></ol></aside></section></section>
 <section>
-<section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="26">
-<h1><span class="header-section-number">26</span> Editing with <code>.docx</code> files</h1>
+<section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="27">
+<h1><span class="header-section-number">27</span> Editing with <code>.docx</code> files</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -2248,8 +2448,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.</p>
 </section></section>
 <section>
-<section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="27">
-<h1><span class="header-section-number">27</span> Copilot Instructions for this Repository</h1>
+<section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="28">
+<h1><span class="header-section-number">28</span> Copilot Instructions for this Repository</h1>
 
 </section>
 <section class="slide level2">
@@ -2268,8 +2468,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>See this repository’s own <a href="https://github.com/d-morrison/wai/blob/main/.github/copilot-instructions.md"><code>.github/copilot-instructions.md</code></a> for a working example.</p>
 </section></section>
 <section>
-<section id="using-copilot-review-before-human-review" class="title-slide slide level1 center" data-number="28">
-<h1><span class="header-section-number">28</span> Using Copilot Review Before Human Review</h1>
+<section id="using-copilot-review-before-human-review" class="title-slide slide level1 center" data-number="29">
+<h1><span class="header-section-number">29</span> Using Copilot Review Before Human Review</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -2309,8 +2509,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.</p>
 </section></section>
 <section>
-<section id="reviewing-a-copilot-pr-you-didnt-create" class="title-slide slide level1 center" data-number="29">
-<h1><span class="header-section-number">29</span> Reviewing a Copilot PR You Didn’t Create</h1>
+<section id="reviewing-a-copilot-pr-you-didnt-create" class="title-slide slide level1 center" data-number="30">
+<h1><span class="header-section-number">30</span> Reviewing a Copilot PR You Didn’t Create</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -2396,8 +2596,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.</p>
 </section></section>
 <section>
-<section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="30">
-<h1><span class="header-section-number">30</span> Installing Claude Code on Windows</h1>
+<section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="31">
+<h1><span class="header-section-number">31</span> Installing Claude Code on Windows</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -2484,8 +2684,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>If you get a version number, you’re ready to run <code>claude</code> in your project directory. If you get <code>command not found</code>, re-check the two <code>PATH</code> issues above: the directory must be on <code>PATH</code>, and you must <code>rehash</code> (or open a fresh window) after changing it.</p>
 </section></section>
 <section>
-<section id="sec-ai-mcp-server-setup" class="title-slide slide level1 center" data-number="31">
-<h1><span class="header-section-number">31</span> Setting up MCP servers</h1>
+<section id="sec-ai-mcp-server-setup" class="title-slide slide level1 center" data-number="32">
+<h1><span class="header-section-number">32</span> Setting up MCP servers</h1>
 
 </section>
 <section class="slide level2">
@@ -2576,17 +2776,26 @@ Asimov, Isaac. 1950. <em>I, Robot</em>. Novel; Gnome Press. <a href="https://sea
 <div id="ref-battlestar_galactica_2004" class="csl-entry" role="listitem">
 <em>Battlestar Galactica</em>. 2004. Television Series. <a href="https://en.wikipedia.org/wiki/Battlestar_Galactica_(2004_TV_series)">https://en.wikipedia.org/wiki/Battlestar_Galactica_(2004_TV_series)</a>.
 </div>
+<div id="ref-slm_agentic_ai" class="csl-entry" role="listitem">
+Belcak, Peter, Greg Heinrich, Shizhe Diao, et al. 2025. <em>Small Language Models Are the Future of Agentic AI</em>. NVIDIA Research; arXiv preprint. <a href="https://arxiv.org/abs/2506.02153">https://arxiv.org/abs/2506.02153</a>.
+</div>
 <div id="ref-blade_runner" class="csl-entry" role="listitem">
 <em>Blade Runner</em>. 1982. Film. <a href="https://en.wikipedia.org/wiki/Blade_Runner">https://en.wikipedia.org/wiki/Blade_Runner</a>.
 </div>
 <div id="ref-enders_game" class="csl-entry" role="listitem">
 Card, Orson Scott. 1985. <em>Ender’s Game</em>. Novel; Tor Books. <a href="https://en.wikipedia.org/wiki/Ender%27s_Game">https://en.wikipedia.org/wiki/Ender%27s_Game</a>.
 </div>
+<div id="ref-qlora" class="csl-entry" role="listitem">
+Dettmers, Tim, Artidoro Pagnoni, Ari Holtzman, and Luke Zettlemoyer. 2023. <em>QLoRA: Efficient Finetuning of Quantized LLMs</em>. arXiv preprint. <a href="https://arxiv.org/abs/2305.14314">https://arxiv.org/abs/2305.14314</a>.
+</div>
 <div id="ref-humans_are_dead" class="csl-entry" role="listitem">
 Flight of the Conchords. 2007. <em>The Humans Are Dead</em>. Music Video. <a href="https://www.youtube.com/watch?v=B1BdQcJ2ZYY">https://www.youtube.com/watch?v=B1BdQcJ2ZYY</a>.
 </div>
 <div id="ref-dune" class="csl-entry" role="listitem">
 Herbert, Frank. 1965. <em>Dune</em>. Novel; Chilton Books. <a href="https://en.wikipedia.org/wiki/Organizations_of_the_Dune_universe#Thinking_machines">https://en.wikipedia.org/wiki/Organizations_of_the_Dune_universe#Thinking_machines</a>.
+</div>
+<div id="ref-lora" class="csl-entry" role="listitem">
+Hu, Edward J., Yelong Shen, Phillip Wallis, et al. 2021. <em>LoRA: Low-Rank Adaptation of Large Language Models</em>. arXiv preprint. <a href="https://arxiv.org/abs/2106.09685">https://arxiv.org/abs/2106.09685</a>.
 </div>
 <div id="ref-lecun_world_models" class="csl-entry" role="listitem">
 LeCun, Yann. 2022. <em>A Path Towards Autonomous Machine Intelligence</em>. Meta AI Research; New York University; Technical Report. <a href="https://openreview.net/forum?id=BZ5a1r-kVsf">https://openreview.net/forum?id=BZ5a1r-kVsf</a>.

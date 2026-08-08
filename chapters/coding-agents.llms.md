@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-05 20:30:48 (PDT)
+Last modified: 2026-08-08 07:40:02 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -79,7 +79,7 @@ An **AI harness** is the scaffolding built around a language model that turns it
 Most coding-agent harnesses — including the [GitHub Copilot coding agent](https://github.com/features/copilot/agents) and [Claude Code](https://claude.com/product/claude-code) — share a similar set of layers:
 
 - **Core loop**: the [tool-calling loop](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview), permission and sandboxing model, and context management that keep the agent grounded in your repository.
-- **Skills**: reusable, named procedures that encode a workflow so it runs the same way every time, instead of being re-improvised in each conversation. See [Section 21](#sec-ai-agent-skills).
+- **Skills**: reusable, named procedures that encode a workflow so it runs the same way every time, instead of being re-improvised in each conversation. See [Section 22](#sec-ai-agent-skills).
 - **Subagents**: a way to spin up a worker with a fresh context window for a self-contained piece of research or work, keeping the main conversation’s context focused.
 - **Multi-agent orchestration**: deterministic fan-out and fan-in across many subagents — for example, running several independent reviewers over a diff and reconciling their findings — for work that is large or benefits from independent verification.
 - **MCP servers**: the [Model Context Protocol](https://modelcontextprotocol.io/) gives a harness typed access to external systems (issue trackers, chat tools, databases) beyond raw shell or API calls.
@@ -558,7 +558,7 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 >
 > See [Section 15](#sec-ai-best-practices) for more details on workflow file security.
 
-**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 25](#sec-ai-when-to-use) for more guidance.
+**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 26](#sec-ai-when-to-use) for more guidance.
 
 #### Scenario 3: Uncertain Which Scenario Applies
 
@@ -589,7 +589,7 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 
 - See the [UCD-SERG Lab Manual’s continuous integration chapter](https://ucd-serg.github.io/lab-manual/continuous-integration.html) for setting up GitHub Actions workflows
 - See [Section 15](#sec-ai-best-practices) and [Section 14](#sec-ai-benefits-hazards) for security considerations with workflow files
-- See [Section 25](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
+- See [Section 26](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
 - See the [GitHub Actions documentation](https://docs.github.com/en/actions) for workflow syntax and troubleshooting
 
 # 14 Benefits and Hazards
@@ -1035,7 +1035,113 @@ Running a model locally ensures that your code and prompts never leave your mach
 
 Even with local models, avoid including raw sensitive data in prompts. Work with anonymized or synthetic data wherever possible.
 
-# 18 Configuring GitHub Copilot Settings
+# 18 Small, Local Models for Autonomous Agentic Coding
+
+[Section 17](#sec-ai-offline) covers the mechanics of running a model on your own hardware: installing Ollama, wiring up an editor, and driving `aider` against a local endpoint. This section is about a narrower and harder question sitting on top of that setup: which local model to pick, and how to let it work **autonomously** — making a sequence of edits, commits, and tool calls with no human approving each step — without the loop quietly going wrong.
+
+> **WARNING:**
+>
+> As of August 2026, the open-weight coding-model landscape changes monthly: new releases, new quantizations, and new benchmark numbers appear faster than any static page can track. The model names, sizes, and figures below were verified against each model’s own listing at the time this section was written, not against benchmark round-ups, and they will drift. Re-check the source links before choosing a model for a new project, and re-benchmark on your own tasks rather than trusting a published score — your repository’s mix of languages and idioms is not the benchmark’s.
+
+#### The honest catch
+
+Small models make more per-step mistakes than frontier cloud models: a slightly wrong function signature, a hallucinated package, a test edited to pass instead of a bug fixed. A human working alongside a small model catches most of these immediately. An **autonomous** loop does not have that human in it, so a small error on step 3 becomes the premise for steps 4 through 40, and the mistakes compound rather than cancel out.
+
+This is the reason **small + local + fully autonomous** is the hardest combination to run safely, and the reason this section spends most of its length on structure rather than on model selection. The fix is not a bigger local model — that only raises the error rate at which the same compounding problem starts to bite. The fix is bounding the loop so that a compounding error is caught and stopped early, covered under [Guardrails for autonomy](#guardrails-for-autonomy) below.
+
+#### Model landscape
+
+Prefer a model explicitly trained for **tool calling and agentic use** over a general chat or plain code-completion model: an agentic loop depends on the model reliably emitting well-formed tool calls and stopping when it has finished a step, not only on writing plausible code. A handful of open-weight families currently fit that description well enough to run an autonomous loop against:
+
+| Family | Sizes worth running locally | License | Best for |
+|----|----|----|----|
+| [Qwen2.5-Coder / Qwen3-Coder](https://ollama.com/library/qwen3-coder) | 7B, 14B, 32B dense; 30B-A3B mixture-of-experts | Apache 2.0 | General-purpose agentic coding across languages |
+| [Devstral Small](https://ollama.com/library/devstral) | 24B | Apache 2.0 | Purpose-built for coding agents (multi-file edits, tool use) |
+| [Codestral](https://ollama.com/library/codestral) | 22B | [Mistral AI Non-Production License](https://mistral.ai/licenses/MNPL-0.1.md) | Fill-in-the-middle completion, not redistribution in a product |
+| [DeepSeek-Coder-V2](https://ollama.com/library/deepseek-coder-v2) | 16B (Lite) mixture-of-experts | [DeepSeek Model License](https://github.com/deepseek-ai/DeepSeek-Coder-V2/blob/main/LICENSE-MODEL) (commercial use permitted, own terms) | A capable, low-VRAM mixture-of-experts option |
+| [GLM-4.x](https://ollama.com/library/glm-4.6) | Flagship models are large MoE (over 100B total parameters) | MIT | Strong agentic benchmarks, but sized for a workstation or rented GPU, not a laptop |
+
+Qwen3-Coder’s 30B-A3B tag is a mixture-of-experts model: 30B total parameters, but only about 3.3B active per token. VRAM at rest is set by the total, not the active count — every expert has to stay resident in memory even though only a fraction fires on any given token — which is why the tag still needs roughly 19 GB at 4-bit quantization, in line with its 30B total rather than its 3.3B active count. What the small active count buys is speed: inference runs closer to a 3–4B model’s pace despite the larger memory footprint. Codestral’s license is worth reading before you rely on it: Mistral’s Non-Production License permits local evaluation but not production or commercial deployment — fine for trying it out, not fine for a lab pipeline that runs unattended.
+
+As a practical floor, treat the 24–32B tier at 4-bit quantization as the smallest size that holds up across a multi-step autonomous loop without frequent tool-call errors. Below that, a model is still useful as an assistant you supervise turn by turn ([Section 17](#sec-ai-offline) covers exactly that setup), but it is not yet a safe choice to leave unattended.
+
+#### Hardware tiers
+
+| VRAM (or unified memory) | Model tier | Autonomy |
+|----|----|----|
+| ~8 GB | 7–8B | Assistant only — keep a human reviewing every step |
+| ~12–16 GB | 14–24B | Entry point for a bounded autonomous loop |
+| ~24 GB+ | 30–32B, with context headroom | Comfortable autonomy at the practical floor above |
+| Apple-silicon unified memory (32 GB+) | Same tiers as above, generally slower per token | Well suited to an overnight batch job where wall-clock time matters less |
+
+These are rough guides, not guarantees: VRAM headroom for context length matters as much as VRAM for the weights themselves, and a long-running agentic loop accumulates a long conversation history that eats into that headroom as it runs. Check the current requirements on the model’s own listing (the [Ollama model library](https://ollama.com/library) states them per tag) rather than a rule of thumb, since quantization schemes change.
+
+#### Routed architectures: a planner and an executor
+
+[Section 17](#sec-ai-offline) already shows the mechanics of splitting a task between two local models with `aider --architect`: a larger model plans the change, and a smaller one applies the edits. The same split has a name in the research literature and a stronger motivating argument than “it’s faster”: Belcak and NVIDIA’s small-language-model research group argue that most of what an agent does in a loop is “a small number of specialized tasks repetitively and with little variation” — reading a diff, running a test, formatting a commit message — and that a small model is “sufficiently powerful, inherently more suitable, and necessarily more economical” for that work ([Belcak et al. 2025](#ref-slm_agentic_ai)). A large model earns its cost only on the steps that genuinely need broad, general reasoning: deciding *what* to change and why.
+
+Two shapes of this pattern are worth knowing:
+
+- **All-local**: a single strong local model (30–32B) does both planning and execution, which is simplest to set up and is the right default for a laptop or workstation with one GPU.
+- **Local planner, local executor**: a 30–32B planner drafts each step and a 7–8B executor applies it, trading some plan quality for throughput — worthwhile mainly on hardware that cannot comfortably hold two copies of a 32B model at once.
+- **Cloud planner, local executor**: a frontier cloud model plans and a local model executes, which keeps the bulk of file contents on your own machine while still using strong reasoning for the decisions that matter most. This is a hybrid rather than a fully local setup — see the LiteLLM fallback pattern in [Section 17](#sec-ai-offline) for one way to wire a cloud-with-local-fallback endpoint, which composes with this split.
+
+None of these routing choices substitutes for the guardrails below. A well-chosen planner still hands off to an executor that can make a per-step mistake, and the loop still needs a way to catch that.
+
+#### Guardrails for autonomy
+
+> **IMPORTANT:**
+>
+> A frontier cloud model makes fewer per-step mistakes than a small local one, but the risk that matters here is not the per-step error rate on its own — it is that **autonomous** mode removes the human who would otherwise catch a mistake before it becomes the premise for the next ten steps. Structure the loop so that a mistake is caught by something other than a human watching in real time, or do not leave a small model fully unattended.
+
+The mitigation for a higher per-step error rate is not a better model; it is a loop that cannot silently drift far from a known-good state. Five patterns do most of the work, and each is deliberately mechanical rather than judgment-based — the whole point is that they do not depend on the model noticing its own mistake:
+
+1.  **Verification gates after every step.** Run something that actually exercises the change — the test suite, `quarto render`, a linter, `R CMD check` — after each edit, and treat a non-zero exit as a hard stop for that step, not a suggestion. The environment’s pass/fail signal is the judge, never the model’s own claim that it “should work now.”
+2.  **Capped blast radius.** Run the loop in an isolated Git worktree (see the [`worktree`](https://git-scm.com/docs/git-worktree) feature), and commit after every step that passes its gate — never after a batch of several. A commit-per-green-step history means the worst outcome of a bad step is one commit to roll back, not an unreviewable pile of changes.
+3.  **Bounded loops.** Cap the total number of iterations and, separately, the number of *consecutive* failed gates. Hitting either cap should stop the loop and report what it tried, not retry indefinitely — a model that fails the same gate three times in a row is not going to succeed on the fourth attempt without a different approach, and a different approach is a decision for a human to make.
+4.  **Decomposition into specified, testable units, done up front.** Break the work into steps that each have a checkable definition of done before the loop starts, rather than handing the model one large, open-ended goal. A step with a clear pass/fail test is exactly the shape a small model handles well; an open-ended goal is exactly the shape that invites drift.
+5.  **Full logging.** Keep every prompt, tool call, and gate result the loop produced, so a run that stopped (or that a human later distrusts) can be reviewed after the fact rather than re-run blind.
+
+These are the guardrails as a reader-facing rationale. The concrete gate wiring — an `ai-config` skill that launches a capped, worktree-isolated local loop, and a `gha` reusable workflow that runs one against a pull request using this repository’s own lint, spellcheck, and render checks as its gates — is tracked separately; see [Companion work](#companion-work) below.
+
+#### Stack-specific notes
+
+This site’s own stack — R, Python, Quarto, Julia, GitHub Actions YAML, and Markdown — is largely about producing *verifiable* artifacts: a script that runs, a document that renders, a workflow that passes. That is exactly the property that makes a narrow, checkable sub-task safe for an autonomous small-model loop, but the safety margin is not the same across languages:
+
+| Language / format | Autonomy dial | Notes |
+|----|----|----|
+| Python, Markdown, GitHub Actions YAML | Loosest leash | Well represented in training data; a syntax or lint check is a strong gate on its own |
+| R | Tighter gates | Watch for non-tidyverse idioms and unfamiliar use of S4 or Reference (R5) classes; a model trained mostly on Python code can default to non-idiomatic R |
+| Quarto (`.qmd`) | `quarto render` as the pass/fail judge | Have the model edit a known-good `_quarto.yml` rather than authoring one from scratch — a render failure is a strong, cheap gate |
+| Julia | Shortest leash, strongest model, tightest test gate | The weakest training coverage of this stack’s languages, so treat any unattended Julia change as higher risk by default |
+
+None of this changes the guardrails above; it changes how tightly you set them — a smaller step size, a lower consecutive-failure cap, or simply keeping a human in the loop for Julia while letting a Markdown fix run unattended.
+
+#### Fine-tuning: closing the idiom gap
+
+A local model’s non-idiomatic R or Julia, noted in the stack-specific table above, is a training-data problem rather than a capability problem: the model has seen far less R and Julia than Python, not that it is incapable of writing either. Two lighter options are worth trying before fine-tuning anything:
+
+- **Retrieval**, giving the model your own package’s existing R or Julia code as context so it has concrete idiom to imitate.
+- **Prompting**, stating the conventions directly — this repository’s own `CLAUDE.md` and `.github/copilot-instructions.md` are examples of exactly that.
+
+When those are not enough, **LoRA** (Low-Rank Adaptation) and its 4-bit variant **QLoRA** are the standard way to close an idiom gap without retraining a whole model. Both freeze the pretrained weights and train a small set of additional low-rank matrices on top, which cuts the trainable parameter count by orders of magnitude compared to full fine-tuning ([Hu et al. 2021](#ref-lora)). QLoRA adds 4-bit quantization of the frozen weights on top of that, which is what actually shrinks the memory footprint enough to fine-tune a mid-sized model on a single consumer GPU ([Dettmers et al. 2023](#ref-qlora)). [Hugging Face’s PEFT library](https://huggingface.co/docs/peft) is the common tooling entry point; the specifics of running it against this lab’s own repositories belong in `ai-config`, not here.
+
+Whatever you fine-tune on, keep a held-out evaluation set of real tasks from your own codebase that the training data never touched, and re-check it after every fine-tuning run — a model that has memorized its training examples will look better on paper than it performs on the next genuinely new task.
+
+#### Companion work
+
+This page explains the reasoning; it does not implement a launcher or a CI gate. Two companion issues carry the runnable parts, each linking back here for rationale:
+
+- **[`ai-config` \#1292](https://github.com/Morrison-Lab/ai-config/issues/1292)**: a skill that configures and launches a local autonomous loop — model choice, an Ollama or `llama.cpp` endpoint, and the guardrail caps above.
+
+- **[`gha` \#436](https://github.com/Morrison-Lab/gha/issues/436)**: a reusable workflow, a sibling to this repository’s own `claude.yml`, that runs a small/self-hosted-model agent against a pull request, wiring this site’s existing checks as the loop’s verification gates:
+
+  - spellcheck
+  - link check
+  - non-standard-characters
+  - bibliography DOIs
+
+# 19 Configuring GitHub Copilot Settings
 
 GitHub Copilot offers numerous configuration options that control how the AI assistant integrates into your development workflow. This section explains the key settings visible in your GitHub account preferences and provides guidance on which options to enable based on your use case.
 
@@ -1267,7 +1373,7 @@ For lab members, we recommend the following configuration:
 
 Following these guidelines will help establish an effective Copilot configuration. The key is to enable features that add value to your workflow while maintaining awareness that AI assistance requires validation (see [Section 15](#sec-ai-best-practices)).
 
-# 19 Connecting VS Code to a Custom Model Endpoint (BYOK)
+# 20 Connecting VS Code to a Custom Model Endpoint (BYOK)
 
 VS Code’s built-in Chat usually talks to GitHub’s hosted models. It can also route requests to a model provider of your own; GitHub calls this “bring your own key” (BYOK). The lab uses BYOK to reach Databricks model serving endpoints, which expose an OpenAI-compatible API, through the community extension [`oai-compatible-copilot`](https://marketplace.visualstudio.com/items?itemName=johnny-zhao.oai-compatible-copilot).
 
@@ -1331,7 +1437,7 @@ The stored token is expired or revoked. Databricks OAuth tokens are short-lived 
 >
 > A quick way to tell 404 from 403: a 404 means the request authenticated but named a missing endpoint (a model-name or configuration problem), while a 403 means the token itself was rejected (an authentication problem).
 
-# 20 Configuring the Agent Environment
+# 21 Configuring the Agent Environment
 
 The `.github/workflows/copilot-setup-steps.yml` file allows you to customize the development environment in which the GitHub Copilot coding agent operates. This file preinstalls tools and dependencies so that Copilot can build, test, and lint your code more reliably.
 
@@ -1479,7 +1585,7 @@ Note: When using self-hosted runners, you must disable Copilot’s integrated fi
 
 For complete details, see [Customizing the development environment for GitHub Copilot coding agent](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment).
 
-# 21 Agent Skills
+# 22 Agent Skills
 
 [Agent Skills](https://agentskills.io/home) are a lightweight, open standard for extending AI agent capabilities with specialized knowledge and workflows. The [specification](https://agentskills.io/specification) defines a portable, tool-agnostic format that any compatible agent can load.
 
@@ -1521,7 +1627,7 @@ Skills package procedural knowledge and team-specific context into portable, ver
 
 For the complete specification and more details, see [agentskills.io](https://agentskills.io/home).
 
-A skill is one of several ways to customize an agent, and not always the right one. [Section 22](#sec-ai-customization) compares it against:
+A skill is one of several ways to customize an agent, and not always the right one. [Section 23](#sec-ai-customization) compares it against:
 
 - instruction files
 - subagents
@@ -1532,9 +1638,9 @@ That section also explains why Claude Code’s custom slash commands are now ski
 
 The [Morrison-Lab/ai-config](https://github.com/Morrison-Lab/ai-config) repository contains an example of personal Claude Code configuration, including user-level skills, hooks, and subagents, synced across machines via Git.
 
-# 22 Customizing an Agent
+# 23 Customizing an Agent
 
-[Section 21](#sec-ai-agent-skills) describes one way to extend an agent. It is not the only one, and a lab that knows only that one tends to write every customization as a skill, including the ones that should have been something else.
+[Section 22](#sec-ai-agent-skills) describes one way to extend an agent. It is not the only one, and a lab that knows only that one tends to write every customization as a skill, including the ones that should have been something else.
 
 This section maps the whole surface. The mechanisms differ less in what you can write in them — most are Markdown with a [YAML front matter](https://jekyllrb.com/docs/front-matter/) header, as [Section 6](#sec-ai-harness-construction) describes — than in **when they fire and who decides**.
 
@@ -1621,7 +1727,7 @@ Rules are written as `Tool(specifier)` — for example `Bash(npm run test *)`, `
 
 Everything above changes what the agent *knows or must do*. An [MCP](https://modelcontextprotocol.io/) server changes what it *can reach*: typed tools, data resources, and reusable templates exposed over a standard protocol. The specification is explicit that it “does not dictate how AI applications use LLMs or manage the provided context.”
 
-So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. [Section 31](#sec-ai-mcp-server-setup) covers configuration and its failure modes.
+So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. [Section 32](#sec-ai-mcp-server-setup) covers configuration and its failure modes.
 
 #### Choosing
 
@@ -1663,9 +1769,9 @@ That distribution is itself the argument. Nearly everything is a skill, because 
 
 This repository is a smaller example of the same idea: it carries a `.github/copilot-instructions.md` for conventions that apply everywhere, plus path-scoped files under `.github/instructions/` whose `applyTo` globs attach them only when you edit a matching file.
 
-# 23 How the Config Reaches a Machine
+# 24 How the Config Reaches a Machine
 
-[Section 22](#sec-ai-customization) describes *which* mechanism a customization should use. This section is about the step after that decision: how a config like a shared instruction repository actually reaches a machine, and how a broken install fails.
+[Section 23](#sec-ai-customization) describes *which* mechanism a customization should use. This section is about the step after that decision: how a config like a shared instruction repository actually reaches a machine, and how a broken install fails.
 
 Two agents can load the identical instruction corpus and still behave differently, because behavior depends not only on what the config says but on how it is installed where the agent runs. An install problem is quiet by construction — nothing errors, the work still gets done, and a capability simply goes missing with no message that it existed.
 
@@ -1703,7 +1809,7 @@ A broken install rarely announces itself; you read it backward from a symptom.
 
 The common thread is that the install layer is a real surface, distinct from the content of the config, with its own failure modes and its own checks. When an agent behaves as though a rule or skill you wrote does not exist, suspect the install before you suspect the rule.
 
-# 24 Claude Code Cloud Environments
+# 25 Claude Code Cloud Environments
 
 [Claude Code](https://www.anthropic.com/claude-code) is a CLI coding agent that can also run tasks on Anthropic-managed cloud infrastructure— either from the web at [claude.ai/code](https://claude.ai/code) (“Claude Code on the web”), or from the terminal by adding the `--remote` flag to move a session into the cloud.
 
@@ -1728,13 +1834,13 @@ The `/remote-env` slash command sets **which configured environment is the defau
 
 For details, see the [Claude Code on the web documentation](https://code.claude.com/docs/en/claude-code-on-the-web) and the [slash command reference](https://code.claude.com/docs/en/commands).
 
-# 25 When to use a coding agent
+# 26 When to use a coding agent
 
 Coding agent sessions are currently[^1] considered “premium requests”, which are limited resources; see <https://github.com/features/copilot/plans> for details. So, use coding agents sparingly. Use them for complex changes that would be difficult or time-consuming for you to complete by hand. Coding agents also take time to get configured for work, every time you make a request. See <https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment#preinstalling-tools-or-dependencies-in-copilots-environment> for ways to reduce that startup time, but it will never be 0. If you can complete the task faster than the coding agent can, you should probably do it yourself. For example, when you have errors in the spell-check or lint workflows, you can often fix them faster than Copilot can. Similarly, when reviewing Copilot’s PRs, you can often make direct changes to the branch faster than you could write clear review comments and get Copilot to address them.
 
 Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.
 
-# 26 Editing with `.docx` files
+# 27 Editing with `.docx` files
 
 GitHub Copilot coding agents can read Microsoft Word (`.docx`) files, including tracked changes and comments. This enables a hybrid editing workflow where:
 
@@ -1769,7 +1875,7 @@ When opening DOCX files generated by Quarto (including this site), Microsoft Wor
 
 This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.
 
-# 27 Copilot Instructions for this Repository
+# 28 Copilot Instructions for this Repository
 
 A `.github/copilot-instructions.md` file contains repository-specific instructions and guidelines for GitHub Copilot coding agents. This file helps ensure that AI-generated contributions follow the project’s formatting standards, coding conventions, and documentation practices.
 
@@ -1786,7 +1892,7 @@ By having these instructions in `.github/copilot-instructions.md`, you ensure th
 
 See this repository’s own [`.github/copilot-instructions.md`](https://github.com/d-morrison/wai/blob/main/.github/copilot-instructions.md) for a working example.
 
-# 28 Using Copilot Review Before Human Review
+# 29 Using Copilot Review Before Human Review
 
 Before requesting review from other humans, **always have Copilot review your pull request first**—even if Copilot created the PR itself. AI review provides fast, thorough feedback that helps catch issues before involving human reviewers, saving everyone time and improving code quality.
 
@@ -1829,7 +1935,7 @@ Even if you’re highly experienced, treating Copilot review as a required pre-r
 
 When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.
 
-# 29 Reviewing a Copilot PR You Didn’t Create
+# 30 Reviewing a Copilot PR You Didn’t Create
 
 When reviewing a pull request where someone else prompted Copilot to make changes, follow these guidelines to avoid confusion and ensure smooth collaboration:
 
@@ -1902,7 +2008,7 @@ To transfer the PR manager role:
 
 This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.
 
-# 30 Installing Claude Code on Windows
+# 31 Installing Claude Code on Windows
 
 [Claude Code](https://www.anthropic.com/claude-code) is Anthropic’s command-line coding agent. Installing it on Windows works well, but a few platform-specific pitfalls can cost you hours if you don’t know about them. These notes capture a setup that works, and the gotchas to watch for.
 
@@ -2002,7 +2108,7 @@ claude --version      # prints the installed version number
 
 If you get a version number, you’re ready to run `claude` in your project directory. If you get `command not found`, re-check the two `PATH` issues above: the directory must be on `PATH`, and you must `rehash` (or open a fresh window) after changing it.
 
-# 31 Setting up MCP servers
+# 32 Setting up MCP servers
 
 The [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) is how a harness gains typed access to external systems. Configuring a server is usually a one-line command. Diagnosing one that *silently* isn’t working is the part worth writing down, because the common failure mode produces no error at all — only a quiet absence of tools you assumed were there.
 
@@ -2119,13 +2225,19 @@ Asimov, Isaac. 1950. *I, Robot*. Novel; Gnome Press. <https://search.library.ucd
 
 *Battlestar Galactica*. 2004. Television Series. <https://en.wikipedia.org/wiki/Battlestar_Galactica_(2004_TV_series)>.
 
+Belcak, Peter, Greg Heinrich, Shizhe Diao, et al. 2025. *Small Language Models Are the Future of Agentic AI*. NVIDIA Research; arXiv preprint. <https://arxiv.org/abs/2506.02153>.
+
 *Blade Runner*. 1982. Film. <https://en.wikipedia.org/wiki/Blade_Runner>.
 
 Card, Orson Scott. 1985. *Ender’s Game*. Novel; Tor Books. <https://en.wikipedia.org/wiki/Ender%27s_Game>.
 
+Dettmers, Tim, Artidoro Pagnoni, Ari Holtzman, and Luke Zettlemoyer. 2023. *QLoRA: Efficient Finetuning of Quantized LLMs*. arXiv preprint. <https://arxiv.org/abs/2305.14314>.
+
 Flight of the Conchords. 2007. *The Humans Are Dead*. Music Video. <https://www.youtube.com/watch?v=B1BdQcJ2ZYY>.
 
 Herbert, Frank. 1965. *Dune*. Novel; Chilton Books. <https://en.wikipedia.org/wiki/Organizations_of_the_Dune_universe#Thinking_machines>.
+
+Hu, Edward J., Yelong Shen, Phillip Wallis, et al. 2021. *LoRA: Low-Rank Adaptation of Large Language Models*. arXiv preprint. <https://arxiv.org/abs/2106.09685>.
 
 LeCun, Yann. 2022. *A Path Towards Autonomous Machine Intelligence*. Meta AI Research; New York University; Technical Report. <https://openreview.net/forum?id=BZ5a1r-kVsf>.
 
