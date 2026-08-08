@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-07 23:47:31 (PDT)
+Last modified: 2026-08-08 00:00:11 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -1061,7 +1061,7 @@ Prefer a model explicitly trained for **tool calling and agentic use** over a ge
 | [DeepSeek-Coder-V2](https://ollama.com/library/deepseek-coder-v2) | 16B (Lite) mixture-of-experts | [DeepSeek Model License](https://github.com/deepseek-ai/DeepSeek-Coder-V2/blob/main/LICENSE-MODEL) (commercial use permitted, own terms) | A capable, low-VRAM mixture-of-experts option |
 | [GLM-4.x](https://ollama.com/library/glm-4.6) | Flagship models are large MoE (over 100B total parameters) | MIT | Strong agentic benchmarks, but sized for a workstation or rented GPU, not a laptop |
 
-Qwen3-Coder’s 30B-A3B tag is a mixture-of-experts model: 30B total parameters, but only about 3.3B active per token, which is why it fits in roughly 19 GB at 4-bit quantization despite the larger headline size. Codestral’s license is worth reading before you rely on it: Mistral’s Non-Production License permits local evaluation but not production or commercial deployment — fine for trying it out, not fine for a lab pipeline that runs unattended.
+Qwen3-Coder’s 30B-A3B tag is a mixture-of-experts model: 30B total parameters, but only about 3.3B active per token. VRAM at rest is set by the total, not the active count — every expert has to stay resident in memory even though only a fraction fires on any given token — which is why the tag still needs roughly 19 GB at 4-bit quantization, in line with its 30B total rather than its 3.3B active count. What the small active count buys is speed: inference runs closer to a 3–4B model’s pace despite the larger memory footprint. Codestral’s license is worth reading before you rely on it: Mistral’s Non-Production License permits local evaluation but not production or commercial deployment — fine for trying it out, not fine for a lab pipeline that runs unattended.
 
 As a practical floor, treat the 24–32B tier at 4-bit quantization as the smallest size that holds up across a multi-step autonomous loop without frequent tool-call errors. Below that, a model is still useful as an assistant you supervise turn by turn ([Section 17](#sec-ai-offline) covers exactly that setup), but it is not yet a safe choice to leave unattended.
 
@@ -1106,7 +1106,7 @@ These are the guardrails as a reader-facing rationale. The concrete gate wiring 
 
 #### Stack-specific notes
 
-This site’s own stack — R, Quarto, Julia, GitHub Actions YAML, and Markdown — is largely about producing *verifiable* artifacts: a script that runs, a document that renders, a workflow that passes. That is exactly the property that makes a narrow, checkable sub-task safe for an autonomous small-model loop, but the safety margin is not the same across languages:
+This site’s own stack — R, Python, Quarto, Julia, GitHub Actions YAML, and Markdown — is largely about producing *verifiable* artifacts: a script that runs, a document that renders, a workflow that passes. That is exactly the property that makes a narrow, checkable sub-task safe for an autonomous small-model loop, but the safety margin is not the same across languages:
 
 | Language / format | Autonomy dial | Notes |
 |----|----|----|
@@ -1133,7 +1133,13 @@ Whatever you fine-tune on, keep a held-out evaluation set of real tasks from you
 This page explains the reasoning; it does not implement a launcher or a CI gate. Two companion issues carry the runnable parts, each linking back here for rationale:
 
 - **[`ai-config` \#1292](https://github.com/Morrison-Lab/ai-config/issues/1292)**: a skill that configures and launches a local autonomous loop — model choice, an Ollama or `llama.cpp` endpoint, and the guardrail caps above.
-- **[`gha` \#436](https://github.com/Morrison-Lab/gha/issues/436)**: a reusable workflow, a sibling to this repository’s own `claude.yml`, that runs a small/self-hosted-model agent against a pull request, wiring this site’s existing checks (spellcheck, link check, non-standard-characters, bibliography DOIs) as the loop’s verification gates.
+
+- **[`gha` \#436](https://github.com/Morrison-Lab/gha/issues/436)**: a reusable workflow, a sibling to this repository’s own `claude.yml`, that runs a small/self-hosted-model agent against a pull request, wiring this site’s existing checks as the loop’s verification gates:
+
+  - spellcheck
+  - link check
+  - non-standard-characters
+  - bibliography DOIs
 
 # 19 Configuring GitHub Copilot Settings
 
