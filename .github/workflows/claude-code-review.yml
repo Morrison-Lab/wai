@@ -139,8 +139,15 @@ jobs:
           # already ran agent mode, and track_progress is rejected for
           # workflow_dispatch anyway (see d-morrison/rme#818).
           track_progress: false
+          # `--comment` is required: `code-review@claude-code-plugins`'s own
+          # command file gates on it explicitly -- step 7 says verbatim "If
+          # `--comment` argument was NOT provided, stop here. Do not post
+          # any GitHub comments." Without it, that gate can win over the
+          # prose below asking Claude to post findings, and the run
+          # silently never calls `gh pr comment` -- real turns/cost logged,
+          # nothing posted. See #49.
           prompt: |
-            /code-review:code-review ${{ github.repository }}/pull/${{ env.PR_NUMBER }}
+            /code-review:code-review ${{ github.repository }}/pull/${{ env.PR_NUMBER }} --comment
 
             In addition to the standard checks above, this is the qwt Quarto
             website template — small, prose-heavy, and re-used as a template
@@ -211,5 +218,14 @@ jobs:
           # Nothing is lost by widening: the narrow form granted no posting
           # AND no protection, since a reviewer that cannot post cannot edit
           # or delete either. See #28.
+          #
+          # `Task` is required too: the plugin's own command file launches
+          # its review through subagents ("Launch a haiku agent to check
+          # if...", "Launch 4 agents in parallel to independently review
+          # the changes", etc.) -- all of that goes through the `Task`
+          # tool. Without it in the allowlist, nobody is present in
+          # unattended CI to approve the out-of-allowlist call, so it's
+          # denied -- another way this job can burn real turns/cost and
+          # never reach the final `gh pr comment` step. See #49.
           claude_args: |
-            --allowedTools "Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*)"
+            --allowedTools "Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*),Task"
