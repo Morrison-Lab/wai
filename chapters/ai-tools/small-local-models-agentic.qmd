@@ -277,11 +277,12 @@ When those are not enough,
 standard way to close an idiom gap without retraining a whole model.
 Both freeze the pretrained weights and train a small set of additional
 low-rank matrices on top,
-which cuts the trainable parameter count and memory footprint by
-orders of magnitude compared to full fine-tuning
-[@lora; @qlora] ---
-QLoRA in particular makes it practical to fine-tune a mid-sized model
-on a single consumer GPU.
+which cuts the trainable parameter count by orders of magnitude
+compared to full fine-tuning [@lora].
+QLoRA adds 4-bit quantization of the frozen weights on top of that,
+which is what actually shrinks the memory footprint enough to
+fine-tune a mid-sized model on a single consumer GPU
+[@qlora].
 [Hugging Face's PEFT library](https://huggingface.co/docs/peft) is the
 common tooling entry point;
 the specifics of running it against this lab's own repositories belong
