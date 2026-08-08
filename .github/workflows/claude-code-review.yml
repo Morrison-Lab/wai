@@ -1,28 +1,25 @@
-# Automatic Claude Code review of pull requests.
+# Thin caller for the shared reusable workflow in Morrison-Lab/gha.
 #
-# Runs the upstream `code-review@claude-code-plugins` plugin so we pick up
-# any improvements to the canonical review skill, then layers a
-# Quarto/R-specific addendum on top so the reviewer also catches issues
-# particular to this template repo.
+# This used to be a hand-rolled copy of the review job (the "qwt" Quarto
+# website template's original version, before gha's reusable workflow was
+# ported FROM it -- see gha's own claude-code-review.yml header). That copy
+# never got migrated to consume its own canonical port, so it carried two
+# config gaps the gha version has since fixed centrally: the plugin's own
+# `/code-review` command needs `gh pr list`/`gh issue view`/`gh issue list`/
+# `gh search` (its declared `allowed-tools`, not just view/diff/comment) or
+# its 4 parallel sub-agents rack up permission denials; and having the AGENT
+# itself call `gh pr comment` is fragile -- gha's version denies that tool
+# outright and has the WORKFLOW post the review from the agent's final
+# message instead, plus a same-run retry when a stub (no verdict) is
+# detected. Both were root causes of the repeated stub reviews on #48/#49.
 #
-# Each run posts a fresh review comment; prior reviews are left in place
-# so the PR keeps a visible history rather than a rolling sticky.
-#
-# Skips drafts, Dependabot bumps, and fork PRs (fork PRs can't read repo
-# secrets). Project guidance is in CLAUDE.md. Requires the
-# CLAUDE_CODE_OAUTH_TOKEN repository secret.
+# See https://github.com/Morrison-Lab/gha for inputs and versioning.
 
 name: Claude Code Review
 
 on:
   pull_request:
     types: [opened, synchronize, ready_for_review, reopened]
-    # Optional: Only run on specific file changes
-    # paths:
-    #   - "src/**/*.ts"
-    #   - "src/**/*.tsx"
-    #   - "src/**/*.js"
-    #   - "src/**/*.jsx"
   # Allow claude.yml to dispatch a fresh review (e.g. after an @claude run
   # pushes commits, or on an `@claude review` comment). GITHUB_TOKEN pushes
   # don't fire `synchronize`, so an explicit dispatch path is needed.
@@ -33,199 +30,59 @@ on:
         required: true
         type: number
 
-# Serialize reviews per PR: a newer push cancels the in-progress review
-# of the now-stale diff so only the freshest review runs (and posts a
-# comment). Plain `cancel-in-progress: true` is safe here: this job is
-# read-only. It runs in agent mode (track_progress: false, below), which
-# honors the read-only `claude_args` tool set (just
-# `gh pr view/diff/comment`, no commit or push), so it never pushes a fix
-# and can't trigger the self-cancellation that rme had to guard against
-# with a conditional expression (see d-morrison/rme#817; and #43 for why
-# tag mode defeated this read-only guarantee). The
-# `|| inputs.pr_number` keeps a workflow_dispatch review in the same
-# group as the PR's pull_request reviews so they dedupe.
-concurrency:
-  group: claude-review-${{ github.event.pull_request.number || inputs.pr_number }}
-  cancel-in-progress: true
-
 jobs:
+  # Keep the job id (claude-review) matching the previous standalone workflow
+  # so the status-check context doesn't change, per this repo's own
+  # convention (see check-links.yml, check-bibliography-dois.yml,
+  # check-non-standard-chars.yaml).
   claude-review:
-    # workflow_dispatch is fired by claude.yml for a specific PR, so always
-    # run it — this intentionally bypasses the draft guard below so a review
-    # fires on the draft PR claude.yml opens for an issue trigger (we want to
-    # review Claude's draft work early). Otherwise skip drafts, Dependabot
-    # bumps, and fork PRs (fork PRs can't read repo secrets, so
-    # CLAUDE_CODE_OAUTH_TOKEN would be empty and the run would fail with a
-    # noisy red check).
-    if: |
-      github.event_name == 'workflow_dispatch' ||
-      (github.event.pull_request.draft == false &&
-       github.event.pull_request.user.login != 'dependabot[bot]' &&
-       github.event.pull_request.head.repo.full_name == github.repository)
-    runs-on: ubuntu-latest
-    env:
-      # Resolve the PR number once: from the pull_request event, or the
-      # workflow_dispatch input when claude.yml triggered us.
-      PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
     permissions:
       contents: read
-      pull-requests: write  # post the top-level review summary comment
-      issues: read
+      pull-requests: write
+      issues: write
       id-token: write       # required by claude-code-action for the App-token
                             # exchange it performs even with OAuth auth
-                            # (without this, the action fails with
-                            # "App token exchange failed: 401 Unauthorized")
+      actions: read          # lets the reviewer read CI/check-run status
+    uses: Morrison-Lab/gha/.github/workflows/claude-code-review.yml@v2
+    secrets:
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}   # empty; this repo uses OAuth
+      SUBMODULES_TOKEN: ${{ secrets.SUBMODULES_TOKEN }}      # empty; both submodules are public
+    with:
+      # Wires the workflow_dispatch input through so claude.yml can re-dispatch
+      # a review on Claude's own commits; empty (and ignored) on pull_request
+      # runs.
+      pr-number: ${{ inputs.pr_number }}
+      # This repo vendors two submodules (macros, .ai-config); the previous
+      # standalone workflow checked them out (`submodules: recursive`) so the
+      # reviewer could read their contents instead of reporting them as
+      # uninitialized.
+      checkout-submodules: true
+      prompt-addendum: |
+        In addition to the standard checks above, this is the qwt Quarto
+        website template -- small, prose-heavy, and re-used as a template
+        for downstream books -- so also prioritize:
 
-    steps:
-      # A PR that changes THIS workflow file can't be reviewed by the action:
-      # its App-token exchange requires the review workflow to match the
-      # default branch, so it 401s ("Workflow validation failed … must have
-      # identical content to the … default branch") — the action itself says
-      # this is normal and to ignore it. Rather than post a failing check,
-      # detect that case and skip the review; it runs normally once merged.
-      - name: Skip self-review when the PR edits this workflow
-        id: selfmod
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ github.repository }}
-        run: |
-          files=$(gh api "repos/$REPO/pulls/$PR_NUMBER/files" --paginate --jq '.[].filename' 2>/dev/null || true)
-          if printf '%s\n' "$files" | grep -qx '.github/workflows/claude-code-review.yml'; then
-            echo "self_mod=true" >> "$GITHUB_OUTPUT"
-            echo "::notice::PR #$PR_NUMBER edits claude-code-review.yml — skipping self-review (the action 401s on workflow validation until merged; it runs after merge)."
-          else
-            echo "self_mod=false" >> "$GITHUB_OUTPUT"
-          fi
+        1. **Quarto / prose correctness**
+           - `.qmd` syntax: chunk options use `#|` directives, fenced
+             blocks are balanced, cross-refs (`@fig-`, `@tbl-`, `@sec-`)
+             resolve to defined labels.
+           - Bullet-list rule: 3+ items use bullets with a blank line above.
+           - `code-fold: true` is used on chunks where the output (not the
+             code) is the point, and avoided on tutorial code.
 
-      - name: Checkout repository
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 1
-          submodules: recursive
+        2. **R code**
+           - Conforms to `.lintr.R` settings (snake_case, line length, etc.).
+           - No new package dependencies without justification -- every
+             dependency added here lands in every downstream book.
 
-      - name: Claude PR review
-        if: steps.selfmod.outputs.self_mod != 'true'
-        uses: anthropics/claude-code-action@v1
-        with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          # When claude.yml routes an `@claude review` comment here, it
-          # dispatches this workflow via `gh workflow run`, so the run's
-          # actor is github-actions[bot]. A `claude` remote session pushing
-          # a commit to a PR fires `synchronize` with the `claude` bot as
-          # actor. Without allowing these bots the action aborts with
-          # "Workflow initiated by non-human actor" and posts no review. The
-          # job `if:` already restricts runs to same-repo, non-Dependabot
-          # PRs, so accepting these bots here is safe.
-          allowed_bots: "github-actions[bot],claude"
-          plugin_marketplaces: 'https://github.com/anthropics/claude-code.git'
-          # `claude-code-plugins` is a branch name, not a version tag.
-          # Intentionally unpinned so we pick up future improvements to the
-          # upstream code-review skill; pin to a tag if reviews ever start
-          # changing in surprising ways.
-          plugins: 'code-review@claude-code-plugins'
-          # Always agent mode. Tag mode (track_progress: true) REPLACES
-          # this job's read-only `claude_args` tool set with its own, which
-          # includes git add/commit and git-push.sh -- so a review session
-          # that decides to "fix" a finding commits and pushes it, and the
-          # `contents: read` token blocks the push with a 403 (see #43).
-          # `claude_args` --disallowedTools can't stop it either, since tag
-          # mode ignores claude_args tool restrictions entirely. Agent mode
-          # honors the read-only `claude_args` below and never injects push
-          # tools, so the reviewer stays read-only as intended. The cost is
-          # no progress-checklist comment and no inline comments (agent mode
-          # doesn't initialize the inline-comment tool -- see
-          # anthropics/claude-code-action#635); findings post as a path:line
-          # list in the top-level `gh pr comment` instead. Dispatched runs
-          # already ran agent mode, and track_progress is rejected for
-          # workflow_dispatch anyway (see d-morrison/rme#818).
-          track_progress: false
-          # `--comment` is required: `code-review@claude-code-plugins`'s own
-          # command file gates on it explicitly -- step 7 says verbatim "If
-          # `--comment` argument was NOT provided, stop here. Do not post
-          # any GitHub comments." Without it, that gate can win over the
-          # prose below asking Claude to post findings, and the run
-          # silently never calls `gh pr comment` -- real turns/cost logged,
-          # nothing posted. See #49.
-          prompt: |
-            /code-review:code-review ${{ github.repository }}/pull/${{ env.PR_NUMBER }} --comment
+        3. **Build hygiene**
+           - No accidental commits of `_site/`, `_freeze/`, or `.quarto/`.
+           - `README.md` is generated; edits should go to `README.Rmd`.
+           - Bibliography entries in `references.bib` are well-formed BibTeX.
 
-            In addition to the standard checks above, this is the qwt Quarto
-            website template — small, prose-heavy, and re-used as a template
-            for downstream books — so also prioritize:
-
-            1. **Quarto / prose correctness**
-               - `.qmd` syntax: chunk options use `#|` directives, fenced
-                 blocks are balanced, cross-refs (`@fig-`, `@tbl-`, `@sec-`)
-                 resolve to defined labels.
-               - Bullet-list rule: 3+ items use bullets with a blank line above.
-               - `code-fold: true` is used on chunks where the output (not the
-                 code) is the point, and avoided on tutorial code.
-
-            2. **R code**
-               - Conforms to `.lintr.R` settings (snake_case, line length, etc.).
-               - No new package dependencies without justification — every
-                 dependency added here lands in every downstream book.
-
-            3. **Build hygiene**
-               - No accidental commits of `_site/`, `_freeze/`, or `.quarto/`.
-               - `README.md` is generated; edits should go to `README.Rmd`.
-               - Bibliography entries in `references.bib` are well-formed BibTeX.
-
-            4. **CI / template impact**
-               - Workflow changes don't break the `copilot-setup-steps.yml`
-                 contract or the publish/preview pipelines.
-               - Spell-check / link-check failures are fixed at the source
-                 (wordlist or content) rather than suppressed.
-
-            **Post findings in the top-level review comment as a concrete
-            list, each anchored to a `path:line` reference** so the author can
-            jump to it. This job runs in agent mode (track_progress: false),
-            where the inline-comment tool is not available, so line-specific
-            findings go in the summary rather than as inline comments. Lead
-            with a brief overall verdict, then the findings. Skip generic
-            praise -- be concrete. If the PR looks clean, say so briefly.
-
-            When you post findings, end the top-level summary with a
-            ready-to-paste draft of the PR comment the author would send to
-            kick off another `@claude` run on those findings. Wrap the
-            draft in a fenced code block (GitHub renders a copy button on
-            code blocks, so one click puts it on the clipboard) and embed
-            a markdown link back to your review summary so the next
-            `@claude` run can find it. The draft should read like:
-
-                ```
-                @claude address review comments in [this review](https://github.com/${{ github.repository }}/pull/${{ env.PR_NUMBER }})
-                ```
-
-            Use the PR conversation URL above as the link target (you
-            won't know your own summary comment's anchor before posting
-            it, and the PR conversation is where the latest review lands
-            anyway). Omit this draft when the PR is clean (nothing to fix).
-
-          # `gh pr comment` must NOT be narrowed to `create` -- there is no
-          # such subcommand. `gh pr comment` takes a number and flags
-          # (`gh pr comment <n> --body ...`), so `Bash(gh pr comment create:*)`
-          # matches nothing the reviewer can actually run: it silently blocked
-          # posting entirely rather than restricting it. The run still goes
-          # GREEN, which is worse than a red check because nothing signals the
-          # review is missing. Observed on #25: `permission_denials_count: 1`,
-          # `num_turns: 5`, $0.21 spent, zero comments posted.
-          #
-          # The original intent -- let the reviewer post a summary but not
-          # edit or delete earlier ones (`--edit-last`, `--delete-last`) --
-          # is sound, but Bash permission patterns match a command prefix and
-          # cannot exclude a later flag, so it is not expressible this way.
-          # Nothing is lost by widening: the narrow form granted no posting
-          # AND no protection, since a reviewer that cannot post cannot edit
-          # or delete either. See #28.
-          #
-          # `Task` is required too: the plugin's own command file launches
-          # its review through subagents ("Launch a haiku agent to check
-          # if...", "Launch 4 agents in parallel to independently review
-          # the changes", etc.) -- all of that goes through the `Task`
-          # tool. Without it in the allowlist, nobody is present in
-          # unattended CI to approve the out-of-allowlist call, so it's
-          # denied -- another way this job can burn real turns/cost and
-          # never reach the final `gh pr comment` step. See #49.
-          claude_args: |
-            --allowedTools "Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*),Task"
+        4. **CI / template impact**
+           - Workflow changes don't break the `copilot-setup-steps.yml`
+             contract or the publish/preview pipelines.
+           - Spell-check / link-check failures are fixed at the source
+             (wordlist or content) rather than suppressed.
