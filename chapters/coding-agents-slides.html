@@ -330,7 +330,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-08-08 11:23:13 (PDT)</p>
+  <p class="date">Last modified: 2026-08-08 16:16:00 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -2725,34 +2725,49 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <li><strong>400</strong> means no token was ever substituted — a <em>configuration</em> problem, and no amount of re-issuing tokens will fix it.</li>
 </ul>
 <p>Chasing a 400 as though it were a 401 sends you to the token-minting page for a problem that lives in a config file.</p>
+<h4 id="install-the-binary-the-platforms-own-way">Install the binary the platform’s own way</h4>
+<p>These notes started from a Linux install, where the binary lands under <code>$HOME/.local/bin</code>. On macOS the same server is a Homebrew formula, and getting it is one command:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><a aria-label="1"></a><span class="ex">brew</span> install github-mcp-server</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>That installs to <code>/opt/homebrew/bin</code> on Apple silicon (<code>/usr/local/bin</code> under Intel Homebrew), so no manual download is needed.</p>
+<p>The official install guide leads with a Docker recipe instead, and it has a catch worth knowing before you follow it: <code>docker</code> being on <code>PATH</code> does not mean the daemon is running. With Docker Desktop stopped, the server fails to connect to the Docker API, and that failure surfaces at <em>server start</em>, not at registration — so <code>claude mcp add</code> succeeds, and the break only shows up later, as a silent absence of tools. That is one more reason to prefer the binary path above.</p>
+<p>Because the binary’s location differs by platform and by installer, a launch wrapper should resolve it from <code>PATH</code> rather than hardcode it, with an override for the case where it isn’t on one.</p>
 <h4 id="supply-credentials-without-storing-a-token">Supply credentials without storing a token</h4>
 <p>The obvious registration bakes a token straight into harness config:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><a aria-label="1"></a><span class="ex">claude</span> mcp add github <span class="at">-e</span> GITHUB_PERSONAL_ACCESS_TOKEN=<span class="op">&lt;</span>pat<span class="op">&gt;</span> -- <span class="op">&lt;</span>server<span class="op">&gt;</span> stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb48-1"><a aria-label="1"></a><span class="ex">claude</span> mcp add github <span class="at">-e</span> GITHUB_PERSONAL_ACCESS_TOKEN=<span class="op">&lt;</span>pat<span class="op">&gt;</span> -- <span class="op">&lt;</span>server<span class="op">&gt;</span> stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>That writes a live credential to a config file in plain text, and pins you to one token that will eventually expire.</p>
 <p>A launch wrapper avoids both. It reads the credential at start time from a tool that already holds one, so nothing is stored and the server follows whatever account you are currently logged in as:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb48-1"><a aria-label="1"></a><span class="co">#!/bin/sh</span></span>
-<span id="cb48-2"><a aria-label="2"></a><span class="bu">set</span> <span class="at">-eu</span></span>
-<span id="cb48-3"><a aria-label="3"></a></span>
-<span id="cb48-4"><a aria-label="4"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_TOOLSETS</span><span class="op">:-</span>default,actions<span class="va">}</span><span class="st">"</span></span>
-<span id="cb48-5"><a aria-label="5"></a><span class="bu">export</span> <span class="va">GITHUB_TOOLSETS</span></span>
-<span id="cb48-6"><a aria-label="6"></a></span>
-<span id="cb48-7"><a aria-label="7"></a><span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="op">=</span><span class="st">"</span><span class="va">$(</span><span class="ex">gh</span> auth token<span class="va">)</span><span class="st">"</span></span>
-<span id="cb48-8"><a aria-label="8"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
-<span id="cb48-9"><a aria-label="9"></a>  <span class="bu">echo</span> <span class="st">"empty token; run 'gh auth login'"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
-<span id="cb48-10"><a aria-label="10"></a>  <span class="bu">exit</span> 1</span>
-<span id="cb48-11"><a aria-label="11"></a><span class="cf">fi</span></span>
-<span id="cb48-12"><a aria-label="12"></a><span class="bu">export</span> <span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span></span>
-<span id="cb48-13"><a aria-label="13"></a></span>
-<span id="cb48-14"><a aria-label="14"></a><span class="bu">exec</span> <span class="st">"</span><span class="va">$HOME</span><span class="st">/.local/bin/github-mcp-server"</span> stdio <span class="st">"</span><span class="va">$@</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb49-1"><a aria-label="1"></a><span class="co">#!/bin/sh</span></span>
+<span id="cb49-2"><a aria-label="2"></a><span class="bu">set</span> <span class="at">-eu</span></span>
+<span id="cb49-3"><a aria-label="3"></a></span>
+<span id="cb49-4"><a aria-label="4"></a><span class="va">SERVER</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_MCP_SERVER_BIN</span><span class="op">:-</span><span class="va">$(</span><span class="bu">command</span> <span class="at">-v</span> github-mcp-server <span class="kw">||</span> <span class="fu">true</span><span class="va">)}</span><span class="st">"</span></span>
+<span id="cb49-5"><a aria-label="5"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$SERVER</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb49-6"><a aria-label="6"></a>  <span class="bu">echo</span> <span class="st">"github-mcp-server not on PATH; install it or set GITHUB_MCP_SERVER_BIN"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb49-7"><a aria-label="7"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb49-8"><a aria-label="8"></a><span class="cf">fi</span></span>
+<span id="cb49-9"><a aria-label="9"></a></span>
+<span id="cb49-10"><a aria-label="10"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_TOOLSETS</span><span class="op">:-</span>default,actions<span class="va">}</span><span class="st">"</span></span>
+<span id="cb49-11"><a aria-label="11"></a><span class="bu">export</span> <span class="va">GITHUB_TOOLSETS</span></span>
+<span id="cb49-12"><a aria-label="12"></a></span>
+<span id="cb49-13"><a aria-label="13"></a><span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="op">=</span><span class="st">"</span><span class="va">$(</span><span class="ex">gh</span> auth token<span class="va">)</span><span class="st">"</span></span>
+<span id="cb49-14"><a aria-label="14"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb49-15"><a aria-label="15"></a>  <span class="bu">echo</span> <span class="st">"empty token; run 'gh auth login'"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb49-16"><a aria-label="16"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb49-17"><a aria-label="17"></a><span class="cf">fi</span></span>
+<span id="cb49-18"><a aria-label="18"></a><span class="bu">export</span> <span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span></span>
+<span id="cb49-19"><a aria-label="19"></a></span>
+<span id="cb49-20"><a aria-label="20"></a><span class="bu">exec</span> <span class="st">"</span><span class="va">$SERVER</span><span class="st">"</span> stdio <span class="st">"</span><span class="va">$@</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Register the wrapper rather than the binary:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb49-1"><a aria-label="1"></a><span class="ex">claude</span> mcp add <span class="at">--scope</span> user github <span class="at">--</span> ~/.local/bin/github-mcp-server-stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb50-1"><a aria-label="1"></a><span class="ex">claude</span> mcp add <span class="at">--scope</span> user github <span class="at">--</span> ~/.local/bin/github-mcp-server-stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Note the explicit failure when the token comes back empty. A wrapper that silently exports an empty string reproduces the bare-<code>Bearer</code> bug you just finished diagnosing.</p>
 <h4 id="toolsets-are-opt-in-and-the-default-may-omit-what-you-need">Toolsets are opt-in, and the default may omit what you need</h4>
-<p>A server does not necessarily expose everything it can do. GitHub’s server exposes a default group, and that default carries <strong>no continuous-integration access at all</strong> — no workflow runs, no job logs, no re-run trigger.</p>
+<p>A server does not necessarily expose everything it can do. GitHub’s server exposes a default group, and that default carries <strong>no continuous-integration access at all</strong> — no workflow runs, no job logs, no re-run trigger. As of this writing (server v1.7.0) the actions toolset’s four tools are <code>actions_get</code>, <code>actions_list</code>, <code>actions_run_trigger</code>, and <code>get_job_logs</code> — the exact names have moved around across releases, so treat this list as a snapshot rather than a promise.</p>
 <p>If your workflow involves driving pull requests to a clean state, that omission matters, because reading check status is most of the job. Request the extra group explicitly:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb50-1"><a aria-label="1"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span>default,actions</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb51-1"><a aria-label="1"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span>default,actions</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Note that the selection <strong>replaces</strong> the default rather than extending it, which is why the value above names <code>default</code> explicitly. Writing <code>actions</code> alone would silently trade away every default tool for the four you asked for — a net <em>loss</em> that looks like a successful configuration change.</p>
-<p>So compare the tool list before and after, and confirm the count went up rather than sideways.</p>
+<p>So compare the tool list before and after, and confirm the count went up rather than sideways. On the same v1.7.0 server, the default group carries 44 tools, and <code>default,actions,discussions,dependabot,labels,notifications</code> carries 63 — the count moving the right direction, as the check above expects.</p>
+<h4 id="subscribe_pr_activity-isnt-a-local-server-tool"><code>subscribe_pr_activity</code> isn’t a local-server tool</h4>
+<p>Workflow guidance written for remote or web agent sessions sometimes names <code>subscribe_pr_activity</code> as the way to watch a pull request’s activity. It doesn’t appear in a locally-run GitHub MCP server, under any toolset combination.</p>
+<p>The local analogues are <code>manage_notification_subscription</code> and <code>manage_repository_notification_subscription</code>. Reach for those instead when working from a local harness.</p>
 <h4 id="verify-with-a-real-call-and-expect-to-restart">Verify with a real call, and expect to restart</h4>
 <p>Two habits close this out.</p>
 <p><strong>Verify by calling, not by reading a list.</strong> A tool appearing in the registry proves the harness parsed a config file. It does not prove the server started, authenticated, or can reach the API. One cheap identity call plus one read (for GitHub: <code>get_me</code>, then listing pull requests on a repo you know) proves the whole path end to end.</p>

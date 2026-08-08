@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-08 11:23:13 (PDT)
+Last modified: 2026-08-08 16:16:00 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -2156,6 +2156,20 @@ If that variable has no value when the harness starts, the header goes out as a 
 
 Chasing a 400 as though it were a 401 sends you to the token-minting page for a problem that lives in a config file.
 
+#### Install the binary the platform’s own way
+
+These notes started from a Linux install, where the binary lands under `$HOME/.local/bin`. On macOS the same server is a Homebrew formula, and getting it is one command:
+
+``` sh
+brew install github-mcp-server
+```
+
+That installs to `/opt/homebrew/bin` on Apple silicon (`/usr/local/bin` under Intel Homebrew), so no manual download is needed.
+
+The official install guide leads with a Docker recipe instead, and it has a catch worth knowing before you follow it: `docker` being on `PATH` does not mean the daemon is running. With Docker Desktop stopped, the server fails to connect to the Docker API, and that failure surfaces at *server start*, not at registration — so `claude mcp add` succeeds, and the break only shows up later, as a silent absence of tools. That is one more reason to prefer the binary path above.
+
+Because the binary’s location differs by platform and by installer, a launch wrapper should resolve it from `PATH` rather than hardcode it, with an override for the case where it isn’t on one.
+
 #### Supply credentials without storing a token
 
 The obvious registration bakes a token straight into harness config:
@@ -2172,6 +2186,12 @@ A launch wrapper avoids both. It reads the credential at start time from a tool 
 #!/bin/sh
 set -eu
 
+SERVER="${GITHUB_MCP_SERVER_BIN:-$(command -v github-mcp-server || true)}"
+if [ -z "$SERVER" ]; then
+  echo "github-mcp-server not on PATH; install it or set GITHUB_MCP_SERVER_BIN" >&2
+  exit 1
+fi
+
 GITHUB_TOOLSETS="${GITHUB_TOOLSETS:-default,actions}"
 export GITHUB_TOOLSETS
 
@@ -2182,7 +2202,7 @@ if [ -z "$GITHUB_PERSONAL_ACCESS_TOKEN" ]; then
 fi
 export GITHUB_PERSONAL_ACCESS_TOKEN
 
-exec "$HOME/.local/bin/github-mcp-server" stdio "$@"
+exec "$SERVER" stdio "$@"
 ```
 
 Register the wrapper rather than the binary:
@@ -2195,7 +2215,7 @@ Note the explicit failure when the token comes back empty. A wrapper that silent
 
 #### Toolsets are opt-in, and the default may omit what you need
 
-A server does not necessarily expose everything it can do. GitHub’s server exposes a default group, and that default carries **no continuous-integration access at all** — no workflow runs, no job logs, no re-run trigger.
+A server does not necessarily expose everything it can do. GitHub’s server exposes a default group, and that default carries **no continuous-integration access at all** — no workflow runs, no job logs, no re-run trigger. As of this writing (server v1.7.0) the actions toolset’s four tools are `actions_get`, `actions_list`, `actions_run_trigger`, and `get_job_logs` — the exact names have moved around across releases, so treat this list as a snapshot rather than a promise.
 
 If your workflow involves driving pull requests to a clean state, that omission matters, because reading check status is most of the job. Request the extra group explicitly:
 
@@ -2205,7 +2225,13 @@ GITHUB_TOOLSETS=default,actions
 
 Note that the selection **replaces** the default rather than extending it, which is why the value above names `default` explicitly. Writing `actions` alone would silently trade away every default tool for the four you asked for — a net *loss* that looks like a successful configuration change.
 
-So compare the tool list before and after, and confirm the count went up rather than sideways.
+So compare the tool list before and after, and confirm the count went up rather than sideways. On the same v1.7.0 server, the default group carries 44 tools, and `default,actions,discussions,dependabot,labels,notifications` carries 63 — the count moving the right direction, as the check above expects.
+
+#### `subscribe_pr_activity` isn’t a local-server tool
+
+Workflow guidance written for remote or web agent sessions sometimes names `subscribe_pr_activity` as the way to watch a pull request’s activity. It doesn’t appear in a locally-run GitHub MCP server, under any toolset combination.
+
+The local analogues are `manage_notification_subscription` and `manage_repository_notification_subscription`. Reach for those instead when working from a local harness.
 
 #### Verify with a real call, and expect to restart
 
