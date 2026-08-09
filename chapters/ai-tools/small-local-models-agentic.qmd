@@ -60,7 +60,9 @@ enough to run an autonomous loop against:
 
 | Family | Sizes worth running locally | License | Best for |
 |---|---|---|---|
-| [Qwen2.5-Coder / Qwen3-Coder](https://ollama.com/library/qwen3-coder) | 7B, 14B, 32B dense; 30B-A3B mixture-of-experts | Apache 2.0 | General-purpose agentic coding across languages |
+| [Qwen3-Coder](https://ollama.com/library/qwen3-coder) | 30B-A3B mixture-of-experts (smallest tag, 19 GB) | Apache 2.0 | General-purpose agentic coding across languages |
+| [Qwen2.5-Coder](https://ollama.com/library/qwen2.5-coder) | 7B, 14B, 32B dense | Apache 2.0 | Completion and supervised chat. Verify tool calling before trusting it in a loop---see below |
+| [Granite 4](https://ollama.com/library/granite4) | 7B-A1B mixture-of-experts (4.2 GB), 32B-A9B | Apache 2.0 | A small, fast tool-caller that fits where the tiers above do not |
 | [Devstral Small](https://ollama.com/library/devstral) | 24B | Apache 2.0 | Purpose-built for coding agents (multi-file edits, tool use) |
 | [Codestral](https://ollama.com/library/codestral) | 22B | [Mistral AI Non-Production License](https://mistral.ai/licenses/MNPL-0.1.md) | Fill-in-the-middle completion, not redistribution in a product |
 | [DeepSeek-Coder-V2](https://ollama.com/library/deepseek-coder-v2) | 16B (Lite) mixture-of-experts | [DeepSeek Model License](https://github.com/deepseek-ai/DeepSeek-Coder-V2/blob/main/LICENSE-MODEL) (commercial use permitted, own terms) | A capable, low-VRAM mixture-of-experts option |
@@ -93,6 +95,45 @@ a model is still useful as an assistant you supervise turn by turn
 (@sec-ai-offline covers exactly that setup),
 but it is not yet a safe choice to leave unattended.
 
+::: {.callout-important}
+#### Parameter count is the wrong first question
+
+Treat that floor as a statement about *sustained* multi-step loops,
+not as a filter to apply before anything else.
+Size predicts tool-calling ability poorly enough that checking it first
+will mislead you.
+
+Measured on a 24 GB M2 against a single-function tool schema,
+`qwen2.5-coder:14b` produced no tool call at all on four attempts out of four,
+returning `finish_reason: stop` each time.
+The 4.2 GB `granite4:7b-a1b-h` produced a well-formed call three times out of
+three and completed a multi-turn round trip using the result.
+A model a third of the size was usable as an agent where the larger one was not,
+and no amount of context or prompting fixes a model that will not call a tool.
+
+The advertised capability list does not settle it either,
+and is wrong in both directions:
+on the same machine `ollama show qwen2.5-coder:14b` lists `tools`
+while the model does not call them,
+and `ollama show gemma4:12b` lists none while the model calls them correctly.
+
+So order the questions this way:
+
+1. **Does it emit well-formed tool calls?**
+   One request answers this.
+   A model that fails here cannot be an agent at any size.
+2. **Does it fit, with context?**
+   Weights plus key-value cache, verified with `ollama ps`.
+3. **Is it big enough to sustain a long loop?**
+   This is where the 24--32B floor applies.
+
+A small model that clears the first two is worth measuring on your own tasks
+before concluding it cannot be left unattended,
+because the guardrails below,
+not the parameter count,
+are what actually bound the damage from a bad step.
+:::
+
 #### Hardware tiers
 
 | VRAM (or unified memory) | Model tier | Autonomy |
@@ -112,6 +153,35 @@ Check the current requirements on the model's own listing
 (the [Ollama model library](https://ollama.com/library) states them per
 tag) rather than a rule of thumb,
 since quantization schemes change.
+
+::: {.callout-warning}
+#### Apple unified memory does not map onto the VRAM column
+
+Read the unified-memory row as its own scale rather than as the VRAM
+figures with a speed penalty attached.
+Two deductions come off the headline number before any model loads:
+
+- **Only about 75% of unified memory is addressable by the GPU** by
+  default, so a 24 GB machine has roughly 18 GB to work with, not 24.
+- **Context is charged on top of the weights.**
+  Measured on a 24 GB M2, raising a 14B model from 4k to 32k context
+  moved it from 9.5 GB resident to 15 GB.
+
+Together those rule out the 30--32B tier on a 24 GB Mac,
+even though the headline number matches the VRAM column.
+The smallest `qwen3-coder` tag is 19 GB,
+which exceeds the addressable ceiling on its own,
+leaving nothing for context.
+There is no smaller variant of it to fall back to.
+
+The practical ceiling on 24 GB of unified memory is a **12--14B dense
+model at 32k context**, or a mixture-of-experts model of similar
+footprint.
+Confirm with `ollama ps` after loading:
+`PROCESSOR` reading `100% GPU` means it fits,
+and anything less means part of the model is on the CPU and the loop
+will be far slower than the tier table suggests.
+:::
 
 #### Routed architectures: a planner and an executor
 
@@ -223,6 +293,23 @@ own mistake:
    Keep every prompt, tool call, and gate result the loop produced,
    so a run that stopped (or that a human later distrusts) can be
    reviewed after the fact rather than re-run blind.
+6. **A tool surface small enough for the model.**
+   Every tool the harness exposes costs context before the task starts,
+   because its schema is sent with the prompt,
+   and a configured Model Context Protocol (MCP) server can add
+   thousands of tokens of definitions on its own.
+   Against a 32k local context that overhead competes directly with the
+   work,
+   and a small model loses:
+   asked to read one file,
+   a 7B model with a full MCP surface loaded produced a paragraph about
+   missing credentials instead,
+   and with MCP disabled invented a task list copied from the description
+   of a tool it had been shown.
+   Expose the smallest set of tools the step actually needs,
+   and prefer a light harness over a heavyweight one ---
+   the same model that failed those attempts fixed a real bug and
+   committed it in 17 seconds through `aider`.
 
 These are the guardrails as a reader-facing rationale.
 The concrete gate wiring ---

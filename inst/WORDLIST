@@ -63,7 +63,9 @@ Docker
 codebase
 Inflexa
 MCP
+Modelfile
 Ollama
+Ollama's
 OpenAI
 TORQCLAW
 TypeScript
@@ -75,6 +77,7 @@ proteomics
 repurposing
 sandboxed
 sandboxing
+schemas
 serology
 transcriptomics
 translational
