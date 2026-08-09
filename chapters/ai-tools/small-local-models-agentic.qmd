@@ -104,18 +104,21 @@ Size predicts tool-calling ability poorly enough that checking it first
 will mislead you.
 
 Measured on a 24 GB M2 against a single-function tool schema,
-`qwen2.5-coder:14b` produced no tool call at all on four attempts out of four,
-returning `finish_reason: stop` each time.
-The 4.2 GB `granite4:7b-a1b-h` produced a well-formed call three times out of
-three and completed a multi-turn round trip using the result.
-A model a third of the size was usable as an agent where the larger one was not,
-and no amount of context or prompting fixes a model that will not call a tool.
+`qwen2.5-coder:14b` returned an empty `tool_calls` field on four attempts out
+of four, with `finish_reason: stop` each time.
+It wrote a correct tool call as prose in the `content` field instead,
+which no harness will act on.
+The 4.2 GB `granite4:7b-a1b-h`, at half the parameter count,
+put a well-formed call in `tool_calls` three times out of three and completed
+a multi-turn round trip using the result.
+The smaller model was usable as an agent where the larger one was not,
+and no amount of context or prompting fixes a model whose calls never reach
+the field a harness reads.
 
-The advertised capability list does not settle it either,
-and is wrong in both directions:
-on the same machine `ollama show qwen2.5-coder:14b` lists `tools`
-while the model does not call them,
-and `ollama show gemma4:12b` lists none while the model calls them correctly.
+The advertised capability list does not settle it either.
+`ollama show qwen2.5-coder:14b` lists `tools`,
+and the model still cannot be driven by a harness,
+so treat the tag as necessary rather than sufficient.
 
 So order the questions this way:
 
