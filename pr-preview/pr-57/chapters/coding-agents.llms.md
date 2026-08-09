@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-09 16:28:29 (PDT)
+Last modified: 2026-08-09 16:46:01 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -826,20 +826,39 @@ The VRAM each model needs depends on its size and quantization and changes as mo
 >
 > The models above are strong at *writing code* when you ask them to. That is a different skill from **tool calling** — emitting a well-formed request to read a file or run a command, and then using the result. Inline completion and chat need only the first. Anything autonomous needs the second, because an agent that cannot call a tool cannot read your repository at all.
 >
-> The two come apart in practice. Tested against a single-function tool schema on a 24 GB M2, `qwen2.5-coder:14b` returned `finish_reason: stop` and no tool call on four attempts out of four, while `granite4:7b-a1b-h` returned a well-formed call three times out of three and completed a full multi-turn round trip — despite being a third of the size.
+> The two come apart in practice, and the failure is subtler than a model simply refusing. Tested against a single-function tool schema on a 24 GB M2, `qwen2.5-coder:14b` returned `finish_reason: stop` with an empty `tool_calls` field on four attempts out of four. It had not ignored the request: it wrote a correct tool call as ordinary prose in the `content` field,
 >
-> Do not settle this from the model’s advertised capabilities, which are wrong in both directions. On the same machine `ollama show qwen2.5-coder:14b` lists `tools` among its capabilities and the model does not call them, while `ollama show gemma4:12b` lists no tools and the model calls them correctly. Test it yourself with one request before building a loop on it:
+> ``` json
+> {"name": "read_file", "arguments": {"path": "src/main.py"}}
+> ```
+>
+> which is the right JSON in the wrong place. A harness looks for `tool_calls`, finds nothing, and treats the turn as a plain reply, so the tool never runs. `granite4:7b-a1b-h`, at half the parameter count, returned a well-formed call in the `tool_calls` field three times out of three and completed a full multi-turn round trip.
+>
+> An advertised `tools` capability is necessary but not sufficient, so do not settle the question with `ollama show`. On the same machine `qwen2.5-coder:14b` lists `tools` among its capabilities and still cannot be driven by a harness, for the reason above. Test it yourself with one request before building a loop on it:
 >
 > ``` bash
-> curl -s http://localhost:11434/v1/chat/completions -H 'content-type: application/json' -d '{
+> RESP=$(curl -s -w '\n%{http_code}' \
+>   http://localhost:11434/v1/chat/completions -H 'content-type: application/json' -d '{
 >   "model": "granite4:7b-a1b-h", "stream": false,
 >   "messages": [{"role": "user", "content": "What is in src/main.py? Use the tool."}],
 >   "tools": [{"type": "function", "function": {"name": "read_file",
 >     "parameters": {"type": "object", "properties": {"path": {"type": "string"}},
->     "required": ["path"]}}}]}' | grep -o '"tool_calls".*' | head -c 200
+>     "required": ["path"]}}}]}')
+>
+> CODE=$(printf '%s' "$RESP" | tail -1)
+> BODY=$(printf '%s' "$RESP" | sed '$d')
+>
+> if [ "$CODE" != "200" ]; then
+>   echo "request failed (HTTP $CODE): $BODY"        # bad tag, tools unsupported, server down
+> elif printf '%s' "$BODY" | grep -q '"tool_calls"'; then
+>   echo "usable as an agent"
+> else
+>   echo "no tool call; completion model only"
+>   printf '%s' "$BODY" | grep -o '"content":"[^"]*"' | head -c 200
+> fi
 > ```
 >
-> Output containing `tool_calls` means the model is usable as an agent. Silence means it is a completion model, whatever its model card says.
+> Check the status code separately from the result. A request that simply errored — a mistyped tag, a model the server rejects for tool use, a server that is not running — produces the same silence as a model that declined to call the tool, and only one of those is a fact about the model. Printing the `content` field on the no-call branch is what distinguishes a model that ignored the tools from one that described the call in prose instead of emitting it, which is the `qwen2.5-coder` case above.
 
 **Start the Ollama server:**
 
@@ -1016,6 +1035,8 @@ Set these in a wrapper script rather than in your shell profile, so that plain `
 > ```
 >
 > For autonomous work on a small local model, prefer a light harness such as `aider`. Reserve this route for using a familiar interface offline, not for getting the best out of the hardware.
+
+#### Falling Back Between Cloud and Local Automatically
 
 Air-gapped work aside, the common case is a laptop that is usually online but sometimes is not—on a plane, behind a flaky hospital network, or temporarily rate-limited by a cloud provider. You can keep a coding agent working across these gaps by putting a cloud model and a local model behind one endpoint and falling back automatically.
 
@@ -1216,9 +1237,9 @@ As a practical floor, treat the 24–32B tier at 4-bit quantization as the small
 >
 > Treat that floor as a statement about *sustained* multi-step loops, not as a filter to apply before anything else. Size predicts tool-calling ability poorly enough that checking it first will mislead you.
 >
-> Measured on a 24 GB M2 against a single-function tool schema, `qwen2.5-coder:14b` produced no tool call at all on four attempts out of four, returning `finish_reason: stop` each time. The 4.2 GB `granite4:7b-a1b-h` produced a well-formed call three times out of three and completed a multi-turn round trip using the result. A model a third of the size was usable as an agent where the larger one was not, and no amount of context or prompting fixes a model that will not call a tool.
+> Measured on a 24 GB M2 against a single-function tool schema, `qwen2.5-coder:14b` returned an empty `tool_calls` field on four attempts out of four, with `finish_reason: stop` each time. It wrote a correct tool call as prose in the `content` field instead, which no harness will act on. The 4.2 GB `granite4:7b-a1b-h`, at half the parameter count, put a well-formed call in `tool_calls` three times out of three and completed a multi-turn round trip using the result. The smaller model was usable as an agent where the larger one was not, and no amount of context or prompting fixes a model whose calls never reach the field a harness reads.
 >
-> The advertised capability list does not settle it either, and is wrong in both directions: on the same machine `ollama show qwen2.5-coder:14b` lists `tools` while the model does not call them, and `ollama show gemma4:12b` lists none while the model calls them correctly.
+> The advertised capability list does not settle it either. `ollama show qwen2.5-coder:14b` lists `tools`, and the model still cannot be driven by a harness, so treat the tag as necessary rather than sufficient.
 >
 > So order the questions this way:
 >
