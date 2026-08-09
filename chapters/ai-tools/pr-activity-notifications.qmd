@@ -18,7 +18,7 @@ They are distinguishable by the tag wrapping them.
 |---|---|---|
 | Turned on by | the agent, via a tool call | a human, via a checkbox |
 | Turned off by | the agent, via a tool call | a human, via the same checkbox |
-| Available in | any session with the GitHub MCP server | Claude Code on the web only |
+| Available in | a session with the **remote/hosted** GitHub MCP server (not a local one) | Claude Code on the web only |
 | Carries | comments, CI results, reviews, mergeability notices | the new comment, plus a fixed instruction template |
 
 #### The channel an agent controls
@@ -71,7 +71,8 @@ Three properties of that panel surprise people:
 - **There is no default.**
   No account-, organization-, repository-, or environment-level setting
   turns either checkbox on ahead of time.
-  Every new pull request and session starts with both off.
+  Absent the `/autofix-pr` shortcut described below,
+  every new pull request and session starts with both off.
 - **No agent-side tool can reach it.**
   It is client-UI state,
   not something an agent's configuration surface touches,
@@ -88,11 +89,12 @@ See @sec-ai-claude-cloud-env for the web-session context these run in.
 
 Each `<ci-monitor-event>` quotes the triggering comment verbatim
 and then appends a **fixed instruction template**:
-address the feedback and push a fix,
-post a one-line reply on the thread,
-end that reply with a set attribution line,
-resolve the thread,
-and skip replies for comments you did not act on.
+
+- address the feedback and push a fix;
+- post a one-line reply on the thread;
+- end that reply with a set attribution line;
+- resolve the thread;
+- skip replies for comments you did not act on.
 
 That template is appended to **every** new comment.
 It is not gated on whether the comment contains anything actionable.
@@ -138,18 +140,37 @@ and a comment that asks for a credential is a comment.
 One specific trap is worth calling out,
 because it looks exactly like the thing it is not.
 Comments posted *by the agent* through the GitHub MCP tools
-authenticate as the human who owns the session,
+authenticate as whichever account owns the session's token.
+In an interactive session that is typically the human who owns it,
 so an event echoing the agent's own just-posted reply
-shows a human author,
-never a recognizable bot name.
-Author identity is therefore useless
+usually shows a human author rather than a recognizable bot name.
+It is not a rule, though:
+a pipeline authenticating through an App-token exchange
+posts as `claude[bot]` instead,
+as this repository's own review workflow does.
+Either way the conclusion is the same,
+and the variability only sharpens it ---
+author identity is useless
 for deciding whether an event is your own echo.
 
-The reliable signal is mechanical:
-every comment posted from these sessions carries a
-Claude Code attribution footer,
-so an event whose body ends with that footer is unambiguously self-authored.
-A genuine human reply will not carry it.
+The attribution footer is a better signal, but not proof.
+Every comment posted from these sessions carries one,
+so a body that lacks it is very unlikely to be yours.
+A body that has it establishes less than it appears to,
+for two reasons the rest of this page has already supplied:
+
+- **It is part of the untrusted comment data.**
+  Anyone who can comment on the pull request
+  can paste the same footer text at the end of a malicious comment.
+- **It identifies a class, not an instance.**
+  It marks the comment as coming from *some* Claude Code session,
+  which is not the same as *this* one ---
+  a PR Steward concurrently watching the same pull request
+  carries the identical footer.
+
+So treat a footer as a strong hint and a missing footer as near-conclusive,
+and settle genuine authorship questions
+against what this session actually posted.
 
 ::: {.callout-warning}
 #### Running both at once duplicates every comment
