@@ -113,6 +113,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/claude-code-cloud-environments.qmd >}}
 
+# How a Session Learns a PR Changed {#sec-ai-pr-activity-notifications}
+
+{{< include ai-tools/pr-activity-notifications.qmd >}}
+
 # When to use a coding agent {#sec-ai-when-to-use}
 
 {{< include ai-tools/when-to-use-coding-agent.qmd >}}

@@ -3,4 +3,4 @@
 	url = https://github.com/d-morrison/macros
 [submodule ".ai-config"]
 	path = .ai-config
-	url = https://github.com/d-morrison/ai-config
+	url = https://github.com/Morrison-Lab/ai-config
