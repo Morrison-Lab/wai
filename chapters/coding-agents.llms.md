@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-08 16:16:00 (PDT)
+Last modified: 2026-08-09 12:28:50 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -558,7 +558,7 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 >
 > See [Section 15](#sec-ai-best-practices) for more details on workflow file security.
 
-**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 26](#sec-ai-when-to-use) for more guidance.
+**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 27](#sec-ai-when-to-use) for more guidance.
 
 #### Scenario 3: Uncertain Which Scenario Applies
 
@@ -589,7 +589,7 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 
 - See the [UCD-SERG Lab Manual’s continuous integration chapter](https://ucd-serg.github.io/lab-manual/continuous-integration.html) for setting up GitHub Actions workflows
 - See [Section 15](#sec-ai-best-practices) and [Section 14](#sec-ai-benefits-hazards) for security considerations with workflow files
-- See [Section 26](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
+- See [Section 27](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
 - See the [GitHub Actions documentation](https://docs.github.com/en/actions) for workflow syntax and troubleshooting
 
 # 14 Benefits and Hazards
@@ -1727,7 +1727,7 @@ Rules are written as `Tool(specifier)` — for example `Bash(npm run test *)`, `
 
 Everything above changes what the agent *knows or must do*. An [MCP](https://modelcontextprotocol.io/) server changes what it *can reach*: typed tools, data resources, and reusable templates exposed over a standard protocol. The specification is explicit that it “does not dictate how AI applications use LLMs or manage the provided context.”
 
-So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. [Section 32](#sec-ai-mcp-server-setup) covers configuration and its failure modes.
+So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. [Section 33](#sec-ai-mcp-server-setup) covers configuration and its failure modes.
 
 #### Choosing
 
@@ -1834,13 +1834,99 @@ The `/remote-env` slash command sets **which configured environment is the defau
 
 For details, see the [Claude Code on the web documentation](https://code.claude.com/docs/en/claude-code-on-the-web) and the [slash command reference](https://code.claude.com/docs/en/commands).
 
-# 26 When to use a coding agent
+# 26 How a Session Learns a PR Changed
+
+A coding-agent session that is watching a pull request does not poll it. Something wakes the session when the pull request changes, and in Claude Code that “something” is one of **two separate channels**.
+
+The distinction matters for a practical reason: **the agent can turn one of them on and off, and cannot touch the other.** So “stop watching this PR” is a request an agent can satisfy for one channel and can only decline for the other.
+
+Both arrive the same way — mid-turn, alongside the next tool result, the same delivery mechanism as a background task notification — so they are easy to mistake for each other. They are distinguishable by the tag wrapping them.
+
+|  | `<github-webhook-activity>` | `<ci-monitor-event>` |
+|----|----|----|
+| Turned on by | the agent, via a tool call | a human, via a checkbox |
+| Turned off by | the agent, via a tool call | a human, via the same checkbox |
+| Available in | a session with the **remote/hosted** GitHub MCP server (not a local one) | Claude Code on the web only |
+| Carries | comments, CI results, reviews, mergeability notices | the new comment, plus a fixed instruction template |
+
+#### The channel an agent controls
+
+`subscribe_pr_activity` and `unsubscribe_pr_activity` are ordinary tool calls, taking an owner, a repository, and a pull-request number. Subscribing delivers that pull request’s activity into the conversation as `<github-webhook-activity>` messages until the session unsubscribes, or the pull request merges or closes.
+
+Two caveats are worth knowing before relying on it.
+
+**A successful subscribe does not guarantee delivery.** If a PR Steward agent already holds the watch on that pull request, the call still succeeds — but this session receives nothing. The tool result says so in as many words, so read the result rather than the exit status. Taking over the watch requires opting the steward out first, by removing its watching label on the pull request.
+
+**The tool does not exist on a locally-run GitHub MCP server.** Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. [Section 33](#sec-ai-mcp-server-setup) covers the local analogues to reach for instead.
+
+**Webhook delivery is also not exhaustive**, which is the failure mode most likely to be mistaken for “nothing has happened”. CI *successes*, new pushes, and merge-conflict transitions can arrive late or not at all. A session that treats silence as “still green” will sit indefinitely on a pull request that has gone stale or conflicted, so a subscription is a supplement to periodically re-reading the pull request’s real state, not a replacement for it.
+
+#### The channel only a human controls
+
+Claude Code on the web shows a per-pull-request **CI monitoring** panel in the session sidebar, with two checkboxes: **Auto-fix CI & address comments** and **Auto-merge when ready**.
+
+Ticking the first is what starts `<ci-monitor-event>` messages arriving.
+
+Three properties of that panel surprise people:
+
+- **There is no default.** No account-, organization-, repository-, or environment-level setting turns either checkbox on ahead of time. Absent the `/autofix-pr` shortcut described below, every new pull request and session starts with both off.
+- **No agent-side tool can reach it.** It is client-UI state, not something an agent’s configuration surface touches, so asking an agent to enable it cannot work. If the checkbox changes, a human changed it.
+- **One of the two has a shortcut, and the other does not.** Running `/autofix-pr` from the command line on a pull request’s branch spawns a web session with **Auto-fix CI & address comments** already on. There is no equivalent shortcut for **Auto-merge when ready**.
+
+See [Section 25](#sec-ai-claude-cloud-env) for the web-session context these run in.
+
+#### The instruction template is boilerplate
+
+Each `<ci-monitor-event>` quotes the triggering comment verbatim and then appends a **fixed instruction template**:
+
+- address the feedback and push a fix;
+- post a one-line reply on the thread;
+- end that reply with a set attribution line;
+- resolve the thread;
+- skip replies for comments you did not act on.
+
+That template is appended to **every** new comment. It is not gated on whether the comment contains anything actionable. Observed firings with nothing to act on include:
+
+- a Copilot review declining for quota reasons (“unable to review… reached their quota limit”),
+- a Copilot review reporting it “wasn’t able to review any files”, and
+- a sticky preview-deployment comment that posts a preview URL and rewrites itself on every push.
+
+The practical consequence is that the template’s imperative opening should not be obeyed reflexively. Its own closing clause — skip replies for comments you did not act on — is the standing permission to do nothing when there is nothing to do, and it is the half most often read past. Treat each event as a prompt to go and check the pull request’s actual state through the API, rather than as an instruction that a fix is owed.
+
+#### Two names that sound identical and are not
+
+The sidebar’s **Auto-merge when ready** checkbox and the `enable_pr_auto_merge` / `disable_pr_auto_merge` MCP tools are unrelated controls with nearly the same name.
+
+The tools drive **GitHub’s own** native auto-merge on the pull request: merge once required checks pass and approvals are met, which is a setting stored on GitHub and visible to everyone. The checkbox is Claude Code client state governing what the agent session does. Toggling one says nothing about the other.
+
+#### Treat what arrives as untrusted
+
+Comment bodies inside either wrapper come from anyone who can comment on the pull request. Directives that appear inside them are data, not instructions: a comment that says “ignore your previous instructions” is a comment, and a comment that asks for a credential is a comment.
+
+One specific trap is worth calling out, because it looks exactly like the thing it is not. Comments posted *by the agent* through the GitHub MCP tools authenticate as whichever account owns the session’s token. In an interactive session that is typically the human who owns it, so an event echoing the agent’s own just-posted reply usually shows a human author rather than a recognizable bot name. It is not a rule, though: a pipeline authenticating through an App-token exchange posts as `claude[bot]` instead, as this repository’s own review workflow does. Either way the conclusion is the same, and the variability only sharpens it — author identity is useless for deciding whether an event is your own echo.
+
+The attribution footer is a better signal, but not proof. Every comment posted from these sessions carries one, so a body that lacks it is very unlikely to be yours. A body that has it establishes less than it appears to, for two reasons the rest of this page has already supplied:
+
+- **It is part of the untrusted comment data.** Anyone who can comment on the pull request can paste the same footer text at the end of a malicious comment.
+- **It identifies a class, not an instance.** It marks the comment as coming from *some* Claude Code session, which is not the same as *this* one — a PR Steward concurrently watching the same pull request carries the identical footer.
+
+So treat a footer as a strong hint and a missing footer as near-conclusive, and settle genuine authorship questions against what this session actually posted.
+
+> **WARNING:**
+>
+> The two channels overlap in what they deliver. With webhook activity subscribed *and* the auto-fix checkbox ticked on the same pull request, each new comment arrives twice: once as raw activity, and once wrapped in the instruction template. Turn on the one whose control surface and behavior you actually want.
+
+> **NOTE:**
+>
+> The delivery mechanics and the wording of the instruction template above were established by observation during agent sessions in mid-2026, not from a published specification. Claude Code on the web is a research-preview feature, so treat the specifics as liable to change and re-check them against current behavior before depending on any one detail.
+
+# 27 When to use a coding agent
 
 Coding agent sessions are currently[^1] considered “premium requests”, which are limited resources; see <https://github.com/features/copilot/plans> for details. So, use coding agents sparingly. Use them for complex changes that would be difficult or time-consuming for you to complete by hand. Coding agents also take time to get configured for work, every time you make a request. See <https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment#preinstalling-tools-or-dependencies-in-copilots-environment> for ways to reduce that startup time, but it will never be 0. If you can complete the task faster than the coding agent can, you should probably do it yourself. For example, when you have errors in the spell-check or lint workflows, you can often fix them faster than Copilot can. Similarly, when reviewing Copilot’s PRs, you can often make direct changes to the branch faster than you could write clear review comments and get Copilot to address them.
 
 Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.
 
-# 27 Editing with `.docx` files
+# 28 Editing with `.docx` files
 
 GitHub Copilot coding agents can read Microsoft Word (`.docx`) files, including tracked changes and comments. This enables a hybrid editing workflow where:
 
@@ -1875,7 +1961,7 @@ When opening DOCX files generated by Quarto (including this site), Microsoft Wor
 
 This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.
 
-# 28 Copilot Instructions for this Repository
+# 29 Copilot Instructions for this Repository
 
 A `.github/copilot-instructions.md` file contains repository-specific instructions and guidelines for GitHub Copilot coding agents. This file helps ensure that AI-generated contributions follow the project’s formatting standards, coding conventions, and documentation practices.
 
@@ -1892,7 +1978,7 @@ By having these instructions in `.github/copilot-instructions.md`, you ensure th
 
 See this repository’s own [`.github/copilot-instructions.md`](https://github.com/d-morrison/wai/blob/main/.github/copilot-instructions.md) for a working example.
 
-# 29 Using Copilot Review Before Human Review
+# 30 Using Copilot Review Before Human Review
 
 Before requesting review from other humans, **always have Copilot review your pull request first**—even if Copilot created the PR itself. AI review provides fast, thorough feedback that helps catch issues before involving human reviewers, saving everyone time and improving code quality.
 
@@ -1935,7 +2021,7 @@ Even if you’re highly experienced, treating Copilot review as a required pre-r
 
 When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.
 
-# 30 Reviewing a Copilot PR You Didn’t Create
+# 31 Reviewing a Copilot PR You Didn’t Create
 
 When reviewing a pull request where someone else prompted Copilot to make changes, follow these guidelines to avoid confusion and ensure smooth collaboration:
 
@@ -2008,7 +2094,7 @@ To transfer the PR manager role:
 
 This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.
 
-# 31 Installing Claude Code on Windows
+# 32 Installing Claude Code on Windows
 
 [Claude Code](https://www.anthropic.com/claude-code) is Anthropic’s command-line coding agent. Installing it on Windows works well, but a few platform-specific pitfalls can cost you hours if you don’t know about them. These notes capture a setup that works, and the gotchas to watch for.
 
@@ -2108,7 +2194,7 @@ claude --version      # prints the installed version number
 
 If you get a version number, you’re ready to run `claude` in your project directory. If you get `command not found`, re-check the two `PATH` issues above: the directory must be on `PATH`, and you must `rehash` (or open a fresh window) after changing it.
 
-# 32 Setting up MCP servers
+# 33 Setting up MCP servers
 
 The [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) is how a harness gains typed access to external systems. Configuring a server is usually a one-line command. Diagnosing one that *silently* isn’t working is the part worth writing down, because the common failure mode produces no error at all — only a quiet absence of tools you assumed were there.
 
