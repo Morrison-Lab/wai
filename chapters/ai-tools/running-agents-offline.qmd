@@ -631,8 +631,8 @@ export HTTPS_PROXY=http://127.0.0.1:9 HTTP_PROXY=http://127.0.0.1:9
 export NO_PROXY=localhost,127.0.0.1
 
 # Confirm the block is real before trusting the result:
-curl -s -m 5 -o /dev/null -w '%{http_code}\n' https://api.anthropic.com  # 000
-curl -s -m 5 -o /dev/null -w '%{http_code}\n' http://localhost:11434/api/version  # 200
+curl -s -m 5 -o /dev/null -w '%{http_code}\n' https://example.com  # 000 = blocked
+curl -s -m 5 -o /dev/null -w '%{http_code}\n' http://localhost:11434/api/version  # 200 = local
 
 aider --yes --message "Fix the off-by-one error in mean()." stats.py
 ```
