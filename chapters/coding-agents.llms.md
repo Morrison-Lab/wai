@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-09 12:28:50 (PDT)
+Last modified: 2026-08-09 18:04:31 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -822,6 +822,44 @@ ollama pull llama3.3
 
 The VRAM each model needs depends on its size and quantization and changes as models are re-quantized—check the [Ollama model library](https://ollama.com/library) for current requirements. As a rough guide, smaller (7B) models run on consumer GPUs with around 8 GB of VRAM, while larger (32B and 70B) models need substantially more and may not fit on a single GPU.
 
+> **WARNING:**
+>
+> The models above are strong at *writing code* when you ask them to. That is a different skill from **tool calling** — emitting a well-formed request to read a file or run a command, and then using the result. Inline completion and chat need only the first. Anything autonomous needs the second, because an agent that cannot call a tool cannot read your repository at all.
+>
+> The two come apart in practice, and the failure is subtler than a model simply refusing. Tested against a single-function tool schema on a 24 GB M2, `qwen2.5-coder:14b` returned `finish_reason: stop` with an empty `tool_calls` field on four attempts out of four. It had not ignored the request: it wrote a correct tool call as ordinary prose in the `content` field,
+>
+> ``` json
+> {"name": "read_file", "arguments": {"path": "src/main.py"}}
+> ```
+>
+> which is the right JSON in the wrong place. A harness looks for `tool_calls`, finds nothing, and treats the turn as a plain reply, so the tool never runs. `granite4:7b-a1b-h`, at half the parameter count, returned a well-formed call in the `tool_calls` field three times out of three and completed a full multi-turn round trip.
+>
+> An advertised `tools` capability is necessary but not sufficient, so do not settle the question with `ollama show`. On the same machine `qwen2.5-coder:14b` lists `tools` among its capabilities and still cannot be driven by a harness, for the reason above. Test it yourself with one request before building a loop on it:
+>
+> ``` bash
+> RESP=$(curl -s -w '\n%{http_code}' \
+>   http://localhost:11434/v1/chat/completions -H 'content-type: application/json' -d '{
+>   "model": "granite4:7b-a1b-h", "stream": false,
+>   "messages": [{"role": "user", "content": "What is in src/main.py? Use the tool."}],
+>   "tools": [{"type": "function", "function": {"name": "read_file",
+>     "parameters": {"type": "object", "properties": {"path": {"type": "string"}},
+>     "required": ["path"]}}}]}')
+>
+> CODE=$(printf '%s' "$RESP" | tail -1)
+> BODY=$(printf '%s' "$RESP" | sed '$d')
+>
+> if [ "$CODE" != "200" ]; then
+>   echo "request failed (HTTP $CODE): $BODY"        # bad tag, tools unsupported, server down
+> elif printf '%s' "$BODY" | grep -q '"tool_calls"'; then
+>   echo "usable as an agent"
+> else
+>   echo "no tool call; completion model only"
+>   printf '%s' "$BODY" | grep -o '"content":"[^"]*"' | head -c 200
+> fi
+> ```
+>
+> Check the status code separately from the result. A request that simply errored — a mistyped tag, a model the server rejects for tool use, a server that is not running — produces the same silence as a model that declined to call the tool, and only one of those is a fact about the model. Printing the `content` field on the no-call branch is what distinguishes a model that ignored the tools from one that described the call in prose instead of emitting it, which is the `qwen2.5-coder` case above.
+
 **Start the Ollama server:**
 
 ``` bash
@@ -875,15 +913,43 @@ aider --model ollama_chat/qwen2.5-coder:7b
 
 > **IMPORTANT:**
 >
-> By default Ollama uses a 2048-token context window, which silently truncates your code and makes the model look far less capable than it is. This is the single most common mistake when pairing `aider` with Ollama. Raise it with a model-settings file at `~/.aider.model.settings.yml`:
+> Ollama’s default context window is small, which silently truncates your code and makes the model look far less capable than it is. This is the single most common mistake when pairing `aider` with Ollama.
 >
-> ``` yaml
-> - name: ollama_chat/qwen2.5-coder:7b
->   extra_params:
->     num_ctx: 8192
+> The default is not a fixed number. Ollama picks it from the memory it detects, as its own `ollama serve --help` states:
+>
+>     OLLAMA_CONTEXT_LENGTH   Context length to use unless otherwise specified
+>                             (default: 4k/32k/256k based on VRAM)
+>
+> Do not assume you landed in a generous tier. A 24 GB Apple-silicon machine gets **4096 tokens**, not the 32k its total memory suggests, because only about 75% of unified memory is addressable by the GPU and the tier boundary sits above that share. Check what you actually got rather than inferring it — `ollama ps` prints the context of each loaded model:
+>
+> ``` bash
+> ollama ps
+> # NAME                 SIZE     PROCESSOR    CONTEXT
+> # qwen2.5-coder:14b    9.5 GB   100% GPU     4096
 > ```
 >
-> Larger values (16384, 32768) handle bigger files at the cost of more memory; pick the largest your machine can comfortably hold.
+> There are three ways to raise it, and they differ in which clients they reach:
+>
+> - **`OLLAMA_CONTEXT_LENGTH`** on the server, which sets the default for everything. Note that the macOS menu-bar app starts the server with its own environment, so exporting the variable in your shell does not reach it; this route applies when you run `ollama serve` yourself.
+>
+> - **A `num_ctx` parameter sent per request**, which is what `aider` does through `~/.aider.model.settings.yml`:
+>
+>   ``` yaml
+>   - name: ollama_chat/qwen2.5-coder:7b
+>     extra_params:
+>       num_ctx: 32768
+>   ```
+>
+> - **A Modelfile that bakes the context into a derived model**, which is the only one of the three that reaches clients that cannot send `num_ctx` themselves:
+>
+>   ``` bash
+>   printf 'FROM granite4:7b-a1b-h\nPARAMETER num_ctx 32768\n' > Modelfile
+>   ollama create granite4-32k -f Modelfile
+>   ```
+>
+>   The derived model shares weight blobs with its base, so it costs no extra disk.
+>
+> Context is not free. Raising a 14B model from 4k to 32k on a 24 GB M2 took its resident size from 9.5 GB to 15 GB, about 5.5 GB of key-value cache, so pick the largest value that still leaves the weights and the cache in GPU memory and confirm with `ollama ps` that `PROCESSOR` still reads `100% GPU`.
 
 To avoid passing flags every time, set defaults in a config file at `~/.aider.conf.yml`:
 
@@ -902,6 +968,73 @@ aider --architect \
 ```
 
 This can improve results on multi-step changes, but on a machine without a strong GPU it roughly doubles the time per turn, because the two models take turns and their weights are swapped in and out of memory. Reserve it for genuinely tricky changes; for small edits, a single model is faster.
+
+> **IMPORTANT:**
+>
+> `aider` asks the model to express an edit either as a SEARCH/REPLACE block (`diff`, the default for most models) or by rewriting the file (`whole`). Producing an exact SEARCH/REPLACE block is a demanding format, and small models are unreliable at it.
+>
+> Measured on a 24 GB M2 with `granite4:7b-a1b-h` at 32k context, same prompt each time:
+>
+> | File | `edit_format: diff` | `edit_format: whole` |
+> |----|----|----|
+> | One function | 3 of 3 correct | 3 of 3 correct |
+> | Two functions, one to be left alone | 0 of 3 correct | 3 of 3 correct |
+>
+> The two-function failure is worth dwelling on, because it is not the failure you would expect. The model did not refuse the edit or produce a broken file. In all three `diff` runs it fixed the target function correctly **and silently deleted the other one**, then committed with a message naming only the intended fix. Nothing in the commit message, the exit status, or the model’s own summary mentioned the deletion.
+>
+> That is the hazard of an unattended loop in its most concrete form: a step that reports success while destroying work, leaving a wrong state as the premise for every step after it. It is also why committing after every step matters — `git` held the original, so the damage was one `git revert` away rather than lost.
+>
+> Set the format per model:
+>
+> ``` yaml
+> - name: ollama_chat/granite4-32k
+>   edit_format: whole
+> ```
+>
+> `whole` costs more tokens per edit, since the model rewrites the whole file, which is a real cost on large files. Larger models generally handle `diff` correctly; re-measure rather than assuming either way.
+
+#### Connecting Claude Code to Ollama
+
+Ollama also serves an **Anthropic-compatible** endpoint at `/v1/messages`, alongside the OpenAI-compatible one used above. Any client that speaks the Anthropic API can therefore be pointed at a local model, including [Claude Code](https://claude.com/claude-code) itself, with no proxy in between. Check that the endpoint answers before wiring anything to it:
+
+``` bash
+curl -s http://localhost:11434/v1/messages -H 'content-type: application/json' \
+  -d '{"model":"granite4-32k","max_tokens":50,
+       "messages":[{"role":"user","content":"Say OK only."}]}'
+```
+
+Point Claude Code at it with three environment variables:
+
+``` bash
+export ANTHROPIC_BASE_URL=http://localhost:11434
+export ANTHROPIC_AUTH_TOKEN=ollama   # any non-empty value; Ollama ignores it
+export ANTHROPIC_API_KEY=""          # ensure no real key is sent to localhost
+claude --model granite4-32k
+```
+
+Set these in a wrapper script rather than in your shell profile, so that plain `claude` keeps using the cloud and a separate command uses the local model.
+
+> **WARNING:**
+>
+> This works, but expect worse results than the same model gives through `aider`, and understand why before blaming the model.
+>
+> A harness spends context before your task does. Claude Code sends a long system prompt and a schema for every tool it exposes, and any Model Context Protocol (MCP) servers you have configured add their own schemas on top. Against a 32k local context that overhead is a large fraction of the budget, and a small model handles it poorly.
+>
+> Observed on a 24 GB M2 with `granite4:7b-a1b-h`, asking only that it read one file and comment on one function:
+>
+> - With a GitHub MCP server loaded, the model ignored the question and produced a paragraph about missing credentials.
+> - With MCP disabled, it invented a task list whose contents were copied from the description of a tool it had been shown.
+> - With the tool surface cut to `Read`, `Grep`, and `Glob`, it still ignored the question and asked what it should work on.
+>
+> The same model, same context, through `aider`, fixed a real bug and committed it in 17 seconds. Swapping in a 12B model produced no answer at all in ten minutes, because processing that much prompt at 10 tokens per second is simply slow.
+>
+> Two practical rules follow. Shrink the tool surface a local model is shown — `--strict-mcp-config --mcp-config '{"mcpServers":{}}'` loads no MCP servers, and `--allowed-tools` narrows the built-ins. And tell the harness the real context size, since Claude Code assumes a 200k window for a model it does not recognize and would let the conversation grow far past what the model can hold:
+>
+> ``` bash
+> export CLAUDE_CODE_MAX_CONTEXT_TOKENS=32768
+> ```
+>
+> For autonomous work on a small local model, prefer a light harness such as `aider`. Reserve this route for using a familiar interface offline, not for getting the best out of the hardware.
 
 #### Falling Back Between Cloud and Local Automatically
 
@@ -1035,6 +1168,39 @@ Running a model locally ensures that your code and prompts never leave your mach
 
 Even with local models, avoid including raw sensitive data in prompts. Work with anonymized or synthetic data wherever possible.
 
+> **IMPORTANT:**
+>
+> Running Ollama does not by itself guarantee that a prompt stays on your machine. Ollama can serve **cloud-hosted** models alongside local ones, and those are the models too large to run on a laptop at all, which is exactly when a tag is tempting. A cloud-routed tag looks much like a local one in everyday use.
+>
+> Two habits keep this honest, and they matter most in precisely the settings that motivated running locally:
+>
+> - **Pull and reference explicitly local tags**, and treat a tag with no listed download size as cloud-routed until you check its own page in the [Ollama model library](https://ollama.com/library).
+>
+> - **Disable the cloud path outright** when the data is regulated, so the guarantee does not depend on remembering which tag is which:
+>
+>   ``` bash
+>   OLLAMA_NO_CLOUD=1 ollama serve
+>   ```
+>
+> Verify rather than trust either one. Cut the machine off the network, or block outbound traffic, and confirm the agent still completes a real task — the check described under [Verifying you are genuinely offline](#verifying-you-are-genuinely-offline) below. A setup that quietly depended on a cloud endpoint fails that test immediately.
+
+#### Verifying you are genuinely offline
+
+A local setup that has never been tested without a network is a local setup you are guessing about. Cutting the machine off entirely is the honest test. A lighter one that does not disturb the rest of your session is to make outbound traffic fail for a single command, while leaving `localhost` reachable:
+
+``` bash
+export HTTPS_PROXY=http://127.0.0.1:9 HTTP_PROXY=http://127.0.0.1:9
+export NO_PROXY=localhost,127.0.0.1
+
+# Confirm the block is real before trusting the result:
+curl -s -m 5 -o /dev/null -w '%{http_code}\n' https://example.com  # 000 = blocked
+curl -s -m 5 -o /dev/null -w '%{http_code}\n' http://localhost:11434/api/version  # 200 = local
+
+aider --yes --message "Fix the off-by-one error in mean()." stats.py
+```
+
+Check the block itself first, as above. A test that passes because the proxy was never applied tells you nothing, and looks exactly like success.
+
 # 18 Small, Local Models for Autonomous Agentic Coding
 
 [Section 17](#sec-ai-offline) covers the mechanics of running a model on your own hardware: installing Ollama, wiring up an editor, and driving `aider` against a local endpoint. This section is about a narrower and harder question sitting on top of that setup: which local model to pick, and how to let it work **autonomously** — making a sequence of edits, commits, and tool calls with no human approving each step — without the loop quietly going wrong.
@@ -1055,7 +1221,9 @@ Prefer a model explicitly trained for **tool calling and agentic use** over a ge
 
 | Family | Sizes worth running locally | License | Best for |
 |----|----|----|----|
-| [Qwen2.5-Coder / Qwen3-Coder](https://ollama.com/library/qwen3-coder) | 7B, 14B, 32B dense; 30B-A3B mixture-of-experts | Apache 2.0 | General-purpose agentic coding across languages |
+| [Qwen3-Coder](https://ollama.com/library/qwen3-coder) | 30B-A3B mixture-of-experts (smallest tag, 19 GB) | Apache 2.0 | General-purpose agentic coding across languages |
+| [Qwen2.5-Coder](https://ollama.com/library/qwen2.5-coder) | 7B, 14B, 32B dense | Apache 2.0 | Completion and supervised chat. Verify tool calling before trusting it in a loop—see below |
+| [Granite 4](https://ollama.com/library/granite4) | 7B-A1B mixture-of-experts (4.2 GB), 32B-A9B | Apache 2.0 | A small, fast tool-caller that fits where the tiers above do not |
 | [Devstral Small](https://ollama.com/library/devstral) | 24B | Apache 2.0 | Purpose-built for coding agents (multi-file edits, tool use) |
 | [Codestral](https://ollama.com/library/codestral) | 22B | [Mistral AI Non-Production License](https://mistral.ai/licenses/MNPL-0.1.md) | Fill-in-the-middle completion, not redistribution in a product |
 | [DeepSeek-Coder-V2](https://ollama.com/library/deepseek-coder-v2) | 16B (Lite) mixture-of-experts | [DeepSeek Model License](https://github.com/deepseek-ai/DeepSeek-Coder-V2/blob/main/LICENSE-MODEL) (commercial use permitted, own terms) | A capable, low-VRAM mixture-of-experts option |
@@ -1064,6 +1232,22 @@ Prefer a model explicitly trained for **tool calling and agentic use** over a ge
 Qwen3-Coder’s 30B-A3B tag is a mixture-of-experts model: 30B total parameters, but only about 3.3B active per token. VRAM at rest is set by the total, not the active count — every expert has to stay resident in memory even though only a fraction fires on any given token — which is why the tag still needs roughly 19 GB at 4-bit quantization, in line with its 30B total rather than its 3.3B active count. What the small active count buys is speed: inference runs closer to a 3–4B model’s pace despite the larger memory footprint. Codestral’s license is worth reading before you rely on it: Mistral’s Non-Production License permits local evaluation but not production or commercial deployment — fine for trying it out, not fine for a lab pipeline that runs unattended.
 
 As a practical floor, treat the 24–32B tier at 4-bit quantization as the smallest size that holds up across a multi-step autonomous loop without frequent tool-call errors. Below that, a model is still useful as an assistant you supervise turn by turn ([Section 17](#sec-ai-offline) covers exactly that setup), but it is not yet a safe choice to leave unattended.
+
+> **IMPORTANT:**
+>
+> Treat that floor as a statement about *sustained* multi-step loops, not as a filter to apply before anything else. Size predicts tool-calling ability poorly enough that checking it first will mislead you.
+>
+> Measured on a 24 GB M2 against a single-function tool schema, `qwen2.5-coder:14b` returned an empty `tool_calls` field on four attempts out of four, with `finish_reason: stop` each time. It wrote a correct tool call as prose in the `content` field instead, which no harness will act on. The 4.2 GB `granite4:7b-a1b-h`, at half the parameter count, put a well-formed call in `tool_calls` three times out of three and completed a multi-turn round trip using the result. The smaller model was usable as an agent where the larger one was not, and no amount of context or prompting fixes a model whose calls never reach the field a harness reads.
+>
+> The advertised capability list does not settle it either. `ollama show qwen2.5-coder:14b` lists `tools`, and the model still cannot be driven by a harness, so treat the tag as necessary rather than sufficient.
+>
+> So order the questions this way:
+>
+> 1.  **Does it emit well-formed tool calls?** One request answers this. A model that fails here cannot be an agent at any size.
+> 2.  **Does it fit, with context?** Weights plus key-value cache, verified with `ollama ps`.
+> 3.  **Is it big enough to sustain a long loop?** This is where the 24–32B floor applies.
+>
+> A small model that clears the first two is worth measuring on your own tasks before concluding it cannot be left unattended, because the guardrails below, not the parameter count, are what actually bound the damage from a bad step.
 
 #### Hardware tiers
 
@@ -1075,6 +1259,17 @@ As a practical floor, treat the 24–32B tier at 4-bit quantization as the small
 | Apple-silicon unified memory (32 GB+) | Same tiers as above, generally slower per token | Well suited to an overnight batch job where wall-clock time matters less |
 
 These are rough guides, not guarantees: VRAM headroom for context length matters as much as VRAM for the weights themselves, and a long-running agentic loop accumulates a long conversation history that eats into that headroom as it runs. Check the current requirements on the model’s own listing (the [Ollama model library](https://ollama.com/library) states them per tag) rather than a rule of thumb, since quantization schemes change.
+
+> **WARNING:**
+>
+> Read the unified-memory row as its own scale rather than as the VRAM figures with a speed penalty attached. Two deductions come off the headline number before any model loads:
+>
+> - **Only about 75% of unified memory is addressable by the GPU** by default, so a 24 GB machine has roughly 18 GB to work with, not 24.
+> - **Context is charged on top of the weights.** Measured on a 24 GB M2, raising a 14B model from 4k to 32k context moved it from 9.5 GB resident to 15 GB.
+>
+> Together those rule out the 30–32B tier on a 24 GB Mac, even though the headline number matches the VRAM column. The smallest `qwen3-coder` tag is 19 GB, which exceeds the addressable ceiling on its own, leaving nothing for context. There is no smaller variant of it to fall back to.
+>
+> The practical ceiling on 24 GB of unified memory is a **12–14B dense model at 32k context**, or a mixture-of-experts model of similar footprint. Confirm with `ollama ps` after loading: `PROCESSOR` reading `100% GPU` means it fits, and anything less means part of the model is on the CPU and the loop will be far slower than the tier table suggests.
 
 #### Routed architectures: a planner and an executor
 
@@ -1101,6 +1296,7 @@ The mitigation for a higher per-step error rate is not a better model; it is a l
 3.  **Bounded loops.** Cap the total number of iterations and, separately, the number of *consecutive* failed gates. Hitting either cap should stop the loop and report what it tried, not retry indefinitely — a model that fails the same gate three times in a row is not going to succeed on the fourth attempt without a different approach, and a different approach is a decision for a human to make.
 4.  **Decomposition into specified, testable units, done up front.** Break the work into steps that each have a checkable definition of done before the loop starts, rather than handing the model one large, open-ended goal. A step with a clear pass/fail test is exactly the shape a small model handles well; an open-ended goal is exactly the shape that invites drift.
 5.  **Full logging.** Keep every prompt, tool call, and gate result the loop produced, so a run that stopped (or that a human later distrusts) can be reviewed after the fact rather than re-run blind.
+6.  **A tool surface small enough for the model.** Every tool the harness exposes costs context before the task starts, because its schema is sent with the prompt, and a configured Model Context Protocol (MCP) server can add thousands of tokens of definitions on its own. Against a 32k local context that overhead competes directly with the work, and a small model loses: asked to read one file, a 7B model with a full MCP surface loaded produced a paragraph about missing credentials instead, and with MCP disabled invented a task list copied from the description of a tool it had been shown. Expose the smallest set of tools the step actually needs, and prefer a light harness over a heavyweight one — the same model that failed those attempts fixed a real bug and committed it in 17 seconds through `aider`.
 
 These are the guardrails as a reader-facing rationale. The concrete gate wiring — an `ai-config` skill that launches a capped, worktree-isolated local loop, and a `gha` reusable workflow that runs one against a pull request using this repository’s own lint, spellcheck, and render checks as its gates — is tracked separately; see [Companion work](#companion-work) below.
 
