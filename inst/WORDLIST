@@ -36,12 +36,14 @@ callout
 ebsite
 edu
 emplate
+errored
 gh
 github
 glitchy
 io
 lintr
 mergeable
+mistyped
 navbar
 orking
 plugin
@@ -63,7 +65,9 @@ Docker
 codebase
 Inflexa
 MCP
+Modelfile
 Ollama
+Ollama's
 OpenAI
 TORQCLAW
 TypeScript
@@ -75,6 +79,7 @@ proteomics
 repurposing
 sandboxed
 sandboxing
+schemas
 serology
 transcriptomics
 translational
