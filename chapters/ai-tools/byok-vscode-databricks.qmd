@@ -95,7 +95,7 @@ output-token-per-minute limit.
 A 64,000-token request can therefore receive an immediate 429 response
 even when the underlying model supports that output length.
 
-Use these quota-aware lab defaults:
+Use the quota-aware lab defaults in @tbl-databricks-oaicopilot-defaults:
 
 | Model group | Context window | Output cap | API mode |
 |---|---:|---:|---|
@@ -113,9 +113,13 @@ Use these quota-aware lab defaults:
 Use `openai-responses` for GPT-5.3 Codex
 and any other endpoint that the current catalog marks as Responses-API-only.
 Use `openai` for the other models in the table.
-The 16,000-token setting is a quota-aware default,
+Every output cap in the table is a working default,
 not the underlying model's maximum capability.
-Workspaces with higher provisioned or priority limits can raise it
+The 16,000-token figure applies to the families the 20,000
+output-token-per-minute limit covers, which is why it repeats across the
+Claude, GPT-5, and Gemini rows;
+the GPT OSS and Llama rows carry their own figures instead.
+Workspaces with higher provisioned or priority limits can raise these
 after checking their actual quota.
 
 For GPT-5 and GPT OSS models,
