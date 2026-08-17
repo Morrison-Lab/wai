@@ -55,7 +55,24 @@
       "Bash(git branch -d:*)",
       "Bash(git branch -D:*)",
       "Bash(git reset --hard:*)",
-      "Bash(rm -rf:*)"
+      "Bash(rm -rf:*)",
+      "Bash(git fetch *--upl*)",
+      "Bash(git ls-remote *--u*)",
+      "Bash(git grep *-O*)",
+      "Bash(git grep *--op*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/block-git-exec-vectors.py\""
+          }
+        ]
+      }
     ]
   }
 }
