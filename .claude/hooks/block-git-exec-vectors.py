@@ -55,9 +55,22 @@ def is_pager_short_bundle(token):
     return "O" in token[1:]
 
 
+def tokenize(command):
+    """shlex.split() only splits on whitespace, so an operator glued
+    directly to the next command (e.g. `true;git fetch ...`, no space
+    after `;`) merges into one token and `git` is never recognized.
+    Using punctuation_chars gives control operators (; & | ( )) their
+    own tokens even without surrounding whitespace, while still
+    resolving quote-splicing within a word the same way shlex.split
+    does."""
+    lexer = shlex.shlex(command, posix=True, punctuation_chars=True)
+    lexer.whitespace_split = True
+    return list(lexer)
+
+
 def find_violations(command):
     try:
-        tokens = shlex.split(command, posix=True)
+        tokens = tokenize(command)
     except ValueError:
         # Unbalanced quotes etc. -- don't try to out-clever a command we
         # can't safely parse; fall back on the existing deny patterns.
