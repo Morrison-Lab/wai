@@ -330,7 +330,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-08-15 08:39:28 (PDT)</p>
+  <p class="date">Last modified: 2026-08-16 17:03:29 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -2149,13 +2149,126 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb34-1"><a aria-label="1"></a><span class="st">"oaicopilot.baseUrl"</span><span class="er">:</span> <span class="st">"https://&lt;workspace&gt;.cloud.databricks.com/serving-endpoints"</span><span class="er">,</span></span>
 <span id="cb34-2"><a aria-label="2"></a><span class="st">"oaicopilot.models"</span><span class="er">:</span> <span class="ot">[</span></span>
 <span id="cb34-3"><a aria-label="3"></a>  <span class="fu">{</span></span>
-<span id="cb34-4"><a aria-label="4"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"databricks-claude-sonnet-4-6"</span><span class="fu">,</span></span>
+<span id="cb34-4"><a aria-label="4"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"databricks-claude-opus-5"</span><span class="fu">,</span></span>
 <span id="cb34-5"><a aria-label="5"></a>    <span class="dt">"owned_by"</span><span class="fu">:</span> <span class="st">"databricks"</span><span class="fu">,</span></span>
-<span id="cb34-6"><a aria-label="6"></a>    <span class="dt">"apiMode"</span><span class="fu">:</span> <span class="st">"openai"</span></span>
-<span id="cb34-7"><a aria-label="7"></a>  <span class="fu">}</span></span>
-<span id="cb34-8"><a aria-label="8"></a><span class="ot">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The <code>id</code> of each model must exactly match the name of a deployed serving endpoint in your workspace. The extension sends <code>id</code> as the OpenAI <code>model</code> field, and Databricks routes <code>POST /serving-endpoints/chat/completions</code> to the endpoint of that name. An <code>id</code> that names no real endpoint fails (see the 404 below).</p>
+<span id="cb34-6"><a aria-label="6"></a>    <span class="dt">"family"</span><span class="fu">:</span> <span class="st">"claude"</span><span class="fu">,</span></span>
+<span id="cb34-7"><a aria-label="7"></a>    <span class="dt">"context_length"</span><span class="fu">:</span> <span class="dv">1000000</span><span class="fu">,</span></span>
+<span id="cb34-8"><a aria-label="8"></a>    <span class="dt">"max_tokens"</span><span class="fu">:</span> <span class="dv">16000</span><span class="fu">,</span></span>
+<span id="cb34-9"><a aria-label="9"></a>    <span class="dt">"vision"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb34-10"><a aria-label="10"></a>    <span class="dt">"apiMode"</span><span class="fu">:</span> <span class="st">"openai"</span></span>
+<span id="cb34-11"><a aria-label="11"></a>  <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb34-12"><a aria-label="12"></a>  <span class="fu">{</span></span>
+<span id="cb34-13"><a aria-label="13"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"databricks-gpt-5-4"</span><span class="fu">,</span></span>
+<span id="cb34-14"><a aria-label="14"></a>    <span class="dt">"owned_by"</span><span class="fu">:</span> <span class="st">"databricks"</span><span class="fu">,</span></span>
+<span id="cb34-15"><a aria-label="15"></a>    <span class="dt">"family"</span><span class="fu">:</span> <span class="st">"gpt-5.4"</span><span class="fu">,</span></span>
+<span id="cb34-16"><a aria-label="16"></a>    <span class="dt">"context_length"</span><span class="fu">:</span> <span class="dv">1050000</span><span class="fu">,</span></span>
+<span id="cb34-17"><a aria-label="17"></a>    <span class="dt">"max_tokens"</span><span class="fu">:</span> <span class="dv">16000</span><span class="fu">,</span></span>
+<span id="cb34-18"><a aria-label="18"></a>    <span class="dt">"reasoning_effort"</span><span class="fu">:</span> <span class="st">"medium"</span><span class="fu">,</span></span>
+<span id="cb34-19"><a aria-label="19"></a>    <span class="dt">"vision"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb34-20"><a aria-label="20"></a>    <span class="dt">"apiMode"</span><span class="fu">:</span> <span class="st">"openai"</span></span>
+<span id="cb34-21"><a aria-label="21"></a>  <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb34-22"><a aria-label="22"></a>  <span class="fu">{</span></span>
+<span id="cb34-23"><a aria-label="23"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"databricks-gpt-5-3-codex"</span><span class="fu">,</span></span>
+<span id="cb34-24"><a aria-label="24"></a>    <span class="dt">"owned_by"</span><span class="fu">:</span> <span class="st">"databricks"</span><span class="fu">,</span></span>
+<span id="cb34-25"><a aria-label="25"></a>    <span class="dt">"family"</span><span class="fu">:</span> <span class="st">"gpt-5.3-codex"</span><span class="fu">,</span></span>
+<span id="cb34-26"><a aria-label="26"></a>    <span class="dt">"context_length"</span><span class="fu">:</span> <span class="dv">400000</span><span class="fu">,</span></span>
+<span id="cb34-27"><a aria-label="27"></a>    <span class="dt">"max_tokens"</span><span class="fu">:</span> <span class="dv">16000</span><span class="fu">,</span></span>
+<span id="cb34-28"><a aria-label="28"></a>    <span class="dt">"reasoning_effort"</span><span class="fu">:</span> <span class="st">"high"</span><span class="fu">,</span></span>
+<span id="cb34-29"><a aria-label="29"></a>    <span class="dt">"vision"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb34-30"><a aria-label="30"></a>    <span class="dt">"apiMode"</span><span class="fu">:</span> <span class="st">"openai-responses"</span></span>
+<span id="cb34-31"><a aria-label="31"></a>  <span class="fu">}</span></span>
+<span id="cb34-32"><a aria-label="32"></a><span class="ot">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>id</code> of each model must exactly match the name of a deployed serving endpoint in your workspace. The extension sends <code>id</code> as the OpenAI <code>model</code> field, and Databricks routes the request to the endpoint of that name. Most entries use <code>POST /serving-endpoints/chat/completions</code>. Models marked as Responses-API-only in the <a href="https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models">Databricks model catalog</a>, including GPT-5.3 Codex, instead require <code>apiMode: "openai-responses"</code>. An <code>id</code> that names no real endpoint fails (see the 404 below).</p>
 <p>To store your token, run <strong>Set OAI Compatible Multi-Provider Apikey</strong> from the Command Palette (<code>Cmd+Shift+P</code> / <code>Ctrl+Shift+P</code>), choose the <code>databricks</code> provider, and paste a Databricks personal access token. The extension keeps it in VS Code’s encrypted secret storage (under <code>oaicopilot.apiKey.databricks</code>) and sends it as an <code>Authorization: Bearer</code> header.</p>
+<h4 id="sizing-context-and-output-limits">Sizing context and output limits</h4>
+<p>The model metadata controls both the request and the amount of conversation history Copilot sends:</p>
+<ul>
+<li><code>context_length</code> is the model’s total advertised context window.</li>
+<li><code>max_tokens</code> is the output cap. The extension maps it to <code>max_output_tokens</code> in Responses mode.</li>
+<li><code>family</code> selects the closest Copilot system-prompt family.</li>
+<li><code>vision</code> tells Copilot whether it may send images.</li>
+</ul>
+<p>The extension advertises input capacity as <code>context_length</code> minus <code>max_tokens</code>. Set <code>context_length</code> to the full model window; do not subtract the output cap yourself.</p>
+<p>The underlying model’s maximum output is not always a good value for <code>max_tokens</code>. <a href="https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/limits">Databricks reserves the requested output allowance before admitting a request</a>. Under the standard pay-per-token quota, Claude, GPT-5, and Gemini models generally have a 20,000 output-token-per-minute limit. A 64,000-token request can therefore receive an immediate 429 response even when the underlying model supports that output length.</p>
+<p>Use the quota-aware lab defaults in <a href="#/tbl-databricks-oaicopilot-defaults" class="quarto-xref">Table&nbsp;3</a>:</p>
+<div id="tbl-databricks-oaicopilot-defaults" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-databricks-oaicopilot-defaults-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Lab defaults for Databricks-hosted models
+</figcaption>
+<div aria-describedby="tbl-databricks-oaicopilot-defaults-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 28%">
+<col style="width: 28%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model group</th>
+<th style="text-align: right;">Context window</th>
+<th style="text-align: right;">Output cap</th>
+<th>API mode</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Claude Opus 5, Sonnet 5, Opus 4.8, Opus 4.6, Sonnet 4.6, Sonnet 4.5</td>
+<td style="text-align: right;">1,000,000</td>
+<td style="text-align: right;">16,000</td>
+<td><code>openai</code></td>
+</tr>
+<tr class="even">
+<td>Claude Opus 4.5, Opus 4.1, Sonnet 4, Haiku 4.5</td>
+<td style="text-align: right;">200,000</td>
+<td style="text-align: right;">16,000</td>
+<td><code>openai</code></td>
+</tr>
+<tr class="odd">
+<td>GPT-5.4</td>
+<td style="text-align: right;">1,050,000</td>
+<td style="text-align: right;">16,000</td>
+<td><code>openai</code></td>
+</tr>
+<tr class="even">
+<td>GPT-5.4 mini/nano, GPT-5.3 Codex, GPT-5.2, GPT-5.1, GPT-5 family</td>
+<td style="text-align: right;">400,000</td>
+<td style="text-align: right;">16,000</td>
+<td>See note below</td>
+</tr>
+<tr class="odd">
+<td>GPT OSS 120B/20B</td>
+<td style="text-align: right;">131,072</td>
+<td style="text-align: right;">32,768</td>
+<td><code>openai</code></td>
+</tr>
+<tr class="even">
+<td>Gemini 2.5 Pro/Flash</td>
+<td style="text-align: right;">1,048,576</td>
+<td style="text-align: right;">16,000</td>
+<td><code>openai</code></td>
+</tr>
+<tr class="odd">
+<td>Llama 4 Maverick</td>
+<td style="text-align: right;">1,000,000</td>
+<td style="text-align: right;">8,192</td>
+<td><code>openai</code></td>
+</tr>
+<tr class="even">
+<td>Llama 3.3/3.1 and Gemma 3</td>
+<td style="text-align: right;">128,000</td>
+<td style="text-align: right;">8,192</td>
+<td><code>openai</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Use <code>openai-responses</code> for GPT-5.3 Codex and any other endpoint that the current catalog marks as Responses-API-only. Use <code>openai</code> for the other models in the table. Every output cap in the table is a working default, not the underlying model’s maximum capability. The 16,000-token figure applies to the families the 20,000 output-token-per-minute limit covers, which is why it repeats across the Claude, GPT-5, and Gemini rows; the GPT OSS and Llama rows carry their own figures instead. Workspaces with higher provisioned or priority limits can raise these after checking their actual quota.</p>
+<p>For GPT-5 and GPT OSS models, <code>reasoning_effort</code> adds a selector to the Copilot model configuration and is forwarded to Databricks. Start with <code>medium</code> for general work and <code>high</code> for Codex or difficult agentic tasks. Claude and Gemini 2.5 use provider-specific thinking controls; do not copy <code>reasoning_effort</code> onto those entries.</p>
+<p>Databricks retires model endpoints over time. Before sharing or troubleshooting a configuration, compare every <code>id</code> with the current model catalog and remove entries that are no longer listed. An accurate local entry cannot make a retired endpoint work.</p>
 <h4 id="three-errors-and-why-they-stack">Three errors, and why they stack</h4>
 <p>These failures sit on top of each other: fixing one uncovers the next, so work through them top-down.</p>
 <p><strong>1. “No utility model is configured for ‘copilot-utility-small’”</strong></p>
