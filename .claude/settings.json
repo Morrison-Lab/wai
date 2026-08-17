@@ -56,10 +56,10 @@
       "Bash(git branch -D:*)",
       "Bash(git reset --hard:*)",
       "Bash(rm -rf:*)",
-      "Bash(git fetch *--upload-pack*)",
-      "Bash(git ls-remote *--upload-pack*)",
+      "Bash(git fetch *--upl*)",
+      "Bash(git ls-remote *--u*)",
       "Bash(git grep *-O*)",
-      "Bash(git grep *--open-files-in-pager*)"
+      "Bash(git grep *--op*)"
     ]
   }
 }
