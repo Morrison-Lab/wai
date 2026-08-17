@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-15 12:48:47 (PDT)
+Last modified: 2026-08-17 14:13:41 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -1583,16 +1583,74 @@ Databricks serves models over an OpenAI-compatible endpoint at `https://<workspa
 "oaicopilot.baseUrl": "https://<workspace>.cloud.databricks.com/serving-endpoints",
 "oaicopilot.models": [
   {
-    "id": "databricks-claude-sonnet-4-6",
+    "id": "databricks-claude-opus-5",
     "owned_by": "databricks",
+    "family": "claude",
+    "context_length": 1000000,
+    "max_tokens": 16000,
+    "vision": true,
     "apiMode": "openai"
+  },
+  {
+    "id": "databricks-gpt-5-4",
+    "owned_by": "databricks",
+    "family": "gpt-5.4",
+    "context_length": 1050000,
+    "max_tokens": 16000,
+    "reasoning_effort": "medium",
+    "vision": true,
+    "apiMode": "openai"
+  },
+  {
+    "id": "databricks-gpt-5-3-codex",
+    "owned_by": "databricks",
+    "family": "gpt-5.3-codex",
+    "context_length": 400000,
+    "max_tokens": 16000,
+    "reasoning_effort": "high",
+    "vision": true,
+    "apiMode": "openai-responses"
   }
 ]
 ```
 
-The `id` of each model must exactly match the name of a deployed serving endpoint in your workspace. The extension sends `id` as the OpenAI `model` field, and Databricks routes `POST /serving-endpoints/chat/completions` to the endpoint of that name. An `id` that names no real endpoint fails (see the 404 below).
+The `id` of each model must exactly match the name of a deployed serving endpoint in your workspace. The extension sends `id` as the OpenAI `model` field, and Databricks routes the request to the endpoint of that name. Most entries use `POST /serving-endpoints/chat/completions`. Models marked as Responses-API-only in the [Databricks model catalog](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models), including GPT-5.3 Codex, instead require `apiMode: "openai-responses"`. An `id` that names no real endpoint fails (see the 404 below).
 
 To store your token, run **Set OAI Compatible Multi-Provider Apikey** from the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`), choose the `databricks` provider, and paste a Databricks personal access token. The extension keeps it in VS Code’s encrypted secret storage (under `oaicopilot.apiKey.databricks`) and sends it as an `Authorization: Bearer` header.
+
+#### Sizing context and output limits
+
+The model metadata controls both the request and the amount of conversation history Copilot sends:
+
+- `context_length` is the model’s total advertised context window.
+- `max_tokens` is the output cap. The extension maps it to `max_output_tokens` in Responses mode.
+- `family` selects the closest Copilot system-prompt family.
+- `vision` tells Copilot whether it may send images.
+
+The extension advertises input capacity as `context_length` minus `max_tokens`. Set `context_length` to the full model window; do not subtract the output cap yourself.
+
+The underlying model’s maximum output is not always a good value for `max_tokens`. [Databricks reserves the requested output allowance before admitting a request](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/limits). Under the standard pay-per-token quota, Claude, GPT-5, and Gemini models generally have a 20,000 output-token-per-minute limit. A 64,000-token request can therefore receive an immediate 429 response even when the underlying model supports that output length.
+
+Use the quota-aware lab defaults in [Table 3](#tbl-databricks-oaicopilot-defaults):
+
+| Model group | Context window | Output cap | API mode |
+|----|---:|---:|----|
+| Claude Opus 5, Sonnet 5, Opus 4.8, Opus 4.6, Sonnet 4.6, Sonnet 4.5 | 1,000,000 | 16,000 | `openai` |
+| Claude Opus 4.5, Opus 4.1, Sonnet 4, Haiku 4.5 | 200,000 | 16,000 | `openai` |
+| GPT-5.4 | 1,050,000 | 16,000 | `openai` |
+| GPT-5.4 mini/nano, GPT-5.3 Codex, GPT-5.2, GPT-5.1, GPT-5 family | 400,000 | 16,000 | See note below |
+| GPT OSS 120B/20B | 131,072 | 32,768 | `openai` |
+| Gemini 2.5 Pro/Flash | 1,048,576 | 16,000 | `openai` |
+| Llama 4 Maverick | 1,000,000 | 8,192 | `openai` |
+| Llama 3.3/3.1 and Gemma 3 | 128,000 | 8,192 | `openai` |
+
+Table 3: Lab defaults for Databricks-hosted models
+
+Use `openai-responses` for GPT-5.3 Codex and any other endpoint that the current catalog marks as Responses-API-only. Use `openai` for the other models in the table. Every output cap in the table is a working default, not the underlying model’s maximum capability. The 16,000-token figure applies to the families the 20,000 output-token-per-minute limit covers, which is why it repeats across the Claude, GPT-5, and Gemini rows; the GPT OSS and Llama rows carry their own figures instead. Workspaces with higher provisioned or priority limits can raise these after checking their actual quota.
+
+For GPT-5 and GPT OSS models, `reasoning_effort` adds a selector to the Copilot model configuration and is forwarded to Databricks. Start with `medium` for general work and `high` for Codex or difficult agentic tasks. Claude and Gemini 2.5 use provider-specific thinking controls; do not copy `reasoning_effort` onto those entries.
+
+Databricks retires model endpoints over time. Before sharing or troubleshooting a configuration, compare every `id` with the current model catalog and remove entries that are no longer listed. An accurate local entry cannot make a retired endpoint work.
 
 #### Three errors, and why they stack
 
