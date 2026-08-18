@@ -330,7 +330,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-08-17 19:23:17 (PDT)</p>
+  <p class="date">Last modified: 2026-08-18 09:05:05 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -425,6 +425,11 @@
 <td>Inspect, edit, and test the current local checkout</td>
 </tr>
 <tr class="odd">
+<td><a href="https://www.cursor.com/">Cursor</a></td>
+<td>IDE</td>
+<td>Edit interactively with path-scoped <code>.cursor/rules</code> context</td>
+</tr>
+<tr class="even">
 <td><a href="https://aider.chat/">Aider</a></td>
 <td>Command line</td>
 <td>Pair locally with explicit files and Git commits</td>
@@ -2484,6 +2489,15 @@ while the selected main agent model is BYOK.</code></pre>
 <li><strong>The two filenames are not interchangeable.</strong> Claude Code <a href="https://code.claude.com/docs/en/memory">reads <code>CLAUDE.md</code>, not <code>AGENTS.md</code></a>, and recommends a <code>CLAUDE.md</code> whose first line is <code>@AGENTS.md</code> so both tools read one source. A symlink works on macOS and Linux; on Windows it needs Administrator privileges or Developer Mode, so the import is the portable choice. GitHub Copilot, by contrast, <a href="https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions">reads all of</a> <code>AGENTS.md</code>, <code>CLAUDE.md</code>, and <code>GEMINI.md</code>.</li>
 </ul>
 <p><code>AGENTS.md</code> is stewarded by the Agentic AI Foundation under the Linux Foundation, and it is worth being precise about what it standardizes: a filename, a location, and a nearest-file-wins precedence rule. Asked whether there are any required fields, its own FAQ answers that there are none — “AGENTS.md is just standard Markdown.” So two agents reading the same file are guaranteed to <em>see</em> the same text and guaranteed nothing about acting on it alike.</p>
+<h4 id="workspace-rules-and-activation-modes">Workspace Rules and Activation Modes</h4>
+<p>Instruction files and rules can be scoped globally or to a specific workspace. Google Antigravity and Cursor extend basic instruction files by supporting explicit rule activation modes and workspace rules (<code>.agents/rules/</code> or <code>.cursor/rules/*.mdc</code>):</p>
+<ul>
+<li><strong>Always On</strong>: Included unconditionally in every prompt context for the workspace (e.g.&nbsp;<code>GEMINI.md</code>, <code>AGENTS.md</code>, or <code>.mdc</code> files with <code>alwaysApply: true</code>).</li>
+<li><strong>Glob Scoped</strong>: Activated automatically only when matching specific file patterns or paths in the workspace (e.g.&nbsp;<code>globs: ["src/ui/**/*"]</code> or Copilot’s <code>applyTo</code>).</li>
+<li><strong>Model Decision</strong>: Dynamically injected into context when the model judges the rule relevant to the current task or user prompt.</li>
+<li><strong>Manual</strong>: Explicitly invoked by name or <code>@mention</code> during a session.</li>
+</ul>
+<p>In Antigravity, workspace rules live under <code>.agents/rules/</code> (project-level) with global rules in <code>~/.gemini/GEMINI.md</code>, and workspace discovery operates via directory structures (<code>.agents/skills/</code> and <code>.agents/plugins/</code>).</p>
 <h4 id="skills-and-the-commands-that-became-them">Skills, and the Commands That Became Them</h4>
 <p>The distinction most people still draw here is out of date. Claude Code’s documentation <a href="https://code.claude.com/docs/en/skills">states</a>:</p>
 <blockquote>
@@ -2610,12 +2624,12 @@ while the selected main agent model is BYOK.</code></pre>
 <tr class="odd">
 <td>Agent Skills (<code>SKILL.md</code>)</td>
 <td>yes, in format</td>
-<td>open standard with a published specification, adopted across many products</td>
+<td>open standard with a published specification, adopted across Claude Code, Gemini CLI, Codex, Copilot, and Cursor</td>
 </tr>
 <tr class="even">
 <td><code>AGENTS.md</code></td>
-<td>yes, as a filename</td>
-<td>standardizes location and precedence, not schema</td>
+<td>yes, as an open specification</td>
+<td>standardizes filename, location, and precedence across Codex, Gemini CLI, Cursor, Aider, and Copilot (Claude Code reads <code>CLAUDE.md</code> by default, or imports <code>@AGENTS.md</code>)</td>
 </tr>
 <tr class="odd">
 <td>MCP servers</td>
@@ -2623,26 +2637,31 @@ while the selected main agent model is BYOK.</code></pre>
 <td>open protocol with multiple independent clients</td>
 </tr>
 <tr class="even">
-<td><code>CLAUDE.md</code></td>
+<td><code>CLAUDE.md</code> / <code>GEMINI.md</code></td>
 <td>by courtesy</td>
-<td>a vendor filename that GitHub Copilot also reads</td>
+<td>vendor instruction files read by default in their respective CLI environments, and supported by courtesy in GitHub Copilot</td>
 </tr>
 <tr class="odd">
+<td>Cursor Rules (<code>.cursor/rules/*.mdc</code>)</td>
+<td>no</td>
+<td>Markdown Cursor (<code>.mdc</code>) files with <code>alwaysApply</code> and <code>globs</code> frontmatter, scoped to Cursor</td>
+</tr>
+<tr class="even">
 <td><code>.github/copilot-instructions.md</code></td>
 <td>no</td>
 <td>GitHub Copilot only</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>.github/instructions/*.instructions.md</code></td>
 <td>no</td>
 <td>GitHub Copilot only, and not on every Copilot surface</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>*.prompt.md</code> prompt files</td>
 <td>no</td>
 <td><a href="https://docs.github.com/en/copilot/concepts/response-customization">Copilot only</a>, and “only available in VS Code, Visual Studio, and JetBrains IDEs”</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>Hooks, settings, permissions</td>
 <td>no</td>
 <td>each harness defines its own</td>

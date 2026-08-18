@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-17 19:23:17 (PDT)
+Last modified: 2026-08-18 09:05:05 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -58,6 +58,7 @@ The following catalog is a starting point rather than an endorsement:
 | [Google Antigravity](https://antigravity.google/) | Agentic development platform | Coordinate coding tasks in a managed development workspace |
 | [Claude Code](https://www.anthropic.com/claude-code) | Terminal, IDE, and cloud | Work interactively or delegate work that returns a pull request |
 | [Gemini CLI](https://github.com/google-gemini/gemini-cli) | Command line | Inspect, edit, and test the current local checkout |
+| [Cursor](https://www.cursor.com/) | IDE | Edit interactively with path-scoped `.cursor/rules` context |
 | [Aider](https://aider.chat/) | Command line | Pair locally with explicit files and Git commits |
 
 Before connecting any platform, check:
@@ -1923,6 +1924,17 @@ Three properties matter when you write one:
 
 `AGENTS.md` is stewarded by the Agentic AI Foundation under the Linux Foundation, and it is worth being precise about what it standardizes: a filename, a location, and a nearest-file-wins precedence rule. Asked whether there are any required fields, its own FAQ answers that there are none — “AGENTS.md is just standard Markdown.” So two agents reading the same file are guaranteed to *see* the same text and guaranteed nothing about acting on it alike.
 
+#### Workspace Rules and Activation Modes
+
+Instruction files and rules can be scoped globally or to a specific workspace. Google Antigravity and Cursor extend basic instruction files by supporting explicit rule activation modes and workspace rules (`.agents/rules/` or `.cursor/rules/*.mdc`):
+
+- **Always On**: Included unconditionally in every prompt context for the workspace (e.g. `GEMINI.md`, `AGENTS.md`, or `.mdc` files with `alwaysApply: true`).
+- **Glob Scoped**: Activated automatically only when matching specific file patterns or paths in the workspace (e.g. `globs: ["src/ui/**/*"]` or Copilot’s `applyTo`).
+- **Model Decision**: Dynamically injected into context when the model judges the rule relevant to the current task or user prompt.
+- **Manual**: Explicitly invoked by name or `@mention` during a session.
+
+In Antigravity, workspace rules live under `.agents/rules/` (project-level) with global rules in `~/.gemini/GEMINI.md`, and workspace discovery operates via directory structures (`.agents/skills/` and `.agents/plugins/`).
+
 #### Skills, and the Commands That Became Them
 
 The distinction most people still draw here is out of date. Claude Code’s documentation [states](https://code.claude.com/docs/en/skills):
@@ -1999,10 +2011,11 @@ So MCP is never the answer to “how do I make the agent follow our convention�
 
 | Mechanism | Portable? | Evidence |
 |----|----|----|
-| Agent Skills (`SKILL.md`) | yes, in format | open standard with a published specification, adopted across many products |
-| `AGENTS.md` | yes, as a filename | standardizes location and precedence, not schema |
+| Agent Skills (`SKILL.md`) | yes, in format | open standard with a published specification, adopted across Claude Code, Gemini CLI, Codex, Copilot, and Cursor |
+| `AGENTS.md` | yes, as an open specification | standardizes filename, location, and precedence across Codex, Gemini CLI, Cursor, Aider, and Copilot (Claude Code reads `CLAUDE.md` by default, or imports `@AGENTS.md`) |
 | MCP servers | yes | open protocol with multiple independent clients |
-| `CLAUDE.md` | by courtesy | a vendor filename that GitHub Copilot also reads |
+| `CLAUDE.md` / `GEMINI.md` | by courtesy | vendor instruction files read by default in their respective CLI environments, and supported by courtesy in GitHub Copilot |
+| Cursor Rules (`.cursor/rules/*.mdc`) | no | Markdown Cursor (`.mdc`) files with `alwaysApply` and `globs` frontmatter, scoped to Cursor |
 | `.github/copilot-instructions.md` | no | GitHub Copilot only |
 | `.github/instructions/*.instructions.md` | no | GitHub Copilot only, and not on every Copilot surface |
 | `*.prompt.md` prompt files | no | [Copilot only](https://docs.github.com/en/copilot/concepts/response-customization), and “only available in VS Code, Visual Studio, and JetBrains IDEs” |
