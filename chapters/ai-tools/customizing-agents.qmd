@@ -78,6 +78,18 @@ its own FAQ answers that there are none ---
 So two agents reading the same file are guaranteed to *see* the same text
 and guaranteed nothing about acting on it alike.
 
+#### Workspace Rules and Activation Modes
+
+Instruction files and rules can be scoped globally or to a specific workspace.
+Google Antigravity and Cursor extend bare markdown instruction files by supporting explicit rule activation modes and workspace rules (`.agents/rules/`, `.gemini/rules/`, or `.cursor/rules/*.mdc`):
+
+- **Always On**: Included unconditionally in every prompt context for the workspace (e.g. `GEMINI.md`, `AGENTS.md`, or `.mdc` files with `alwaysApply: true`).
+- **Glob Scoped**: Activated automatically only when matching specific file patterns or paths in the workspace (e.g. `globs: ["src/ui/**/*"]` or Copilot's `applyTo`).
+- **Model Decision**: Dynamically injected into context when the model judges the rule relevant to the current task or user prompt.
+- **Manual**: Explicitly invoked by name or `@mention` during a session.
+
+In Antigravity, workspace rules live under `.agents/rules/` (project-level) or `~/.gemini/config/rules/` (user-level), and workspace discovery is configured via `.agents/skills.json` and `.agents/plugins.json`.
+
 #### Skills, and the Commands That Became Them
 
 The distinction most people still draw here is out of date.
