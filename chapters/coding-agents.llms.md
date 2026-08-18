@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-17 14:51:55 (PDT)
+Last modified: 2026-08-17 19:23:17 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -2582,6 +2582,52 @@ Two habits close this out.
 **Expect the tools to be missing until you restart.** MCP servers connect when a session starts, so a server registered mid-session is inert for the rest of it. This is a common false alarm: the registration worked, and the tools genuinely are not there yet.
 
 Finally, note which new tools can *write*. A re-run or dispatch tool can trigger CI, and permissive permission modes will not prompt before it does. Treat those the way you would treat a merge — something a human authorizes, not something an agent does in passing.
+
+# 34 Managing Gemini API Spend and Cost Optimization
+
+This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.
+
+#### Identifying Paused Projects (Project Numbers vs. Friendly Names)
+
+When a project reaches its monthly budget limit, Google sends an email notification stating that Gemini API service has been paused. These email notifications identify the affected project using its internal **numerical GCP Project Number** (e.g. `156839315029`).
+
+In contrast, [Google AI Studio](https://aistudio.google.com/projects) lists projects by their **friendly display names** (such as `ai-config Project` or `gha-project`) and alphanumeric client IDs (`gen-lang-client-...`).
+
+To find which project in AI Studio corresponds to the notification email:
+
+1.  Open [Google AI Studio Projects](https://aistudio.google.com/projects).
+2.  Locate the project corresponding to your client ID or spend alert.
+3.  Any project that has hit its monthly spend cap will have its API requests paused until the limit is updated.
+
+#### Adjusting and Unpausing Spend Caps
+
+To restore API access for a paused project:
+
+1.  Open [Google AI Studio Spend](https://aistudio.google.com/spend).
+2.  Increase the monthly spend cap dollar amount or set it to unlimited.
+3.  Save your changes. API requests will automatically resume within a few minutes.
+
+If no manual action is taken, accumulated spend resets to **\$0 on the 1st of the next month**, and API service automatically resumes up to the configured cap.
+
+#### Setting Up Google Cloud Budget Alerts
+
+To receive early warnings before reaching a spend cap:
+
+1.  Open [Google Cloud Console Billing Budgets & Alerts](https://console.cloud.google.com/billing/budgets).
+2.  Select your billing account and click **Create Budget**.
+3.  Name the budget (e.g., `Lab AI API Monthly Budget`) and select the relevant GCP projects.
+4.  Set your target monthly budget amount.
+5.  Configure trigger rules for email notifications at **50%**, **75%**, and **90%** of the budget.
+6.  Click **Finish**. You will receive email alerts before any project hits its spend cap.
+
+#### Cost Optimization Best Practices
+
+To maximize the efficiency of your API spend across local CLI sessions, subagents, and automated workflows:
+
+- **Right-Size Model Selection**: For general Gemini API, Python SDK, or custom scripts, prefer Flash-tier models (such as `gemini-2.5-flash`) over Pro-tier models (`gemini-2.5-pro`). Flash models provide a substantially lower token cost for routine search, log parsing, and background processing. For Antigravity Agent workflows (`google-antigravity`), the agent defaults to `gemini-3.7-flash` (already a Flash-tier model). Supported Antigravity Agent model options include `gemini-3.7-flash`, `gemini-3.6-flash`, `gemini-3.5-flash`, and `gemini-3.5-flash-lite`.
+- **Use Context Caching**: For workloads that repeatedly pass static context over 2,048 tokens (such as large reference docs, system prompts, or codebase indices), use Gemini Context Caching. Cached input tokens receive a substantial discount compared to standard input tokens.
+- **Use the Batch API for Non-Realtime Tasks**: For offline batch processing, evaluation suites, or background doc updates, submit requests via the Gemini Batch API to receive a 50% discount on input and output tokens.
+- **GitHub UI Diff Collapsing**: Mark dependency lockfiles (`*.lock`, `package-lock.json`, `yarn.lock`, `renv.lock`) and generated build artifacts as `linguist-generated=true` in `.gitattributes` to collapse them in GitHub’s web diff view and exclude them from repository language statistics.
 
 # References
 
