@@ -236,10 +236,11 @@ and always a candidate answer to "how do I let the agent query our issue tracker
 
 | Mechanism | Portable? | Evidence |
 |---|---|---|
-| Agent Skills (`SKILL.md`) | yes, in format | open standard with a published specification, adopted across many products |
-| `AGENTS.md` | yes, as a filename | standardizes location and precedence, not schema |
+| Agent Skills (`SKILL.md`) | yes, in format | open standard with a published specification, adopted across Claude Code, Gemini CLI, Codex, Copilot, and Cursor |
+| `AGENTS.md` | yes, as an open standard | standardizes persistent agent instructions across Codex, Gemini CLI, Cursor, Aider, and Claude Code |
 | MCP servers | yes | open protocol with multiple independent clients |
-| `CLAUDE.md` | by courtesy | a vendor filename that GitHub Copilot also reads |
+| `CLAUDE.md` / `GEMINI.md` | by courtesy / vendor convention | vendor instruction files read by default in their respective environments and supported by courtesy in others |
+| Cursor Rules (`.cursor/rules/*.mdc`) | no | Markdown Cursor (`.mdc`) files with `alwaysApply` and `globs` frontmatter, scoped to Cursor |
 | `.github/copilot-instructions.md` | no | GitHub Copilot only |
 | `.github/instructions/*.instructions.md` | no | GitHub Copilot only, and not on every Copilot surface |
 | `*.prompt.md` prompt files | no | [Copilot only](https://docs.github.com/en/copilot/concepts/response-customization), and "only available in VS Code, Visual Studio, and JetBrains IDEs" |

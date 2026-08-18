@@ -14,6 +14,7 @@ The following catalog is a starting point rather than an endorsement:
 | [Google Antigravity](https://antigravity.google/) | Agentic development platform | Coordinate coding tasks in a managed development workspace |
 | [Claude Code](https://www.anthropic.com/claude-code) | Terminal, IDE, and cloud | Work interactively or delegate work that returns a pull request |
 | [Gemini CLI](https://github.com/google-gemini/gemini-cli) | Command line | Inspect, edit, and test the current local checkout |
+| [Cursor](https://www.cursor.com/) | IDE | Edit interactively with path-scoped `.cursor/rules` context |
 | [Aider](https://aider.chat/) | Command line | Pair locally with explicit files and Git commits |
 
 Before connecting any platform, check:
