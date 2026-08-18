@@ -272,6 +272,9 @@ so pick the largest value that still leaves the weights and the cache in GPU mem
 and confirm with `ollama ps` that `PROCESSOR` still reads `100% GPU`.
 :::
 
+To avoid passing flags every time,
+set defaults in a config file at `~/.aider.conf.yml`:
+
 ```yaml
 model: ollama_chat/llama3.2:3b
 set-env:
@@ -279,7 +282,7 @@ set-env:
 
 # Automatically load shared lab instructions and agent conventions
 read:
-  - ~/Documents/GitHub/ai-config/AGENTS.md
+  - ~/path/to/ai-config/AGENTS.md
 ```
 
 ::: {.callout-caution}
@@ -305,9 +308,9 @@ aider --model ollama_chat/llama3.2:3b --gui
 
 This launches a local web application in your default browser with:
 
-* A visual chat timeline and diff review panel
-* Point-and-click file selectors for adding files into the active context
-* Speech-to-text voice input support
+- A visual chat timeline and diff review panel
+- Point-and-click file selectors for adding files into the active context
+- Speech-to-text voice input support
 
 #### Integrating Aider into VS Code
 
@@ -315,7 +318,7 @@ You can bring Aider directly into VS Code or Positron through three workflows:
 
 1. **Integrated Terminal**: Run `aider` in the built-in terminal (`` Ctrl+` ``). Edits and Git commits made by Aider immediately reflect in your editor tabs.
 2. **VS Code Simple Browser**: Run `aider --gui` in the terminal, open the Command Palette (`Cmd+Shift+P`), and run **Simple Browser: Show** with `http://localhost:8501` to dock the Aider interface side-by-side with your code.
-3. **VS Code Extension**: Install the **Aider: AI Pair Programming** extension from the marketplace for dedicated sidebar controls and editor context-menu actions.
+3. **VS Code Extension**: Install a community integration such as **Aider** (by MattFlower) or **Aider Composer** (by lee2py) from the marketplace for dedicated sidebar controls and editor context-menu actions.
 
 `aider` can also split the work between two models in "architect" mode:
 a larger model plans the change (the architect),
