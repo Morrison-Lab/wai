@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-18 09:35:25 (PDT)
+Last modified: 2026-08-18 10:01:24 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -952,6 +952,8 @@ aider --model ollama_chat/qwen2.5-coder:7b
 >
 > Context is not free. Raising a 14B model from 4k to 32k on a 24 GB M2 took its resident size from 9.5 GB to 15 GB, about 5.5 GB of key-value cache, so pick the largest value that still leaves the weights and the cache in GPU memory and confirm with `ollama ps` that `PROCESSOR` still reads `100% GPU`.
 
+To avoid passing flags every time, set defaults in a config file at `~/.aider.conf.yml`:
+
 ``` yaml
 model: ollama_chat/llama3.2:3b
 set-env:
@@ -959,7 +961,7 @@ set-env:
 
 # Automatically load shared lab instructions and agent conventions
 read:
-  - ~/Documents/GitHub/ai-config/AGENTS.md
+  - ~/path/to/ai-config/AGENTS.md
 ```
 
 > **CAUTION:**
@@ -986,7 +988,7 @@ You can bring Aider directly into VS Code or Positron through three workflows:
 
 1.  **Integrated Terminal**: Run `aider` in the built-in terminal (`` Ctrl+` ``). Edits and Git commits made by Aider immediately reflect in your editor tabs.
 2.  **VS Code Simple Browser**: Run `aider --gui` in the terminal, open the Command Palette (`Cmd+Shift+P`), and run **Simple Browser: Show** with `http://localhost:8501` to dock the Aider interface side-by-side with your code.
-3.  **VS Code Extension**: Install the **Aider: AI Pair Programming** extension from the marketplace for dedicated sidebar controls and editor context-menu actions.
+3.  **VS Code Extension**: Install a community integration such as **Aider** (by MattFlower) or **Aider Composer** (by lee2py) from the marketplace for dedicated sidebar controls and editor context-menu actions.
 
 `aider` can also split the work between two models in “architect” mode: a larger model plans the change (the architect), and a second model applies the edits (the editor).
 
