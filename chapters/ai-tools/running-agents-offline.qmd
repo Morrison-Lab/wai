@@ -272,14 +272,50 @@ so pick the largest value that still leaves the weights and the cache in GPU mem
 and confirm with `ollama ps` that `PROCESSOR` still reads `100% GPU`.
 :::
 
-To avoid passing flags every time,
-set defaults in a config file at `~/.aider.conf.yml`:
-
 ```yaml
-model: ollama_chat/qwen2.5-coder:7b
+model: ollama_chat/llama3.2:3b
 set-env:
   - OLLAMA_API_BASE=http://127.0.0.1:11434
+
+# Automatically load shared lab instructions and agent conventions
+read:
+  - ~/Documents/GitHub/ai-config/AGENTS.md
 ```
+
+::: {.callout-caution}
+#### Keep instruction files lean for small local models
+
+While cloud frontier models handle tens of thousands of tokens of system prompt easily,
+small local models (1.5B--7B) lose speed and instruction fidelity when loaded with large instruction files.
+A multi-page documentation bundle (such as a 95 KB `CLAUDE.md`) will consume most of an SLM's active context window
+and cause severe prompt-ingestion delays.
+For local SLMs,
+point `read` at a concise, focused summary file (such as `AGENTS.md` or a project-specific rules snippet)
+rather than the full multi-tool configuration suite.
+:::
+
+#### Running Aider with a Graphical User Interface (GUI)
+
+While `aider` is primarily used from the command line,
+it includes a built-in browser-based GUI:
+
+```bash
+aider --model ollama_chat/llama3.2:3b --gui
+```
+
+This launches a local web application in your default browser with:
+
+* A visual chat timeline and diff review panel
+* Point-and-click file selectors for adding files into the active context
+* Speech-to-text voice input support
+
+#### Integrating Aider into VS Code
+
+You can bring Aider directly into VS Code or Positron through three workflows:
+
+1. **Integrated Terminal**: Run `aider` in the built-in terminal (`` Ctrl+` ``). Edits and Git commits made by Aider immediately reflect in your editor tabs.
+2. **VS Code Simple Browser**: Run `aider --gui` in the terminal, open the Command Palette (`Cmd+Shift+P`), and run **Simple Browser: Show** with `http://localhost:8501` to dock the Aider interface side-by-side with your code.
+3. **VS Code Extension**: Install the **Aider: AI Pair Programming** extension from the marketplace for dedicated sidebar controls and editor context-menu actions.
 
 `aider` can also split the work between two models in "architect" mode:
 a larger model plans the change (the architect),
