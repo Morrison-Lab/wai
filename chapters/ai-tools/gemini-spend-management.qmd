@@ -15,14 +15,14 @@ and alphanumeric client IDs (`gen-lang-client-...`).
 To find which project in AI Studio corresponds to the notification email:
 
 1. Open [Google AI Studio Projects](https://aistudio.google.com/projects).
-2. Locate the project listed with a **Cap hit** indicator or spend alert.
-3. Any project with a **Cap hit** indicator has reached its configured monthly limit and has its API requests paused.
+2. Locate the project corresponding to your client ID or spend alert.
+3. Any project that has hit its monthly spend cap will have its API requests paused until the limit is updated.
 
 #### Adjusting and Unpausing Spend Caps
 
 To restore API access for a paused project:
 
-1. Open [Google AI Studio Spend](https://aistudio.google.com/spend) or select **Adjust spend cap** on the [Projects page](https://aistudio.google.com/projects).
+1. Open [Google AI Studio Spend](https://aistudio.google.com/spend).
 2. Increase the monthly spend cap dollar amount or set it to unlimited.
 3. Save your changes. API requests will automatically resume within a few minutes.
 
@@ -46,7 +46,7 @@ To receive early warnings before reaching a spend cap:
 To maximize the efficiency of your API spend across local CLI sessions, subagents, and automated workflows:
 
 * **Right-Size Model Selection**:
-  For general Gemini API, Python SDK, or custom scripts, prefer Flash-tier models (such as `gemini-2.5-flash` or `gemini-1.5-flash`) over Pro-tier models (`gemini-2.5-pro`).
+  For general Gemini API, Python SDK, or custom scripts, prefer Flash-tier models (such as `gemini-2.5-flash`) over Pro-tier models (`gemini-2.5-pro`).
   Flash models provide a substantially lower token cost for routine search, log parsing, and background processing.
   For Antigravity Agent workflows (`google-antigravity`), the agent defaults to `gemini-3.7-flash` (already a Flash-tier model).
   Supported Antigravity Agent model options include `gemini-3.7-flash`, `gemini-3.6-flash`, `gemini-3.5-flash`, and `gemini-3.5-flash-lite`.
