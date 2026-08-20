@@ -1,0 +1,57 @@
+
+[OpenCode](https://opencode.ai) is an open-source coding agent
+that runs in your terminal, reads your project, edits files, and runs commands.
+It supports local models through OpenAI-compatible providers.
+
+This section assumes Ollama is already installed
+and that you have pulled a code-focused model ---
+see @sec-ai-offline for both,
+including the Linux and Windows install paths.
+
+Verify the server is running:
+
+```bash
+curl -s http://localhost:11434/api/version
+# {"version":"0.1.x"}
+```
+
+On macOS, `brew services start ollama` registers a launchd agent
+so the server comes back automatically at login
+rather than needing a manual start each session.
+
+**Install the model-discovery plugin:**
+
+Rather than hand-coding each model into `opencode.json`,
+use the [`opencode-local-ollama`](https://www.npmjs.com/package/opencode-local-ollama) plugin,
+which discovers your local Ollama models automatically on startup:
+
+```bash
+opencode plugin --global opencode-local-ollama
+```
+
+This writes to `~/.config/opencode/opencode.json`:
+
+```json
+{
+  "plugin": ["opencode-local-ollama"]
+}
+```
+
+Restart OpenCode and run `/models` to see your local models listed
+alongside any cloud providers.
+The plugin reads from Ollama's `/api/tags` and `/api/show` endpoints,
+so newly pulled models appear on the next restart with no config edits.
+
+::: {.callout-note}
+#### Alternative: multi-backend local provider
+
+If you also run LM Studio, llama.cpp, or vLLM alongside Ollama,
+the [`opencode-local-provider`](https://www.npmjs.com/package/opencode-local-provider) plugin
+auto-detects all of them under a single `local` provider
+and probes each at runtime for loaded models.
+Install it with `opencode plugin --global opencode-local-provider`.
+:::
+
+A lightweight hand-written provider block in your project's `opencode.json`
+still works if you prefer explicit control over model names and context limits,
+but the plugin removes the need to keep that list in sync with `ollama pull`.

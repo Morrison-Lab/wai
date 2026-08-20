@@ -42,6 +42,7 @@ OSS
 Ollama
 Ollama's
 OpenAI
+OpenCode
 OpenDevin
 OpenHands
 PEFT
@@ -73,14 +74,17 @@ gh
 github
 glitchy
 io
+launchd
 lee2py
 lintr
+llama
 mergeability
 mergeable
 mistyped
 nano
 navbar
 omics
+opencode
 orchestrator
 orchestrators
 orking
@@ -106,6 +110,7 @@ transcriptomics
 translational
 uarto
 ucdavis
+vLLM
 webhook
 worktree
 worktrees
