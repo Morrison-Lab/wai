@@ -16,8 +16,8 @@ Keep publish rendering all configured formats and fix underlying failures instea
 Path-scoped rules live in [`.github/instructions/`](instructions/) and attach
 automatically (via each file's `applyTo:` glob) when you edit matching files:
 
-- [`quarto-content.instructions.md`](instructions/quarto-content.instructions.md) — `.qmd` / `.Rmd` content
-- [`r-and-config.instructions.md`](instructions/r-and-config.instructions.md) — `.R`, `.yml`, `.yaml`
+- [`quarto-content.instructions.md`](instructions/quarto-content.instructions.md) --- `.qmd` / `.Rmd` content
+- [`r-and-config.instructions.md`](instructions/r-and-config.instructions.md) --- `.R`, `.yml`, `.yaml`
 
 ## Style Guidelines
 
