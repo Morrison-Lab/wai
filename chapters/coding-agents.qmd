@@ -81,6 +81,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/running-agents-offline.qmd >}}
 
+# Connecting OpenCode to Local Models {#sec-ai-opencode-ollama}
+
+{{< include ai-tools/opencode-ollama.qmd >}}
+
 # Small, Local Models for Autonomous Agentic Coding {#sec-ai-small-local-models}
 
 {{< include ai-tools/small-local-models-agentic.qmd >}}
