@@ -19,7 +19,7 @@ Quarto supports various image formats:
 - JPEG (`.jpg`, `.jpeg`)
 - SVG (`.svg`)
 - GIF (`.gif`)
-- PDF (`.pdf`) — for LaTeX/PDF output
+- PDF (`.pdf`) -- for LaTeX/PDF output
 
 ## Referencing images
 
