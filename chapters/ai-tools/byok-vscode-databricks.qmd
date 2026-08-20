@@ -7,7 +7,7 @@ which expose an OpenAI-compatible API,
 through the community extension
 [`oai-compatible-copilot`](https://marketplace.visualstudio.com/items?itemName=johnny-zhao.oai-compatible-copilot).
 
-This section describes the wiring and three errors you are likely to hit.
+This section describes the wiring and four errors you are likely to hit.
 
 #### Wiring the extension to Databricks
 
@@ -22,8 +22,9 @@ Point the extension at it in VS Code `settings.json`:
     "id": "databricks-claude-opus-5",
     "owned_by": "databricks",
     "family": "claude",
-    "context_length": 1000000,
+    "context_length": 64000,
     "max_tokens": 16000,
+    "delay": 15000,
     "vision": true,
     "apiMode": "openai"
   },
@@ -31,8 +32,9 @@ Point the extension at it in VS Code `settings.json`:
     "id": "databricks-gpt-5-4",
     "owned_by": "databricks",
     "family": "gpt-5.4",
-    "context_length": 1050000,
+    "context_length": 64000,
     "max_tokens": 16000,
+    "delay": 15000,
     "reasoning_effort": "medium",
     "vision": true,
     "apiMode": "openai"
@@ -41,8 +43,9 @@ Point the extension at it in VS Code `settings.json`:
     "id": "databricks-gpt-5-3-codex",
     "owned_by": "databricks",
     "family": "gpt-5.3-codex",
-    "context_length": 400000,
+    "context_length": 64000,
     "max_tokens": 16000,
+    "delay": 15000,
     "reasoning_effort": "high",
     "vision": true,
     "apiMode": "openai-responses"
@@ -75,7 +78,9 @@ and sends it as an `Authorization: Bearer` header.
 The model metadata controls both the request
 and the amount of conversation history Copilot sends:
 
-- `context_length` is the model's total advertised context window.
+- `context_length` is the total context window that the extension advertises
+  to Copilot.
+  It may deliberately be smaller than the provider's maximum window.
 - `max_tokens` is the output cap.
   The extension maps it to `max_output_tokens` in Responses mode.
 - `family` selects the closest Copilot system-prompt family.
@@ -83,8 +88,11 @@ and the amount of conversation history Copilot sends:
 
 The extension advertises input capacity as `context_length` minus
 `max_tokens`.
-Set `context_length` to the full model window;
-do not subtract the output cap yourself.
+For example,
+`context_length: 64000` with `max_tokens: 16000`
+allows Copilot to send about 48,000 input tokens.
+Use the full provider window only when the workspace quota can sustain
+repeated agent turns at that size.
 
 The underlying model's maximum output is not always a good value for
 `max_tokens`.
@@ -95,32 +103,58 @@ output-token-per-minute limit.
 A 64,000-token request can therefore receive an immediate 429 response
 even when the underlying model supports that output length.
 
-Use the quota-aware lab defaults in @tbl-databricks-oaicopilot-defaults:
+Use the quota-aware lab defaults in @tbl-databricks-oaicopilot-defaults.
+The context column is the operational value to put in `settings.json`,
+not the model's maximum capability.
 
-| Model group | Context window | Output cap | API mode |
-|---|---:|---:|---|
-| Claude Opus 5, Sonnet 5, Opus 4.8, Opus 4.6, Sonnet 4.6, Sonnet 4.5 | 1,000,000 | 16,000 | `openai` |
-| Claude Opus 4.5, Opus 4.1, Sonnet 4, Haiku 4.5 | 200,000 | 16,000 | `openai` |
-| GPT-5.4 | 1,050,000 | 16,000 | `openai` |
-| GPT-5.4 mini/nano, GPT-5.3 Codex, GPT-5.2, GPT-5.1, GPT-5 family | 400,000 | 16,000 | See note below |
-| GPT OSS 120B/20B | 131,072 | 32,768 | `openai` |
-| Gemini 2.5 Pro/Flash | 1,048,576 | 16,000 | `openai` |
-| Llama 4 Maverick | 1,000,000 | 8,192 | `openai` |
-| Llama 3.3/3.1 and Gemma 3 | 128,000 | 8,192 | `openai` |
+| Model group | Workspace ITPM / OTPM | OAICopilot context | Output cap | Delay |
+|---|---:|---:|---:|---:|
+| GPT-5.6 Sol/Terra/Luna | 2,000,000 / 200,000 | 400,000 | 16,000 | 0 ms |
+| Claude Opus/Sonnet/Haiku | 200,000 / 20,000 | 64,000 | 16,000 | 15,000 ms |
+| GPT-5.5 through GPT-5 | 200,000 / 20,000 | 64,000 | 16,000 | 15,000 ms |
+| Gemini | 200,000 / 20,000 | 64,000 | 16,000 | 15,000 ms |
+| Inkling | 200,000 / 10,000 | 64,000 | 8,192 | 15,000 ms |
+| GPT OSS 120B/20B | 1,000,000 / 100,000 | 131,072 | 25,000 | 0 ms |
+| Llama 4 Maverick | 1,000,000 / 100,000 | 128,000 | 8,192 | 0 ms |
+| Llama 3.3/3.1 and Gemma 3 | 1,000,000 / 100,000 | 128,000 | 8,192 | 0 ms |
 
 : Lab defaults for Databricks-hosted models {#tbl-databricks-oaicopilot-defaults}
 
 Use `openai-responses` for GPT-5.3 Codex
 and any other endpoint that the current catalog marks as Responses-API-only.
 Use `openai` for the other models in the table.
-Every output cap in the table is a working default,
+Add the `delay` value to each affected model entry.
+The extension applies this model-specific pause between requests;
+models without it fall back to the global `oaicopilot.delay` value.
+Every context and output cap in the table is a working default,
 not the underlying model's maximum capability.
-The 16,000-token figure applies to the families the 20,000
-output-token-per-minute limit covers, which is why it repeats across the
-Claude, GPT-5, and Gemini rows;
-the GPT OSS and Llama rows carry their own figures instead.
 Workspaces with higher provisioned or priority limits can raise these
 after checking their actual quota.
+
+The 64,000/16,000 combination limits one prompt to about 48,000 input tokens.
+Together with 15-second pacing,
+that keeps one busy client near rather than far above a 200,000 ITPM tier.
+It is not a guarantee:
+the quota is shared across the workspace,
+prompt sizes vary,
+and concurrent users or clients consume the same allowance.
+Increase the delay or reduce `context_length` further when 429s continue.
+
+Use longer retry spacing than the extension's one-second default:
+
+```json
+"oaicopilot.retry": {
+  "enabled": true,
+  "max_attempts": 3,
+  "interval_ms": 15000,
+  "status_codes": []
+}
+```
+
+The extension already retries 429 responses
+and doubles this base interval on successive attempts.
+The longer starting interval gives Databricks' sliding token window time to
+recover.
 
 For GPT-5 and GPT OSS models,
 `reasoning_effort` adds a selector to the Copilot model configuration
@@ -136,7 +170,7 @@ compare every `id` with the current model catalog
 and remove entries that are no longer listed.
 An accurate local entry cannot make a retired endpoint work.
 
-#### Three errors, and why they stack
+#### Four errors, and why they stack
 
 These failures sit on top of each other:
 fixing one uncovers the next,
@@ -201,6 +235,35 @@ and re-run **Set OAI Compatible Multi-Provider Apikey**.
 Prefer a long-lived personal access token to avoid frequent re-authentication.
 No window reload is needed;
 the extension reads the token on each request.
+
+**4. `[429] REQUEST_LIMIT_EXCEEDED`**
+
+```text
+[429] Too Many Requests
+REQUEST_LIMIT_EXCEEDED: Exceeded workspace input tokens per minute rate limit
+for databricks-claude-sonnet-5.
+```
+
+This example is an input-tokens-per-minute (ITPM) failure.
+Lowering only `max_tokens` does not fix it:
+Databricks counts the actual prompt and conversation history against ITPM,
+while `max_tokens` reserves output-tokens-per-minute (OTPM) capacity.
+
+For an ITPM error:
+
+1. lower the model's operational `context_length`;
+2. add or increase its model-specific `delay`;
+3. lengthen `oaicopilot.retry.interval_ms`;
+4. start a new conversation when accumulated history is no longer useful;
+5. use GitHub's utility model for background chores when your Copilot plan
+   allows it; and
+6. ask the Databricks account team for a higher tier,
+   or use provisioned throughput for sustained workloads.
+
+For an OTPM error,
+lower `max_tokens` first.
+For either type,
+the error can persist until the sliding rate-limit window recovers.
 
 :::: {.callout-tip}
 A quick way to tell 404 from 403:
