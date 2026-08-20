@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-20 15:37:40 (PDT)
+Last modified: 2026-08-20 16:04:04 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -1801,6 +1801,8 @@ For GPT-5 and GPT OSS models, `reasoning_effort` adds a selector to the Copilot 
 
 Databricks retires model endpoints over time. Before sharing or troubleshooting a configuration, compare every `id` with the current model catalog and remove entries that are no longer listed. An accurate local entry cannot make a retired endpoint work.
 
+An individual endpoint page may also carry a banner reading “This serving endpoint is deprecated. Foundation models are now managed in Unity AI Gateway.” That is a statement about where Databricks intends to manage these models, not an outage: the `/serving-endpoints` path keeps serving while the banner is up. Unity AI Gateway’s **LLMs** and **Providers** tabs are in beta, and they are inactive in a workspace that has not been enabled for them. In that state there is no gateway base URL to move to, and the configuration in this section is still the working one. Re-check when those tabs become active. Observed 2026-08-20.
+
 #### Four errors that report themselves, and why they stack
 
 These failures sit on top of each other: fixing one uncovers the next, so work through them top-down.
@@ -1860,6 +1862,14 @@ For an OTPM error, lower `max_tokens` first. For either type, the error can pers
 > **TIP:**
 >
 > A quick way to tell 404 from 403: a 404 means the request authenticated but named a missing endpoint (a model-name or configuration problem), while a 403 means the token itself was rejected (an authentication problem).
+
+> **IMPORTANT:**
+>
+> Both the 404 and the 403 above assume the request reached the workspace you think it did. A `baseUrl` whose `dbc-` host belongs to a *different* workspace produces those same two errors and survives every remedy listed for them. The endpoint name is real and the token is valid; neither one is in the workspace being asked. Issuing a fresh token then fails in exactly the same way, indefinitely.
+>
+> Compare the host in `oaicopilot.baseUrl` against the invocations URL shown at the top of the endpoint’s page in the Databricks console (**Serving**, then the endpoint). Check every per-model `baseUrl` as well: each model entry may carry its own copy of the host, so a single corrected setting can leave dozens of stale ones behind it.
+>
+> Observed 2026-08-20, where a stale host appeared 42 times in one `settings.json`: once at the top level and once in each of 41 model entries. A second VS Code installation on the same machine carried the same stale host in its own copy of the setting.
 
 #### Three failures that name no error in the chat panel
 
