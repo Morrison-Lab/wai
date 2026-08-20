@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-20 01:02:59 (PDT)
+Last modified: 2026-08-20 01:17:30 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -1236,14 +1236,7 @@ Check the block itself first, as above. A test that passes because the proxy was
 
 [OpenCode](https://opencode.ai) is an open-source coding agent that runs in your terminal, reads your project, edits files, and runs commands. It supports local models through OpenAI-compatible providers.
 
-**Install Ollama and start it on boot:**
-
-``` bash
-brew install ollama
-brew services start ollama
-```
-
-The `brew services` command registers a macOS launchd agent that starts Ollama automatically at login, keeps it running in the background, and starts it immediately without waiting for a reboot.
+This section assumes Ollama is already installed and that you have pulled a code-focused model — see [Section 17](#sec-ai-offline) for both, including the Linux and Windows install paths.
 
 Verify the server is running:
 
@@ -1252,11 +1245,7 @@ curl -s http://localhost:11434/api/version
 # {"version":"0.1.x"}
 ```
 
-**Pull a model:**
-
-``` bash
-ollama pull qwen2.5-coder:7b
-```
+On macOS, `brew services start ollama` registers a launchd agent so the server comes back automatically at login rather than needing a manual start each session.
 
 **Install the model-discovery plugin:**
 
