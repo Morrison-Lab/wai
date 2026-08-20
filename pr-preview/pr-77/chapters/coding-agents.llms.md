@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-20 00:19:13 (PDT)
+Last modified: 2026-08-20 01:11:58 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -1266,7 +1266,7 @@ Rather than hand-coding each model into `opencode.json`, use the [`opencode-loca
 opencode plugin --global opencode-local-ollama
 ```
 
-This writes to `~/.config/opencode/opencode.jsonc`:
+This writes to `~/.config/opencode/opencode.json`:
 
 ``` json
 {
