@@ -12,29 +12,29 @@ assistants: what they are, how to use them, and the policies lab members
 follow. The notes are published as a [Quarto](https://quarto.org/)
 website at <https://d-morrison.github.io/wai/>.
 
-The content was migrated out of the “Working with AI” chapter of the
+The content was migrated out of the "Working with AI" chapter of the
 [UCD-SERG Lab Manual](https://ucd-serg.github.io/lab-manual/), which had
-grown large enough to deserve a dedicated site. For the lab’s broader
+grown large enough to deserve a dedicated site. For the lab's broader
 coding, reproducibility, and collaboration conventions, see the lab
 manual itself.
 
 > **Technology in rapid evolution.** As of early 2026, AI
 > coding-assistant technology is changing extremely rapidly, and we are
 > still figuring out how to use these tools well. Treat everything here
-> as provisional — best practices and capabilities keep moving.
+> as provisional -- best practices and capabilities keep moving.
 
 ## Contents
 
 The site is organized into three main chapters:
 
-- **[Policies for Using AI](chapters/ai-use-policies.qmd)** —
+- **[Policies for Using AI](chapters/ai-use-policies.qmd)** --
   responsibility for validation, disclosure, attribution, and using AI
   for journal articles
-- **[Coding Agents](chapters/coding-agents.qmd)** — what language
+- **[Coding Agents](chapters/coding-agents.qmd)** -- what language
   models, coding agents, and harnesses are; how to work with them; their
   benefits and hazards; and how to configure your environment
 - **[Pull-Request Workflow with
-  Agents](chapters/pr-workflow-with-agents.qmd)** — filing issues,
+  Agents](chapters/pr-workflow-with-agents.qmd)** -- filing issues,
   claiming work, and driving a pull request to a clean, mergeable state
 
 Supporting material lives under `chapters/ai-tools/`.
@@ -49,7 +49,7 @@ Word document (`.docx`).
 ## Building locally
 
 You need [Quarto](https://quarto.org/docs/get-started/) installed. This
-project uses Quarto’s
+project uses Quarto's
 [`llms-txt`](https://quarto.org/docs/websites/website-llms.html) website
 option, which requires **Quarto 1.9.36 or newer**.
 
@@ -99,12 +99,13 @@ conventions and CI checks.
 
 ## Contributing
 
-Contributions are welcome — see [`CONTRIBUTING.md`](CONTRIBUTING.md) for
-the branch-and-PR workflow, and open an issue to discuss larger changes.
+Contributions are welcome -- see [`CONTRIBUTING.md`](CONTRIBUTING.md)
+for the branch-and-PR workflow, and open an issue to discuss larger
+changes.
 
 ## License
 
-Released under the MIT License — see [`LICENSE`](LICENSE).
+Released under the MIT License -- see [`LICENSE`](LICENSE).
 
 ## Acknowledgments
 
