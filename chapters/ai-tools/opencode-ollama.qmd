@@ -37,7 +37,7 @@ which discovers your local Ollama models automatically on startup:
 opencode plugin --global opencode-local-ollama
 ```
 
-This writes to `~/.config/opencode/opencode.jsonc`:
+This writes to `~/.config/opencode/opencode.json`:
 
 ```json
 {
