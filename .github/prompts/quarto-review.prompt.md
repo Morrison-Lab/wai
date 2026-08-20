@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: Quarto-first PR review for this repository — content, rendering correctness, links, and validation gaps. Use when preparing or checking a PR that touches pages, rendering logic, or workflow files.
+description: Quarto-first PR review for this repository -- content, rendering correctness, links, and validation gaps. Use when preparing or checking a PR that touches pages, rendering logic, or workflow files.
 ---
 
 Review the requested changes as a Quarto-first code review for this repository.
@@ -20,12 +20,12 @@ Review checklist:
 2. Lists of three or more items use bullets with a blank line above them.
 3. `code-fold: true` is used where the *output* is the point and avoided on
    tutorial code; chunk options use `#|` directives, not inline `r, opt = val`.
-4. Narrative text does not hard-code computed values — they are computed in a
+4. Narrative text does not hard-code computed values -- they are computed in a
    chunk and referenced with inline R.
 5. Citations and attribution are present where adapted content or factual
    claims appear, and only sources in `references.bib` are used.
 6. No new R package or Quarto extension is added without a clear reason (this is
-   a template — every dependency lands in every downstream book).
+   a template -- every dependency lands in every downstream book).
 7. No generated files are edited (`README.md` from `README.Rmd`; `_site/`,
    `_freeze/`, `.quarto/`), and spell/link-check failures are fixed at the
    source (wordlist or content), not suppressed.

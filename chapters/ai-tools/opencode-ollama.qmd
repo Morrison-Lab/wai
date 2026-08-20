@@ -1,6 +1,4 @@
 
-#### Connecting OpenCode to Ollama
-
 [OpenCode](https://opencode.ai) is an open-source coding agent
 that runs in your terminal, reads your project, edits files, and runs commands.
 It supports local models through OpenAI-compatible providers.
@@ -13,12 +11,8 @@ brew services start ollama
 ```
 
 The `brew services` command registers a macOS launchd agent
-that starts Ollama automatically at login and keeps it running in the background.
-To start it immediately without waiting for a reboot:
-
-```bash
-brew services start ollama
-```
+that starts Ollama automatically at login, keeps it running in the background,
+and starts it immediately without waiting for a reboot.
 
 Verify the server is running:
 
