@@ -9,7 +9,7 @@ the template) with:
 .github/scripts/apply-rulesets.sh owner/repo      # explicit target
 ```
 
-The script is idempotent — re-running it updates a ruleset in place when
+The script is idempotent --- re-running it updates a ruleset in place when
 one with the same `name` already exists, rather than creating a duplicate.
 
 Requirements:
@@ -22,13 +22,13 @@ Requirements:
 
 Applies to the default branch:
 
-- **Required PR before merging** — no direct pushes to `main`.
+- **Required PR before merging** --- no direct pushes to `main`.
 - **No force-pushes, no branch deletion.**
 - **Copilot code review** runs on every push and on draft PRs.
-- **No mandatory approval by default** — PRs require no approvals to merge
+- **No mandatory approval by default** --- PRs require no approvals to merge
   (`required_approving_review_count: 0`); raise this under Settings → Rules →
   Rulesets if you want a review gate.
-- **Bypass** in `pull_request` mode for the Maintain role (role id 2) —
+- **Bypass** in `pull_request` mode for the Maintain role (role id 2) ---
   Maintainers can merge pull requests even when the ruleset's PR requirements
   are not otherwise satisfied, but cannot push directly.
 
