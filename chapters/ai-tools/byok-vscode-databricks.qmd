@@ -305,8 +305,10 @@ Check every per-model `baseUrl` as well:
 each model entry may carry its own copy of the host,
 so a single corrected setting can leave dozens of stale ones behind it.
 
-Observed 2026-08-20, where a stale host appeared in 42 places across two
-VS Code installations that shared one synced `settings.json`.
+Observed 2026-08-20, where a stale host appeared 42 times in one
+`settings.json`: once at the top level and once in each of 41 model entries.
+A second VS Code installation on the same machine carried the same stale host
+in its own copy of the setting.
 ::::
 
 #### Three failures that name no error in the chat panel
