@@ -135,6 +135,76 @@ div.csl-indent {
   }
 }</script>
 <style>
+div.callout-remark.callout {
+  border-left-color: #AD1457;
+}
+div.callout-remark.callout-style-default .callout-header {
+  background-color: rgba(173, 20, 87, 0.13);
+}
+div.callout-remark .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-remark.callout-style-default .callout-icon::before, div.callout-remark.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23AD1457" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+div.callout-def.callout {
+  border-left-color: #1B5E20;
+}
+div.callout-def.callout-style-default .callout-header {
+  background-color: rgba(27, 94, 32, 0.13);
+}
+div.callout-def .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-def.callout-style-default .callout-icon::before, div.callout-def.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%231B5E20" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+div.callout-cnj.callout {
+  border-left-color: #558B2F;
+}
+div.callout-cnj.callout-style-default .callout-header {
+  background-color: rgba(85, 139, 47, 0.13);
+}
+div.callout-cnj .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-cnj.callout-style-default .callout-icon::before, div.callout-cnj.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23558B2F" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+div.callout-exm.callout {
+  border-left-color: #6A1B9A;
+}
+div.callout-exm.callout-style-default .callout-header {
+  background-color: rgba(106, 27, 154, 0.13);
+}
+div.callout-exm .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-exm.callout-style-default .callout-icon::before, div.callout-exm.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%236A1B9A" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+div.callout-exr.callout {
+  border-left-color: #FFA500;
+}
+div.callout-exr.callout-style-default .callout-header {
+  background-color: rgba(255, 165, 0, 0.13);
+}
+div.callout-exr .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-exr.callout-style-default .callout-icon::before, div.callout-exr.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23FFA500" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+div.callout-cor.callout {
+  border-left-color: #00838F;
+}
+div.callout-cor.callout-style-default .callout-header {
+  background-color: rgba(0, 131, 143, 0.13);
+}
+div.callout-cor .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-cor.callout-style-default .callout-icon::before, div.callout-cor.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%2300838F" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+div.callout-proof.callout {
+  border-left-color: #37474F;
+}
+div.callout-proof.callout-style-default .callout-header {
+  background-color: rgba(55, 71, 79, 0.13);
+}
+div.callout-proof .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-proof.callout-style-default .callout-icon::before, div.callout-proof.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%2337474F" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
 div.callout-lem.callout {
   border-left-color: #1565C0;
 }
@@ -155,36 +225,6 @@ div.callout-prp .callout-toggle::before {  background-image: url('data:image/svg
 div.callout-prp.callout-style-default .callout-icon::before, div.callout-prp.callout-titled .callout-icon::before {
   background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23827717" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
 }
-div.callout-cor.callout {
-  border-left-color: #00838F;
-}
-div.callout-cor.callout-style-default .callout-header {
-  background-color: rgba(0, 131, 143, 0.13);
-}
-div.callout-cor .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
-div.callout-cor.callout-style-default .callout-icon::before, div.callout-cor.callout-titled .callout-icon::before {
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%2300838F" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
-}
-div.callout-def.callout {
-  border-left-color: #1B5E20;
-}
-div.callout-def.callout-style-default .callout-header {
-  background-color: rgba(27, 94, 32, 0.13);
-}
-div.callout-def .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
-div.callout-def.callout-style-default .callout-icon::before, div.callout-def.callout-titled .callout-icon::before {
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%231B5E20" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
-}
-div.callout-remark.callout {
-  border-left-color: #AD1457;
-}
-div.callout-remark.callout-style-default .callout-header {
-  background-color: rgba(173, 20, 87, 0.13);
-}
-div.callout-remark .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
-div.callout-remark.callout-style-default .callout-icon::before, div.callout-remark.callout-titled .callout-icon::before {
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23AD1457" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
-}
 div.callout-solution.callout {
   border-left-color: #4E342E;
 }
@@ -194,46 +234,6 @@ div.callout-solution.callout-style-default .callout-header {
 div.callout-solution .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
 div.callout-solution.callout-style-default .callout-icon::before, div.callout-solution.callout-titled .callout-icon::before {
   background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%234E342E" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
-}
-div.callout-proof.callout {
-  border-left-color: #37474F;
-}
-div.callout-proof.callout-style-default .callout-header {
-  background-color: rgba(55, 71, 79, 0.13);
-}
-div.callout-proof .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
-div.callout-proof.callout-style-default .callout-icon::before, div.callout-proof.callout-titled .callout-icon::before {
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%2337474F" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
-}
-div.callout-cnj.callout {
-  border-left-color: #558B2F;
-}
-div.callout-cnj.callout-style-default .callout-header {
-  background-color: rgba(85, 139, 47, 0.13);
-}
-div.callout-cnj .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
-div.callout-cnj.callout-style-default .callout-icon::before, div.callout-cnj.callout-titled .callout-icon::before {
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23558B2F" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
-}
-div.callout-exr.callout {
-  border-left-color: #FFA500;
-}
-div.callout-exr.callout-style-default .callout-header {
-  background-color: rgba(255, 165, 0, 0.13);
-}
-div.callout-exr .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
-div.callout-exr.callout-style-default .callout-icon::before, div.callout-exr.callout-titled .callout-icon::before {
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23FFA500" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
-}
-div.callout-exm.callout {
-  border-left-color: #6A1B9A;
-}
-div.callout-exm.callout-style-default .callout-header {
-  background-color: rgba(106, 27, 154, 0.13);
-}
-div.callout-exm .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
-div.callout-exm.callout-style-default .callout-icon::before, div.callout-exm.callout-titled .callout-icon::before {
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%236A1B9A" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
 }
 </style>
 
@@ -561,7 +561,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified: <mark class="preview-text-changed">2026-08-19</mark> <mark class="preview-text-changed">19:30:02</mark> (PDT)</p>
+      <p class="date">Last modified: <mark class="preview-text-changed">2026-08-20</mark> <mark class="preview-text-changed">01:02:59</mark> (PDT)</p>
     </div>
   </div>
   
@@ -1901,26 +1901,23 @@ Caution
 </section>
 <section id="sec-ai-opencode-ollama" class="level1" data-number="18">
 <h1 data-number="18"><span class="header-section-number"><mark class="preview-text-added">18</mark></span><mark class="preview-text-added"> </mark>Connecting <mark class="preview-text-changed">OpenCode</mark> to <mark class="preview-text-changed">Local Models</mark></h1>
-<section id="connecting-opencode-to-ollama" class="level4">
-<h4 class="anchored" data-anchor-id="connecting-opencode-to-ollama">Connecting <mark class="preview-text-changed">OpenCode</mark> to Ollama</h4>
 <p><mark class="preview-element-added"><a href="https://opencode.ai">OpenCode</a> is an open-source coding agent that runs in your terminal, reads your project, edits files, and runs commands. It supports local models through OpenAI-compatible providers.</mark></p>
 <p><strong>Install <mark class="preview-text-changed">Ollama and start it on boot:</mark></strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode bash code-with-copy"><mark class="preview-element-added"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install ollama</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> services start ollama</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The <code>brew services</code> command registers a macOS launchd agent that starts Ollama automatically at login and keeps it running in the background. To start it immediately without waiting for a reboot:</mark></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> services start ollama</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Verify the server is running:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode bash code-with-copy"><mark class="preview-element-added"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-s</span> http://localhost:11434/api/version</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co"># {"version":"0.1.x"}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>brew services</code> command registers a macOS launchd agent that starts Ollama automatically at login, keeps it running in the background, and starts it immediately without waiting for a reboot.</mark></p>
+<p>Verify the <mark class="preview-text-changed">server is running:</mark></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode bash code-with-copy"><mark class="preview-element-added"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-s</span> http://localhost:11434/api/version</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co"># {"version":"0.1.x"}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Pull a model:</strong></mark></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode bash code-with-copy"><mark class="preview-element-added"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ollama</span> pull qwen2.5-coder:7b</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode bash code-with-copy"><mark class="preview-element-added"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ollama</span> pull qwen2.5-coder:7b</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Install the model-discovery plugin:</strong></mark></p>
 <p><mark class="preview-element-added">Rather than hand-coding each model into <code>opencode.json</code>, use the <a href="https://www.npmjs.com/package/opencode-local-ollama"><code>opencode-local-ollama</code></a> plugin, which discovers your local Ollama models automatically on startup:</mark></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode bash code-with-copy"><mark class="preview-element-added"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="ex">opencode</span> plugin <span class="at">--global</span> opencode-local-ollama</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This writes to <code>~/.config/opencode/opencode.jsonc</code>:</mark></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode json code-with-copy"><mark class="preview-element-added"><code class="sourceCode json"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"plugin"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"opencode-local-ollama"</span><span class="ot">]</span></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode bash code-with-copy"><mark class="preview-element-added"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="ex">opencode</span> plugin <span class="at">--global</span> opencode-local-ollama</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This writes to <code>~/.config/opencode/opencode.json</code>:</mark></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode json code-with-copy"><mark class="preview-element-added"><code class="sourceCode json"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"plugin"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"opencode-local-ollama"</span><span class="ot">]</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Restart OpenCode and run <code>/models</code> to see your local models listed alongside any cloud providers. The plugin reads from Ollama’s <code>/api/tags</code> and <code>/api/show</code> endpoints, so newly pulled models appear on the next restart with no config edits.</mark></p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1936,7 +1933,6 @@ Caution
 </div>
 </div>
 <p><mark class="preview-element-added">A lightweight hand-written provider block in your project’s <code>opencode.json</code> still works if you prefer explicit control over model names and context limits, but the plugin removes the need to keep that list in sync with <code>ollama pull</code>.</mark></p>
-</section>
 </section>
 <section id="sec-ai-small-local-models" class="level1" data-number="19">
 <h1 data-number="19"><span class="header-section-number"><mark class="preview-text-changed">19</mark></span> Small, Local Models for Autonomous Agentic Coding</h1>
@@ -2145,8 +2141,8 @@ Caution
 <section id="an-interactive-chat-repl-is-not-an-agent-harness" class="level4">
 <h4 class="anchored" data-anchor-id="an-interactive-chat-repl-is-not-an-agent-harness">An interactive chat REPL is not an agent harness</h4>
 <p>A common stumbling block when running local models is typing agent instructions directly into <code>ollama run</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ollama</span> run llama3.2:3b</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> grab <span class="ex">an</span> issue from github and write a PR to fix it</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ollama</span> run llama3.2:3b</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> grab <span class="ex">an</span> issue from github and write a PR to fix it</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>In plain <code>ollama run</code>, the model is running in an isolated conversational REPL with <strong>no tool schemas, no file access, and no shell or Git access</strong>. Because it cannot actually query GitHub or inspect your repository, it will fabricate a fictional issue (e.g.&nbsp;<code>cpython/issues/1234</code>), write fictional code in prose, and describe a non-existent commit. When asked <em>“did you push the PR?”</em>, it will correctly admit that it is a text-only assistant without execution capabilities.</p>
 <p>An agent requires a <strong>harness</strong> (such as <code>aider</code> or a programmatic tool runner) that:</p>
 <ol type="1">
@@ -2159,13 +2155,13 @@ Caution
 <section id="baking-deterministic-agent-presets-with-modelfiles" class="level4">
 <h4 class="anchored" data-anchor-id="baking-deterministic-agent-presets-with-modelfiles">Baking deterministic agent presets with Modelfiles</h4>
 <p>Default local model tags are configured for open-ended conversation (temperature <span class="math inline">\(0.8\)</span>, small <span class="math inline">\(4\text{k}\)</span> context). For agentic tool use, bake a dedicated model tag via a <code>Modelfile</code> to enforce deterministic schema compliance:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelfile.llama3.2-agent</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> llama3.2:3b</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>PARAMETER temperature 0.0</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>PARAMETER num_ctx 16384</span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>SYSTEM You are a fast, concise autonomous coding agent. Always execute tasks directly using available tools.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelfile.llama3.2-agent</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> llama3.2:3b</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>PARAMETER temperature 0.0</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>PARAMETER num_ctx 16384</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>SYSTEM You are a fast, concise autonomous coding agent. Always execute tasks directly using available tools.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Create the derived model:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ollama</span> create llama3.2-agent <span class="at">-f</span> Modelfile.llama3.2-agent</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ollama</span> create llama3.2-agent <span class="at">-f</span> Modelfile.llama3.2-agent</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This ensures:</p>
 <ul>
 <li><strong>Zero temperature (<code>0.0</code>)</strong>: Prevents hallucinated JSON keys or invalid tool parameters.</li>
@@ -2531,38 +2527,38 @@ Caution
 <section id="wiring-the-extension-to-databricks" class="level4">
 <h4 class="anchored" data-anchor-id="wiring-the-extension-to-databricks">Wiring the extension to Databricks</h4>
 <p>Databricks serves models over an OpenAI-compatible endpoint at <code>https://&lt;workspace&gt;.cloud.databricks.com/serving-endpoints</code>. Point the extension at it in VS Code <code>settings.json</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="st">"oaicopilot.baseUrl"</span><span class="er">:</span> <span class="st">"https://&lt;workspace&gt;.cloud.databricks.com/serving-endpoints"</span><span class="er">,</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="st">"oaicopilot.models"</span><span class="er">:</span> <span class="ot">[</span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"databricks-claude-opus-5"</span><span class="fu">,</span></span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"owned_by"</span><span class="fu">:</span> <span class="st">"databricks"</span><span class="fu">,</span></span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"family"</span><span class="fu">:</span> <span class="st">"claude"</span><span class="fu">,</span></span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"context_length"</span><span class="fu">:</span> <span class="dv">1000000</span><span class="fu">,</span></span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"max_tokens"</span><span class="fu">:</span> <span class="dv">16000</span><span class="fu">,</span></span>
-<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"vision"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
-<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"apiMode"</span><span class="fu">:</span> <span class="st">"openai"</span></span>
-<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span></span>
-<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"databricks-gpt-5-4"</span><span class="fu">,</span></span>
-<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"owned_by"</span><span class="fu">:</span> <span class="st">"databricks"</span><span class="fu">,</span></span>
-<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"family"</span><span class="fu">:</span> <span class="st">"gpt-5.4"</span><span class="fu">,</span></span>
-<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"context_length"</span><span class="fu">:</span> <span class="dv">1050000</span><span class="fu">,</span></span>
-<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"max_tokens"</span><span class="fu">:</span> <span class="dv">16000</span><span class="fu">,</span></span>
-<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"reasoning_effort"</span><span class="fu">:</span> <span class="st">"medium"</span><span class="fu">,</span></span>
-<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"vision"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
-<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"apiMode"</span><span class="fu">:</span> <span class="st">"openai"</span></span>
-<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span></span>
-<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"databricks-gpt-5-3-codex"</span><span class="fu">,</span></span>
-<span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"owned_by"</span><span class="fu">:</span> <span class="st">"databricks"</span><span class="fu">,</span></span>
-<span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"family"</span><span class="fu">:</span> <span class="st">"gpt-5.3-codex"</span><span class="fu">,</span></span>
-<span id="cb44-26"><a href="#cb44-26" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"context_length"</span><span class="fu">:</span> <span class="dv">400000</span><span class="fu">,</span></span>
-<span id="cb44-27"><a href="#cb44-27" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"max_tokens"</span><span class="fu">:</span> <span class="dv">16000</span><span class="fu">,</span></span>
-<span id="cb44-28"><a href="#cb44-28" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"reasoning_effort"</span><span class="fu">:</span> <span class="st">"high"</span><span class="fu">,</span></span>
-<span id="cb44-29"><a href="#cb44-29" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"vision"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
-<span id="cb44-30"><a href="#cb44-30" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"apiMode"</span><span class="fu">:</span> <span class="st">"openai-responses"</span></span>
-<span id="cb44-31"><a href="#cb44-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb44-32"><a href="#cb44-32" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="st">"oaicopilot.baseUrl"</span><span class="er">:</span> <span class="st">"https://&lt;workspace&gt;.cloud.databricks.com/serving-endpoints"</span><span class="er">,</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="st">"oaicopilot.models"</span><span class="er">:</span> <span class="ot">[</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"databricks-claude-opus-5"</span><span class="fu">,</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"owned_by"</span><span class="fu">:</span> <span class="st">"databricks"</span><span class="fu">,</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"family"</span><span class="fu">:</span> <span class="st">"claude"</span><span class="fu">,</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"context_length"</span><span class="fu">:</span> <span class="dv">1000000</span><span class="fu">,</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"max_tokens"</span><span class="fu">:</span> <span class="dv">16000</span><span class="fu">,</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"vision"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"apiMode"</span><span class="fu">:</span> <span class="st">"openai"</span></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span></span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"databricks-gpt-5-4"</span><span class="fu">,</span></span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"owned_by"</span><span class="fu">:</span> <span class="st">"databricks"</span><span class="fu">,</span></span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"family"</span><span class="fu">:</span> <span class="st">"gpt-5.4"</span><span class="fu">,</span></span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"context_length"</span><span class="fu">:</span> <span class="dv">1050000</span><span class="fu">,</span></span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"max_tokens"</span><span class="fu">:</span> <span class="dv">16000</span><span class="fu">,</span></span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"reasoning_effort"</span><span class="fu">:</span> <span class="st">"medium"</span><span class="fu">,</span></span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"vision"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"apiMode"</span><span class="fu">:</span> <span class="st">"openai"</span></span>
+<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span></span>
+<span id="cb43-23"><a href="#cb43-23" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"databricks-gpt-5-3-codex"</span><span class="fu">,</span></span>
+<span id="cb43-24"><a href="#cb43-24" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"owned_by"</span><span class="fu">:</span> <span class="st">"databricks"</span><span class="fu">,</span></span>
+<span id="cb43-25"><a href="#cb43-25" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"family"</span><span class="fu">:</span> <span class="st">"gpt-5.3-codex"</span><span class="fu">,</span></span>
+<span id="cb43-26"><a href="#cb43-26" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"context_length"</span><span class="fu">:</span> <span class="dv">400000</span><span class="fu">,</span></span>
+<span id="cb43-27"><a href="#cb43-27" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"max_tokens"</span><span class="fu">:</span> <span class="dv">16000</span><span class="fu">,</span></span>
+<span id="cb43-28"><a href="#cb43-28" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"reasoning_effort"</span><span class="fu">:</span> <span class="st">"high"</span><span class="fu">,</span></span>
+<span id="cb43-29"><a href="#cb43-29" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"vision"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb43-30"><a href="#cb43-30" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"apiMode"</span><span class="fu">:</span> <span class="st">"openai-responses"</span></span>
+<span id="cb43-31"><a href="#cb43-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb43-32"><a href="#cb43-32" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The <code>id</code> of each model must exactly match the name of a deployed serving endpoint in your workspace. The extension sends <code>id</code> as the OpenAI <code>model</code> field, and Databricks routes the request to the endpoint of that name. Most entries use <code>POST /serving-endpoints/chat/completions</code>. Models marked as Responses-API-only in the <a href="https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models">Databricks model catalog</a>, including GPT-5.3 Codex, instead require <code>apiMode: "openai-responses"</code>. An <code>id</code> that names no real endpoint fails (see the 404 below).</p>
 <p>To store your token, run <strong>Set OAI Compatible Multi-Provider Apikey</strong> from the Command Palette (<code>Cmd+Shift+P</code> / <code>Ctrl+Shift+P</code>), choose the <code>databricks</code> provider, and paste a Databricks personal access token. The extension keeps it in VS Code’s encrypted secret storage (under <code>oaicopilot.apiKey.databricks</code>) and sends it as an <code>Authorization: Bearer</code> header.</p>
 </section>
@@ -2730,8 +2726,8 @@ Tip
 </ul>
 <p>Without an explicit checkout step, these dependency installation commands will fail because the necessary files won’t be available yet.</p>
 <p><strong>Basic checkout:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Checkout code</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Checkout code</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Important:</strong> The Copilot coding agent overrides any <code>fetch-depth</code> value you set in the checkout step. According to <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment">GitHub’s official documentation</a>, this override happens “to allow the agent to rollback commits upon request, while mitigating security risks.” The agent dynamically determines the appropriate fetch depth based on the pull request context.</p>
 <p>While you cannot control the fetch depth used by Copilot, the agent still has access to sufficient git history to perform its work effectively, including comparing changes and understanding the context of your pull request.</p>
 </section>
@@ -2751,30 +2747,30 @@ Tip
 <section id="common-setup-tasks" class="level4">
 <h4 class="anchored" data-anchor-id="common-setup-tasks">Common Setup Tasks</h4>
 <p><strong>For Node.js/TypeScript projects:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up Node.js</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/setup-node@v4</span></span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">node-version</span><span class="kw">:</span><span class="at"> </span><span class="st">"20"</span></span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">cache</span><span class="kw">:</span><span class="at"> </span><span class="st">"npm"</span></span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install dependencies</span></span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">run</span><span class="kw">:</span><span class="at"> npm ci</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up Node.js</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/setup-node@v4</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">node-version</span><span class="kw">:</span><span class="at"> </span><span class="st">"20"</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">cache</span><span class="kw">:</span><span class="at"> </span><span class="st">"npm"</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install dependencies</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">run</span><span class="kw">:</span><span class="at"> npm ci</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>For Python projects:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up Python</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/setup-python@v5</span></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">python-version</span><span class="kw">:</span><span class="at"> </span><span class="st">"3.11"</span></span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install dependencies</span></span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">run</span><span class="kw">:</span><span class="at"> pip install -r requirements.txt</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up Python</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/setup-python@v5</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">python-version</span><span class="kw">:</span><span class="at"> </span><span class="st">"3.11"</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install dependencies</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">run</span><span class="kw">:</span><span class="at"> pip install -r requirements.txt</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>For R projects:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up R</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-r@v2</span></span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">r-version</span><span class="kw">:</span><span class="at"> </span><span class="st">'release'</span></span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install R dependencies</span></span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-renv@v2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up R</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-r@v2</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">r-version</span><span class="kw">:</span><span class="at"> </span><span class="st">'release'</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install R dependencies</span></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-renv@v2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="environment-variables-and-secrets" class="level4">
 <h4 class="anchored" data-anchor-id="environment-variables-and-secrets">Environment Variables and Secrets</h4>
@@ -2795,18 +2791,18 @@ Tip
 <section id="advanced-configuration" class="level4">
 <h4 class="anchored" data-anchor-id="advanced-configuration">Advanced Configuration</h4>
 <p><strong>Larger runners:</strong> For projects requiring more resources, you can use larger GitHub-hosted runners:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">copilot-setup-steps</span><span class="kw">:</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-4-core</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Self-hosted runners (ARC):</strong> For access to internal resources or private registries, use Actions Runner Controller (ARC) self-hosted runners:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">copilot-setup-steps</span><span class="kw">:</span></span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-4-core</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Self-hosted runners (ARC):</strong> For access to internal resources or private registries, use Actions Runner Controller (ARC) self-hosted runners:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">copilot-setup-steps</span><span class="kw">:</span></span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> arc-scale-set-name</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> arc-scale-set-name</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Note: When using self-hosted runners, you must disable Copilot’s integrated firewall in repository settings and configure appropriate network security controls.</p>
 <p><strong>Git Large File Storage (LFS):</strong> If your repository uses Git LFS:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">lfs</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">lfs</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="further-reading-1" class="level4">
 <h4 class="anchored" data-anchor-id="further-reading-1">Further Reading</h4>
@@ -3496,10 +3492,10 @@ Note
 <p>There are two common routes:</p>
 <ol type="1">
 <li><p><strong>Native installer</strong> (recommended):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This installs the binary to <code>~/.local/bin</code>. If your organization’s policy requires it, download and inspect the script before running it rather than piping it straight to <code>bash</code>.</p></li>
 <li><p><strong>npm</strong> (requires <a href="https://nodejs.org/">Node.js</a>):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb57"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install <span class="at">-g</span> @anthropic-ai/claude-code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install <span class="at">-g</span> @anthropic-ai/claude-code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 </ol>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -3520,11 +3516,11 @@ Note
 <h4 class="anchored" data-anchor-id="make-sure-your-shell-can-find-claude">Make sure your shell can find <code>claude</code></h4>
 <p>The native binary lives in <code>~/.local/bin</code>. The installer adds this directory to <code>PATH</code> for ordinary shells, but on Windows two things commonly break that.</p>
 <p><strong>MSYS2 does not inherit the Windows <code>PATH</code> by default.</strong> It starts in a “minimal” path mode, so tools installed elsewhere on Windows are invisible to it. Add the binary’s directory explicitly in your <code>~/.zshrc</code> (or <code>~/.bashrc</code>). Because MSYS2’s <code>$HOME</code> is <code>/home/&lt;you&gt;</code> (its own home, not the Windows profile where the installer puts the binary), point <code>PATH</code> at the absolute Windows path:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"/c/Users/&lt;you&gt;/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># MSYS2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb57"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"/c/Users/&lt;you&gt;/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># MSYS2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>In <strong>Git Bash</strong>, <code>$HOME</code> already is <code>/c/Users/&lt;you&gt;</code> (your Windows user profile), so the shorthand works there:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"</span><span class="va">$HOME</span><span class="st">/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># Git Bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"</span><span class="va">$HOME</span><span class="st">/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># Git Bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Rehash after changing <code>PATH</code>.</strong> <code>zsh</code> and <code>bash</code> cache the locations of executables. If you add a directory to <code>PATH</code> in your shell config, the shell may still report <code>command not found</code> <em>even though the directory is on <code>PATH</code></em>, because its command table is stale. Force a rebuild in the same shell right after editing <code>PATH</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="ex">rehash</span>        <span class="co"># zsh; use 'hash -r' in bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="ex">rehash</span>        <span class="co"># zsh; use 'hash -r' in bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This bites hardest with <a href="https://ohmyz.sh/">oh-my-zsh</a>, which builds zsh’s command table <em>before</em> your custom <code>PATH</code> line runs, so opening a fresh window may not clear the stale <code>command not found</code> on its own until you <code>rehash</code> (or move the <code>PATH</code> line before oh-my-zsh initializes).</p>
 </section>
 <section id="do-not-edit-dotfiles-with-powershell-redirection" class="level4">
@@ -3550,13 +3546,13 @@ Note
 <p>If you also use the <a href="https://cli.github.com/">GitHub CLI</a> (<code>gh</code>) to push code or open pull requests, <code>gh auth login</code> may fail with:</p>
 <pre><code>could not prompt: … running in MinTTY without pseudo terminal support</code></pre>
 <p>Git Bash and MSYS2 both default to the MinTTY terminal, which can’t host the interactive prompt. Wrap the command with <code>winpty</code>, or run it from PowerShell / Windows Terminal instead:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="ex">winpty</span> gh auth login</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="ex">winpty</span> gh auth login</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>winpty</code> ships with Git Bash, but in MSYS2 it’s a separate package — install it first with <code>pacman -S winpty</code> if you get <code>command not found</code>.</p>
 </section>
 <section id="verify-the-install" class="level4">
-<h4 class="anchored" data-anchor-id="verify-the-install">Verify the install</h4>
+<h4 class="anchored" data-anchor-id="verify-the-install"><mark class="preview-element-added">Verify the install</mark></h4>
 <p>Open a <strong>new</strong> terminal window (so it picks up your updated config) and run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> <span class="at">--version</span>      <span class="co"># prints the installed version number</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> <span class="at">--version</span>      <span class="co"># prints the installed version number</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If you get a version number, you’re ready to run <code>claude</code> in your project directory. If you get <code>command not found</code>, re-check the two <code>PATH</code> issues above: the directory must be on <code>PATH</code>, and you must <code>rehash</code> (or open a fresh window) after changing it.</p>
 </section>
 </section>
@@ -3580,7 +3576,7 @@ Note
 <h4 class="anchored" data-anchor-id="installed-is-not-registered">Installed is not registered</h4>
 <p>A server binary sitting on disk is not available to your agent. The harness knows only what its configuration declares, so installing <a href="https://github.com/github/github-mcp-server"><code>github-mcp-server</code></a> and <em>registering</em> it are two separate acts. Skipping the second is easy to miss, because the first one felt like the hard part.</p>
 <p>The check is one command:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb65"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> mcp list</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> mcp list</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="a-broken-server-can-occupy-the-name-your-working-one-wanted" class="level4">
 <h4 class="anchored" data-anchor-id="a-broken-server-can-occupy-the-name-your-working-one-wanted">A broken server can occupy the name your working one wanted</h4>
@@ -3595,7 +3591,7 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <h4 class="anchored" data-anchor-id="and-401-mean-different-things">400 and 401 mean different things</h4>
 <p>The status code is the whole diagnosis here, and it is easy to skim past.</p>
 <p>The configuration a plugin ships may hardcode a credential placeholder:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb67"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">"headers"</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">"Authorization"</span><span class="fu">:</span> <span class="st">"Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}"</span><span class="fu">}}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb66"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">"headers"</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">"Authorization"</span><span class="fu">:</span> <span class="st">"Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}"</span><span class="fu">}}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If that variable has no value when the harness starts, the header goes out as a bare <code>Bearer</code> with nothing after it. That is <strong>malformed</strong>, not <strong>unauthorized</strong>:</p>
 <ul>
 <li><strong>401</strong> means the server read your token and rejected it — a real credential problem: expired, wrong scopes, wrong account.</li>
@@ -3606,7 +3602,7 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <section id="install-the-binary-the-platforms-own-way" class="level4">
 <h4 class="anchored" data-anchor-id="install-the-binary-the-platforms-own-way">Install the binary the platform’s own way</h4>
 <p>These notes started from a Linux install, where the binary lands under <code>$HOME/.local/bin</code>. On macOS the same server is a Homebrew formula, and getting it is one command:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb68"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install github-mcp-server</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb67"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install github-mcp-server</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>That installs to <code>/opt/homebrew/bin</code> on Apple silicon (<code>/usr/local/bin</code> under Intel Homebrew), so no manual download is needed.</p>
 <p>The official install guide leads with a Docker recipe instead, and it has a catch worth knowing before you follow it: <code>docker</code> being on <code>PATH</code> does not mean the daemon is running. With Docker Desktop stopped, the server fails to connect to the Docker API, and that failure surfaces at <em>server start</em>, not at registration — so <code>claude mcp add</code> succeeds, and the break only shows up later, as a silent absence of tools. That is one more reason to prefer the binary path above.</p>
 <p>Because the binary’s location differs by platform and by installer, a launch wrapper should resolve it from <code>PATH</code> rather than hardcode it, with an override for the case where it isn’t on one.</p>
@@ -3614,38 +3610,38 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <section id="supply-credentials-without-storing-a-token" class="level4">
 <h4 class="anchored" data-anchor-id="supply-credentials-without-storing-a-token">Supply credentials without storing a token</h4>
 <p>The obvious registration bakes a token straight into harness config:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb69"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> mcp add github <span class="at">-e</span> GITHUB_PERSONAL_ACCESS_TOKEN=<span class="op">&lt;</span>pat<span class="op">&gt;</span> -- <span class="op">&lt;</span>server<span class="op">&gt;</span> stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb68"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> mcp add github <span class="at">-e</span> GITHUB_PERSONAL_ACCESS_TOKEN=<span class="op">&lt;</span>pat<span class="op">&gt;</span> -- <span class="op">&lt;</span>server<span class="op">&gt;</span> stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>That writes a live credential to a config file in plain text, and pins you to one token that will eventually expire.</p>
 <p>A launch wrapper avoids both. It reads the credential at start time from a tool that already holds one, so nothing is stored and the server follows whatever account you are currently logged in as:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb70"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/sh</span></span>
-<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="at">-eu</span></span>
-<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a><span class="va">SERVER</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_MCP_SERVER_BIN</span><span class="op">:-</span><span class="va">$(</span><span class="bu">command</span> <span class="at">-v</span> github-mcp-server <span class="kw">||</span> <span class="fu">true</span><span class="va">)}</span><span class="st">"</span></span>
-<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$SERVER</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
-<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"github-mcp-server not on PATH; install it or set GITHUB_MCP_SERVER_BIN"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
-<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 1</span>
-<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
-<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_TOOLSETS</span><span class="op">:-</span>default,actions<span class="va">}</span><span class="st">"</span></span>
-<span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">GITHUB_TOOLSETS</span></span>
-<span id="cb70-12"><a href="#cb70-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-13"><a href="#cb70-13" aria-hidden="true" tabindex="-1"></a><span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="op">=</span><span class="st">"</span><span class="va">$(</span><span class="ex">gh</span> auth token<span class="va">)</span><span class="st">"</span></span>
-<span id="cb70-14"><a href="#cb70-14" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
-<span id="cb70-15"><a href="#cb70-15" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"empty token; run 'gh auth login'"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
-<span id="cb70-16"><a href="#cb70-16" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 1</span>
-<span id="cb70-17"><a href="#cb70-17" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
-<span id="cb70-18"><a href="#cb70-18" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span></span>
-<span id="cb70-19"><a href="#cb70-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-20"><a href="#cb70-20" aria-hidden="true" tabindex="-1"></a><span class="bu">exec</span> <span class="st">"</span><span class="va">$SERVER</span><span class="st">"</span> stdio <span class="st">"</span><span class="va">$@</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb69"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/sh</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="at">-eu</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="va">SERVER</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_MCP_SERVER_BIN</span><span class="op">:-</span><span class="va">$(</span><span class="bu">command</span> <span class="at">-v</span> github-mcp-server <span class="kw">||</span> <span class="fu">true</span><span class="va">)}</span><span class="st">"</span></span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$SERVER</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"github-mcp-server not on PATH; install it or set GITHUB_MCP_SERVER_BIN"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-10"><a href="#cb69-10" aria-hidden="true" tabindex="-1"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_TOOLSETS</span><span class="op">:-</span>default,actions<span class="va">}</span><span class="st">"</span></span>
+<span id="cb69-11"><a href="#cb69-11" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">GITHUB_TOOLSETS</span></span>
+<span id="cb69-12"><a href="#cb69-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-13"><a href="#cb69-13" aria-hidden="true" tabindex="-1"></a><span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="op">=</span><span class="st">"</span><span class="va">$(</span><span class="ex">gh</span> auth token<span class="va">)</span><span class="st">"</span></span>
+<span id="cb69-14"><a href="#cb69-14" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb69-15"><a href="#cb69-15" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"empty token; run 'gh auth login'"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb69-16"><a href="#cb69-16" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb69-17"><a href="#cb69-17" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb69-18"><a href="#cb69-18" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span></span>
+<span id="cb69-19"><a href="#cb69-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-20"><a href="#cb69-20" aria-hidden="true" tabindex="-1"></a><span class="bu">exec</span> <span class="st">"</span><span class="va">$SERVER</span><span class="st">"</span> stdio <span class="st">"</span><span class="va">$@</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Register the wrapper rather than the binary:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb71"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> mcp add <span class="at">--scope</span> user github <span class="at">--</span> ~/.local/bin/github-mcp-server-stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb70"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> mcp add <span class="at">--scope</span> user github <span class="at">--</span> ~/.local/bin/github-mcp-server-stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Note the explicit failure when the token comes back empty. A wrapper that silently exports an empty string reproduces the bare-<code>Bearer</code> bug you just finished diagnosing.</p>
 </section>
 <section id="toolsets-are-opt-in-and-the-default-may-omit-what-you-need" class="level4">
 <h4 class="anchored" data-anchor-id="toolsets-are-opt-in-and-the-default-may-omit-what-you-need">Toolsets are opt-in, and the default may omit what you need</h4>
 <p>A server does not necessarily expose everything it can do. GitHub’s server exposes a default group, and that default carries <strong>no continuous-integration access at all</strong> — no workflow runs, no job logs, no re-run trigger. As of this writing (server v1.7.0) the actions toolset’s four tools are <code>actions_get</code>, <code>actions_list</code>, <code>actions_run_trigger</code>, and <code>get_job_logs</code> — the exact names have moved around across releases, so treat this list as a snapshot rather than a promise.</p>
 <p>If your workflow involves driving pull requests to a clean state, that omission matters, because reading check status is most of the job. Request the extra group explicitly:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb72"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span>default,actions</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb71"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span>default,actions</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Note that the selection <strong>replaces</strong> the default rather than extending it, which is why the value above names <code>default</code> explicitly. Writing <code>actions</code> alone would silently trade away every default tool for the four you asked for — a net <em>loss</em> that looks like a successful configuration change.</p>
 <p>So compare the tool list before and after, and confirm the count went up rather than sideways. On the same v1.7.0 server, the default group carries 44 tools, and <code>default,actions,discussions,dependabot,labels,notifications</code> carries 63 — the count moving the right direction, as the check above expects.</p>
 </section>
@@ -4455,166 +4451,166 @@ window.addEventListener("load", alignEquationAnchorsWithDefault);
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb73" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Coding Agents"</span></span>
-<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a><span class="co">  html: default</span></span>
-<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a><span class="co">  revealjs:</span></span>
-<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a><span class="co">    output-file: coding-agents-slides.html</span></span>
-<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a><span class="co">  pdf:</span></span>
-<span id="cb73-8"><a href="#cb73-8" aria-hidden="true" tabindex="-1"></a><span class="co">    output-file: coding-agents-handout.pdf</span></span>
-<span id="cb73-9"><a href="#cb73-9" aria-hidden="true" tabindex="-1"></a><span class="co">  docx:</span></span>
-<span id="cb73-10"><a href="#cb73-10" aria-hidden="true" tabindex="-1"></a><span class="co">    output-file: coding-agents.docx</span></span>
-<span id="cb73-11"><a href="#cb73-11" aria-hidden="true" tabindex="-1"></a><span class="an">preview-changed:</span><span class="co"> true</span></span>
-<span id="cb73-12"><a href="#cb73-12" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb73-13"><a href="#cb73-13" aria-hidden="true" tabindex="-1"></a>We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)**</span>
-<span id="cb73-14"><a href="#cb73-14" aria-hidden="true" tabindex="-1"></a>to <span class="co">[</span><span class="ot">help you code</span><span class="co">](https://en.wikipedia.org/wiki/AI-assisted_software_development)</span>.</span>
-<span id="cb73-15"><a href="#cb73-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-16"><a href="#cb73-16" aria-hidden="true" tabindex="-1"></a><span class="fu"># What Is a Language Model? {#sec-ai-language-model}</span></span>
-<span id="cb73-17"><a href="#cb73-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-18"><a href="#cb73-18" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/what-is-a-language-model.qmd &gt;}}</span>
-<span id="cb73-19"><a href="#cb73-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-20"><a href="#cb73-20" aria-hidden="true" tabindex="-1"></a><span class="fu"># What are AI coding agents?</span></span>
-<span id="cb73-21"><a href="#cb73-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-22"><a href="#cb73-22" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/what-are-ai-coding-agents.qmd &gt;}}</span>
-<span id="cb73-23"><a href="#cb73-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-24"><a href="#cb73-24" aria-hidden="true" tabindex="-1"></a><span class="fu"># Coding-Agent Platforms {#sec-ai-coding-agent-platforms}</span></span>
-<span id="cb73-25"><a href="#cb73-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-26"><a href="#cb73-26" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/coding-agent-platforms.qmd &gt;}}</span>
-<span id="cb73-27"><a href="#cb73-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-28"><a href="#cb73-28" aria-hidden="true" tabindex="-1"></a><span class="fu"># What are AI harnesses? {#sec-ai-harnesses}</span></span>
-<span id="cb73-29"><a href="#cb73-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-30"><a href="#cb73-30" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/what-are-ai-harnesses.qmd &gt;}}</span>
-<span id="cb73-31"><a href="#cb73-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-32"><a href="#cb73-32" aria-hidden="true" tabindex="-1"></a><span class="fu"># How Agents Are Structured and Implemented {#sec-ai-agent-implementation}</span></span>
-<span id="cb73-33"><a href="#cb73-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-34"><a href="#cb73-34" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/how-agents-are-implemented.qmd &gt;}}</span>
-<span id="cb73-35"><a href="#cb73-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-36"><a href="#cb73-36" aria-hidden="true" tabindex="-1"></a><span class="fu"># How Harnesses and Agents Are Built {#sec-ai-harness-construction}</span></span>
-<span id="cb73-37"><a href="#cb73-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-38"><a href="#cb73-38" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/how-harnesses-and-agents-are-built.qmd &gt;}}</span>
-<span id="cb73-39"><a href="#cb73-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-40"><a href="#cb73-40" aria-hidden="true" tabindex="-1"></a><span class="fu"># What Kind of Program Is an Agent? {#sec-ai-agent-program-kind}</span></span>
-<span id="cb73-41"><a href="#cb73-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-42"><a href="#cb73-42" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/what-kind-of-program-is-an-agent.qmd &gt;}}</span>
-<span id="cb73-43"><a href="#cb73-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-44"><a href="#cb73-44" aria-hidden="true" tabindex="-1"></a><span class="fu"># How Does a Harness Relate to an Agent? {#sec-ai-harness-agent-relationship}</span></span>
-<span id="cb73-45"><a href="#cb73-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-46"><a href="#cb73-46" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/harness-agent-relationship.qmd &gt;}}</span>
-<span id="cb73-47"><a href="#cb73-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-48"><a href="#cb73-48" aria-hidden="true" tabindex="-1"></a><span class="fu"># AI Agents and the Technological Singularity</span></span>
-<span id="cb73-49"><a href="#cb73-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-50"><a href="#cb73-50" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/technological-singularity.qmd &gt;}}</span>
-<span id="cb73-51"><a href="#cb73-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-52"><a href="#cb73-52" aria-hidden="true" tabindex="-1"></a><span class="fu"># Relative Advantages of AI and Humans</span></span>
-<span id="cb73-53"><a href="#cb73-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-54"><a href="#cb73-54" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/relative-advantages-ai-humans.qmd &gt;}}</span>
-<span id="cb73-55"><a href="#cb73-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-56"><a href="#cb73-56" aria-hidden="true" tabindex="-1"></a><span class="fu"># How to Work with Coding Agents</span></span>
-<span id="cb73-57"><a href="#cb73-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-58"><a href="#cb73-58" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/how-to-work-with-agents.qmd &gt;}}</span>
-<span id="cb73-59"><a href="#cb73-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-60"><a href="#cb73-60" aria-hidden="true" tabindex="-1"></a><span class="fu"># Useful Prompt Formats</span></span>
-<span id="cb73-61"><a href="#cb73-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-62"><a href="#cb73-62" aria-hidden="true" tabindex="-1"></a>{{&lt; include ../shared/prompt-formats.md &gt;}}</span>
-<span id="cb73-63"><a href="#cb73-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-64"><a href="#cb73-64" aria-hidden="true" tabindex="-1"></a><span class="fu"># Addressing Failing GitHub Actions Workflows {#sec-ai-addressing-failing-workflows}</span></span>
-<span id="cb73-65"><a href="#cb73-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-66"><a href="#cb73-66" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/addressing-failing-workflows.qmd &gt;}}</span>
-<span id="cb73-67"><a href="#cb73-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-68"><a href="#cb73-68" aria-hidden="true" tabindex="-1"></a><span class="fu"># Benefits and Hazards {#sec-ai-benefits-hazards}</span></span>
-<span id="cb73-69"><a href="#cb73-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-70"><a href="#cb73-70" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/agents-benefits-and-hazards.qmd &gt;}}</span>
-<span id="cb73-71"><a href="#cb73-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-72"><a href="#cb73-72" aria-hidden="true" tabindex="-1"></a><span class="fu"># Best Practices for Safe and Successful Use {#sec-ai-best-practices}</span></span>
-<span id="cb73-73"><a href="#cb73-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-74"><a href="#cb73-74" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/agents-best-practices.qmd &gt;}}</span>
-<span id="cb73-75"><a href="#cb73-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-76"><a href="#cb73-76" aria-hidden="true" tabindex="-1"></a><span class="fu"># Firewall and Network Configuration</span></span>
-<span id="cb73-77"><a href="#cb73-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-78"><a href="#cb73-78" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/agents-firewall-config.qmd &gt;}}</span>
-<span id="cb73-79"><a href="#cb73-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-80"><a href="#cb73-80" aria-hidden="true" tabindex="-1"></a><span class="fu"># Running Coding Agents Offline {#sec-ai-offline}</span></span>
-<span id="cb73-81"><a href="#cb73-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-82"><a href="#cb73-82" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/running-agents-offline.qmd &gt;}}</span>
-<span id="cb73-83"><a href="#cb73-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-84"><a href="#cb73-84" aria-hidden="true" tabindex="-1"></a><span class="fu"># Connecting OpenCode to Local Models {#sec-ai-opencode-ollama}</span></span>
-<span id="cb73-85"><a href="#cb73-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-86"><a href="#cb73-86" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/opencode-ollama.qmd &gt;}}</span>
-<span id="cb73-87"><a href="#cb73-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-88"><a href="#cb73-88" aria-hidden="true" tabindex="-1"></a><span class="fu"># Small, Local Models for Autonomous Agentic Coding {#sec-ai-small-local-models}</span></span>
-<span id="cb73-89"><a href="#cb73-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-90"><a href="#cb73-90" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/small-local-models-agentic.qmd &gt;}}</span>
-<span id="cb73-91"><a href="#cb73-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-92"><a href="#cb73-92" aria-hidden="true" tabindex="-1"></a><span class="fu"># Configuring GitHub Copilot Settings {#sec-ai-copilot-settings}</span></span>
-<span id="cb73-93"><a href="#cb73-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-94"><a href="#cb73-94" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/copilot-settings.qmd &gt;}}</span>
-<span id="cb73-95"><a href="#cb73-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-96"><a href="#cb73-96" aria-hidden="true" tabindex="-1"></a><span class="fu"># Connecting VS Code to a Custom Model Endpoint (BYOK) {#sec-ai-byok-vscode}</span></span>
-<span id="cb73-97"><a href="#cb73-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-98"><a href="#cb73-98" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/byok-vscode-databricks.qmd &gt;}}</span>
-<span id="cb73-99"><a href="#cb73-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-100"><a href="#cb73-100" aria-hidden="true" tabindex="-1"></a><span class="fu"># Configuring the Agent Environment</span></span>
-<span id="cb73-101"><a href="#cb73-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-102"><a href="#cb73-102" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/copilot-setup-steps-config.qmd &gt;}}</span>
-<span id="cb73-103"><a href="#cb73-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-104"><a href="#cb73-104" aria-hidden="true" tabindex="-1"></a><span class="fu"># Agent Skills {#sec-ai-agent-skills}</span></span>
-<span id="cb73-105"><a href="#cb73-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-106"><a href="#cb73-106" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/agent-skills.qmd &gt;}}</span>
-<span id="cb73-107"><a href="#cb73-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-108"><a href="#cb73-108" aria-hidden="true" tabindex="-1"></a><span class="fu"># Customizing an Agent {#sec-ai-customization}</span></span>
-<span id="cb73-109"><a href="#cb73-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-110"><a href="#cb73-110" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/customizing-agents.qmd &gt;}}</span>
-<span id="cb73-111"><a href="#cb73-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-112"><a href="#cb73-112" aria-hidden="true" tabindex="-1"></a><span class="fu"># How the Config Reaches a Machine {#sec-ai-config-install}</span></span>
-<span id="cb73-113"><a href="#cb73-113" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-114"><a href="#cb73-114" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/claude-code-config-install.qmd &gt;}}</span>
-<span id="cb73-115"><a href="#cb73-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-116"><a href="#cb73-116" aria-hidden="true" tabindex="-1"></a><span class="fu"># Claude Code Cloud Environments {#sec-ai-claude-cloud-env}</span></span>
-<span id="cb73-117"><a href="#cb73-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-118"><a href="#cb73-118" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/claude-code-cloud-environments.qmd &gt;}}</span>
-<span id="cb73-119"><a href="#cb73-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-120"><a href="#cb73-120" aria-hidden="true" tabindex="-1"></a><span class="fu"># How a Session Learns a PR Changed {#sec-ai-pr-activity-notifications}</span></span>
-<span id="cb73-121"><a href="#cb73-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-122"><a href="#cb73-122" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/pr-activity-notifications.qmd &gt;}}</span>
-<span id="cb73-123"><a href="#cb73-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-124"><a href="#cb73-124" aria-hidden="true" tabindex="-1"></a><span class="fu"># When to use a coding agent {#sec-ai-when-to-use}</span></span>
-<span id="cb73-125"><a href="#cb73-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-126"><a href="#cb73-126" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/when-to-use-coding-agent.qmd &gt;}}</span>
-<span id="cb73-127"><a href="#cb73-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-128"><a href="#cb73-128" aria-hidden="true" tabindex="-1"></a><span class="fu"># Editing with `.docx` files</span></span>
-<span id="cb73-129"><a href="#cb73-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-130"><a href="#cb73-130" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/editing-with-docx-files.qmd &gt;}}</span>
-<span id="cb73-131"><a href="#cb73-131" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-132"><a href="#cb73-132" aria-hidden="true" tabindex="-1"></a><span class="fu"># Copilot Instructions for this Repository</span></span>
-<span id="cb73-133"><a href="#cb73-133" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-134"><a href="#cb73-134" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/copilot-instructions-explanation.qmd &gt;}}</span>
-<span id="cb73-135"><a href="#cb73-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-136"><a href="#cb73-136" aria-hidden="true" tabindex="-1"></a><span class="fu"># Using Copilot Review Before Human Review</span></span>
-<span id="cb73-137"><a href="#cb73-137" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-138"><a href="#cb73-138" aria-hidden="true" tabindex="-1"></a>{{&lt; include ../shared/copilot-review-before-human.md &gt;}}</span>
-<span id="cb73-139"><a href="#cb73-139" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-140"><a href="#cb73-140" aria-hidden="true" tabindex="-1"></a><span class="fu"># Reviewing a Copilot PR You Didn't Create</span></span>
-<span id="cb73-141"><a href="#cb73-141" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-142"><a href="#cb73-142" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/reviewing-copilot-prs.qmd &gt;}}</span>
-<span id="cb73-143"><a href="#cb73-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-144"><a href="#cb73-144" aria-hidden="true" tabindex="-1"></a><span class="fu"># Installing Claude Code on Windows {#sec-ai-claude-code-windows}</span></span>
-<span id="cb73-145"><a href="#cb73-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-146"><a href="#cb73-146" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/installing-claude-code-windows.qmd &gt;}}</span>
-<span id="cb73-147"><a href="#cb73-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-148"><a href="#cb73-148" aria-hidden="true" tabindex="-1"></a><span class="fu"># Setting up MCP servers {#sec-ai-mcp-server-setup}</span></span>
-<span id="cb73-149"><a href="#cb73-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-150"><a href="#cb73-150" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/mcp-server-setup.qmd &gt;}}</span>
-<span id="cb73-151"><a href="#cb73-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-152"><a href="#cb73-152" aria-hidden="true" tabindex="-1"></a><span class="fu"># Managing Gemini API Spend and Cost Optimization {#sec-ai-gemini-spend-management}</span></span>
-<span id="cb73-153"><a href="#cb73-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-154"><a href="#cb73-154" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/gemini-spend-management.qmd &gt;}}</span>
-<span id="cb73-155"><a href="#cb73-155" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-156"><a href="#cb73-156" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-157"><a href="#cb73-157" aria-hidden="true" tabindex="-1"></a><span class="fu"># References {.unnumbered}</span></span>
-<span id="cb73-158"><a href="#cb73-158" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-159"><a href="#cb73-159" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb73-160"><a href="#cb73-160" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb72" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Coding Agents"</span></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a><span class="co">  html: default</span></span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a><span class="co">  revealjs:</span></span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a><span class="co">    output-file: coding-agents-slides.html</span></span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a><span class="co">  pdf:</span></span>
+<span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a><span class="co">    output-file: coding-agents-handout.pdf</span></span>
+<span id="cb72-9"><a href="#cb72-9" aria-hidden="true" tabindex="-1"></a><span class="co">  docx:</span></span>
+<span id="cb72-10"><a href="#cb72-10" aria-hidden="true" tabindex="-1"></a><span class="co">    output-file: coding-agents.docx</span></span>
+<span id="cb72-11"><a href="#cb72-11" aria-hidden="true" tabindex="-1"></a><span class="an">preview-changed:</span><span class="co"> true</span></span>
+<span id="cb72-12"><a href="#cb72-12" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb72-13"><a href="#cb72-13" aria-hidden="true" tabindex="-1"></a>We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)**</span>
+<span id="cb72-14"><a href="#cb72-14" aria-hidden="true" tabindex="-1"></a>to <span class="co">[</span><span class="ot">help you code</span><span class="co">](https://en.wikipedia.org/wiki/AI-assisted_software_development)</span>.</span>
+<span id="cb72-15"><a href="#cb72-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-16"><a href="#cb72-16" aria-hidden="true" tabindex="-1"></a><span class="fu"># What Is a Language Model? {#sec-ai-language-model}</span></span>
+<span id="cb72-17"><a href="#cb72-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-18"><a href="#cb72-18" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/what-is-a-language-model.qmd &gt;}}</span>
+<span id="cb72-19"><a href="#cb72-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-20"><a href="#cb72-20" aria-hidden="true" tabindex="-1"></a><span class="fu"># What are AI coding agents?</span></span>
+<span id="cb72-21"><a href="#cb72-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-22"><a href="#cb72-22" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/what-are-ai-coding-agents.qmd &gt;}}</span>
+<span id="cb72-23"><a href="#cb72-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-24"><a href="#cb72-24" aria-hidden="true" tabindex="-1"></a><span class="fu"># Coding-Agent Platforms {#sec-ai-coding-agent-platforms}</span></span>
+<span id="cb72-25"><a href="#cb72-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-26"><a href="#cb72-26" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/coding-agent-platforms.qmd &gt;}}</span>
+<span id="cb72-27"><a href="#cb72-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-28"><a href="#cb72-28" aria-hidden="true" tabindex="-1"></a><span class="fu"># What are AI harnesses? {#sec-ai-harnesses}</span></span>
+<span id="cb72-29"><a href="#cb72-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-30"><a href="#cb72-30" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/what-are-ai-harnesses.qmd &gt;}}</span>
+<span id="cb72-31"><a href="#cb72-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-32"><a href="#cb72-32" aria-hidden="true" tabindex="-1"></a><span class="fu"># How Agents Are Structured and Implemented {#sec-ai-agent-implementation}</span></span>
+<span id="cb72-33"><a href="#cb72-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-34"><a href="#cb72-34" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/how-agents-are-implemented.qmd &gt;}}</span>
+<span id="cb72-35"><a href="#cb72-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-36"><a href="#cb72-36" aria-hidden="true" tabindex="-1"></a><span class="fu"># How Harnesses and Agents Are Built {#sec-ai-harness-construction}</span></span>
+<span id="cb72-37"><a href="#cb72-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-38"><a href="#cb72-38" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/how-harnesses-and-agents-are-built.qmd &gt;}}</span>
+<span id="cb72-39"><a href="#cb72-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-40"><a href="#cb72-40" aria-hidden="true" tabindex="-1"></a><span class="fu"># What Kind of Program Is an Agent? {#sec-ai-agent-program-kind}</span></span>
+<span id="cb72-41"><a href="#cb72-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-42"><a href="#cb72-42" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/what-kind-of-program-is-an-agent.qmd &gt;}}</span>
+<span id="cb72-43"><a href="#cb72-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-44"><a href="#cb72-44" aria-hidden="true" tabindex="-1"></a><span class="fu"># How Does a Harness Relate to an Agent? {#sec-ai-harness-agent-relationship}</span></span>
+<span id="cb72-45"><a href="#cb72-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-46"><a href="#cb72-46" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/harness-agent-relationship.qmd &gt;}}</span>
+<span id="cb72-47"><a href="#cb72-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-48"><a href="#cb72-48" aria-hidden="true" tabindex="-1"></a><span class="fu"># AI Agents and the Technological Singularity</span></span>
+<span id="cb72-49"><a href="#cb72-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-50"><a href="#cb72-50" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/technological-singularity.qmd &gt;}}</span>
+<span id="cb72-51"><a href="#cb72-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-52"><a href="#cb72-52" aria-hidden="true" tabindex="-1"></a><span class="fu"># Relative Advantages of AI and Humans</span></span>
+<span id="cb72-53"><a href="#cb72-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-54"><a href="#cb72-54" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/relative-advantages-ai-humans.qmd &gt;}}</span>
+<span id="cb72-55"><a href="#cb72-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-56"><a href="#cb72-56" aria-hidden="true" tabindex="-1"></a><span class="fu"># How to Work with Coding Agents</span></span>
+<span id="cb72-57"><a href="#cb72-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-58"><a href="#cb72-58" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/how-to-work-with-agents.qmd &gt;}}</span>
+<span id="cb72-59"><a href="#cb72-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-60"><a href="#cb72-60" aria-hidden="true" tabindex="-1"></a><span class="fu"># Useful Prompt Formats</span></span>
+<span id="cb72-61"><a href="#cb72-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-62"><a href="#cb72-62" aria-hidden="true" tabindex="-1"></a>{{&lt; include ../shared/prompt-formats.md &gt;}}</span>
+<span id="cb72-63"><a href="#cb72-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-64"><a href="#cb72-64" aria-hidden="true" tabindex="-1"></a><span class="fu"># Addressing Failing GitHub Actions Workflows {#sec-ai-addressing-failing-workflows}</span></span>
+<span id="cb72-65"><a href="#cb72-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-66"><a href="#cb72-66" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/addressing-failing-workflows.qmd &gt;}}</span>
+<span id="cb72-67"><a href="#cb72-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-68"><a href="#cb72-68" aria-hidden="true" tabindex="-1"></a><span class="fu"># Benefits and Hazards {#sec-ai-benefits-hazards}</span></span>
+<span id="cb72-69"><a href="#cb72-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-70"><a href="#cb72-70" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/agents-benefits-and-hazards.qmd &gt;}}</span>
+<span id="cb72-71"><a href="#cb72-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-72"><a href="#cb72-72" aria-hidden="true" tabindex="-1"></a><span class="fu"># Best Practices for Safe and Successful Use {#sec-ai-best-practices}</span></span>
+<span id="cb72-73"><a href="#cb72-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-74"><a href="#cb72-74" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/agents-best-practices.qmd &gt;}}</span>
+<span id="cb72-75"><a href="#cb72-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-76"><a href="#cb72-76" aria-hidden="true" tabindex="-1"></a><span class="fu"># Firewall and Network Configuration</span></span>
+<span id="cb72-77"><a href="#cb72-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-78"><a href="#cb72-78" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/agents-firewall-config.qmd &gt;}}</span>
+<span id="cb72-79"><a href="#cb72-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-80"><a href="#cb72-80" aria-hidden="true" tabindex="-1"></a><span class="fu"># Running Coding Agents Offline {#sec-ai-offline}</span></span>
+<span id="cb72-81"><a href="#cb72-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-82"><a href="#cb72-82" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/running-agents-offline.qmd &gt;}}</span>
+<span id="cb72-83"><a href="#cb72-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-84"><a href="#cb72-84" aria-hidden="true" tabindex="-1"></a><span class="fu"># Connecting OpenCode to Local Models {#sec-ai-opencode-ollama}</span></span>
+<span id="cb72-85"><a href="#cb72-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-86"><a href="#cb72-86" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/opencode-ollama.qmd &gt;}}</span>
+<span id="cb72-87"><a href="#cb72-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-88"><a href="#cb72-88" aria-hidden="true" tabindex="-1"></a><span class="fu"># Small, Local Models for Autonomous Agentic Coding {#sec-ai-small-local-models}</span></span>
+<span id="cb72-89"><a href="#cb72-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-90"><a href="#cb72-90" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/small-local-models-agentic.qmd &gt;}}</span>
+<span id="cb72-91"><a href="#cb72-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-92"><a href="#cb72-92" aria-hidden="true" tabindex="-1"></a><span class="fu"># Configuring GitHub Copilot Settings {#sec-ai-copilot-settings}</span></span>
+<span id="cb72-93"><a href="#cb72-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-94"><a href="#cb72-94" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/copilot-settings.qmd &gt;}}</span>
+<span id="cb72-95"><a href="#cb72-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-96"><a href="#cb72-96" aria-hidden="true" tabindex="-1"></a><span class="fu"># Connecting VS Code to a Custom Model Endpoint (BYOK) {#sec-ai-byok-vscode}</span></span>
+<span id="cb72-97"><a href="#cb72-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-98"><a href="#cb72-98" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/byok-vscode-databricks.qmd &gt;}}</span>
+<span id="cb72-99"><a href="#cb72-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-100"><a href="#cb72-100" aria-hidden="true" tabindex="-1"></a><span class="fu"># Configuring the Agent Environment</span></span>
+<span id="cb72-101"><a href="#cb72-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-102"><a href="#cb72-102" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/copilot-setup-steps-config.qmd &gt;}}</span>
+<span id="cb72-103"><a href="#cb72-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-104"><a href="#cb72-104" aria-hidden="true" tabindex="-1"></a><span class="fu"># Agent Skills {#sec-ai-agent-skills}</span></span>
+<span id="cb72-105"><a href="#cb72-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-106"><a href="#cb72-106" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/agent-skills.qmd &gt;}}</span>
+<span id="cb72-107"><a href="#cb72-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-108"><a href="#cb72-108" aria-hidden="true" tabindex="-1"></a><span class="fu"># Customizing an Agent {#sec-ai-customization}</span></span>
+<span id="cb72-109"><a href="#cb72-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-110"><a href="#cb72-110" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/customizing-agents.qmd &gt;}}</span>
+<span id="cb72-111"><a href="#cb72-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-112"><a href="#cb72-112" aria-hidden="true" tabindex="-1"></a><span class="fu"># How the Config Reaches a Machine {#sec-ai-config-install}</span></span>
+<span id="cb72-113"><a href="#cb72-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-114"><a href="#cb72-114" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/claude-code-config-install.qmd &gt;}}</span>
+<span id="cb72-115"><a href="#cb72-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-116"><a href="#cb72-116" aria-hidden="true" tabindex="-1"></a><span class="fu"># Claude Code Cloud Environments {#sec-ai-claude-cloud-env}</span></span>
+<span id="cb72-117"><a href="#cb72-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-118"><a href="#cb72-118" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/claude-code-cloud-environments.qmd &gt;}}</span>
+<span id="cb72-119"><a href="#cb72-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-120"><a href="#cb72-120" aria-hidden="true" tabindex="-1"></a><span class="fu"># How a Session Learns a PR Changed {#sec-ai-pr-activity-notifications}</span></span>
+<span id="cb72-121"><a href="#cb72-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-122"><a href="#cb72-122" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/pr-activity-notifications.qmd &gt;}}</span>
+<span id="cb72-123"><a href="#cb72-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-124"><a href="#cb72-124" aria-hidden="true" tabindex="-1"></a><span class="fu"># When to use a coding agent {#sec-ai-when-to-use}</span></span>
+<span id="cb72-125"><a href="#cb72-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-126"><a href="#cb72-126" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/when-to-use-coding-agent.qmd &gt;}}</span>
+<span id="cb72-127"><a href="#cb72-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-128"><a href="#cb72-128" aria-hidden="true" tabindex="-1"></a><span class="fu"># Editing with `.docx` files</span></span>
+<span id="cb72-129"><a href="#cb72-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-130"><a href="#cb72-130" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/editing-with-docx-files.qmd &gt;}}</span>
+<span id="cb72-131"><a href="#cb72-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-132"><a href="#cb72-132" aria-hidden="true" tabindex="-1"></a><span class="fu"># Copilot Instructions for this Repository</span></span>
+<span id="cb72-133"><a href="#cb72-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-134"><a href="#cb72-134" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/copilot-instructions-explanation.qmd &gt;}}</span>
+<span id="cb72-135"><a href="#cb72-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-136"><a href="#cb72-136" aria-hidden="true" tabindex="-1"></a><span class="fu"># Using Copilot Review Before Human Review</span></span>
+<span id="cb72-137"><a href="#cb72-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-138"><a href="#cb72-138" aria-hidden="true" tabindex="-1"></a>{{&lt; include ../shared/copilot-review-before-human.md &gt;}}</span>
+<span id="cb72-139"><a href="#cb72-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-140"><a href="#cb72-140" aria-hidden="true" tabindex="-1"></a><span class="fu"># Reviewing a Copilot PR You Didn't Create</span></span>
+<span id="cb72-141"><a href="#cb72-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-142"><a href="#cb72-142" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/reviewing-copilot-prs.qmd &gt;}}</span>
+<span id="cb72-143"><a href="#cb72-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-144"><a href="#cb72-144" aria-hidden="true" tabindex="-1"></a><span class="fu"># Installing Claude Code on Windows {#sec-ai-claude-code-windows}</span></span>
+<span id="cb72-145"><a href="#cb72-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-146"><a href="#cb72-146" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/installing-claude-code-windows.qmd &gt;}}</span>
+<span id="cb72-147"><a href="#cb72-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-148"><a href="#cb72-148" aria-hidden="true" tabindex="-1"></a><span class="fu"># Setting up MCP servers {#sec-ai-mcp-server-setup}</span></span>
+<span id="cb72-149"><a href="#cb72-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-150"><a href="#cb72-150" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/mcp-server-setup.qmd &gt;}}</span>
+<span id="cb72-151"><a href="#cb72-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-152"><a href="#cb72-152" aria-hidden="true" tabindex="-1"></a><span class="fu"># Managing Gemini API Spend and Cost Optimization {#sec-ai-gemini-spend-management}</span></span>
+<span id="cb72-153"><a href="#cb72-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-154"><a href="#cb72-154" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/gemini-spend-management.qmd &gt;}}</span>
+<span id="cb72-155"><a href="#cb72-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-156"><a href="#cb72-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-157"><a href="#cb72-157" aria-hidden="true" tabindex="-1"></a><span class="fu"># References {.unnumbered}</span></span>
+<span id="cb72-158"><a href="#cb72-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-159"><a href="#cb72-159" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb72-160"><a href="#cb72-160" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

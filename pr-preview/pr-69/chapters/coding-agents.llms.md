@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-19 19:30:02 (PDT)
+Last modified: 2026-08-20 01:02:59 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -1234,8 +1234,6 @@ Check the block itself first, as above. A test that passes because the proxy was
 
 # 18 Connecting OpenCode to Local Models
 
-#### Connecting OpenCode to Ollama
-
 [OpenCode](https://opencode.ai) is an open-source coding agent that runs in your terminal, reads your project, edits files, and runs commands. It supports local models through OpenAI-compatible providers.
 
 **Install Ollama and start it on boot:**
@@ -1245,11 +1243,7 @@ brew install ollama
 brew services start ollama
 ```
 
-The `brew services` command registers a macOS launchd agent that starts Ollama automatically at login and keeps it running in the background. To start it immediately without waiting for a reboot:
-
-``` bash
-brew services start ollama
-```
+The `brew services` command registers a macOS launchd agent that starts Ollama automatically at login, keeps it running in the background, and starts it immediately without waiting for a reboot.
 
 Verify the server is running:
 
@@ -1272,7 +1266,7 @@ Rather than hand-coding each model into `opencode.json`, use the [`opencode-loca
 opencode plugin --global opencode-local-ollama
 ```
 
-This writes to `~/.config/opencode/opencode.jsonc`:
+This writes to `~/.config/opencode/opencode.json`:
 
 ``` json
 {
