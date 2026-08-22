@@ -109,6 +109,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/agent-skills.qmd >}}
 
+# Useful plugins {#sec-ai-useful-plugins}
+
+{{< include ai-tools/useful-plugins.qmd >}}
+
 # Customizing an Agent {#sec-ai-customization}
 
 {{< include ai-tools/customizing-agents.qmd >}}
