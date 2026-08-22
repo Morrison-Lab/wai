@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-21 20:45:48 (PDT)
+Last modified: 2026-08-21 22:23:36 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -2301,21 +2301,35 @@ You can add a one-off focus to the same comment, for example:
 
 Where the workspace configuration permits it, Codex can also review new pull requests automatically. In GitHub, the general code review reports only high-priority P0 and P1 findings to keep its comments focused.
 
+A separate **Security Review** (research preview) is a deeper pass on security-specific risks. Request it with `@codex security review`. It can overlap with the general review’s security findings.
+
 #### When an administrator has disabled Codex Cloud
 
-The message **“Your admin has turned off Codex Cloud”** is a workspace-policy restriction, not a GitHub repository error. Local Codex use in the app, IDE, or command line can continue, but the native `@codex review` bot cannot run because GitHub reviews execute through Codex Cloud.
+The message **“Your admin has turned off Codex Cloud”** is a workspace-policy restriction, not a GitHub repository error. The native `@codex review` bot cannot run because GitHub reviews execute through Codex Cloud. Local Codex use can continue. Run `/review` against a checked-out diff in any of:
+
+- the Codex app
+- the IDE composer
+- the CLI
+
+That is a local review. It does not post a GitHub review and does not create an always-on GitHub bot.
 
 Resolve the restriction in one of these ways:
 
 - A workspace administrator can enable Codex Cloud in the workspace’s admin permissions.
 - A user whose personal workspace permits Codex Cloud can switch to it, then connect and authorize the repository there.
-- If cloud access must remain disabled, use Codex locally to inspect a checked-out pull-request diff. This is a manual review and does not create an always-on GitHub bot.
+- If cloud access must remain disabled, use the local `/review` path above.
 
 GitHub organizations may separately require an owner to approve the repository connection. Changing that authorization does not override a ChatGPT workspace policy; both sides must permit the integration.
 
 #### Native review versus API-backed automation
 
-Do not confuse the native integration with a custom GitHub Action that calls an OpenAI model. The native reviewer is configured through Codex and the linked ChatGPT workspace. A custom action instead needs API credentials, uses API billing and limits, and requires you to implement the review prompt, permissions, and comment-posting behavior. Do not copy personal ChatGPT or Codex login credentials into CI secrets.
+Do not confuse the native integration with a custom GitHub Action that calls an OpenAI model. The native reviewer is configured through Codex and the linked ChatGPT workspace. A custom action instead needs API credentials and uses API billing and limits. It also requires you to implement:
+
+- the review prompt
+- permissions
+- comment-posting behavior
+
+Do not copy personal ChatGPT or Codex login credentials into CI secrets.
 
 #### Adding repository-specific review rules
 
@@ -2329,9 +2343,19 @@ Codex reads applicable `AGENTS.md` files. Put broad guidance in the repository r
 - Flag behavior changes without a regression test.
 ```
 
-Keep deterministic formatting and lint checks in continuous integration. Code-review guidance should focus on consequential behavior, state the safe alternative or exception, and remain concise enough to apply consistently.
+Keep deterministic formatting and lint checks in continuous integration. Code-review guidance should:
 
-Codex review is an additional signal; it does not replace tests, branch protection, or required human approval. For current setup details, see OpenAI’s [GitHub code-review documentation](https://learn.chatgpt.com/docs/third-party/github).
+- focus on consequential behavior
+- state the safe alternative or exception
+- remain concise enough to apply consistently
+
+Codex review is an additional signal; it does not replace:
+
+- tests
+- branch protection
+- required human approval
+
+For current setup details, see OpenAI’s [GitHub code-review documentation](https://learn.chatgpt.com/docs/third-party/github).
 
 # 28 How a Session Learns a PR Changed
 
