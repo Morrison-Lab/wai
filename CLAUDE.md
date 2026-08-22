@@ -17,6 +17,8 @@ Authoritative style guide: [UCD-SERG Lab Manual](https://ucd-serg.github.io/lab-
 - `_quarto.yml`, `_quarto-website.yml` --- Quarto project + website config
 - `_extensions/` --- vendored Quarto extensions
 - `macros/` --- git submodule for shortcode/macro definitions (see `.gitmodules`)
+- `.ai-config/` --- git submodule of shared agent-workflow fragments;
+  `chapters/pr-workflow-with-agents.qmd` includes them (see `.gitmodules`)
 - `R/`, `man/`, `DESCRIPTION`, `NAMESPACE` --- the project is also a small R package
 - `references.bib` --- BibTeX bibliography
 - `styles.css` --- website styling; `styles-reveal.scss`, `qwt-reveal-toggle.html`, and the `revealjs-*.lua` filters drive the reveal.js slide output
@@ -40,11 +42,14 @@ Mirrors [`.github/copilot-instructions.md`](.github/copilot-instructions.md). Ke
 
 - **Don't edit generated files**: `README.md` is built from `README.Rmd`; `_site/` and `_freeze/` are build outputs.
 - **Local preview**: `quarto preview` (live reload). Full build: `quarto render`. When verifying a single edited page, render just that page (`quarto render <file>.qmd --to html`) rather than the whole site --- the `/render` command is for the full build.
-- **Submodules**: `macros/` is the only git submodule (see `.gitmodules`). Run `git submodule update --init --recursive` after cloning.
+- **Submodules**: see `.gitmodules` for the current set (`macros/` and `.ai-config/`).
+  Run `git submodule update --init --recursive` after cloning.
+  `chapters/pr-workflow-with-agents.qmd` includes files from `.ai-config/`,
+  so that chapter fails to render if the submodule is not checked out.
 - **Spell check**: words go in `inst/WORDLIST` (see `.github/workflows/check-spelling.yaml`). Update the wordlist instead of disabling the check.
 - **Link check**: tuned in `lychee.toml`; prefer fixing broken links over adding exceptions.
 - **Other CI checks**: workflows also verify bibliography DOIs (`check-bibliography-dois.yml`) and flag non-standard characters (`check-non-standard-chars.yaml`). Fix the flagged source rather than relaxing the check.
-- **Dependencies**: Dependabot auto-updates the `macros` submodule and GitHub Actions (see `.github/dependabot.yml`); don't bump those by hand unless a PR needs it.
+- **Dependencies**: Dependabot auto-updates the git submodules listed in `.gitmodules` and GitHub Actions (see `.github/dependabot.yml`); don't bump those by hand unless a PR needs it.
 
 ## Pull request expectations
 
