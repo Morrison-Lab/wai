@@ -25,6 +25,7 @@ Herbert
 Homebrew
 Inflexa
 Jules
+Kimi
 Kubrick
 LeCun
 LiteLLM
@@ -45,7 +46,9 @@ OpenAI
 OpenCode
 OpenDevin
 OpenHands
+OpenRouter
 PEFT
+Playwright
 Positron
 QLoRA
 Qwen
@@ -53,7 +56,9 @@ REPL
 RevealJS
 SERG
 SWE
+SemBr
 TORQCLAW
+TUI
 TinyTeX
 TypeScript
 UC
@@ -63,6 +68,7 @@ Wachowskis
 Workspaces
 agentic
 aider
+allowlist
 autofix
 callout
 codebase
@@ -97,6 +103,7 @@ rulesets
 sandboxed
 sandboxing
 schemas
+sembr
 serology
 subagent
 subagents
