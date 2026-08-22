@@ -238,7 +238,7 @@ and Copilot code review on GitHub.com
 do not read that file.
 
 Repository administrators configure those agents from
-**Settings → Copilot → MCP servers**
+**Settings > Copilot > MCP servers**
 using a JSON `mcpServers` object.
 GitHub's
 [Configure MCP servers](https://docs.github.com/en/enterprise-cloud@latest/copilot/how-tos/copilot-on-github/customize-copilot/configure-mcp-servers)
