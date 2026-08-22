@@ -31,3 +31,16 @@ The harness supplies the memory,
 the tools,
 and the control flow;
 the model only ever predicts what token comes next.
+
+For a from-scratch walk through that stack, see Stanford's
+[CS336: Language Modeling from Scratch](https://cs336.stanford.edu/).
+The course has students implement:
+
+- data collection and cleaning for pre-training
+- transformer construction
+- training
+- evaluation
+
+Lecture recordings are public.
+It is an implementation-heavy treatment of how a language model is built,
+not a product tutorial for coding agents.
