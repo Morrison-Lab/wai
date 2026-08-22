@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-20 16:04:04 (PDT)
+Last modified: 2026-08-21 22:11:08 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -1873,7 +1873,7 @@ For an OTPM error, lower `max_tokens` first. For either type, the error can pers
 
 #### Three failures that name no error in the chat panel
 
-The four errors above print their own text. These three do not. The chat panel shows an ordinary-looking reply, and the only record is in VS Code’s **GitHub Copilot Chat** output channel (**View**, then **Output**, then pick that channel). Open it first whenever a BYOK reply is wrong in a way that names no error.
+The four errors above print their own text. These three do not name an error. Failures 5 and 6 leave an ordinary-looking reply in the chat panel, and the only record is in VS Code’s **GitHub Copilot Chat** output channel (**View**, then **Output**, then pick that channel). Failure 7 is visible in the panel as a `[object Object]` prefix on the reply; it is still a display bug rather than a named error. Open the output channel first whenever a BYOK reply is wrong in a way that names no error.
 
 A reply that begins `[object Object]` and then answers as though you had asked nothing is the symptom that produced all three of these at once. Observed 2026-08-20 with VS Code 1.135.0-insider, Copilot Chat 0.63.2026082004, `oai-compatible-copilot` 0.4.2, and `databricks-claude-sonnet-5`.
 
@@ -1884,7 +1884,7 @@ OAI Compatible API key not found
   at ...provideLanguageModelChatResponse (out/provider.js:173)
 ```
 
-The extension keeps the token in VS Code’s encrypted secret storage, which is per install and per profile. `settings.json` travels through Settings Sync; the secret does not. So a second install, such as Insiders beside stable or a new profile, shows a complete-looking `oaicopilot` configuration with no token behind it. Re-run **Set OAI Compatible Multi-Provider Apikey** in the install that is failing.
+The extension keeps the token in VS Code’s encrypted secret storage, which is per install, not per profile. `settings.json` travels through Settings Sync; the secret does not. So a second install, such as Insiders beside stable, shows a complete-looking `oaicopilot` configuration with no token behind it. A new profile in the same install still sees the existing token. Re-run **Set OAI Compatible Multi-Provider Apikey** in the install that is failing.
 
 This is not the same as the 403 above. There, a token was sent and the provider rejected it; here, no request reaches the provider at all.
 
@@ -1901,7 +1901,7 @@ Agent mode reaches this sooner than ordinary chat, because tool definitions and 
 
 **7. `[object Object]` in the reply text**
 
-Version 0.4.2 renders streamed content with `String(deltaObj.content)` in both of its streaming paths, in `out/openai/openaiApi.js`. A chunk whose `content` is a plain string renders normally. A chunk that carries structured content instead prints as the literal text `[object Object]`, because that is what JavaScript’s `String()` returns for an object. Text streamed after such a chunk is unaffected, which is why the prefix appears once and the rest of the reply reads normally.
+Version 0.4.2 renders streamed content with `String(deltaObj.content)` in both of its streaming paths, in `out/openai/openaiApi.js`. A chunk whose `content` is a plain string renders normally. A chunk that carries structured content instead prints as the literal text `[object Object]`, because that is what JavaScript’s `String()` returns for an object. Later chunks that carry a plain string render normally. In the 2026-08-20 session the prefix appeared once, at the start of the reply. That is an observation from that session, not a guarantee that later chunks cannot also be structured.
 
 This is a display bug in the extension rather than a configuration error, so no setting turns it off. Report it upstream and read past the prefix.
 
