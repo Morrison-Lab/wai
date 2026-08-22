@@ -46,6 +46,7 @@ OpenCode
 OpenDevin
 OpenHands
 PEFT
+Playwright
 Positron
 QLoRA
 Qwen
@@ -63,6 +64,7 @@ Wachowskis
 Workspaces
 agentic
 aider
+allowlist
 autofix
 callout
 codebase
