@@ -53,6 +53,7 @@ REPL
 RevealJS
 SERG
 SWE
+SemBr
 TORQCLAW
 TinyTeX
 TypeScript
@@ -97,6 +98,7 @@ rulesets
 sandboxed
 sandboxing
 schemas
+sembr
 serology
 subagent
 subagents
