@@ -1,0 +1,31 @@
+This site's Quarto sources already use
+[Semantic Line Breaks](https://sembr.org/)
+(SemBr):
+a line break after each substantial unit of thought,
+so the source is easier to edit
+while the rendered HTML still reads as ordinary paragraphs.
+
+[sembr/skills](https://github.com/sembr/skills)
+packages that convention as Agent Skills
+for any skills-compatible tool.
+Install it one of these ways:
+
+- Claude Code: `/plugin marketplace add sembr/skills`
+- Cursor: from the [Cursor Marketplace](https://cursor.com/marketplace),
+  or **Settings > Rules > Add Rule > Remote Rule (Github)** with `sembr/skills`
+- skills CLI: `npx skills add https://sembr.org`
+- [Pi](https://pi.dev): `pi install git:github.com/sembr/skills`
+
+Ask the agent to apply SemBr on new or revised prose
+(the `sembr-reformat` skill);
+there is no need to reformat an entire document in one pass.
+
+The lab's portable agent config lives in
+[`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config)
+(the same repository as [`d-morrison/ai-config`](https://github.com/d-morrison/ai-config)).
+It is a plugin-or-symlink install of skills, hooks, and memories ---
+not a third marketplace next to SemBr.
+How that config actually reaches a machine,
+and how a doubled plugin install fails,
+is @sec-ai-config-install.
+@sec-ai-customization is the worked example of what the corpus contains.
