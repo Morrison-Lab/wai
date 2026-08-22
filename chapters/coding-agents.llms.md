@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-20 09:32:05 (PDT)
+Last modified: 2026-08-22 11:04:29 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -2764,6 +2764,21 @@ Two habits close this out.
 **Expect the tools to be missing until you restart.** MCP servers connect when a session starts, so a server registered mid-session is inert for the rest of it. This is a common false alarm: the registration worked, and the tools genuinely are not there yet.
 
 Finally, note which new tools can *write*. A re-run or dispatch tool can trigger CI, and permissive permission modes will not prompt before it does. Treat those the way you would treat a merge — something a human authorizes, not something an agent does in passing.
+
+#### Copilot on GitHub uses a different config surface
+
+The notes above are for a local harness (`claude mcp list`, a binary on `PATH`). [Copilot cloud agent](https://github.com/features/copilot/agents) and Copilot code review on GitHub.com do not read that file.
+
+Repository administrators configure those agents from **Settings \> Copilot \> MCP servers** using a JSON `mcpServers` object. GitHub’s [Configure MCP servers](https://docs.github.com/en/enterprise-cloud@latest/copilot/how-tos/copilot-on-github/customize-copilot/configure-mcp-servers) page is the source of truth for the schema. As of that page:
+
+- The GitHub MCP server and the Playwright MCP server are enabled by default.
+- Cloud agent and code review share the repository config; a separate toggle can disable MCP tools for code review only.
+- Only MCP *tools* are supported, not resources or prompts.
+- Remote servers that authenticate with OAuth are not supported.
+- Secrets and variables must be named with a `COPILOT_MCP_` prefix or they are invisible to the config.
+- Once a tool is enabled, Copilot uses it without asking for approval, so allowlist specific read-only tools rather than `*`.
+
+Do not copy a local `claude mcp add` registration into that JSON and expect it to work.
 
 # 35 Managing Gemini API Spend and Cost Optimization
 

@@ -330,7 +330,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-08-20 09:32:05 (PDT)</p>
+  <p class="date">Last modified: 2026-08-22 11:04:29 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -3414,6 +3414,18 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <p><strong>Verify by calling, not by reading a list.</strong> A tool appearing in the registry proves the harness parsed a config file. It does not prove the server started, authenticated, or can reach the API. One cheap identity call plus one read (for GitHub: <code>get_me</code>, then listing pull requests on a repo you know) proves the whole path end to end.</p>
 <p><strong>Expect the tools to be missing until you restart.</strong> MCP servers connect when a session starts, so a server registered mid-session is inert for the rest of it. This is a common false alarm: the registration worked, and the tools genuinely are not there yet.</p>
 <p>Finally, note which new tools can <em>write</em>. A re-run or dispatch tool can trigger CI, and permissive permission modes will not prompt before it does. Treat those the way you would treat a merge — something a human authorizes, not something an agent does in passing.</p>
+<h4 id="copilot-on-github-uses-a-different-config-surface">Copilot on GitHub uses a different config surface</h4>
+<p>The notes above are for a local harness (<code>claude mcp list</code>, a binary on <code>PATH</code>). <a href="https://github.com/features/copilot/agents">Copilot cloud agent</a> and Copilot code review on GitHub.com do not read that file.</p>
+<p>Repository administrators configure those agents from <strong>Settings &gt; Copilot &gt; MCP servers</strong> using a JSON <code>mcpServers</code> object. GitHub’s <a href="https://docs.github.com/en/enterprise-cloud@latest/copilot/how-tos/copilot-on-github/customize-copilot/configure-mcp-servers">Configure MCP servers</a> page is the source of truth for the schema. As of that page:</p>
+<ul>
+<li>The GitHub MCP server and the Playwright MCP server are enabled by default.</li>
+<li>Cloud agent and code review share the repository config; a separate toggle can disable MCP tools for code review only.</li>
+<li>Only MCP <em>tools</em> are supported, not resources or prompts.</li>
+<li>Remote servers that authenticate with OAuth are not supported.</li>
+<li>Secrets and variables must be named with a <code>COPILOT_MCP_</code> prefix or they are invisible to the config.</li>
+<li>Once a tool is enabled, Copilot uses it without asking for approval, so allowlist specific read-only tools rather than <code>*</code>.</li>
+</ul>
+<p>Do not copy a local <code>claude mcp add</code> registration into that JSON and expect it to work.</p>
 </section></section>
 <section>
 <section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="35">
