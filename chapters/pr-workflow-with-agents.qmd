@@ -38,6 +38,10 @@ request moving toward a clean, mergeable state.
 
 {{< include ../.ai-config/shared/workflow/address-every-comment.md >}}
 
+# Reviewing AI-generated work {#sec-invalidate-ai-review}
+
+{{< include ai-tools/reviewing-ai-generated-work.qmd >}}
+
 # References {.unnumbered}
 
 ::: {#refs}
