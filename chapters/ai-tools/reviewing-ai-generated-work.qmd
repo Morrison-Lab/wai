@@ -1,0 +1,22 @@
+A reviewer of AI-generated work is not there to confirm that it sounds right.
+The job is to **try to invalidate it**.
+Assume the output is wrong until a check shows otherwise,
+and search mercilessly for mistakes.
+
+Plausible, fluent prose is the main risk, not a comfort.
+It conceals errors that a human's awkward draft would have made obvious.
+Put on the harshest critic hat, especially for:
+
+- citations, DOIs, and URLs that may have been invented
+- functions, flags, and APIs that may not exist on the version you actually run
+- numbers, file paths, and "as of" claims that were never measured
+
+Author-side validation
+([Responsibility for validation](ai-use-policies.qmd#responsibility-for-validation))
+is necessary and not sufficient.
+A second person (or a later pass by the author wearing a reviewer hat)
+should still try to break the work.
+
+Automated review is a filter, not a substitute for this stance.
+Those tools miss domain errors and sometimes invent findings;
+they do not license a lighter human review.
