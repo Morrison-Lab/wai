@@ -1,0 +1,81 @@
+
+[OpenRouter](https://openrouter.ai) is a gateway that exposes hundreds of
+hosted models --- Claude, GPT, Gemini, DeepSeek, Qwen, Kimi, Llama, and more
+--- behind a single API key and billing account.
+OpenCode treats it as a built-in provider,
+so its catalog appears in the `/models` picker
+alongside local models (@sec-ai-opencode-ollama).
+The catalog changes frequently;
+model IDs below were verified against it in August 2026.
+
+**Connect an API key:**
+
+1. Create a key at <https://openrouter.ai/settings/keys>
+   and add credits at <https://openrouter.ai/credits>.
+   Some models carry a `:free` ID suffix and cost nothing,
+   at the price of tight rate limits.
+2. In the OpenCode TUI, run `/connect`,
+   select **OpenRouter**, and paste the key.
+   The CLI command `opencode auth login` does the same thing outside
+   the TUI.
+   Either way the key is stored in `~/.local/share/opencode/auth.json`,
+   never in `opencode.json`.
+3. Run `/models`, filter for `openrouter`, and pick a model.
+
+**Pick a model that supports tool calls:**
+
+Coding agents drive every action --- reading files, editing, running
+commands --- through tool calls.
+Image-generation, speech, and embedding models have no endpoints that
+support tool use, so an agent session fails on them immediately with
+`No endpoints found that support tool use`.
+Prefer chat or coder variants such as
+`anthropic/claude-sonnet-4.5`, `deepseek/deepseek-chat`,
+or `qwen/qwen3-coder`.
+
+One trap worth naming: on OpenRouter, Google lists Gemini 3 Pro only as
+image-output variants (`google/gemini-3-pro-image`,
+`google/gemini-3-pro-image-preview`) ---
+there is no plain `google/gemini-3-pro` entry --- so those image models
+are easy to pick by mistake.
+For tool-calling work, use one of the Gemini Flash chat variants instead,
+such as `google/gemini-3-flash-preview`.
+
+Models are addressed as `openrouter/<vendor>/<model>`,
+for example `openrouter/deepseek/deepseek-chat`.
+
+**Optional configuration** in `~/.config/opencode/opencode.json`
+(or the project-level file):
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "openrouter/deepseek/deepseek-chat",
+  "small_model": "openrouter/openai/gpt-oss-20b",
+  "provider": {
+    "openrouter": {
+      "models": {
+        "moonshotai/kimi-k2": {
+          "options": {
+            "provider": { "order": ["baseten"], "allow_fallbacks": false }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+- `model` pins the session default;
+  without it, OpenCode starts each session on its own built-in default
+
+- `small_model` sends housekeeping tasks (session titles, summaries) to a
+  cheap model instead of a frontier one
+
+- entries under `provider.openrouter.models` add models that are not
+  preloaded, or pin routing:
+  OpenRouter load-balances across upstream hosts by default, and `order`
+  restricts requests to named providers
+  ([provider-selection docs](https://openrouter.ai/docs/guides/routing/provider-selection))
+
+Config loads at startup, so restart OpenCode after editing it.
