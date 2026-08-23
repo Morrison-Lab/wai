@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-22 12:03:43 (PDT)
+Last modified: 2026-08-22 18:15:33 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -1760,7 +1760,7 @@ Following these guidelines will help establish an effective Copilot configuratio
 
 VS Code’s built-in Chat usually talks to GitHub’s hosted models. It can also route requests to a model provider of your own; GitHub calls this “bring your own key” (BYOK). The lab uses BYOK to reach Databricks model serving endpoints, which expose an OpenAI-compatible API, through the community extension [`oai-compatible-copilot`](https://marketplace.visualstudio.com/items?itemName=johnny-zhao.oai-compatible-copilot).
 
-This section describes the wiring and four errors you are likely to hit.
+This section describes the wiring, four errors that report themselves in the chat panel, and three more that do not.
 
 #### Wiring the extension to Databricks
 
@@ -1857,7 +1857,9 @@ For GPT-5 and GPT OSS models, `reasoning_effort` adds a selector to the Copilot 
 
 Databricks retires model endpoints over time. Before sharing or troubleshooting a configuration, compare every `id` with the current model catalog and remove entries that are no longer listed. An accurate local entry cannot make a retired endpoint work.
 
-#### Four errors, and why they stack
+An individual endpoint page may also carry a banner reading “This serving endpoint is deprecated. Foundation models are now managed in Unity AI Gateway.” That is a statement about where Databricks intends to manage these models, not an outage: the `/serving-endpoints` path keeps serving while the banner is up. Unity AI Gateway’s **LLMs** and **Providers** tabs are in beta, and they are inactive in a workspace that has not been enabled for them. In that state there is no gateway base URL to move to, and the configuration in this section is still the working one. Re-check when those tabs become active. Observed 2026-08-20.
+
+#### Four errors that report themselves, and why they stack
 
 These failures sit on top of each other: fixing one uncovers the next, so work through them top-down.
 
@@ -1916,6 +1918,52 @@ For an OTPM error, lower `max_tokens` first. For either type, the error can pers
 > **TIP:**
 >
 > A quick way to tell 404 from 403: a 404 means the request authenticated but named a missing endpoint (a model-name or configuration problem), while a 403 means the token itself was rejected (an authentication problem).
+
+> **IMPORTANT:**
+>
+> Both the 404 and the 403 above assume the request reached the workspace you think it did. A `baseUrl` whose `dbc-` host belongs to a *different* workspace produces those same two errors and survives every remedy listed for them. The endpoint name is real and the token is valid; neither one is in the workspace being asked. Issuing a fresh token then fails in exactly the same way, indefinitely.
+>
+> Compare the host in `oaicopilot.baseUrl` against the invocations URL shown at the top of the endpoint’s page in the Databricks console (**Serving**, then the endpoint). Check every per-model `baseUrl` as well: each model entry may carry its own copy of the host, so a single corrected setting can leave dozens of stale ones behind it.
+>
+> Observed 2026-08-20, where a stale host appeared 42 times in one `settings.json`: once at the top level and once in each of 41 model entries. A second VS Code installation on the same machine carried the same stale host in its own copy of the setting.
+
+#### Three failures that name no error in the chat panel
+
+The four errors above print their own text. These three do not name an error. Failures 5 and 6 leave an ordinary-looking reply in the chat panel, and the only record is in VS Code’s **GitHub Copilot Chat** output channel (**View**, then **Output**, then pick that channel). Failure 7 is visible in the panel as a `[object Object]` prefix on the reply; it is still a display bug rather than a named error. Open the output channel first whenever a BYOK reply is wrong in a way that names no error.
+
+A reply that begins `[object Object]` and then answers as though you had asked nothing is the symptom that produced all three of these at once. Observed 2026-08-20 with VS Code 1.135.0-insider, Copilot Chat 0.63.2026082004, `oai-compatible-copilot` 0.4.2, and `databricks-claude-sonnet-5`.
+
+**5. `OAI Compatible API key not found`**
+
+``` text
+OAI Compatible API key not found
+  at ...provideLanguageModelChatResponse (out/provider.js:173)
+```
+
+The extension keeps the token in VS Code’s encrypted secret storage, which is per install, not per profile. `settings.json` travels through Settings Sync; the secret does not. So a second install, such as Insiders beside stable, shows a complete-looking `oaicopilot` configuration with no token behind it. A new profile in the same install still sees the existing token. Re-run **Set OAI Compatible Multi-Provider Apikey** in the install that is failing.
+
+This is not the same as the 403 above. There, a token was sent and the provider rejected it; here, no request reaches the provider at all.
+
+**6. `No lowest priority node found`**
+
+``` text
+Error: No lowest priority node found (path: ...)
+  ... [ConversationHistorySummarizer] summarization failed
+```
+
+This one comes from Copilot Chat’s prompt renderer, not from Databricks. The renderer drops prompt elements in priority order until the prompt fits the input budget the extension advertises, which is `context_length` minus `max_tokens`, or 48,000 tokens at the Claude defaults in [Table 3](#tbl-databricks-oaicopilot-defaults). The error is what it raises when it has nothing left to drop and the prompt is still over budget. A prompt pruned that far need not still contain your own message, which fits a model that replies it cannot see a request.
+
+Agent mode reaches this sooner than ordinary chat, because tool definitions and instruction files consume the budget before any conversation does. Raise the model’s `context_length` and leave `max_tokens` alone: that widens the input allowance without reserving more output tokens per minute. Reducing the number of active tools and instruction files works too. Weigh both against [Table 3](#tbl-databricks-oaicopilot-defaults), whose context values are chosen to keep one client inside an ITPM tier, so buying prompt headroom this way costs more 429s.
+
+**7. `[object Object]` in the reply text**
+
+Version 0.4.2 renders streamed content with `String(deltaObj.content)` in both of its streaming paths, in `out/openai/openaiApi.js`. A chunk whose `content` is a plain string renders normally. A chunk that carries structured content instead prints as the literal text `[object Object]`, because that is what JavaScript’s `String()` returns for an object. Later chunks that carry a plain string render normally. In the 2026-08-20 session the prefix appeared once, at the start of the reply. That is an observation from that session, not a guarantee that later chunks cannot also be structured.
+
+This is a display bug in the extension rather than a configuration error, so no setting turns it off. Report it upstream and read past the prefix.
+
+> **NOTE:**
+>
+> Copilot’s own hosted quota still applies to some background chores even when the main chat model is BYOK. A log line reading `quotaExceeded | gpt-4o-mini-2024-07-18 | [title]` is conversation-title generation failing against GitHub’s models, and it says nothing about whether your provider is working. In the 2026-08-20 session above, `chat.byokUtilityModelDefault` was already set to `"mainAgent"` and the title request still went to `gpt-4o-mini`, so that setting did not cover conversation titles in this version.
 
 # 23 Configuring the Agent Environment
 
