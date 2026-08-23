@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-22 18:15:33 (PDT)
+Last modified: 2026-08-23 13:48:44 (PDT)
 
 The practices below apply whether you are driving an agent’s work or doing the work yourself. They keep parallel sessions from colliding and keep a pull request moving toward a clean, mergeable state.
 
@@ -1028,6 +1028,20 @@ See [`address-every-comment.cases.md`](address-every-comment.cases.md), “A fin
 - **Do:** hold the change regardless when the note turns out correct but genuinely optional — verifying decides what is true, not what ships.
 - **Don’t:** treat a PR title, commit subject, or changelog line as evidence about what the code does; each states an intent, and a refactor can keep the very thing it says it replaced.
 - **Don’t:** let your own refutation past the check you would have applied to the reviewer’s finding — it is a fresh claim, and overturning something feels like having verified it.
+
+# 7 Reviewing AI-generated work
+
+A reviewer of AI-generated work is not there to confirm that it sounds right. The job is to **try to invalidate it**. Assume the output is wrong until a check shows otherwise, and search mercilessly for mistakes.
+
+Plausible, fluent prose is the main risk, not a comfort. It conceals errors that a human’s awkward draft would have made obvious. Put on the harshest critic hat, especially for:
+
+- citations, DOIs, and URLs that may have been invented
+- functions, flags, and APIs that may not exist on the version you actually run
+- numbers, file paths, and “as of” claims that were never measured
+
+Author-side validation ([Responsibility for validation](../chapters/ai-use-policies.llms.md#responsibility-for-validation)) is necessary and not sufficient. A second person (or a later pass by the author wearing a reviewer hat) should still try to break the work.
+
+Automated review is a filter, not a substitute for this stance. Those tools miss domain errors and sometimes invent findings; they do not license a lighter human review.
 
 # References
 
