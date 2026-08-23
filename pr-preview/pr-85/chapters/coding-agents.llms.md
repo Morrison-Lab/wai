@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-22 18:15:14 (PDT)
+Last modified: 2026-08-23 13:37:34 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -2426,7 +2426,7 @@ That is a local review. It does not post a GitHub review and does not create an 
 Resolve the restriction in one of these ways:
 
 - A workspace administrator can enable Codex Cloud in the workspace’s admin permissions.
-- A user whose personal workspace permits Codex Cloud can switch to it, then connect and authorize the repository there.
+- A user can connect a *personal* repository from a personal workspace that permits Codex Cloud. Do not use a personal workspace to connect organization-owned repositories — that bypasses the workspace policy your administrator set and moves the code outside your organization’s controls.
 - If cloud access must remain disabled, use the local `/review` path above.
 
 GitHub organizations may separately require an owner to approve the repository connection. Changing that authorization does not override a ChatGPT workspace policy; both sides must permit the integration.
