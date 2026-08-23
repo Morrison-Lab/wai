@@ -85,6 +85,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/opencode-ollama.qmd >}}
 
+# Connecting OpenCode to OpenRouter {#sec-ai-opencode-openrouter}
+
+{{< include ai-tools/opencode-openrouter.qmd >}}
+
 # Small, Local Models for Autonomous Agentic Coding {#sec-ai-small-local-models}
 
 {{< include ai-tools/small-local-models-agentic.qmd >}}
@@ -104,6 +108,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 # Agent Skills {#sec-ai-agent-skills}
 
 {{< include ai-tools/agent-skills.qmd >}}
+
+# Useful plugins {#sec-ai-useful-plugins}
+
+{{< include ai-tools/useful-plugins.qmd >}}
 
 # Customizing an Agent {#sec-ai-customization}
 

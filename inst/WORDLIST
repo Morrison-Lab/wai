@@ -25,7 +25,9 @@ Herbert
 Homebrew
 Inflexa
 Jules
+Kimi
 Kubrick
+LLMs
 LeCun
 LiteLLM
 LoRA
@@ -45,7 +47,9 @@ OpenAI
 OpenCode
 OpenDevin
 OpenHands
+OpenRouter
 PEFT
+Playwright
 Positron
 QLoRA
 Qwen
@@ -53,7 +57,9 @@ REPL
 RevealJS
 SERG
 SWE
+SemBr
 TORQCLAW
+TUI
 TinyTeX
 TypeScript
 UC
@@ -63,6 +69,7 @@ Wachowskis
 Workspaces
 agentic
 aider
+allowlist
 autofix
 callout
 codebase
@@ -92,11 +99,13 @@ pharmacokinetics
 plugin
 plugins
 proteomics
+renderer
 repurposing
 rulesets
 sandboxed
 sandboxing
 schemas
+sembr
 serology
 subagent
 subagents
