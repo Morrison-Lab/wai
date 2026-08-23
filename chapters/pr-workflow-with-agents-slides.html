@@ -327,7 +327,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-08-22 18:12:39 (PDT)</p>
+  <p class="date">Last modified: 2026-08-22 18:13:52 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -1179,6 +1179,23 @@ gh issue comment &lt;N&gt; --body "Working on this --- paws off until I'm done."
 <li><strong>Don’t:</strong> treat a PR title, commit subject, or changelog line as evidence about what the code does; each states an intent, and a refactor can keep the very thing it says it replaced.</li>
 <li><strong>Don’t:</strong> let your own refutation past the check you would have applied to the reviewer’s finding — it is a fresh claim, and overturning something feels like having verified it.</li>
 </ul>
+</section></section>
+<section>
+<section id="sec-invalidate-ai-review" class="title-slide slide level1 center" data-number="7">
+<h1><span class="header-section-number">7</span> Reviewing AI-generated work</h1>
+
+</section>
+<section class="slide level2">
+
+<p>A reviewer of AI-generated work is not there to confirm that it sounds right. The job is to <strong>try to invalidate it</strong>. Assume the output is wrong until a check shows otherwise, and search mercilessly for mistakes.</p>
+<p>Plausible, fluent prose is the main risk, not a comfort. It conceals errors that a human’s awkward draft would have made obvious. Put on the harshest critic hat, especially for:</p>
+<ul>
+<li>citations, DOIs, and URLs that may have been invented</li>
+<li>functions, flags, and APIs that may not exist on the version you actually run</li>
+<li>numbers, file paths, and “as of” claims that were never measured</li>
+</ul>
+<p>Author-side validation (<a href="../chapters/ai-use-policies.html#responsibility-for-validation">Responsibility for validation</a>) is necessary and not sufficient. A second person (or a later pass by the author wearing a reviewer hat) should still try to break the work.</p>
+<p>Automated review is a filter, not a substitute for this stance. Those tools miss domain errors and sometimes invent findings; they do not license a lighter human review.</p>
 </section></section>
 <section>
 <section id="references" class="title-slide slide level1 unnumbered center">
