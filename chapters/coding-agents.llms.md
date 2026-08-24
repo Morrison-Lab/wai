@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-23 00:43:06 (PDT)
+Last modified: 2026-08-23 20:25:47 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -559,7 +559,7 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 >
 > See [Section 15](#sec-ai-best-practices) for more details on workflow file security.
 
-**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 30](#sec-ai-when-to-use) for more guidance.
+**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 31](#sec-ai-when-to-use) for more guidance.
 
 #### Scenario 3: Uncertain Which Scenario Applies
 
@@ -590,7 +590,7 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 
 - See the [UCD-SERG Lab Manual’s continuous integration chapter](https://ucd-serg.github.io/lab-manual/continuous-integration.html) for setting up GitHub Actions workflows
 - See [Section 15](#sec-ai-best-practices) and [Section 14](#sec-ai-benefits-hazards) for security considerations with workflow files
-- See [Section 30](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
+- See [Section 31](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
 - See the [GitHub Actions documentation](https://docs.github.com/en/actions) for workflow syntax and troubleshooting
 
 # 14 Benefits and Hazards
@@ -2272,7 +2272,7 @@ Rules are written as `Tool(specifier)` — for example `Bash(npm run test *)`, `
 
 Everything above changes what the agent *knows or must do*. An [MCP](https://modelcontextprotocol.io/) server changes what it *can reach*: typed tools, data resources, and reusable templates exposed over a standard protocol. The specification is explicit that it “does not dictate how AI applications use LLMs or manage the provided context.”
 
-So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. [Section 36](#sec-ai-mcp-server-setup) covers configuration and its failure modes.
+So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. [Section 37](#sec-ai-mcp-server-setup) covers configuration and its failure modes.
 
 #### Choosing
 
@@ -2380,7 +2380,94 @@ The `/remote-env` slash command sets **which configured environment is the defau
 
 For details, see the [Claude Code on the web documentation](https://code.claude.com/docs/en/claude-code-on-the-web) and the [slash command reference](https://code.claude.com/docs/en/commands).
 
-# 29 How a Session Learns a PR Changed
+# 29 Using a ChatGPT Account for Codex Pull-Request Reviews
+
+OpenAI Codex can act as a reviewer on GitHub pull requests. The native integration uses the Codex service connected to a ChatGPT workspace and posts a standard GitHub review through the Codex connector bot. It does not require you to build a separate GitHub Action.
+
+#### Prerequisites
+
+The native reviewer depends on **Codex Cloud**. Before it can review a repository, you need:
+
+- Codex Cloud enabled for your active ChatGPT workspace;
+- the repository connected to Codex Cloud;
+- access to the Codex code-review settings; and
+- GitHub push or admin permission if you want to configure automatic reviews.
+
+An `AGENTS.md` file is optional, but it lets the reviewer follow repository-specific guidance.
+
+#### Requesting and automating reviews
+
+After an administrator or repository owner connects the repository and enables code review in Codex settings, request a review by adding this comment to a pull request:
+
+``` text
+@codex review
+```
+
+You can add a one-off focus to the same comment, for example:
+
+``` text
+@codex review for security regressions and missing tests
+```
+
+Where the workspace configuration permits it, Codex can also review new pull requests automatically. In GitHub, the general code review reports only high-priority P0 and P1 findings to keep its comments focused.
+
+A separate **Security Review** (research preview) is a deeper pass on security-specific risks. Request it with `@codex security review`. It can overlap with the general review’s security findings.
+
+#### When an administrator has disabled Codex Cloud
+
+The message **“Your admin has turned off Codex Cloud”** is a workspace-policy restriction, not a GitHub repository error. The native `@codex review` bot cannot run because GitHub reviews execute through Codex Cloud. Local Codex use can continue. Run `/review` against a checked-out diff in any of:
+
+- the Codex app
+- the IDE composer
+- the CLI
+
+That is a local review. It does not post a GitHub review and does not create an always-on GitHub bot.
+
+Resolve the restriction in one of these ways:
+
+- A workspace administrator can enable Codex Cloud in the workspace’s admin permissions.
+- A user can connect a *personal* repository from a personal workspace that permits Codex Cloud. Do not use a personal workspace to connect organization-owned repositories — that bypasses the workspace policy your administrator set and moves the code outside your organization’s controls.
+- If cloud access must remain disabled, use the local `/review` path above.
+
+GitHub organizations may separately require an owner to approve the repository connection. Changing that authorization does not override a ChatGPT workspace policy; both sides must permit the integration.
+
+#### Native review versus API-backed automation
+
+Do not confuse the native integration with a custom GitHub Action that calls an OpenAI model. The native reviewer is configured through Codex and the linked ChatGPT workspace. A custom action instead needs API credentials and uses API billing and limits. It also requires you to implement:
+
+- the review prompt
+- permissions
+- comment-posting behavior
+
+Do not copy personal ChatGPT or Codex login credentials into CI secrets.
+
+#### Adding repository-specific review rules
+
+Codex reads applicable `AGENTS.md` files. Put broad guidance in the repository root and narrower guidance in a file closer to the code it governs. Review-only guidance belongs under a `## Code Review Rules` heading:
+
+``` markdown
+## Code Review Rules
+
+- Flag schema changes that are not backward compatible.
+  A safe migration must support both deployed application versions.
+- Flag behavior changes without a regression test.
+```
+
+Keep deterministic formatting and lint checks in continuous integration. Code-review guidance should:
+
+- focus on consequential behavior
+- state the safe alternative or exception
+- remain concise enough to apply consistently
+
+Codex review is an additional signal; it does not replace:
+
+- tests
+- branch protection
+- required human approval
+
+For current setup details, see OpenAI’s [GitHub code-review documentation](https://learn.chatgpt.com/docs/third-party/github).
+
+# 30 How a Session Learns a PR Changed
 
 A coding-agent session that is watching a pull request does not poll it. Something wakes the session when the pull request changes, and in Claude Code that “something” is one of **two separate channels**.
 
@@ -2403,7 +2490,7 @@ Two caveats are worth knowing before relying on it.
 
 **A successful subscribe does not guarantee delivery.** If a PR Steward agent already holds the watch on that pull request, the call still succeeds — but this session receives nothing. The tool result says so in as many words, so read the result rather than the exit status. Taking over the watch requires opting the steward out first, by removing its watching label on the pull request.
 
-**The tool does not exist on a locally-run GitHub MCP server.** Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. [Section 36](#sec-ai-mcp-server-setup) covers the local analogues to reach for instead.
+**The tool does not exist on a locally-run GitHub MCP server.** Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. [Section 37](#sec-ai-mcp-server-setup) covers the local analogues to reach for instead.
 
 **Webhook delivery is also not exhaustive**, which is the failure mode most likely to be mistaken for “nothing has happened”. CI *successes*, new pushes, and merge-conflict transitions can arrive late or not at all. A session that treats silence as “still green” will sit indefinitely on a pull request that has gone stale or conflicted, so a subscription is a supplement to periodically re-reading the pull request’s real state, not a replacement for it.
 
@@ -2466,13 +2553,13 @@ So treat a footer as a strong hint and a missing footer as near-conclusive, and 
 >
 > The delivery mechanics and the wording of the instruction template above were established by observation during agent sessions in mid-2026, not from a published specification. Claude Code on the web is a research-preview feature, so treat the specifics as liable to change and re-check them against current behavior before depending on any one detail.
 
-# 30 When to use a coding agent
+# 31 When to use a coding agent
 
 Coding agent sessions are currently[^1] considered “premium requests”, which are limited resources; see <https://github.com/features/copilot/plans> for details. So, use coding agents sparingly. Use them for complex changes that would be difficult or time-consuming for you to complete by hand. Coding agents also take time to get configured for work, every time you make a request. See <https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment#preinstalling-tools-or-dependencies-in-copilots-environment> for ways to reduce that startup time, but it will never be 0. If you can complete the task faster than the coding agent can, you should probably do it yourself. For example, when you have errors in the spell-check or lint workflows, you can often fix them faster than Copilot can. Similarly, when reviewing Copilot’s PRs, you can often make direct changes to the branch faster than you could write clear review comments and get Copilot to address them.
 
 Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.
 
-# 31 Editing with `.docx` files
+# 32 Editing with `.docx` files
 
 GitHub Copilot coding agents can read Microsoft Word (`.docx`) files, including tracked changes and comments. This enables a hybrid editing workflow where:
 
@@ -2507,7 +2594,7 @@ When opening DOCX files generated by Quarto (including this site), Microsoft Wor
 
 This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.
 
-# 32 Copilot Instructions for this Repository
+# 33 Copilot Instructions for this Repository
 
 A `.github/copilot-instructions.md` file contains repository-specific instructions and guidelines for GitHub Copilot coding agents. This file helps ensure that AI-generated contributions follow the project’s formatting standards, coding conventions, and documentation practices.
 
@@ -2524,7 +2611,7 @@ By having these instructions in `.github/copilot-instructions.md`, you ensure th
 
 See this repository’s own [`.github/copilot-instructions.md`](https://github.com/d-morrison/wai/blob/main/.github/copilot-instructions.md) for a working example.
 
-# 33 Using Copilot Review Before Human Review
+# 34 Using Copilot Review Before Human Review
 
 Before requesting review from other humans, **always have Copilot review your pull request first**—even if Copilot created the PR itself. AI review provides fast, thorough feedback that helps catch issues before involving human reviewers, saving everyone time and improving code quality.
 
@@ -2567,7 +2654,7 @@ Even if you’re highly experienced, treating Copilot review as a required pre-r
 
 When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.
 
-# 34 Reviewing a Copilot PR You Didn’t Create
+# 35 Reviewing a Copilot PR You Didn’t Create
 
 When reviewing a pull request where someone else prompted Copilot to make changes, follow these guidelines to avoid confusion and ensure smooth collaboration:
 
@@ -2640,7 +2727,7 @@ To transfer the PR manager role:
 
 This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.
 
-# 35 Installing Claude Code on Windows
+# 36 Installing Claude Code on Windows
 
 [Claude Code](https://www.anthropic.com/claude-code) is Anthropic’s command-line coding agent. Installing it on Windows works well, but a few platform-specific pitfalls can cost you hours if you don’t know about them. These notes capture a setup that works, and the gotchas to watch for.
 
@@ -2740,7 +2827,7 @@ claude --version      # prints the installed version number
 
 If you get a version number, you’re ready to run `claude` in your project directory. If you get `command not found`, re-check the two `PATH` issues above: the directory must be on `PATH`, and you must `rehash` (or open a fresh window) after changing it.
 
-# 36 Setting up MCP servers
+# 37 Setting up MCP servers
 
 The [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) is how a harness gains typed access to external systems. Configuring a server is usually a one-line command. Diagnosing one that *silently* isn’t working is the part worth writing down, because the common failure mode produces no error at all — only a quiet absence of tools you assumed were there.
 
@@ -2890,7 +2977,7 @@ Repository administrators configure those agents from **Settings \> Copilot \> M
 
 Do not copy a local `claude mcp add` registration into that JSON and expect it to work.
 
-# 37 Managing Gemini API Spend and Cost Optimization
+# 38 Managing Gemini API Spend and Cost Optimization
 
 This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.
 
