@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-23 20:25:47 (PDT)
+Last modified: 2026-08-23 20:26:47 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -15,6 +15,15 @@ A **[large language model](https://en.wikipedia.org/wiki/Large_language_model)**
 A base model trained only to predict text is not yet a helpful assistant. A further training step, often [reinforcement learning from human feedback](https://en.wikipedia.org/wiki/Reinforcement_learning_from_human_feedback), teaches the model to follow instructions, answer as a helpful assistant, and refuse harmful requests, rather than simply continuing whatever text it is given. This is the step that turns a raw language model into something like Claude or ChatGPT.
 
 A model call is stateless: given the same input, it has no memory of any previous call. Every capability the rest of this chapter describes — holding a conversation, using tools, running autonomously as an agent — is scaffolding built on top of that one stateless function. The harness supplies the memory, the tools, and the control flow; the model only ever predicts what token comes next.
+
+For a from-scratch walk through that stack, see Stanford’s [CS336: Language Modeling from Scratch](https://cs336.stanford.edu/). The course has students implement:
+
+- data collection and cleaning for pre-training
+- transformer construction
+- training
+- evaluation
+
+Lecture recordings are public. It is an implementation-heavy treatment of how a language model is built, not a product tutorial for coding agents.
 
 # 2 What are AI coding agents?
 

@@ -330,7 +330,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-08-23 20:25:47 (PDT)</p>
+  <p class="date">Last modified: 2026-08-23 20:26:47 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -346,6 +346,14 @@
 <p>A <strong><a href="https://en.wikipedia.org/wiki/Large_language_model">large language model</a></strong> (LLM) is a statistical model trained to predict the next token in a sequence of text, based on patterns learned from enormous amounts of text during training. That single capability — predicting what comes next — turns out to be enough to write code, answer questions, and hold a conversation, once the model is large enough and trained on enough data.</p>
 <p>A base model trained only to predict text is not yet a helpful assistant. A further training step, often <a href="https://en.wikipedia.org/wiki/Reinforcement_learning_from_human_feedback">reinforcement learning from human feedback</a>, teaches the model to follow instructions, answer as a helpful assistant, and refuse harmful requests, rather than simply continuing whatever text it is given. This is the step that turns a raw language model into something like Claude or ChatGPT.</p>
 <p>A model call is stateless: given the same input, it has no memory of any previous call. Every capability the rest of this chapter describes — holding a conversation, using tools, running autonomously as an agent — is scaffolding built on top of that one stateless function. The harness supplies the memory, the tools, and the control flow; the model only ever predicts what token comes next.</p>
+<p>For a from-scratch walk through that stack, see Stanford’s <a href="https://cs336.stanford.edu/">CS336: Language Modeling from Scratch</a>. The course has students implement:</p>
+<ul>
+<li>data collection and cleaning for pre-training</li>
+<li>transformer construction</li>
+<li>training</li>
+<li>evaluation</li>
+</ul>
+<p>Lecture recordings are public. It is an implementation-heavy treatment of how a language model is built, not a product tutorial for coding agents.</p>
 </section></section>
 <section>
 <section id="what-are-ai-coding-agents" class="title-slide slide level1 center" data-number="2">
