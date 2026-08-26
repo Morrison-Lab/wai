@@ -330,7 +330,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-08-23 20:26:47 (PDT)</p>
+  <p class="date">Last modified: 2026-08-26 00:54:04 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -999,7 +999,7 @@ Table&nbsp;2: Relative advantages of humans and Agents
 </div>
 </div>
 </div>
-<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;31</a> for more guidance.</p>
+<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;32</a> for more guidance.</p>
 <h4 id="scenario-3-uncertain-which-scenario-applies">Scenario 3: Uncertain Which Scenario Applies</h4>
 <p><strong>When to use:</strong> You’re not sure whether the failure is due to code issues or workflow configuration problems.</p>
 <p><strong>Recommended approach:</strong></p>
@@ -1027,7 +1027,7 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <ul>
 <li>See the <a href="https://ucd-serg.github.io/lab-manual/continuous-integration.html">UCD-SERG Lab Manual’s continuous integration chapter</a> for setting up GitHub Actions workflows</li>
 <li>See <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;15</a> and <a href="#/sec-ai-benefits-hazards" class="quarto-xref">Section&nbsp;14</a> for security considerations with workflow files</li>
-<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;31</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
+<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;32</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
 <li>See the <a href="https://docs.github.com/en/actions">GitHub Actions documentation</a> for workflow syntax and troubleshooting</li>
 </ul>
 </section></section>
@@ -2844,7 +2844,7 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Rules are written as <code>Tool(specifier)</code> — for example <code>Bash(npm run test *)</code>, <code>Read(./.env)</code>, or <code>Skill(commit)</code> — and sorted into <code>allow</code>, <code>ask</code>, and <code>deny</code>. Because a project’s rules merge with yours rather than replacing them, a repository can tighten what you allow, and cannot quietly loosen it.</p>
 <h4 id="mcp-servers-are-a-different-axis-entirely">MCP Servers Are a Different Axis Entirely</h4>
 <p>Everything above changes what the agent <em>knows or must do</em>. An <a href="https://modelcontextprotocol.io/">MCP</a> server changes what it <em>can reach</em>: typed tools, data resources, and reusable templates exposed over a standard protocol. The specification is explicit that it “does not dictate how AI applications use LLMs or manage the provided context.”</p>
-<p>So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;37</a> covers configuration and its failure modes.</p>
+<p>So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;38</a> covers configuration and its failure modes.</p>
 <h4 id="choosing">Choosing</h4>
 <table class="caption-top">
 <colgroup>
@@ -3106,8 +3106,80 @@ while the selected main agent model is BYOK.</code></pre>
 <p>For current setup details, see OpenAI’s <a href="https://learn.chatgpt.com/docs/third-party/github">GitHub code-review documentation</a>.</p>
 </section></section>
 <section>
-<section id="sec-ai-pr-activity-notifications" class="title-slide slide level1 center" data-number="30">
-<h1><span class="header-section-number">30</span> How a Session Learns a PR Changed</h1>
+<section id="sec-ai-claude-code-action-review" class="title-slide slide level1 center" data-number="30">
+<h1><span class="header-section-number">30</span> Where Pull-Request Review Lives in Claude Code Action</h1>
+
+</section>
+<section class="slide level2">
+
+<p>A common question about <a href="https://github.com/anthropics/claude-code-action">anthropics/claude-code-action</a> is where its pull-request review lives. The answer is surprising: <strong>there is no dedicated review action.</strong> The repository publishes one general-purpose top-level action, and “review” is a <em>prompt</em> you pass it, not a separate artifact.</p>
+<p>All claims below were surveyed against that repository at <code>main</code> (measured 2026-08-25; paths can move).</p>
+<h4 id="one-action-many-behaviors">One action, many behaviors</h4>
+<p>The published action is <a href="https://github.com/anthropics/claude-code-action/blob/main/action.yml"><code>action.yml</code></a>. It is a single composite action whose one external step installs Bun, and its description reads: “Flexible GitHub automation platform with Claude. Auto-detects mode based on event type: PR reviews, <code>@claude</code> mentions, or custom automation.”</p>
+<p>What selects the behavior is the <code>prompt</code> input:</p>
+<ul>
+<li>A workflow triggered by comments containing <code>@claude</code> gets the interactive agent mode.</li>
+<li>A workflow that supplies an explicit review prompt gets a one-shot reviewer.</li>
+<li>The same action also handles issue triage and other automation, which is why one top-level action covers every behavior.</li>
+</ul>
+<p>A second directory in the repository, <a href="https://github.com/anthropics/claude-code-action/tree/main/base-action"><code>base-action/</code></a>, is easy to mistake for a delegation target. It is not one: it holds a lower-level building block, developed in-tree and mirrored automatically to its own repository, <a href="https://github.com/anthropics/claude-code-base-action"><code>anthropics/claude-code-base-action</code></a>. Consumers reference the mirror, not the in-repo path.</p>
+<h4 id="where-the-repository-reviews-its-own-prs">Where the repository reviews its own PRs</h4>
+<ul>
+<li><p><a href="https://github.com/anthropics/claude-code-action/blob/main/.github/workflows/claude-review.yml"><code>.github/workflows/claude-review.yml</code></a> is the reviewer. It triggers on <code>pull_request: opened</code>, skips fork PRs (they cannot mint the OpenID Connect (OIDC) token used for authentication), and calls <code>anthropics/claude-code-action@v1</code> with the prompt <code>/review-pr REPO: ... PR_NUMBER: ...</code>.</p></li>
+<li><p><a href="https://github.com/anthropics/claude-code-action/blob/main/.claude/commands/review-pr.md"><code>.claude/commands/review-pr.md</code></a> defines what <code>/review-pr</code> does. It fans out to five reviewer subagents, defined under <a href="https://github.com/anthropics/claude-code-action/tree/main/.claude/agents"><code>.claude/agents/</code></a>:</p>
+<ul>
+<li>code quality</li>
+<li>performance</li>
+<li>test coverage</li>
+<li>documentation accuracy</li>
+<li>security</li>
+</ul>
+<p>Each subagent is told to report only noteworthy feedback. The command then reviews that feedback and posts only the findings it also deems noteworthy — inline comments for specific issues, top-level comments for general observations or praise.</p></li>
+<li><p><a href="https://github.com/anthropics/claude-code-action/blob/main/examples/pr-review-comprehensive.yml"><code>examples/pr-review-comprehensive.yml</code></a> plus two filtered variants (by author and by path) are copy-paste templates for adding review to another repository.</p></li>
+</ul>
+<h4 id="adding-review-to-your-own-repository">Adding review to your own repository</h4>
+<p>Copy one of the <code>examples/pr-review-*.yml</code> files into your repository’s <code>.github/workflows/</code>, then provide credentials. The examples authenticate with an <code>ANTHROPIC_API_KEY</code> secret; the upstream repository’s own workflows instead use Workload Identity Federation inputs (<code>anthropic_federation_rule_id</code>, <code>anthropic_organization_id</code>, <code>anthropic_service_account_id</code>) to exchange the workflow’s OIDC token for a short-lived API token. Either route works; the federation route avoids a long-lived static key in CI.</p>
+<p>The example’s prompt is the customization point. It is ordinary prose naming focus areas, so you edit it the way you would edit any review checklist.</p>
+<h4 id="reviewer-versus-claude-agent">Reviewer versus <code>@claude</code> agent</h4>
+<p>Do not confuse the review workflow with <a href="https://github.com/anthropics/claude-code-action/blob/main/.github/workflows/claude.yml"><code>.github/workflows/claude.yml</code></a>, the interactive agent. They share one underlying action but differ in trigger surface:</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><code>claude-review.yml</code></th>
+<th><code>claude.yml</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Fires on</td>
+<td>PR opened</td>
+<td>comments, reviews, or issues containing <code>@claude</code></td>
+</tr>
+<tr class="even">
+<td>Behavior</td>
+<td>one-shot review</td>
+<td>open-ended agent session</td>
+</tr>
+<tr class="odd">
+<td>Writes code</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table>
+<p>This distinction explains a common debugging dead end: “<code>@claude</code> answered my comment, so why did nobody review the pull request?” Mention-triggered activity never runs the reviewer; only the <code>pull_request</code>-triggered workflow does.</p>
+<h4 id="relation-to-codex-native-review">Relation to Codex native review</h4>
+<p>This is the Claude-side counterpart to <a href="#/sec-ai-codex-github-review">using a ChatGPT account for Codex pull-request reviews</a>. Codex ships a hosted native reviewer configured through the ChatGPT workspace, with no workflow file. Claude Code’s reviewer is the opposite trade: you own a workflow file and supply API credentials, but the prompt, tools, model, and triggering events are all visible and editable in your repository.</p>
+</section></section>
+<section>
+<section id="sec-ai-pr-activity-notifications" class="title-slide slide level1 center" data-number="31">
+<h1><span class="header-section-number">31</span> How a Session Learns a PR Changed</h1>
 
 </section>
 <section class="slide level2">
@@ -3155,7 +3227,7 @@ while the selected main agent model is BYOK.</code></pre>
 <p><code>subscribe_pr_activity</code> and <code>unsubscribe_pr_activity</code> are ordinary tool calls, taking an owner, a repository, and a pull-request number. Subscribing delivers that pull request’s activity into the conversation as <code>&lt;github-webhook-activity&gt;</code> messages until the session unsubscribes, or the pull request merges or closes.</p>
 <p>Two caveats are worth knowing before relying on it.</p>
 <p><strong>A successful subscribe does not guarantee delivery.</strong> If a PR Steward agent already holds the watch on that pull request, the call still succeeds — but this session receives nothing. The tool result says so in as many words, so read the result rather than the exit status. Taking over the watch requires opting the steward out first, by removing its watching label on the pull request.</p>
-<p><strong>The tool does not exist on a locally-run GitHub MCP server.</strong> Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;37</a> covers the local analogues to reach for instead.</p>
+<p><strong>The tool does not exist on a locally-run GitHub MCP server.</strong> Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;38</a> covers the local analogues to reach for instead.</p>
 <p><strong>Webhook delivery is also not exhaustive</strong>, which is the failure mode most likely to be mistaken for “nothing has happened”. CI <em>successes</em>, new pushes, and merge-conflict transitions can arrive late or not at all. A session that treats silence as “still green” will sit indefinitely on a pull request that has gone stale or conflicted, so a subscription is a supplement to periodically re-reading the pull request’s real state, not a replacement for it.</p>
 <h4 id="the-channel-only-a-human-controls">The channel only a human controls</h4>
 <p>Claude Code on the web shows a per-pull-request <strong>CI monitoring</strong> panel in the session sidebar, with two checkboxes: <strong>Auto-fix CI &amp; address comments</strong> and <strong>Auto-merge when ready</strong>.</p>
@@ -3223,8 +3295,8 @@ while the selected main agent model is BYOK.</code></pre>
 </div>
 </section></section>
 <section>
-<section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="31">
-<h1><span class="header-section-number">31</span> When to use a coding agent</h1>
+<section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="32">
+<h1><span class="header-section-number">32</span> When to use a coding agent</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -3233,8 +3305,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.</p>
 <aside><ol class="aside-footnotes"><li id="fn1"><p>2026-01-10</p></li></ol></aside></section></section>
 <section>
-<section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="32">
-<h1><span class="header-section-number">32</span> Editing with <code>.docx</code> files</h1>
+<section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="33">
+<h1><span class="header-section-number">33</span> Editing with <code>.docx</code> files</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -3270,8 +3342,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.</p>
 </section></section>
 <section>
-<section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="33">
-<h1><span class="header-section-number">33</span> Copilot Instructions for this Repository</h1>
+<section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="34">
+<h1><span class="header-section-number">34</span> Copilot Instructions for this Repository</h1>
 
 </section>
 <section class="slide level2">
@@ -3290,8 +3362,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>See this repository’s own <a href="https://github.com/d-morrison/wai/blob/main/.github/copilot-instructions.md"><code>.github/copilot-instructions.md</code></a> for a working example.</p>
 </section></section>
 <section>
-<section id="using-copilot-review-before-human-review" class="title-slide slide level1 center" data-number="34">
-<h1><span class="header-section-number">34</span> Using Copilot Review Before Human Review</h1>
+<section id="using-copilot-review-before-human-review" class="title-slide slide level1 center" data-number="35">
+<h1><span class="header-section-number">35</span> Using Copilot Review Before Human Review</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -3331,8 +3403,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.</p>
 </section></section>
 <section>
-<section id="reviewing-a-copilot-pr-you-didnt-create" class="title-slide slide level1 center" data-number="35">
-<h1><span class="header-section-number">35</span> Reviewing a Copilot PR You Didn’t Create</h1>
+<section id="reviewing-a-copilot-pr-you-didnt-create" class="title-slide slide level1 center" data-number="36">
+<h1><span class="header-section-number">36</span> Reviewing a Copilot PR You Didn’t Create</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -3418,8 +3490,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.</p>
 </section></section>
 <section>
-<section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="36">
-<h1><span class="header-section-number">36</span> Installing Claude Code on Windows</h1>
+<section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="37">
+<h1><span class="header-section-number">37</span> Installing Claude Code on Windows</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -3506,8 +3578,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>If you get a version number, you’re ready to run <code>claude</code> in your project directory. If you get <code>command not found</code>, re-check the two <code>PATH</code> issues above: the directory must be on <code>PATH</code>, and you must <code>rehash</code> (or open a fresh window) after changing it.</p>
 </section></section>
 <section>
-<section id="sec-ai-mcp-server-setup" class="title-slide slide level1 center" data-number="37">
-<h1><span class="header-section-number">37</span> Setting up MCP servers</h1>
+<section id="sec-ai-mcp-server-setup" class="title-slide slide level1 center" data-number="38">
+<h1><span class="header-section-number">38</span> Setting up MCP servers</h1>
 
 </section>
 <section class="slide level2">
@@ -3609,8 +3681,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <p>Do not copy a local <code>claude mcp add</code> registration into that JSON and expect it to work.</p>
 </section></section>
 <section>
-<section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="38">
-<h1><span class="header-section-number">38</span> Managing Gemini API Spend and Cost Optimization</h1>
+<section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="39">
+<h1><span class="header-section-number">39</span> Managing Gemini API Spend and Cost Optimization</h1>
 
 </section>
 <section class="slide level2 scrollable">
