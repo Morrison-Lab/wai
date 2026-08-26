@@ -130,8 +130,7 @@ not a separate Grok-only data plane
 
 #### Skills, routines, and demonstration
 
-Grok Bot has its own skill and routine objects,
-not the filesystem skills in `ai-config`
+Grok Bot has its own in-app skill and routine objects
 [@grok_bot_skills]:
 
 - A **skill** is a reusable instruction pack
@@ -146,6 +145,19 @@ not the filesystem skills in `ai-config`
 A Bot can own up to 50 routines.
 Background routines can run while the laptop is closed.
 A test run performs *real* work.
+
+Those objects are Grok Bot's product surface.
+They are not a substitute for the lab `ai-config` corpus.
+Because Grok Bot signs in with a Cursor account,
+a session can still load that corpus as a **Cursor plugin**
+(skills, user-global rules, and commands from
+[`.cursor-plugin/plugin.json`](https://github.com/Morrison-Lab/ai-config)):
+the same plugin path this lab's Cursor sessions already use.
+That is not Claude Code's install path.
+Grok Bot does not load the `~/.claude` symlink install,
+`CLAUDE.md` `@imports`, or Claude hooks/`hooks.json`.
+Cursor Cloud uses `.cursor/hooks.json` instead
+([how the config reaches a machine](coding-agents.qmd#sec-ai-config-install)).
 
 #### Approvals and the shared-computer boundary
 
@@ -175,7 +187,15 @@ and production changes behind approval.
 Grok Bot is a capable product in a category we do not currently run:
 unattended work inside signed-in web apps.
 It does not replace Claude Code.
-It will not load `ai-config` skills, hooks, or `CLAUDE.md`.
+Plugin skills from
+[`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config)
+**do** load when the Cursor plugin is installed
+(`.cursor-plugin/plugin.json`: skills, user-global rules, commands).
+The Claude-only install path does **not**:
+no `~/.claude` symlink,
+no `CLAUDE.md` `@imports`,
+no Claude `hooks.json`.
+Cursor Cloud uses `.cursor/hooks.json` instead.
 It has no Linux desktop app.
 Every Bot on an account shares logins and files.
 Using it for lab GitHub, email, or data systems
@@ -393,7 +413,7 @@ and follows from the rows above it.
 | Isolation of named agents | Worktrees, permissions, hooks | Not a security boundary | Team Computer is not; Private Computer is | Per-agent workspace; sandbox off by default | Session and folder access you grant | Workspace and plugin permissions |
 | Model choice | Whatever that harness is configured for | xAI / Cursor product path | Bring your own via Pi | Hosted or local providers | Anthropic | OpenAI |
 | License / lock-in | Reusable across our repos | Closed; Cursor account required | Apache-2.0 | MIT | Anthropic product | OpenAI product |
-| Loads `ai-config` / `~/.claude` | Yes, when installed | No | No | No | No (Customize on claude.ai only) | No |
+| Loads `ai-config` / `~/.claude` | Yes, when installed | Cursor plugin yes; `~/.claude` / Claude hooks no | No | No | No (Customize on claude.ai only) | No |
 | Linux desktop app | Yes (CLI) | No | Web client; Electron is a client of that API | Yes | Claude Desktop | Desktop app; Computer Use is macOS/Windows |
 | Relevance to us | The baseline | Pass for lab workflow; optional narrow trial | Evaluate if we need this shape | Gateway only, sandboxed | Knowledge work beside the terminal | Only if the project already lives in ChatGPT |
 
@@ -402,9 +422,14 @@ and follows from the rows above it.
 For the lab, as of August 2026:
 
 - **Keep repository work in Claude Code plus `ai-config`.**
-  Grok Bot, Rakazo, OpenClaw, Cowork, and ChatGPT Work
-  do not load that config,
-  and they are not a substitute for a reviewable pull request.
+  Grok Bot can load the Cursor plugin from that repo
+  (skills, user-global rules, and commands in
+  `.cursor-plugin/plugin.json`).
+  It still does not load Claude Code's `~/.claude` symlink install,
+  `CLAUDE.md` `@imports`, or Claude `hooks.json`;
+  Cursor Cloud uses `.cursor/hooks.json` instead.
+  Rakazo, OpenClaw, Cowork, and ChatGPT Work do not load that config.
+  None of these is a substitute for a reviewable pull request.
 - **Do not adopt Grok Bot as lab infrastructure.**
   It is a vendor cloud computer that shares logins across Bots,
   requires Cursor data storage,
