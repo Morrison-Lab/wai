@@ -2,19 +2,22 @@ A common question about
 [anthropics/claude-code-action](https://github.com/anthropics/claude-code-action)
 is where its pull-request review lives.
 The answer is surprising:
-**there is no review action.**
-The repository ships one general-purpose action,
+**there is no dedicated review action.**
+The repository publishes one general-purpose top-level action,
 and "review" is a *prompt* you pass it,
 not a separate artifact.
+
+All claims below were surveyed against that repository at `main`
+(measured 2026-08-25;
+paths can move).
 
 #### One action, many behaviors
 
 The published action is
-[`action.yml`](https://github.com/anthropics/claude-code-action/blob/main/action.yml),
-a thin wrapper that delegates to
-[`base-action/action.yml`](https://github.com/anthropics/claude-code-action/blob/main/base-action/action.yml).
-Its own description states the design:
-it "auto-detects mode based on event type:
+[`action.yml`](https://github.com/anthropics/claude-code-action/blob/main/action.yml).
+It is self-contained,
+and its description reads:
+"Auto-detects mode based on event type:
 PR reviews, `@claude` mentions, or custom automation."
 
 What selects the behavior is the `prompt` input:
@@ -24,13 +27,17 @@ What selects the behavior is the `prompt` input:
 - A workflow that supplies an explicit review prompt
   gets a one-shot reviewer.
 - The same action also handles issue triage and other automation,
-  which is why the repository carries only this one action.
+  which is why one top-level action covers every behavior.
+
+A second directory in the repository,
+[`base-action/`](https://github.com/anthropics/claude-code-action/tree/main/base-action),
+is easy to mistake for a delegation target.
+It holds a lower-level building block
+that has since been split into its own repository,
+[`anthropics/claude-code-base-action`](https://github.com/anthropics/claude-code-base-action).
+Consumers do not call it from here.
 
 #### Where the repository reviews its own PRs
-
-Surveying the repository at `main`
-(measured 2026-08-25;
-paths can move):
 
 - [`.github/workflows/claude-review.yml`](https://github.com/anthropics/claude-code-action/blob/main/.github/workflows/claude-review.yml)
   is the reviewer.
@@ -39,15 +46,21 @@ paths can move):
   and calls `anthropics/claude-code-action@v1` with the prompt
   `/review-pr REPO: ... PR_NUMBER: ...`.
 - [`.claude/commands/review-pr.md`](https://github.com/anthropics/claude-code-action/blob/main/.claude/commands/review-pr.md)
-  defines what `/review-pr` does:
-  fan out to five reviewer subagents ---
-  code quality, performance, test coverage, documentation accuracy,
-  and security ---
-  then post only the findings worth posting,
-  as inline comments for specific issues
-  and top-level comments for general observations.
-- [`.claude/agents/*.md`](https://github.com/anthropics/claude-code-action/tree/main/.claude/agents)
-  holds those five subagent definitions.
+  defines what `/review-pr` does.
+  It fans out to five reviewer subagents,
+  defined under [`.claude/agents/`](https://github.com/anthropics/claude-code-action/tree/main/.claude/agents):
+
+  - code quality
+  - performance
+  - test coverage
+  - documentation accuracy
+  - security
+
+  Each subagent is told to report only noteworthy feedback.
+  The command then reviews that feedback
+  and posts only the findings it also deems noteworthy ---
+  inline comments for specific issues,
+  top-level comments for general observations.
 - [`examples/pr-review-comprehensive.yml`](https://github.com/anthropics/claude-code-action/blob/main/examples/pr-review-comprehensive.yml)
   plus two filtered variants
   (by author and by path)
@@ -80,7 +93,7 @@ They share one underlying action but differ in trigger surface:
 
 | | `claude-review.yml` | `claude.yml` |
 |---|---|---|
-| Fires on | PR opened | comments or issues containing `@claude` |
+| Fires on | PR opened | comments, reviews, or issues containing `@claude` |
 | Behavior | one-shot review | open-ended agent session |
 | Writes code | no | yes |
 
