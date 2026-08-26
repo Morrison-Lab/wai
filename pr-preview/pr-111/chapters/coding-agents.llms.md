@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-25 22:10:41 (PDT)
+Last modified: 2026-08-25 23:57:18 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -2476,7 +2476,7 @@ Codex review is an additional signal; it does not replace:
 
 For current setup details, see OpenAI’s [GitHub code-review documentation](https://learn.chatgpt.com/docs/third-party/github).
 
-# 30 Where PR Review Lives in claude-code-action
+# 30 Where Pull-Request Review Lives in Claude Code Action
 
 A common question about [anthropics/claude-code-action](https://github.com/anthropics/claude-code-action) is where its pull-request review lives. The answer is surprising: **there is no dedicated review action.** The repository publishes one general-purpose top-level action, and “review” is a *prompt* you pass it, not a separate artifact.
 
@@ -2484,7 +2484,7 @@ All claims below were surveyed against that repository at `main` (measured 2026-
 
 #### One action, many behaviors
 
-The published action is [`action.yml`](https://github.com/anthropics/claude-code-action/blob/main/action.yml). It is self-contained, and its description reads: “Auto-detects mode based on event type: PR reviews, `@claude` mentions, or custom automation.”
+The published action is [`action.yml`](https://github.com/anthropics/claude-code-action/blob/main/action.yml). It is a single composite action whose one external step installs Bun, and its description reads: “Flexible GitHub automation platform with Claude. Auto-detects mode based on event type: PR reviews, `@claude` mentions, or custom automation.”
 
 What selects the behavior is the `prompt` input:
 
@@ -2492,11 +2492,11 @@ What selects the behavior is the `prompt` input:
 - A workflow that supplies an explicit review prompt gets a one-shot reviewer.
 - The same action also handles issue triage and other automation, which is why one top-level action covers every behavior.
 
-A second directory in the repository, [`base-action/`](https://github.com/anthropics/claude-code-action/tree/main/base-action), is easy to mistake for a delegation target. It holds a lower-level building block that has since been split into its own repository, [`anthropics/claude-code-base-action`](https://github.com/anthropics/claude-code-base-action). Consumers do not call it from here.
+A second directory in the repository, [`base-action/`](https://github.com/anthropics/claude-code-action/tree/main/base-action), is easy to mistake for a delegation target. It is not one: it holds a lower-level building block, developed in-tree and mirrored automatically to its own repository, [`anthropics/claude-code-base-action`](https://github.com/anthropics/claude-code-base-action). Consumers reference the mirror, not the in-repo path.
 
 #### Where the repository reviews its own PRs
 
-- [`.github/workflows/claude-review.yml`](https://github.com/anthropics/claude-code-action/blob/main/.github/workflows/claude-review.yml) is the reviewer. It triggers on `pull_request: opened`, skips fork PRs (they cannot mint the OIDC token used for authentication), and calls `anthropics/claude-code-action@v1` with the prompt `/review-pr REPO: ... PR_NUMBER: ...`.
+- [`.github/workflows/claude-review.yml`](https://github.com/anthropics/claude-code-action/blob/main/.github/workflows/claude-review.yml) is the reviewer. It triggers on `pull_request: opened`, skips fork PRs (they cannot mint the OpenID Connect (OIDC) token used for authentication), and calls `anthropics/claude-code-action@v1` with the prompt `/review-pr REPO: ... PR_NUMBER: ...`.
 
 - [`.claude/commands/review-pr.md`](https://github.com/anthropics/claude-code-action/blob/main/.claude/commands/review-pr.md) defines what `/review-pr` does. It fans out to five reviewer subagents, defined under [`.claude/agents/`](https://github.com/anthropics/claude-code-action/tree/main/.claude/agents):
 
@@ -2506,7 +2506,7 @@ A second directory in the repository, [`base-action/`](https://github.com/anthro
   - documentation accuracy
   - security
 
-  Each subagent is told to report only noteworthy feedback. The command then reviews that feedback and posts only the findings it also deems noteworthy — inline comments for specific issues, top-level comments for general observations.
+  Each subagent is told to report only noteworthy feedback. The command then reviews that feedback and posts only the findings it also deems noteworthy — inline comments for specific issues, top-level comments for general observations or praise.
 
 - [`examples/pr-review-comprehensive.yml`](https://github.com/anthropics/claude-code-action/blob/main/examples/pr-review-comprehensive.yml) plus two filtered variants (by author and by path) are copy-paste templates for adding review to another repository.
 
