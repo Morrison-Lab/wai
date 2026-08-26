@@ -15,9 +15,11 @@ paths can move).
 
 The published action is
 [`action.yml`](https://github.com/anthropics/claude-code-action/blob/main/action.yml).
-It is self-contained,
+It is a single composite action
+whose one external step installs Bun,
 and its description reads:
-"Auto-detects mode based on event type:
+"Flexible GitHub automation platform with Claude.
+Auto-detects mode based on event type:
 PR reviews, `@claude` mentions, or custom automation."
 
 What selects the behavior is the `prompt` input:
@@ -32,17 +34,20 @@ What selects the behavior is the `prompt` input:
 A second directory in the repository,
 [`base-action/`](https://github.com/anthropics/claude-code-action/tree/main/base-action),
 is easy to mistake for a delegation target.
-It holds a lower-level building block
-that has since been split into its own repository,
+It is not one:
+it holds a lower-level building block,
+developed in-tree and mirrored automatically to its own repository,
 [`anthropics/claude-code-base-action`](https://github.com/anthropics/claude-code-base-action).
-Consumers do not call it from here.
+Consumers reference the mirror,
+not the in-repo path.
 
 #### Where the repository reviews its own PRs
 
 - [`.github/workflows/claude-review.yml`](https://github.com/anthropics/claude-code-action/blob/main/.github/workflows/claude-review.yml)
   is the reviewer.
   It triggers on `pull_request: opened`,
-  skips fork PRs (they cannot mint the OIDC token used for authentication),
+  skips fork PRs (they cannot mint the
+  OpenID Connect (OIDC) token used for authentication),
   and calls `anthropics/claude-code-action@v1` with the prompt
   `/review-pr REPO: ... PR_NUMBER: ...`.
 - [`.claude/commands/review-pr.md`](https://github.com/anthropics/claude-code-action/blob/main/.claude/commands/review-pr.md)
@@ -60,7 +65,7 @@ Consumers do not call it from here.
   The command then reviews that feedback
   and posts only the findings it also deems noteworthy ---
   inline comments for specific issues,
-  top-level comments for general observations.
+  top-level comments for general observations or praise.
 - [`examples/pr-review-comprehensive.yml`](https://github.com/anthropics/claude-code-action/blob/main/examples/pr-review-comprehensive.yml)
   plus two filtered variants
   (by author and by path)

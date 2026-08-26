@@ -129,7 +129,7 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/codex-github-code-review.qmd >}}
 
-# Where PR Review Lives in claude-code-action {#sec-ai-claude-code-action-review}
+# Where Pull-Request Review Lives in Claude Code Action {#sec-ai-claude-code-action-review}
 
 {{< include ai-tools/claude-code-action-review.qmd >}}
 
