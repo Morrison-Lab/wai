@@ -27,3 +27,8 @@ Before connecting any platform, check:
 
 Platform capabilities and commercial terms change quickly. Confirm current
 details in the linked official documentation before adopting one.
+
+A separate category --- named, persistent teammates with their own
+browser-and-shell computer, rather than a repository checkout ---
+is reviewed in @sec-grok-bot-category.
+Those products do not replace the platforms above.
