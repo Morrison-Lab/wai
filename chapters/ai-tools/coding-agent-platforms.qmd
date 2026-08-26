@@ -30,5 +30,6 @@ details in the linked official documentation before adopting one.
 
 A separate category --- named, persistent teammates with their own
 browser-and-shell computer, rather than a repository checkout ---
-is reviewed in @sec-grok-bot-category.
+is reviewed in
+[Grok Bot and Alternatives](grok-bot-and-alternatives.qmd#sec-grok-bot-category).
 Those products do not replace the platforms above.

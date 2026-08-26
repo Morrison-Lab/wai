@@ -11,15 +11,14 @@ format:
 ---
 
 Coding agents edit a checkout and return a branch or pull request
-(@sec-ai-coding-agent-platforms).
+([coding-agent platforms](coding-agents.qmd#sec-ai-coding-agent-platforms)).
 *Grok Bot-style* products are a different shape:
 a named, persistent teammate with its own computer,
 so it can click through apps and websites the way a person would
 and keep going after you close your laptop.
 This chapter reviews [Grok Bot](https://docs.x.ai/grok-bot/overview)
-and the real alternatives we found,
-including the open-source project named in the request,
-[Rakazo](https://github.com/elie222/rakazo).
+and the alternatives we could verify from primary sources,
+including [Rakazo](https://github.com/elie222/rakazo).
 
 The question for the lab is not "is the demo impressive?"
 but "what does it add to Claude Code plus
@@ -81,7 +80,8 @@ The pieces that matter as a yardstick here are:
   [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config):
   skills, hooks, and memories that we install once
   and expect a session to load
-  (@sec-ai-config-install, @sec-ai-customization).
+  ([how the config reaches a machine](coding-agents.qmd#sec-ai-config-install);
+  [customizing an agent](coding-agents.qmd#sec-ai-customization)).
 - **GitHub as the review surface**:
   work returns as a branch or pull request,
   with human approval before merge.
@@ -375,7 +375,7 @@ they operate *your* machine under approvals.
 
 None of this loads `ai-config`.
 For repository work we already document Codex separately
-(@sec-ai-codex-github-review).
+([Codex pull-request reviews](coding-agents.qmd#sec-ai-codex-github-review)).
 Do not add ChatGPT Work as a lab-wide tool
 unless a project is already inside that workspace
 and the data-handling rules for that workspace are acceptable.
@@ -426,7 +426,7 @@ For the lab, as of August 2026:
   keep coding in Codex.
 
 None of these replaces the coding-agent platforms in
-@sec-ai-coding-agent-platforms.
+[Coding-Agent Platforms](coding-agents.qmd#sec-ai-coding-agent-platforms).
 They are teammates-with-computers and knowledge-work desktops.
 The portable lab config still lives in `ai-config`,
 and the review surface is still GitHub.
