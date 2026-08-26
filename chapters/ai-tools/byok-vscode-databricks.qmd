@@ -108,6 +108,10 @@ even when the underlying model supports that output length.
 Use the quota-aware lab defaults in @tbl-databricks-oaicopilot-defaults.
 The context column is the operational value to put in `settings.json`,
 not the model's maximum capability.
+These are chat-scale defaults.
+Agent mode has a floor that several of them fall below,
+so read the next section before copying the table into a configuration
+you intend to use with agent mode.
 
 | Model group | Workspace ITPM / OTPM | OAICopilot context | Output cap | Delay |
 |---|---:|---:|---:|---:|
@@ -122,9 +126,13 @@ not the model's maximum capability.
 
 : Lab defaults for Databricks-hosted models {#tbl-databricks-oaicopilot-defaults}
 
-Use `openai-responses` for GPT-5.3 Codex
-and any other endpoint that the current catalog marks as Responses-API-only.
-Use `openai` for the other models in the table.
+The [Databricks supported-models catalog](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models)
+marks three endpoints as Responses-API-only:
+GPT-5.5 Pro, GPT-5.5, and GPT-5.3 Codex.
+Use `openai-responses` for those three
+and `openai` for every other model in the table.
+Re-check the catalog when adding a model,
+since the set changes as endpoints are added and retired.
 Add the `delay` value to each affected model entry.
 The extension applies this model-specific pause between requests;
 models without it fall back to the global `oaicopilot.delay` value.
@@ -132,6 +140,60 @@ Every context and output cap in the table is a working default,
 not the underlying model's maximum capability.
 Workspaces with higher provisioned or priority limits can raise these
 after checking their actual quota.
+
+#### Sizing for agent mode
+
+The table above is sized to keep a chat session inside an ITPM tier.
+Agent mode does not fit inside it,
+because the instruction corpus loads before the conversation does.
+
+The arithmetic is the same one given above,
+run in the other direction.
+The extension advertises `context_length` minus `max_tokens` as the input
+budget, so the 64,000/16,000 row leaves 48,000 input tokens.
+Everything an agent session sends competes for that number:
+the always-loaded instruction files,
+the tool definitions,
+whatever file contents the agent reads,
+and only then the request.
+
+Measure the corpus rather than estimating it.
+For a Claude Code session loading the lab's shared configuration,
+`scripts/check-context-closure.py` in
+[`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config)
+reported 281,297 bytes across nine always-loaded files,
+or about 70,324 tokens, on 2026-08-26.
+
+That is over the whole 48,000-token budget before the session has read a file
+or received a message.
+The result is not a constrained session but failure 6 below,
+`No lowest priority node found`:
+the prompt renderer drops elements until nothing is left to drop
+and the prompt is still over budget.
+
+So treat 64,000 as a chat-scale value.
+Agent mode with an instruction corpus of this size needs the provider's real
+context window,
+which the
+[Databricks supported-models catalog](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models)
+states matches the value published by the model's own provider
+for OpenAI, Google Gemini, and Anthropic models.
+The lab's per-model inventory of registered endpoints and their provider
+windows is maintained separately in the private HAC runbook,
+`chapters/oaicopilot-databricks.qmd` in `ucdavis/hac.it`.
+Reconcile against that inventory rather than against this table
+when configuring a machine for agent work.
+
+Raising `context_length` this way does not raise the output reservation,
+since `max_tokens` is unchanged,
+so it costs ITPM headroom and not OTPM headroom.
+Keep the other controls from this section in place when you do it:
+the per-model `delay`,
+the lengthened retry interval,
+and starting a new conversation once accumulated history stops earning its
+tokens.
+Those address pacing,
+which is what a larger window makes more important rather than less.
 
 The 64,000/16,000 combination limits one prompt to about 48,000 input tokens.
 Together with 15-second pacing,
