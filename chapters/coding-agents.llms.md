@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-26 23:14:14 (PDT)
+Last modified: 2026-08-27 00:29:31 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -1838,7 +1838,41 @@ Use the quota-aware lab defaults in [Table 3](#tbl-databricks-oaicopilot-defaul
 
 Table 3: Lab defaults for Databricks-hosted models
 
-Use `openai-responses` for GPT-5.3 Codex and any other endpoint that the current catalog marks as Responses-API-only. Use `openai` for the other models in the table. Add the `delay` value to each affected model entry. The extension applies this model-specific pause between requests; models without it fall back to the global `oaicopilot.delay` value. Every context and output cap in the table is a working default, not the underlying model’s maximum capability. Workspaces with higher provisioned or priority limits can raise these after checking their actual quota.
+Use `openai-responses` for any endpoint that the current catalog marks as requiring the Responses API, and `openai` for the rest. Checked 2026-08-26, the catalog gives that instruction for GPT-5.5 Pro, GPT-5.5, and GPT-5.3 Codex. Read the catalog rather than the list, since an endpoint can change API mode without any model being added. Add the `delay` value to each affected model entry. The extension applies this model-specific pause between requests; models without it fall back to the global `oaicopilot.delay` value. Every context and output cap in the table is a working default, not the underlying model’s maximum capability. Workspaces with higher provisioned or priority limits can raise these after checking their actual quota.
+
+#### Why the context and delay columns move together
+
+The context and delay columns are one setting expressed twice, so changing either alone breaks the pairing.
+
+A workspace admits `ITPM` input tokens per minute. The extension advertises `context_length` minus `max_tokens` as the model’s input budget, and the delay sets how often a request can be sent. Sustained work therefore needs
+
+\\\text{input budget} \times \text{requests per minute} \le \text{ITPM}\\
+
+The Claude row is tuned to sit just under that ceiling. A 15,000 ms delay allows four requests per minute, and each request carries the 48,000-token input budget derived above, so a busy client draws about 192,000 against a 200,000 ITPM tier. That is roughly 96 percent of the allowance, which is why the 64,000 value looks conservative and is not.
+
+This is what makes a larger window expensive. Raising `context_length` while leaving the delay alone multiplies straight through the inequality above. [Table 4](#tbl-databricks-itpm-pacing) gives the largest input budget each tier sustains at a given pace.
+
+| Workspace ITPM | 15 s (4/min) | 30 s (2/min) | 60 s (1/min) |
+|----------------|-------------:|-------------:|-------------:|
+| 200,000        |       50,000 |      100,000 |      200,000 |
+| 1,000,000      |      250,000 |      500,000 |    1,000,000 |
+| 2,000,000      |      500,000 |    1,000,000 |    2,000,000 |
+
+Table 4: Largest sustainable input budget by tier and pacing
+
+A model’s own maximum window is a separate quantity from either column, and it is usually far larger. Registering it directly is the common mistake. Advertising a 1,000,000-token window on a 200,000 ITPM tier offers a single prompt of 984,000 input tokens, which is 4.9 times the entire per-minute allowance, so two full prompts would need about 295 seconds between them. The window is a real capability of the model and it is not available at that quota.
+
+#### Choosing a model for agent mode
+
+Agent mode spends the input budget faster than chat does, because tool definitions and file contents are sent before any conversation. Two configurations are possible, and the tier decides which one is open.
+
+On a 200,000 ITPM tier the budget can be spent on a large window or on frequent turns, and not on both. Doubling the window means halving the pace, so an agent that reads several files per turn slows to a crawl exactly when it is doing the most work.
+
+The higher tiers change the answer rather than easing it. GPT-5.6 Sol, Terra, and Luna sit on a 2,000,000 ITPM tier, ten times the Claude and Gemini families, and carry a 400,000 context with no delay. That is 384,000 input tokens at roughly five requests per minute: eight times the Claude window and faster turns at the same time. Prefer that family for agent work on a standard pay-per-token workspace, and keep the 200,000 ITPM families for chat.
+
+Note the direction of the trade, which is the opposite of the intuition. Within one tier a smaller window buys more turns per minute, so the fastest agent configuration is rarely the widest one.
+
+Measure before tuning either column. VS Code’s status bar reports tokens used against the advertised window for the current chat, which is the only reading that reflects what a client actually sends. Read it in a **new** chat, since an existing one keeps the context metadata it was created with.
 
 The 64,000/16,000 combination limits one prompt to about 48,000 input tokens. Together with 15-second pacing, that keeps one busy client near rather than far above a 200,000 ITPM tier. It is not a guarantee: the quota is shared across the workspace, prompt sizes vary, and concurrent users or clients consume the same allowance. Increase the delay or reduce `context_length` further when 429s continue.
 
@@ -1955,7 +1989,7 @@ Error: No lowest priority node found (path: ...)
 
 This one comes from Copilot Chat’s prompt renderer, not from Databricks. The renderer drops prompt elements in priority order until the prompt fits the input budget the extension advertises, which is `context_length` minus `max_tokens`, or 48,000 tokens at the Claude defaults in [Table 3](#tbl-databricks-oaicopilot-defaults). The error is what it raises when it has nothing left to drop and the prompt is still over budget. A prompt pruned that far need not still contain your own message, which fits a model that replies it cannot see a request.
 
-Agent mode reaches this sooner than ordinary chat, because tool definitions and instruction files consume the budget before any conversation does. Raise the model’s `context_length` and leave `max_tokens` alone: that widens the input allowance without reserving more output tokens per minute. Reducing the number of active tools and instruction files works too. Weigh both against [Table 3](#tbl-databricks-oaicopilot-defaults), whose context values are chosen to keep one client inside an ITPM tier, so buying prompt headroom this way costs more 429s.
+Agent mode reaches this sooner than ordinary chat, because tool definitions and instruction files consume the budget before any conversation does. Raise the model’s `context_length` and leave `max_tokens` alone: that widens the input allowance without reserving more output tokens per minute. Reducing the number of active tools and instruction files works too. Weigh both against [Table 3](#tbl-databricks-oaicopilot-defaults), whose context values are chosen to keep one client inside an ITPM tier, so buying prompt headroom this way costs more 429s. Raising the window without lengthening the delay breaks the pairing those two columns encode, and on a 200,000 ITPM tier the headroom is not there to buy. Switching to a higher-tier family is the move that gets both, as [Table 4](#tbl-databricks-itpm-pacing) sets out.
 
 **7. `[object Object]` in the reply text**
 
