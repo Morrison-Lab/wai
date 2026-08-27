@@ -9,7 +9,7 @@
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.10.18">
 
-  <title>Working with AI – Orchestrating Teams of Agents</title>
+  <title>Working with AI – Grok Bot and Alternatives</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -256,7 +256,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Orchestrating Teams of Agents</h1>
+  <h1 class="title">Grok Bot and Alternatives</h1>
 
 <div class="quarto-title-authors">
 </div>
@@ -265,7 +265,8 @@
 </section>
 <section class="slide level2">
 
-<p>A single coding agent works one problem at a time. <em>Orchestration</em> is the step up from that: running several agents at once and coordinating their work. This chapter explains when orchestration is worth the added cost, describes what our lab already uses for it, and evaluates three outside “agent orchestrator” projects that lab members have asked about.</p>
+<p>Coding agents edit a checkout and return a branch or pull request (<a href="../chapters/coding-agents.html#sec-ai-coding-agent-platforms">coding-agent platforms</a>). <em>Grok Bot-style</em> products are a different shape: a named, persistent teammate with its own computer, so it can click through apps and websites the way a person would and keep going after you close your laptop. This chapter reviews <a href="https://docs.x.ai/grok-bot/overview">Grok Bot</a> and the alternatives we could verify from primary sources, including <a href="https://github.com/elie222/rakazo">Rakazo</a>.</p>
+<p>The question for the lab is not “is the demo impressive?” but “what does it add to Claude Code plus <a href="https://github.com/Morrison-Lab/ai-config"><code>ai-config</code></a>, and what data or approval boundary does it move?”</p>
 <div class="callout callout-warning callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -275,211 +276,322 @@
 <p><strong>A fast-moving, opinionated snapshot</strong></p>
 </div>
 <div class="callout-content">
-<p>As of early 2026, this space is changing weekly. The tools below are young, and the star counts, version numbers, and “experimental” labels quoted here were true when this chapter was written (August 2026) and will drift. The verdicts are the lab’s current opinion, not settled fact. Re-check before acting on any of them.</p>
+<p>As of August 2026, this category is days to weeks old in public form. Grok Bot launched as an early beta on 11 August 2026 <span class="citation" data-cites="grok_bot_introducing">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">xAI</span> 2026d</a>)</span>. Product names, plan gates, and security wording will drift. The claims below are taken from vendor docs and project READMEs as they stood on 26 August 2026. Re-check those sources before acting on any of them.</p>
 </div>
 </div>
 </div>
 </section>
 <section>
-<section id="sec-orch-when" class="title-slide slide level1 center" data-number="1">
-<h1><span class="header-section-number">1</span> When Orchestration Helps</h1>
+<section id="sec-grok-bot-category" class="title-slide slide level1 center" data-number="1">
+<h1><span class="header-section-number">1</span> What This Category Is</h1>
 
 </section>
 <section class="slide level2">
 
-<p>Orchestration pays off when work splits into pieces that can run at the same time without waiting on each other. The strongest cases are:</p>
+<p>A coding agent lives in a repository. A Grok Bot-style teammate lives on a <em>computer</em>: a browser, a filesystem, a terminal, and often a graphical desktop, with logins and files that survive from one task to the next.</p>
+<p>That architecture buys three things coding agents do not optimize for:</p>
 <ul>
-<li><strong>Research and review</strong>: several agents investigate different angles at once, then compare and challenge each other’s findings.</li>
-<li><strong>Independent implementation</strong>: each agent owns a separate module, file set, or task.</li>
-<li><strong>Adversarial verification</strong>: agents test competing hypotheses in parallel and converge faster than one agent anchoring on its first guess.</li>
+<li>Work in tools that have no clean API or MCP server, by driving the user interface.</li>
+<li>Unattended runs after the operator’s laptop is closed.</li>
+<li>Named roles that keep memory, routines, and preferences instead of starting from a fresh sandbox every issue.</li>
 </ul>
-<p>Orchestration is not free. Every extra agent has its own context window and spends tokens independently, so cost grows with the number of agents, and coordination overhead grows too. For sequential work, edits to the same file, or tasks with many dependencies, a single agent is cheaper and simpler. The question for any orchestration tool is not “is it impressive?” but “what does it add to what we already do?”</p>
+<p>It also moves a different risk: the agent holds app sessions, not just a git checkout. A login placed on a shared computer is available to every teammate on that computer. Vendor docs for Grok Bot are explicit that <strong>named Bots are not a security boundary</strong> <span class="citation" data-cites="grok_bot_security">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">xAI</span> 2026a</a>)</span>.</p>
+<p>This chapter is not a catalog of every desktop chat app. It covers products that either ship that “teammate with a computer” shape or are the closest vendor and self-hosted substitutes a lab member would actually reach for.</p>
 </section></section>
 <section>
-<section id="sec-orch-baseline" class="title-slide slide level1 center" data-number="2">
+<section id="sec-grok-bot-baseline" class="title-slide slide level1 center" data-number="2">
 <h1><span class="header-section-number">2</span> What We Already Use</h1>
 
 </section>
 <section class="slide level2">
 
-<p>Our lab already orchestrates agents, using <a href="https://www.anthropic.com/claude-code">Claude Code</a> plus the conventions in our <a href="https://github.com/Morrison-Lab/ai-config"><code>ai-config</code></a> repository. The pieces are:</p>
+<p>The lab already runs agents for repository work, documented in the <a href="../chapters/coding-agents.html">coding-agents</a> chapter and the <a href="../chapters/agent-orchestration.html">orchestration</a> chapter. The pieces that matter as a yardstick here are:</p>
 <ul>
-<li><strong>Subagents</strong>: a session spawns focused helper agents for search, review, or verification. Each has its own context window and reports its result back to the main session.</li>
-<li><strong>The <code>Workflow</code> fan-out tool</strong>: a deterministic script that spreads work across many agents in parallel (for example, one reviewer per dimension of a pull request), with token budgets and verification stages built in.</li>
-<li><strong>Git worktrees</strong>: isolated checkouts that let parallel sessions edit a repository without clobbering each other.</li>
-<li><strong>Hooks and permissions</strong>: guardrails that gate risky actions, scope tool access, and enforce lab rules mechanically.</li>
-<li><strong>Reusable GitHub Actions workflows</strong> (in <a href="https://github.com/Morrison-Lab/gha"><code>Morrison-Lab/gha</code></a>): the automated review-and-merge workflow for pull requests.</li>
+<li><strong>Claude Code</strong> (terminal, IDE, and cloud), with skills, hooks, permissions, and subagents.</li>
+<li><strong>Portable agent config</strong> in <a href="https://github.com/Morrison-Lab/ai-config"><code>Morrison-Lab/ai-config</code></a>: skills, hooks, and memories that we install once and expect a session to load (<a href="../chapters/coding-agents.html#sec-ai-config-install">how the config reaches a machine</a>; <a href="../chapters/coding-agents.html#sec-ai-customization">customizing an agent</a>).</li>
+<li><strong>GitHub as the review surface</strong>: work returns as a branch or pull request, with human approval before merge.</li>
+<li><strong>Cursor</strong> as an interactive IDE, not as a second cloud computer that signs into our apps.</li>
 </ul>
-<p>This baseline matters because it is the yardstick for everything below. A new orchestrator is useful to us only if it does something this stack does not already do well.</p>
+<p>A new teammate product is useful to us only if it does something that stack does not already do well, without putting lab credentials on a computer we do not control.</p>
 </section></section>
 <section>
-<section id="sec-orch-agent-teams" class="title-slide slide level1 center" data-number="3">
-<h1><span class="header-section-number">3</span> Claude Code Agent Teams</h1>
+<section id="sec-grok-bot" class="title-slide slide level1 center" data-number="3">
+<h1><span class="header-section-number">3</span> Grok Bot</h1>
 
 </section>
 <section class="slide level2">
 
-<p><a href="https://code.claude.com/docs/en/agent-teams">Agent Teams</a> <span class="citation" data-cites="claude_agent_teams">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026</a>)</span> is the built-in Anthropic feature for coordinating several Claude Code sessions. One session acts as the <strong>lead</strong>, and it spawns <strong>teammates</strong>, each a full, independent Claude Code session with its own context window. Teammates coordinate through a shared task list and a mailbox, and, unlike subagents, they can message each other directly rather than only reporting back to the lead.</p>
-<p>The intended uses match the strong cases in <a href="#/sec-orch-when" class="quarto-xref">Section&nbsp;1</a>: parallel code review, competing-hypothesis debugging, new modules owned by different teammates, and changes that span several layers of a codebase. As of August 2026 the feature is <strong>experimental</strong> and off by default; it is enabled with the <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS</code> environment variable. It carries real limits: teammates do not survive session resumption, a session has exactly one team, teammates cannot spawn their own teammates, and token use is much higher than a single session.</p>
-<div class="callout callout-tip callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Useful to us? Yes, worth trying</strong></p>
-</div>
-<div class="callout-content">
-<p>Agent Teams is a native extension of the tool we already live in, so it is the lowest-friction option here. It complements, rather than replaces, our subagents, <code>Workflow</code> fan-out, and worktree parallelism: teammates that talk to each other suit adversarial review and debugging, where our subagents (which only report back) are weaker. Treat it as a feature to experiment with on research and review tasks, not a platform to adopt, and mind the token cost and the experimental limits.</p>
-</div>
-</div>
-</div>
-</section></section>
-<section>
-<section id="sec-orch-inflexa" class="title-slide slide level1 center" data-number="4">
-<h1><span class="header-section-number">4</span> Inflexa</h1>
-
-</section>
-<section class="slide level2">
-
-<p><a href="https://github.com/inflexa-ai/inflexa">Inflexa</a> <span class="citation" data-cites="inflexa">(<a href="#/references" role="doc-biblioref" onclick="">Inflexa 2026</a>)</span> calls itself “the open-source orchestrator for computational biology.” It is a local-first command-line tool that turns a plain-language biological question into code you can read and run, executes that code in a sandboxed <a href="https://www.docker.com/">Docker</a> container, and records signed provenance for every step in a local database. It reads scientific literature, queries dozens of biological databases, and runs analyses in Python and R environments. It is model-agnostic: you bring your own key for Claude, an OpenAI-compatible endpoint, or a local model.</p>
-<p>Inflexa is released under the permissive <strong>Apache-2.0</strong> license. Its open-source command-line tool is the full product, not a trial; the separate commercial offering only adds hosted infrastructure, team collaboration, and managed compute. As of August 2026 it is young but actively developed (around 30 stars), and its analysis “skill packs” are omics- and translational-medicine-focused (transcriptomics, proteomics, pharmacokinetics, drug repurposing, statistical modeling).</p>
-<div class="callout callout-tip callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Useful to us? Yes, worth evaluating</strong></p>
-</div>
-<div class="callout-content">
-<p>Of the three outside tools, Inflexa is the most relevant to our actual research. Its priorities are ours: reproducible analysis in R and Python, provenance on every step, and no data leaving the machine. It is worth a real trial on a lab dataset, and its provenance and sandboxing design is a useful reference for our own reproducibility tooling. Two cautions: it is early, and its skill packs are aimed at omics rather than serology or infectious-disease epidemiology, so adopting it as a dependency now would be premature. Evaluate first; contribute a domain skill pack if the fit turns out to be good.</p>
-</div>
-</div>
-</div>
-</section></section>
-<section>
-<section id="sec-orch-torqclaw" class="title-slide slide level1 center" data-number="5">
-<h1><span class="header-section-number">5</span> TORQCLAW</h1>
-
-</section>
-<section class="slide level2">
-
-<p><a href="https://github.com/pilotwaffle/TORQCLAW">TORQCLAW</a> <span class="citation" data-cites="torqclaw">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">pilotwaffle</span> 2026</a>)</span> is a “governed local and cloud AI-agent control plane.” It is a <a href="https://www.typescriptlang.org/">TypeScript</a> gateway, router, and console user interface wrapped around a forked Python execution engine, adding a governance layer between an agent’s request and its action: approval gates, budget caps, spending receipts, and capability and path scoping over <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> (MCP) tools. It runs local models through <a href="https://ollama.com/">Ollama</a> and falls back to a frontier model when needed.</p>
-<p>As of August 2026 it is a single-author, early-stage project (a few stars, a completed “Phase 1” prototype). Critically, it ships <strong>with no license file</strong>, which under default copyright means all rights are reserved: we could not legally fork, vendor, or reuse its code even if we wanted to.</p>
+<p><a href="https://docs.x.ai/grok-bot/overview">Grok Bot</a> <span class="citation" data-cites="grok_bot">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">xAI</span> 2026c</a>)</span> is xAI’s early-beta product for named AI teammates. Each Bot is a persistent agent you message like a colleague. The Bots on one account share <strong>one user-scoped cloud computer</strong> with a browser, filesystem, and terminal <span class="citation" data-cites="grok_bot_computer">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">xAI</span> 2026f</a>)</span>. They can use connectors (shown as Plugins in the app) where those exist, and computer use for apps and websites without a clean API. Several Bots can run in parallel, each with its own <em>screen</em> on that shared computer. The screens are work surfaces, not isolation.</p>
+<p>It is a separate product from the consumer Grok chatbot. You install a desktop app (macOS or Windows), sign in with a <strong>Cursor</strong> account, and can continue the same Bot from iOS <span class="citation" data-cites="grok_bot_get_started">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">xAI</span> 2026b</a>)</span>. There is no Linux desktop app as of this survey. Eligible plans listed in the getting-started docs are:</p>
+<ul>
+<li>SuperGrok Plus and SuperGrok Heavy</li>
+<li>Cursor Pro+ and Cursor Ultra</li>
+<li>Cursor Teams Standard and Premium</li>
+</ul>
+<p>Grok Bot requires cloud data storage. Accounts using Cursor Legacy Privacy Mode must change that setting before it will start <span class="citation" data-cites="grok_bot_get_started">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">xAI</span> 2026b</a>)</span>. Privacy, training opt-out, and account deletion follow <a href="https://cursor.com/privacy">Cursor’s privacy</a> and <a href="https://cursor.com/security">security</a> documentation, not a separate Grok-only data plane <span class="citation" data-cites="grok_bot_security">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">xAI</span> 2026a</a>)</span>.</p>
+<h4 id="skills-routines-and-demonstration">Skills, routines, and demonstration</h4>
+<p>Grok Bot has its own in-app skill and routine objects <span class="citation" data-cites="grok_bot_skills">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">xAI</span> 2026e</a>)</span>:</p>
+<ul>
+<li>A <strong>skill</strong> is a reusable instruction pack (when to use it, inputs, steps, validation, deliverable, approvals).</li>
+<li>A <strong>routine</strong> tells one Bot when to run a workflow, on a schedule or, where supported, after a Cursor-account event such as a Slack message or GitHub notification.</li>
+<li><strong>Teach a task</strong>, when the control is visible, records a browser demonstration (up to ten minutes, no microphone) and drafts a skill from it.</li>
+</ul>
+<p>A Bot can own up to 50 routines. Background routines can run while the laptop is closed. A test run performs <em>real</em> work.</p>
+<p>Those objects are Grok Bot’s product surface. They are not a substitute for the lab <code>ai-config</code> corpus. Because Grok Bot signs in with a Cursor account, a session can still load that corpus as a <strong>Cursor plugin</strong> (skills, user-global rules, and commands from <a href="https://github.com/Morrison-Lab/ai-config"><code>.cursor-plugin/plugin.json</code></a>): the same plugin path this lab’s Cursor sessions already use. That is not Claude Code’s install path. Grok Bot does not load the <code>~/.claude</code> symlink install, <code>CLAUDE.md</code> <code>@imports</code>, or Claude hooks/<code>hooks.json</code>. Cursor Cloud uses <code>.cursor/hooks.json</code> instead (<a href="../chapters/coding-agents.html#sec-ai-config-install">how the config reaches a machine</a>).</p>
+<h4 id="approvals-and-the-shared-computer-boundary">Approvals and the shared-computer boundary</h4>
+<p>The security docs describe operator controls worth taking at face value <span class="citation" data-cites="grok_bot_security">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">xAI</span> 2026a</a>)</span>:</p>
+<ul>
+<li>Per-action <strong>Allow once</strong>, <strong>Deny</strong>, and <strong>Always allow</strong>.</li>
+<li><strong>Auto Review</strong> rules: Require Approval always wins over Always Allow when both match.</li>
+<li><strong>Take control</strong> of the Agent Computer for passwords, passkeys, two-factor codes, CAPTCHAs, and payments. Do not paste those into chat.</li>
+<li>Local-computer execution is a <em>separate</em> switch (default: ask every time) and does not stop the Bot from using its cloud computer.</li>
+<li>Deleting a Bot does not wipe shared-computer files or browser sessions.</li>
+</ul>
+<p>The docs’ own least-privilege advice matches lab practice: connect only the tools a workflow needs, start with drafts, and keep sending, publishing, purchasing, deletion, and production changes behind approval.</p>
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Useful to us? Not for adoption</strong></p>
+<p><strong>Useful to us? Not as the agent-config workflow</strong></p>
 </div>
 <div class="callout-content">
-<p>TORQCLAW fails three ways for our purposes. It is unlicensed, so we cannot legally build on it. It is domain-agnostic agent <em>infrastructure</em>, not tooling for our research. And the governance ideas it centers on, approval gates, capability scoping, and cost limits, we already implement directly through Claude Code permissions and hooks, MCP scoping, and the <code>Workflow</code> tool’s token budgets. At most, its design documents are worth skimming as a catalog of agent-governance patterns.</p>
+<p>Grok Bot is a capable product in a category we do not currently run: unattended work inside signed-in web apps. It does not replace Claude Code. Plugin skills from <a href="https://github.com/Morrison-Lab/ai-config"><code>Morrison-Lab/ai-config</code></a> <strong>do</strong> load when the Cursor plugin is installed (<code>.cursor-plugin/plugin.json</code>: skills, user-global rules, commands). The Claude-only install path does <strong>not</strong>: no <code>~/.claude</code> symlink, no <code>CLAUDE.md</code> <code>@imports</code>, no Claude <code>hooks.json</code>. Cursor Cloud uses <code>.cursor/hooks.json</code> instead. It has no Linux desktop app. Every Bot on an account shares logins and files. Using it for lab GitHub, email, or data systems would put those sessions on an xAI-managed computer under Cursor’s data settings.</p>
+<p>If someone already has an eligible Cursor or SuperGrok plan, a narrow trial on <em>non-sensitive</em> operational chores (public-web research, drafting from files you attach) is reasonable. Do not treat named Bots as isolation, and do not enable local-computer execution unless there is a specific reason.</p>
 </div>
 </div>
 </div>
 </section></section>
 <section>
-<section id="sec-orch-comparison" class="title-slide slide level1 center" data-number="6">
-<h1><span class="header-section-number">6</span> Comparison</h1>
+<section id="sec-rakazo" class="title-slide slide level1 center" data-number="4">
+<h1><span class="header-section-number">4</span> Rakazo</h1>
 
 </section>
 <section class="slide level2">
 
-<p>The table below places the three outside tools against our current stack. “Relevance to us” is the bottom line and follows directly from the rows above it.</p>
-<table class="caption-top">
+<p><a href="https://github.com/elie222/rakazo">Rakazo</a> <span class="citation" data-cites="rakazo">(<a href="#/references" role="doc-biblioref" onclick="">Rakazo contributors 2026b</a>)</span> is an Apache-2.0, self-hosted platform that describes itself as an “open-source Grok Bot alternative.” The complete core product is in that repository: a web app, an Electron desktop client, and an Expo mobile app talking to one API. You bring model credentials (through the <a href="https://pi.dev">Pi</a> harness) and choose where the computer runs.</p>
+<p>As of 26 August 2026 the GitHub listing showed on the order of 1,300 stars. The README marks the product as beta.</p>
+<p>Each bot has a thread, memory, routines, and history. Bots can delegate to peer bots or to short-lived subagents. Integrations can come from Composio or Pipedream Connect, or from a user-installed MCP server, Treg endpoint, or OpenAPI document.</p>
+<h4 id="computers-you-host">Computers you host</h4>
+<p>The important design split is the same one Grok Bot has, except Rakazo lets you choose the provider <span class="citation" data-cites="rakazo_runtime">(<a href="#/references" role="doc-biblioref" onclick="">Rakazo contributors 2026a</a>)</span>:</p>
+<ul>
+<li><strong>Team Computer</strong> (default): bots share browser sessions and tools. Per-bot folders organize work; they are <strong>not</strong> a security boundary.</li>
+<li><strong>Private Computer</strong>: the whole workspace is that bot’s home.</li>
+<li><strong>Providers</strong>: Docker (local default), E2B, Daytona, and Box for remote desktops, plus a trusted “this machine” desktop provider.</li>
+</ul>
+<p>Pi runs in the Rakazo API/worker process, not inside the sandbox. Screen operation needs a model that can use image tool results. The Electron app is a client of the same API; on first launch it asks whether bots should keep using Docker or run on this Mac as you. That local-computer provider is the least isolated option and is not for a public or shared server <span class="citation" data-cites="rakazo">(<a href="#/references" role="doc-biblioref" onclick="">Rakazo contributors 2026b</a>)</span>.</p>
+<p>Self-hosting is a long-running API, a Graphile Worker, Postgres, and a computer provider — not a static site (<a href="https://github.com/elie222/rakazo/blob/main/docs/self-host.md">self-hosting guide</a>).</p>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Useful to us? Yes, as the open implementation to watch</strong></p>
+</div>
+<div class="callout-content">
+<p>Rakazo is the closest thing we found to Grok Bot that we could legally inspect, self-host, and point at our own models. That matches lab priorities (local or lab-hosted compute, model choice, no extra vendor computer) better than Grok Bot itself.</p>
+<p>It is still a beta product with a real operations burden (Postgres, a worker, sandbox images, encrypted connector secrets). Do not adopt it as a dependency of lab workflow today. If we ever need persistent sandboxed teammates for browser-and-shell chores that should not run on an xAI VM, this is the codebase to evaluate — and its Team-versus-Private computer split is the right mental model even if we never run the app.</p>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="sec-openclaw" class="title-slide slide level1 center" data-number="5">
+<h1><span class="header-section-number">5</span> OpenClaw</h1>
+
+</section>
+<section class="slide level2">
+
+<p><a href="https://github.com/openclaw/openclaw">OpenClaw</a> <span class="citation" data-cites="openclaw">(<a href="#/references" role="doc-biblioref" onclick="">OpenClaw Foundation 2026a</a>)</span> is a MIT-licensed, self-hosted <strong>gateway</strong> for a personal assistant that meets you in messaging apps. You run one Gateway process on your own machine or a server. The Control UI, CLI, and TUI talk to that Gateway. Channels include WhatsApp, Telegram, Slack, Discord, Google Chat, Signal, iMessage, and others. Companion apps can add voice, canvas, camera, and device-local actions.</p>
+<p>It works with hosted and local model providers. Skills, tools, and plugins extend the assistant. The project is built for a <strong>single operator</strong>.</p>
+<p>This is not a Grok Bot clone. There is no vendor cloud VM per teammate. The Gateway stays on the host. <strong>Sandboxing is off by default</strong>: tool execution for the main session runs on the host unless you set <code>agents.defaults.sandbox</code> <span class="citation" data-cites="openclaw_sandbox">(<a href="#/references" role="doc-biblioref" onclick="">OpenClaw Foundation 2026b</a>)</span>. The docs warn that inbound messages are untrusted input, and that you should read the security and sandboxing guides before exposing the Gateway or connecting other users.</p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Useful to us? Only with sandboxing, and not as a Grok Bot stand-in</strong></p>
+</div>
+<div class="callout-content">
+<p>OpenClaw is relevant if we want an always-on assistant reachable from Slack or Telegram on hardware we already operate. That is a messaging-and-gateway problem, not a “bot with its own computer” problem.</p>
+<p>Default host-side tool execution is incompatible with how we treat untrusted prompts and shared channels. Anyone trying it should turn sandboxing on (<code>non-main</code> or <code>all</code>) before connecting a group channel. It does not replace Claude Code, and it will not automatically load <code>ai-config</code>.</p>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="sec-claude-cowork" class="title-slide slide level1 center" data-number="6">
+<h1><span class="header-section-number">6</span> Claude Cowork</h1>
+
+</section>
+<section class="slide level2">
+
+<p><a href="https://claude.com/docs/cowork/overview">Claude Cowork</a> <span class="citation" data-cites="claude_cowork">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026</a>)</span> uses the same agentic architecture as Claude Code, inside Claude Desktop (with web and mobile access described as rolling out). You describe an outcome; Claude works across local files and connected tools and returns documents, spreadsheets, or organized folders. <a href="https://claude.com/chrome">Claude in Chrome</a> is the browser path. Sub-agents split parallel workstreams.</p>
+<p>Cowork is on paid Claude plans. Connectors, skills, and plugins load from <strong>Customize</strong> on the claude.ai account at session start. Cowork <strong>does not read</strong> the Claude Code CLI’s <code>~/.claude</code> directory. A skill that exists only in the lab’s symlink install must be added again under Customize <span class="citation" data-cites="claude_cowork">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026</a>)</span>.</p>
+<p>That last point is the lab-config trap: Cowork is the same vendor family as our daily coding agent, but it is not the same install path.</p>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Useful to us? Yes, for knowledge work beside the terminal</strong></p>
+</div>
+<div class="callout-content">
+<p>Cowork is the lowest-friction vendor option if the task is files, slides, or Chrome automation and the operator already pays for Claude. It is not a persistent cloud computer of its own in the Grok Bot sense, and it will not pick up <code>ai-config</code> for free. Use it as a desktop knowledge-work surface, not as a second copy of our coding-agent stack.</p>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="sec-chatgpt-work" class="title-slide slide level1 center" data-number="7">
+<h1><span class="header-section-number">7</span> ChatGPT Work</h1>
+
+</section>
+<section class="slide level2">
+
+<p><a href="https://learn.chatgpt.com/docs/get-started-with-work">ChatGPT Work</a> <span class="citation" data-cites="chatgpt_work">(<a href="#/references" role="doc-biblioref" onclick="">OpenAI 2026</a>)</span> is OpenAI’s surface for delegating a task with a clear outcome (a brief, deck, analysis, recurring update, or file). Chat remains for short answers. On the desktop app, Work can use local files, apps, and the browser when those tools are available. A <strong>Work locally</strong> versus <strong>Cloud</strong> control chooses whether the run needs your computer or should continue after you close the app <span class="citation" data-cites="chatgpt_work">(<a href="#/references" role="doc-biblioref" onclick="">OpenAI 2026</a>)</span>.</p>
+<p><a href="https://learn.chatgpt.com/docs/computer-use">Computer Use</a> is a plugin on the ChatGPT desktop app for macOS and Windows with Work and Codex: screen recording and accessibility permissions, plus per-app approval. Codex stays the software-development view in the same desktop app; Work is the everyday-work view of similar agent machinery <span class="citation" data-cites="chatgpt_work">(<a href="#/references" role="doc-biblioref" onclick="">OpenAI 2026</a>)</span>.</p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Useful to us? Only inside an existing ChatGPT workspace</strong></p>
+</div>
+<div class="callout-content">
+<p>ChatGPT Work is the OpenAI analog of “hand it a job and come back.” Cloud Work is the closest OpenAI match to Grok Bot’s laptop-closed computer. Local Work and Codex Computer Use are closer to Cowork: they operate <em>your</em> machine under approvals.</p>
+<p>None of this loads <code>ai-config</code>. For repository work we already document Codex separately (<a href="../chapters/coding-agents.html#sec-ai-codex-github-review">Codex pull-request reviews</a>). Do not add ChatGPT Work as a lab-wide tool unless a project is already inside that workspace and the data-handling rules for that workspace are acceptable.</p>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="sec-grok-bot-comparison" class="title-slide slide level1 center" data-number="8">
+<h1><span class="header-section-number">8</span> Comparison</h1>
+
+</section>
+<section class="slide level2">
+
+<p>“Relevance to us” is the bottom line and follows from the rows above it.</p>
+<table class="caption-top" style="width:100%;">
 <colgroup>
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
 </colgroup>
 <thead>
 <tr class="header">
 <th>Dimension</th>
 <th>Claude Code + <code>ai-config</code> (ours)</th>
-<th>Agent Teams</th>
-<th>Inflexa</th>
-<th>TORQCLAW</th>
+<th>Grok Bot</th>
+<th>Rakazo</th>
+<th>OpenClaw</th>
+<th>Claude Cowork</th>
+<th>ChatGPT Work</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>What it is</td>
-<td>Our current agent stack</td>
-<td>Multi-session teammates</td>
-<td>Computational-biology orchestrator</td>
-<td>Governed agent control plane</td>
+<td>Repository coding-agent stack</td>
+<td>Named teammates on a vendor cloud computer</td>
+<td>Self-hosted Grok Bot-style platform</td>
+<td>Self-hosted messaging gateway</td>
+<td>Desktop knowledge-work agent</td>
+<td>Outcome-oriented ChatGPT agent</td>
 </tr>
 <tr class="even">
-<td>Primary domain</td>
-<td>General coding and research</td>
-<td>General coding and research</td>
-<td>Computational biology</td>
-<td>General agent infrastructure</td>
+<td>Computer</td>
+<td>Local checkout or cloud coding environment</td>
+<td>One user-scoped xAI VM, shared by all Bots</td>
+<td>Docker / E2B / Daytona / Box / this machine</td>
+<td>Host Gateway; optional tool sandbox</td>
+<td>Local files; Chrome; cloud sessions on some plans</td>
+<td>Local or Cloud Work; optional Computer Use</td>
 </tr>
 <tr class="odd">
-<td>License</td>
+<td>Isolation of named agents</td>
+<td>Worktrees, permissions, hooks</td>
+<td>Not a security boundary</td>
+<td>Team Computer is not; Private Computer is</td>
+<td>Per-agent workspace; sandbox off by default</td>
+<td>Session and folder access you grant</td>
+<td>Workspace and plugin permissions</td>
+</tr>
+<tr class="even">
+<td>Model choice</td>
+<td>Whatever that harness is configured for</td>
+<td>xAI / Cursor product path</td>
+<td>Bring your own via Pi</td>
+<td>Hosted or local providers</td>
+<td>Anthropic</td>
+<td>OpenAI</td>
+</tr>
+<tr class="odd">
+<td>License / lock-in</td>
 <td>Reusable across our repos</td>
+<td>Closed; Cursor account required</td>
+<td>Apache-2.0</td>
+<td>MIT</td>
 <td>Anthropic product</td>
-<td>Apache-2.0 (permissive)</td>
-<td>None (all rights reserved)</td>
+<td>OpenAI product</td>
 </tr>
 <tr class="even">
-<td>Maturity (2026)</td>
-<td>In daily use</td>
-<td>Experimental, off by default</td>
-<td>Young, active</td>
-<td>Early prototype, one author</td>
+<td>Loads <code>ai-config</code> / <code>~/.claude</code></td>
+<td>Yes, when installed</td>
+<td>Cursor plugin yes; <code>~/.claude</code> / Claude hooks no</td>
+<td>No</td>
+<td>No</td>
+<td>No (Customize on claude.ai only)</td>
+<td>No</td>
 </tr>
 <tr class="odd">
-<td>Execution model</td>
-<td>Subagents, <code>Workflow</code>, worktrees</td>
-<td>Lead plus independent teammates</td>
-<td>Sandboxed Docker, R and Python</td>
-<td>TypeScript gateway, Python engine</td>
-</tr>
-<tr class="even">
-<td>Governance built in</td>
-<td>Hooks, permissions, budgets</td>
-<td>Inherits Claude Code permissions</td>
-<td>Sandbox, signed provenance</td>
-<td>Approval gates, budgets, receipts</td>
-</tr>
-<tr class="odd">
-<td>Local-first</td>
+<td>Linux desktop app</td>
+<td>Yes (CLI)</td>
+<td>No</td>
+<td>Web client; Electron is a client of that API</td>
 <td>Yes</td>
-<td>Yes</td>
-<td>Yes</td>
-<td>Yes (Ollama, cloud fallback)</td>
+<td>Claude Desktop</td>
+<td>Desktop app; Computer Use is macOS/Windows</td>
 </tr>
 <tr class="even">
 <td>Relevance to us</td>
 <td>The baseline</td>
-<td>Try it</td>
-<td>Evaluate it</td>
-<td>Pass; reference only</td>
+<td>Pass for lab workflow; optional narrow trial</td>
+<td>Evaluate if we need this shape</td>
+<td>Gateway only, sandboxed</td>
+<td>Knowledge work beside the terminal</td>
+<td>Only if the project already lives in ChatGPT</td>
 </tr>
 </tbody>
 </table>
 </section></section>
 <section>
-<section id="sec-orch-recommendation" class="title-slide slide level1 center" data-number="7">
-<h1><span class="header-section-number">7</span> Recommendation</h1>
+<section id="sec-grok-bot-recommendation" class="title-slide slide level1 center" data-number="9">
+<h1><span class="header-section-number">9</span> Recommendation</h1>
 
 </section>
 <section class="slide level2">
 
 <p>For the lab, as of August 2026:</p>
 <ul>
-<li><strong>Try Agent Teams</strong> on a research or review task where parallel, arguing agents would beat one agent working alone. It is native to our tooling and the cheapest to experiment with, as long as the token cost is watched.</li>
-<li><strong>Evaluate Inflexa</strong> on a real dataset. It is the most domain-aligned option and openly licensed, and even if we do not adopt it, its provenance-and-sandbox design informs our own reproducibility work.</li>
-<li><strong>Pass on TORQCLAW</strong> for adoption. It is unlicensed, off-domain, and centered on governance we already have.</li>
+<li><strong>Keep repository work in Claude Code plus <code>ai-config</code>.</strong> Grok Bot can load the Cursor plugin from that repo (skills, user-global rules, and commands in <code>.cursor-plugin/plugin.json</code>). It still does not load Claude Code’s <code>~/.claude</code> symlink install, <code>CLAUDE.md</code> <code>@imports</code>, or Claude <code>hooks.json</code>; Cursor Cloud uses <code>.cursor/hooks.json</code> instead. Rakazo, OpenClaw, Cowork, and ChatGPT Work do not load that config. None of these is a substitute for a reviewable pull request.</li>
+<li><strong>Do not adopt Grok Bot as lab infrastructure.</strong> It is a vendor cloud computer that shares logins across Bots, requires Cursor data storage, and has no Linux desktop app. A personal trial on non-sensitive chores is the most it should be.</li>
+<li><strong>Treat Rakazo as the open reference implementation</strong> of the Grok Bot shape. Evaluate it if we need persistent sandboxed teammates under our keys; do not deploy it as production lab tooling while it is beta.</li>
+<li><strong>Do not confuse OpenClaw with Grok Bot.</strong> It is a self-hosted messaging gateway. Sandbox it before any shared channel, or skip it.</li>
+<li><strong>Use Claude Cowork</strong> when the job is local files or Chrome and you already pay for Claude, knowing you must re-add skills under Customize.</li>
+<li><strong>Leave ChatGPT Work</strong> to projects that already use ChatGPT; keep coding in Codex.</li>
 </ul>
-<p>None of these replaces our current Claude Code and <code>ai-config</code> practice. Agent Teams extends it, Inflexa is a candidate research tool alongside it, and TORQCLAW is, for now, only a reference.</p>
+<p>None of these replaces the coding-agent platforms in <a href="../chapters/coding-agents.html#sec-ai-coding-agent-platforms">Coding-Agent Platforms</a>. They are teammates-with-computers and knowledge-work desktops. The portable lab config still lives in <code>ai-config</code>, and the review surface is still GitHub.</p>
 </section></section>
 <section>
 <section id="references" class="title-slide slide level1 unnumbered center">
@@ -489,14 +601,41 @@
 <section class="slide level2 smaller scrollable" id="references">
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-claude_agent_teams" class="csl-entry" role="listitem">
-Anthropic. 2026. <em>Orchestrate Teams of Claude Code Sessions</em>. Documentation. <a href="https://code.claude.com/docs/en/agent-teams">https://code.claude.com/docs/en/agent-teams</a>.
+<div id="ref-claude_cowork" class="csl-entry" role="listitem">
+Anthropic. 2026. <em>Claude Cowork Overview</em>. Documentation. <a href="https://claude.com/docs/cowork/overview">https://claude.com/docs/cowork/overview</a>.
 </div>
-<div id="ref-inflexa" class="csl-entry" role="listitem">
-Inflexa. 2026. <em>Inflexa: The Open-Source Orchestrator for Computational Biology</em>. Software. <a href="https://github.com/inflexa-ai/inflexa">https://github.com/inflexa-ai/inflexa</a>.
+<div id="ref-chatgpt_work" class="csl-entry" role="listitem">
+OpenAI. 2026. <em>Get Started with ChatGPT Work</em>. Documentation. <a href="https://learn.chatgpt.com/docs/get-started-with-work">https://learn.chatgpt.com/docs/get-started-with-work</a>.
 </div>
-<div id="ref-torqclaw" class="csl-entry" role="listitem">
-<span class="nocase">pilotwaffle</span>. 2026. <em>TORQCLAW: A Governed Local and Cloud AI-Agent Control Plane</em>. Software. <a href="https://github.com/pilotwaffle/TORQCLAW">https://github.com/pilotwaffle/TORQCLAW</a>.
+<div id="ref-openclaw" class="csl-entry" role="listitem">
+OpenClaw Foundation. 2026a. <em>OpenClaw</em>. Software. <a href="https://github.com/openclaw/openclaw">https://github.com/openclaw/openclaw</a>.
+</div>
+<div id="ref-openclaw_sandbox" class="csl-entry" role="listitem">
+OpenClaw Foundation. 2026b. <em>OpenClaw Sandboxing</em>. Documentation. <a href="https://docs.openclaw.ai/gateway/sandboxing">https://docs.openclaw.ai/gateway/sandboxing</a>.
+</div>
+<div id="ref-rakazo_runtime" class="csl-entry" role="listitem">
+Rakazo contributors. 2026a. <em>Rakazo Computer Runtime</em>. Documentation. <a href="https://github.com/elie222/rakazo/blob/main/docs/computer-runtime.md">https://github.com/elie222/rakazo/blob/main/docs/computer-runtime.md</a>.
+</div>
+<div id="ref-rakazo" class="csl-entry" role="listitem">
+Rakazo contributors. 2026b. <em>Rakazo: Open-Source Grok Bot Alternative</em>. Software. <a href="https://github.com/elie222/rakazo">https://github.com/elie222/rakazo</a>.
+</div>
+<div id="ref-grok_bot_security" class="csl-entry" role="listitem">
+<span class="nocase">xAI</span>. 2026a. <em>Approvals, Security, and Privacy</em>. Documentation. <a href="https://docs.x.ai/grok-bot/approvals-security-and-privacy">https://docs.x.ai/grok-bot/approvals-security-and-privacy</a>.
+</div>
+<div id="ref-grok_bot_get_started" class="csl-entry" role="listitem">
+<span class="nocase">xAI</span>. 2026b. <em>Get Started with Grok Bot</em>. Documentation. <a href="https://docs.x.ai/grok-bot/get-started">https://docs.x.ai/grok-bot/get-started</a>.
+</div>
+<div id="ref-grok_bot" class="csl-entry" role="listitem">
+<span class="nocase">xAI</span>. 2026c. <em>Grok Bot Overview</em>. Documentation. <a href="https://docs.x.ai/grok-bot/overview">https://docs.x.ai/grok-bot/overview</a>.
+</div>
+<div id="ref-grok_bot_introducing" class="csl-entry" role="listitem">
+<span class="nocase">xAI</span>. 2026d. <em>Introducing Grok Bot</em>. Product announcement. <a href="https://x.ai/news/introducing-grok-bot">https://x.ai/news/introducing-grok-bot</a>.
+</div>
+<div id="ref-grok_bot_skills" class="csl-entry" role="listitem">
+<span class="nocase">xAI</span>. 2026e. <em>Skills and Routines</em>. Documentation. <a href="https://docs.x.ai/grok-bot/skills-routines-and-automations">https://docs.x.ai/grok-bot/skills-routines-and-automations</a>.
+</div>
+<div id="ref-grok_bot_computer" class="csl-entry" role="listitem">
+<span class="nocase">xAI</span>. 2026f. <em>Use the Computer and Apps</em>. Documentation. <a href="https://docs.x.ai/grok-bot/computer-and-apps">https://docs.x.ai/grok-bot/computer-and-apps</a>.
 </div>
 </div>
 

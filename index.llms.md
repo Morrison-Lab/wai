@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-26 23:09:33 (PDT)
+Last modified: 2026-08-26 23:09:54 (PDT)
 
 This site collects the UCD-SERG lab’s notes on working responsibly and effectively with AI coding assistants: what they are, how to use them, and the policies lab members follow when using them. It was migrated out of the [UCD-SERG Lab Manual](https://ucd-serg.github.io/lab-manual/)’s “Working with AI” chapter, which had grown large enough to deserve a dedicated site. For the lab’s broader coding, reproducibility, and collaboration conventions, see the lab manual itself.
 
@@ -17,6 +17,7 @@ This site collects the UCD-SERG lab’s notes on working responsibly and effecti
 - [**Policies for Using AI**](chapters/ai-use-policies.llms.md): responsibility for validation, disclosure, attribution, and using AI for journal articles
 - [**Coding Agents**](chapters/coding-agents.llms.md): what language models, coding agents, and harnesses are; how to work with them; benefits, hazards, and best practices; and configuring your environment
 - [**Orchestrating Teams of Agents**](chapters/agent-orchestration.llms.md): when running several agents at once is worth the cost, what we already use for it, and how three outside orchestrators (Agent Teams, Inflexa, TORQCLAW) compare
+- [**Grok Bot and Alternatives**](chapters/grok-bot-and-alternatives.llms.md): persistent teammates with their own computer (Grok Bot, Rakazo, OpenClaw, Claude Cowork, ChatGPT Work) and how they differ from our coding-agent stack
 - [**Pull-Request Workflow with Agents**](chapters/pr-workflow-with-agents.llms.md): filing issues, claiming work, and driving a pull request to a clean, mergeable state
 
 The notes are available in multiple formats:

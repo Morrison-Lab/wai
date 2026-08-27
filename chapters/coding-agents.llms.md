@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-26 23:09:33 (PDT)
+Last modified: 2026-08-26 23:09:54 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -79,6 +79,8 @@ Before connecting any platform, check:
 - whether your organization can retain the required audit trail.
 
 Platform capabilities and commercial terms change quickly. Confirm current details in the linked official documentation before adopting one.
+
+A separate category — named, persistent teammates with their own browser-and-shell computer, rather than a repository checkout — is reviewed in [Grok Bot and Alternatives](../chapters/grok-bot-and-alternatives.llms.md#sec-grok-bot-category). Those products do not replace the platforms above.
 
 # 4 What are AI harnesses?
 
