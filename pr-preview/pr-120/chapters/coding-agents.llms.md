@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-26 23:11:29 (PDT)
+Last modified: 2026-08-26 23:28:01 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -79,6 +79,8 @@ Before connecting any platform, check:
 - whether your organization can retain the required audit trail.
 
 Platform capabilities and commercial terms change quickly. Confirm current details in the linked official documentation before adopting one.
+
+A separate category — named, persistent teammates with their own browser-and-shell computer, rather than a repository checkout — is reviewed in [Grok Bot and Alternatives](../chapters/grok-bot-and-alternatives.llms.md#sec-grok-bot-category). Those products do not replace the platforms above.
 
 # 4 What are AI harnesses?
 
@@ -1842,11 +1844,11 @@ Use `openai-responses` for any endpoint that the current catalog marks as requir
 
 The context and delay columns are one setting expressed twice, so changing either alone breaks the pairing.
 
-A workspace admits `ITPM` input tokens per minute. A model advertises `context_length` minus `max_tokens` as its input budget, and the delay sets how often a request can be sent. Sustained work therefore needs
+A workspace admits `ITPM` input tokens per minute. The extension advertises `context_length` minus `max_tokens` as the model’s input budget, and the delay sets how often a request can be sent. Sustained work therefore needs
 
 \\\text{input budget} \times \text{requests per minute} \le \text{ITPM}\\
 
-The Claude row is tuned to sit just under that ceiling. A 15,000 ms delay allows four requests per minute, and 64,000 minus 16,000 leaves 48,000 input tokens, so a busy client draws about 192,000 against a 200,000 ITPM tier. That is roughly 96 percent of the allowance, which is why the 64,000 value looks conservative and is not.
+The Claude row is tuned to sit just under that ceiling. A 15,000 ms delay allows four requests per minute, and each request carries the 48,000-token input budget derived above, so a busy client draws about 192,000 against a 200,000 ITPM tier. That is roughly 96 percent of the allowance, which is why the 64,000 value looks conservative and is not.
 
 This is what makes a larger window expensive. Raising `context_length` while leaving the delay alone multiplies straight through the inequality above. [Table 4](#tbl-databricks-itpm-pacing) gives the largest input budget each tier sustains at a given pace.
 
@@ -1862,7 +1864,7 @@ A model’s own maximum window is a separate quantity from either column, and it
 
 #### Choosing a model for agent mode
 
-Agent mode spends the input budget faster than chat does, because tool definitions and file contents are sent before any conversation. Two responses are available, and the tier decides which one is open.
+Agent mode spends the input budget faster than chat does, because tool definitions and file contents are sent before any conversation. Two configurations are possible, and the tier decides which one is open.
 
 On a 200,000 ITPM tier the budget can be spent on a large window or on frequent turns, and not on both. Doubling the window means halving the pace, so an agent that reads several files per turn slows to a crawl exactly when it is doing the most work.
 

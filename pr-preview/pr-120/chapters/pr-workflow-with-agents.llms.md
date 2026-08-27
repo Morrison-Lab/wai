@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-26 23:11:29 (PDT)
+Last modified: 2026-08-26 23:28:01 (PDT)
 
 The practices below apply whether you are driving an agent’s work or doing the work yourself. They keep parallel sessions from colliding and keep a pull request moving toward a clean, mergeable state.
 
@@ -281,20 +281,63 @@ Worked-example case records for the rules below live in [`ardi.cases.md`](ardi.c
 - **Don’t:** read green CI at the current head as evidence a review is in flight — on a dispatch-only repo that is the steady state, not a transient one.
 - **Don’t:** let a verdict from an earlier head stand because the repo’s trigger class was already known. Knowing it is not the same as acting on it each round.
 
+**Dispatching needs no permission, so do not ask about the spend.**
+
+The rule above is about the mechanism and says nothing about authorization, which leaves a session free to know it and still stall — by reasoning that a review round costs money and the spend is the maintainer’s call. That sounds like restraint and is indistinguishable from it from the inside.
+
+The asymmetry runs the other way. A green, unreviewed PR is **parked, not clean**, so declining to dispatch does not save a round; it holds the PR in a state that reads as finished and is not. The stall also spends the user’s attention every time, which is the thing the review loop exists to conserve.
+
+So dispatch when the round is ready, and put the run in the status report rather than the question.
+
+- **Do:** dispatch the review yourself once the round’s last push has landed, on any repo whose reviewer is dispatch-only.
+- **Do:** name the run you are waiting on, so the report carries a fact rather than a request.
+- **Don’t:** write “spending a round is the maintainer’s call” into a status report, or hold a ready PR pending a spend question.
+- **Don’t:** read this as a general spending grant — it covers scheduling a review, and merging is still [`mwc`](../../skills/mwc/SKILL.md)’s to govern.
+
+(Directive from the user, 2026-08-16: “always dispatch”. Three PRs reached green CI on a `workflow_dispatch`-only repo in one session, and each time the session asked before dispatching, citing rounds that had billed \$12.14, \$10.37 and \$12.44 against a monthly limit already reached. Both earlier dispatches came back `Needs more work`, one with a blocking correctness bug, so the round was not a formality. Tracked as ai-config#1571.)
+
 **Dispatch once, after the round’s LAST push — a per-push rhythm cancels its own reviews.**
 
 **Dispatch with `--ref <PR-branch>`, or the resulting failure is invisible on the PR.**
 
 - **Do:** finish pushing, then dispatch once, and name in the status report which run you are waiting on.
 - **Do:** pass `--ref <PR-branch>` on every dispatch, so the review’s check runs attach to the PR head.
-- **Do:** diagnose a missing verdict by reading the run, since a cancelled dispatched run leaves no trace on the PR at all.
+- **Do:** diagnose a missing verdict by reading the run, since a cancelled dispatched run leaves no trace on the PR’s check-run list.
 - **Don’t:** dispatch per push — each one cancels the last, and the round spends review time producing nothing.
 - **Don’t:** re-dispatch reflexively when a verdict is missing. If one is in flight, the retry cancels it.
 - **Don’t:** read a green, nothing-pending PR as reviewed on such a repo — that is also what an invisible cancelled gate looks like.
 
+**A cancelled run is invisible to a session READING the PR and loud to one SUBSCRIBED to it, and the second is the dangerous direction.**
+
+The bullet above is scoped to the check-run list deliberately. GitHub lists check runs for the **head commit**, so a run cancelled after the head moved leaves a `require-review` failure hanging off the superseded SHA, where a session reading the PR will not find it.
+
+The webhook stream is a different surface and it does not filter that way. The cancel fires a `check_run.completed` with `conclusion: failure`, so a session subscribed to PR activity is woken by a red **required** check on its own PR.
+
+That inverts the risk the bullet above describes. An invisible failure costs you a verdict you thought you had, and you find out by looking. A visible failure on a superseded commit costs more, because the drive-to-green posture says not to end a CI-failure wake without pushing a fix or replying with a blocker — so the reflex is to fix, against a commit that is no longer in the PR’s timeline. At best that is wasted work. At worst you change the current head on the authority of a red check that was never about it.
+
+One field decides it, and it is the field [`fully-clean`](fully-clean.md) already names for the neighbouring problem: compare the event’s own `head_sha` against the PR’s current head. Equal means act. Unequal means confirm a run is live at the real head, and leave the diff alone.
+
+- **Do:** compare a CI-failure event’s `head_sha` against the PR’s current head before diagnosing anything.
+- **Do:** reply naming the superseded SHA rather than staying silent, so the wake is visibly dispositioned rather than dropped.
+- **Don’t:** read “leaves no trace on the PR” as covering the webhook stream — it describes the check-run list, which is filtered by head commit.
+- **Don’t:** push a fix in response to a red check whose `head_sha` is not the head; the check is not about the code you would be changing.
+
+See [`ardi.cases.md`](ardi.cases.md), “A cancelled dispatch that fired a failure webhook against the superseded SHA”.
+
 See [`ardi.cases.md`](ardi.cases.md), “A per-push dispatch cancels its own review, invisibly”.
 
-NEVER use background tasks, async sleep commands, or schedule timers for ARDI status polling. Always execute `python3 scripts/check-pr-fully-clean.py <pr>` synchronously in the foreground turn. This applies transitively to PR-driving workflows such as `gi`, `gii`, and `ardia`; only monitor PRs the session owns or has explicitly claimed, so the rule does not authorize changing someone else’s work.
+**A dispatch you make while idle can still be cancelled — by a push you did not make.** The per-push rule above governs your own pushing rhythm colliding with your own dispatch. The concurrency group is keyed on the PR number alone, not on who triggered the run or how, so a **third party’s** push into the same PR branch cancels your dispatch exactly as a push of your own would — even when you have pushed nothing since dispatching. On a repo with an active `@claude` agent, the bot itself is such a third party: reacting to review activity, it can push a `main`-sync merge into the PR branch (see [`claim-pr`](claim-pr.md)’s note on this), which is a `synchronize` event and, on a repo that reviews on push, schedules a fresh review run in the same group — cancelling yours.
+
+The tell: your dispatched run reads `cancelled`, its `headBranch` is whatever ref you dispatched against — the default branch if you omitted `--ref`, the PR branch if you passed it, so this conjunct alone proves nothing — and a newer `pull_request`-event run exists for the same PR, at a newer head. The right response is to do nothing — the cancellation is benign, since the newer run supersedes at a better head, and re-dispatching would cancel *that* one instead.
+
+- **Do:** before treating a cancelled dispatch as a lost review, check for a newer `pull_request`-triggered run on the same PR. Its existence and its head are the whole explanation.
+- **Do:** re-fetch the PR branch head before concluding a dispatch failed — a head that moved without you pushing explains a cancellation the per-push rule above cannot.
+- **Don’t:** re-dispatch to “fix” a cancelled run that a newer, better-placed run already superseded — that cancels the survivor instead.
+- **Don’t:** read `require-review: failure` on the cancelled run as a live problem. It is a side effect of the superseded run, and the newer run supplies the real verdict.
+
+See [`ardi.cases.md`](ardi.cases.md), “A third-party push cancels an idle-dispatched review”.
+
+Always execute `python3 scripts/check-pr-fully-clean.py <pr>` synchronously in the foreground turn to evaluate clean verdicts. Whenever ending a turn while waiting for an AI review or CI completion on an active PR after pushing code, launch a `schedule` timer (e.g. 120s) to check back. When the timer fires: - Check if a review for the HEAD SHA has arrived. - If no review has posted yet, verify whether review workflow runs are still in progress (`gh run list` / `gh pr view --json statusCheckRollup`). - If review workflows are still running: schedule another timer to check back. - If the reviewer failed, was canceled, skipped with no replacement (e.g. quota limit), or produced a stub review with no stated verdict: invoke self-review fallback per [`self-review-fallback.md`](self-review-fallback.md) rather than stalling the loop. - Otherwise, fix any underlying workflow or dispatch issues discovered along the way and schedule another timer to maintain continuous monitoring until a review lands, self-review fallback triggers, or CI completes. This applies transitively to PR-driving workflows such as `gi`, `gii`, and `ardia`; only monitor PRs the session owns or has explicitly claimed, so the rule does not authorize changing someone else’s work.
 
 The loop’s terminal action is to **report the PR ready, not to merge it**. Merging is human-gated — it happens only on an explicit human “merge it” (the `merge-it` skill), never as a step ARDI takes on its own. So when you carry a PR across a `ScheduleWakeup` or `/loop` wait, **never** bake a self-merge directive like “if clean and CI green, merge it” into the wakeup/loop prompt: a scheduled prompt fires back as a user-role turn, so a self-authored “merge it” only *looks* like human approval (and Claude Code’s auto-mode classifier will rightly deny it as a self-authored merge). Drive to fully clean, report ready, and leave the merge — and any other destructive one-off, e.g. a `gh workflow run` that force-pushes — for explicit human authorization.
 
@@ -327,7 +370,7 @@ See [`ardi.cases.md`](ardi.cases.md), “A review round surfacing five findings 
 
 **Generated trees were regenerated** if the diff (or a `main` merge) touched a generator’s inputs, and the PR body states how many changed files are generated.
 
-**Added lines were scanned** for banned punctuation and multi-sentence lines, run *after* committing, *after* every pass that edited the diff (your own reflow included), and with the three-dot range (`origin/main...HEAD`) — a pre-commit run reports on the wrong tree, a later edit retires the lines an earlier run scanned, and a two-dot range re-attributes whatever `main` deleted to you.
+**Added lines were scanned** for banned punctuation and multi-sentence lines, run *after* committing, *after* every pass that edited the diff (your own reflow included), and with the three-dot range (`origin/main...HEAD`) — a pre-commit run reports on the wrong tree, a later edit retires the lines an earlier run scanned, and a two-dot range re-attributes whatever `main` deleted to you. The mirror direction fires at merge-decision time rather than at line-scanning time, and reads as an emergency: a two-dot `git diff origin/main` shows whatever `main` **added** as *your* deletions, so a behind branch appears to be reverting a sibling PR that just landed. It is not. A merge is three-way, so a file this branch never touched keeps `main`’s version, and a deletion count in an untouched file means the branch is behind rather than dangerous. Settle it with `git merge-tree --write-tree origin/main <head>` and read the resulting tree, rather than acting on the two-dot diff.
 
 **The changelog entry and EVERY PR description this round touched were re-read** against the new behavior, not just the code — none is in the diff, so no reviewer and no grep will catch a stale one. Read “every” literally: a round that corrects a claim appearing in two PRs’ bodies discharges the *feeling* of having synced bodies as soon as one of them is done, and the one most likely to be skipped is your own, because fixing the other repo’s copy is the part that felt like the work. This fires on a **prose** diff too: a body that explains the claim the round just walked back is stale in the way that matters most, and “reconciling prose” does not feel like changing what the PR does. Every **number** in the body was re-*derived* by command rather than re-read, run *at this push* rather than carried from the last one, with the command pasted beside it — a wrong count reads exactly as plausible as a right one, so reading is no instrument for it, and a base figure owes its own derivation rather than riding on the delta’s. “At this push” includes a push that only answers a self-review finding, and it includes the figures a “Corrections to this body” entry already refreshed — that entry is a claim about the previous head, so the current push is what expires it. A figure whose deriving command carries a **precondition** owes one more step, because deriving it freshly discharges “don’t recall it” and says nothing about whether the command was right for this diff: cross-check it against a quantity computed by something else (`git diff --shortstat` against a hand-run added-lines count), since re-reading a correct-looking pipeline confirms it ([`fail-fast`](../principles/fail-fast.md)).
 
@@ -335,7 +378,7 @@ See [`ardi.cases.md`](ardi.cases.md), “A review round surfacing five findings 
 
 **`main` was merged in** if it moved, with version parity re-checked afterward, so the round costs one review run rather than two — and any whole-file count a merge can worsen (spliced changelog bullets) compared before against after, since a defect caused by a *deleted* line is invisible to every added-lines check ([`sync-with-main`](sync-with-main.md)).
 
-**Killer item: the push landed.** `git rev-parse HEAD origin/<branch>` agree before any reply asserting a fix. This one is marked because its failure is not an omission but a **false claim about state**, which a reviewer has no reason to doubt: CI reports green because it correctly validated the older head, and the session’s own recollection agrees with the reply.
+**Killer item: the push landed.** `git rev-parse HEAD origin/<branch>` agree before any reply asserting a fix. This one is marked because its failure is not an omission but a **false claim about state**, which a reviewer has no reason to doubt: CI reports green because it correctly validated the older head, and the session’s own recollection agrees with the reply. It answers whether the **branch** moved, and nothing about whether the **PR** is still open — a closed PR keeps accepting pushes and stops tracking its branch, so both SHAs agree while the PR’s own head stays frozen. Read the PR’s `state` as a second check, per [`use-existing-pr-branch`](use-existing-pr-branch.md), rather than letting this item stand for both.
 
 **Review a round’s fixes as one diff, not as N independent fixes: two of them, each correctly addressing its own finding, can compose into a defect neither introduces alone.**
 
@@ -419,6 +462,23 @@ See [`ardi.cases.md`](ardi.cases.md), “A read SHA can answer a different quest
 
 See [`ardi.cases.md`](ardi.cases.md), “A verification table in the PR body going stale as rounds change the diff”.
 
+**A reviewer’s round-one confirmation of that table does not expire when the diff moves, and the confirmation is what makes the stale figure dangerous.**
+
+The rule above says the figures go stale. This is about the one artifact in the review record that argues they have not.
+
+Round 1 verifies the table, in detail, because a body full of derived counts is exactly what a first review checks, and it says so, naming each figure it matched. Round 2 does not re-verify it, because round 2 is not about the table. Round 2 is about whether round 1’s findings were addressed, so the body sits outside what that round set out to read.
+
+The confirmation is therefore a claim about one head, and nothing retires it. An unverified table at least invites suspicion. A table a reviewer explicitly confirmed reads as settled by someone other than its author, and that reading survives every push that falsifies it.
+
+Sharper still, and this is the part worth pinning: round 2 can derive the correct new figure and use it in its own prose while the body carries the old one, and flag nothing. The reviewer is not diffing its numbers against the body’s. The reviewer derives fresh ones for its own purposes, so the two figures sit one round apart in a single comment thread, contradicting each other, with nobody comparing them.
+
+- **Do:** re-derive every figure in the body at each push, whatever an earlier round confirmed, and record the SHA the new figures were derived at.
+- **Do:** compare any figure a later review states in its own prose against the figure the body states, and read a mismatch as the body being stale.
+- **Don’t:** carry a round-one confirmation forward to a later head — it verified the diff that existed when it ran.
+- **Don’t:** read a later round’s clean verdict as evidence the body is still accurate; that round checked the findings, not the table.
+
+See [`ardi.cases.md`](ardi.cases.md), “A round-one confirmation laundering a body the next round contradicts”.
+
 **A “Corrections to this body” entry is itself a figure in the body, so the next push expires it too — and it reads as more settled than the figure it corrected.**
 
 - **Do:** re-derive every figure a corrections entry vouches for at each push, and record the SHA the new figures were derived at alongside them.
@@ -427,6 +487,30 @@ See [`ardi.cases.md`](ardi.cases.md), “A verification table in the PR body goi
 - **Don’t:** treat having written the correction as having done the check; the note is that check’s output, never a substitute for re-running it.
 
 See [`ardi.cases.md`](ardi.cases.md), “A corrections entry expires with the next push”.
+
+**Verifying that a stale figure is gone needs a SECTION-scoped search, because the corrections entry legitimately quotes it.**
+
+The two rules above compose into a check that cannot discriminate. The table must stop claiming the superseded figure, and the corrections entry must quote that same figure in order to say what changed — so the string is still in the body after a fully correct fix, and a whole-body search for it reports that fix as having failed.
+
+That is a check whose pass path and failure path look alike, which [`fail-fast`](../principles/fail-fast.md) says is not yet a check. It also fails in the direction that invites damage: the natural response to a “still present” hit is to delete the quotation, which is the one part of the entry carrying the record.
+
+Scope the search to the section that makes the claim, and assert the corrections entry in the opposite direction:
+
+``` python
+ver  = body[body.find("## Verification"):body.find("### Corrections")]
+corr = body[body.find("### Corrections"):]
+assert "484 added" not in ver    # the table no longer claims it
+assert "484 added" in corr       # the entry still records what changed
+```
+
+- **Do:** scope a staleness check to the section that makes the claim, and assert separately that the corrections entry still quotes the old figure.
+- **Do:** write the two assertions in opposite directions, so a deleted quotation fails as loudly as an uncorrected table.
+- **Don’t:** search the whole body for the superseded figure — a correct fix leaves it present, so that search reports every correct outcome as a failure.
+- **Don’t:** answer a “still present” hit by removing the quotation from the corrections entry; that quotation is the record the entry exists to carry.
+
+See [`ardi.cases.md`](ardi.cases.md), “A whole-body staleness check that reported a correct fix as failed”.
+
+The one case where a figure does **not** expire is a push that leaves the tree unchanged — a revert-and-restore returns the tree to an object it already had, and a measurement is a function of the tree rather than the commit. [`dont-incur-technical-debt`](../principles/dont-incur-technical-debt.md)’s “The one exception” section carries that mechanic, and the deferral it licenses.
 
 **The read side of that comparison can lag a push by a few seconds, so test the two *local* refs against each other before concluding anything failed.**
 
@@ -543,6 +627,24 @@ See [`ardi.cases.md`](ardi.cases.md), “A mechanism claim whose population held
 - **Don’t:** explain a symptom’s disappearance as nondeterminism on the strength of one clean run.
 - **Don’t:** carry such a claim into an issue or a decision doc, where it argues against the very fix that produced the silence.
 
+**The mirror runs the other way, and it is the one that discards a good fix: a symptom that KEEPS reproducing after a fix landed is not evidence the fix failed.**
+
+The bullet above governs a symptom that vanished, where the attractive wrong answer is nondeterminism. Here the symptom is still there, and the attractive wrong answer is that the diagnosis was wrong — which sends you back to re-litigate a fix that is working, and leaves the real remaining cause unread.
+
+The mechanism is ordinary and worth naming, because it makes the persistence expected rather than surprising. A failure can have causes in series, and only the first one is observable while it stands. Removing it does not change the outcome; it changes which cause produces the outcome. So the job’s colour is the same before and after, and the outcome is the one thing everybody checks.
+
+**The discriminator is the error, not the outcome.** Both runs failed, so comparing conclusions establishes nothing. Comparing the error text is decidable in one read, and a changed error means the first cause is gone and a second was behind it. Where the fix is upstream, pin the comparison to the dependency version each run actually resolved, since a run predating the fix is not evidence about it — [`dont-reinvent-wheel`](../principles/dont-reinvent-wheel.md)’s “mirror direction” section owns that lookup.
+
+Note the asymmetry that makes this worth a rule. Reading the new error costs one glance and usually names its own remedy. Re-litigating the first fix costs a round, and it argues for reverting something correct — the same shape the bullet above warns about, where a claim ends up arguing against the fix that produced the change.
+
+- **Do:** diff the error text across the fix, not the pass/fail outcome, before concluding anything about whether the fix worked.
+- **Do:** resolve which dependency version each run used, when the fix landed upstream, so a pre-fix run is not read as evidence against it.
+- **Do:** report a changed error as a second cause found, and file it, rather than as the first fix having failed.
+- **Don’t:** re-open a landed fix because the symptom persists — that is a claim about the outcome, and the outcome is what a serial second cause preserves.
+- **Don’t:** read the earlier bullet as covering this; it fires on a symptom that stopped, and this one fires on a symptom that did not.
+
+See [`ardi.cases.md`](ardi.cases.md), “A trust-gate fix that revealed a tool-name mismatch behind it”.
+
 **Verify a command, path, or flag *you* write into a doc, with the same rigor [`address-every-comment`](address-every-comment.md) demands for one a reviewer suggests.**
 
 - **Do:** confirm every literal you invent against the tool’s own source or help output before it lands in a doc.
@@ -648,7 +750,7 @@ Worked-example case records for the rules below live in [`fully-clean.cases.md`]
     - **Do:** take a job’s real state from its `status`/`conclusion`, since the same 404 covers a still-running job and a completed-with-no-logs one.
     - **Don’t:** read a 404 on the log fetch as positive evidence of a hang or a stall — it is the opposite, evidence the job is still running.
     - **Don’t:** file an issue reporting a review job as hung or “no verdict produced” while its log fetch still 404s and its status is `in_progress`.
-    - **Don’t:** run the rule backwards: a log URL being **served** is not evidence the job completed. The blob can exist mid-run, so a successful log fetch and a still-running job coexist (measured 2026-08-15 on run 31903219396: the MCP `get_job_logs` call returned a signed `logs_url` while the job’s own `status` still read `in_progress` and it ran on for several more minutes). Completion comes from `status`/`conclusion` alone, in both directions.
+    - **Don’t:** run the rule backwards: a log URL being **served** is not evidence the job completed. The blob can exist mid-run, so a successful log fetch and a still-running job coexist. Completion comes from `status`/`conclusion` alone, in both directions.
 
     **`gh pr checks` is not a complete enumeration of a head’s check runs, so read the commit check-runs endpoint before deciding that everything has finished.**
 
@@ -664,13 +766,81 @@ Worked-example case records for the rules below live in [`fully-clean.cases.md`]
     - **Don’t:** drop `--paginate` — an unfinished run on page 2 returns the same empty result as a finished head.
     - **Don’t:** offer a reason for the omission — none was established.
 
+    **A check-run NAME is not unique across workflows, so a name alone does not identify which check passed.** Two workflows in one repo can each define a job with the same name, and `gh pr checks` prints the bare name with no workflow attached — so a passing row can belong to a workflow you were not asking about. The ambiguity is invisible in the output, which is what makes it dangerous: nothing in a duplicated name looks different from a unique one, so no prompt to check ever arrives.
+
+    Resolve it from the run behind the check rather than from the name:
+
+    ``` bash
+    gh api "repos/<owner>/<repo>/commits/<sha>/check-runs" --paginate \
+      --jq '.check_runs[] | select(.name == "<name>") | .html_url'
+    gh run view <run-id> -R <owner>/<repo> --json workflowName --jq .workflowName
+    ```
+
+    Cross-check against the workflow’s own job list too. A matrix leg gated on `needs:` may not have started at all, so its absence from a run’s jobs contradicts any same-named row reported as passing.
+
+    `check-pr-fully-clean.py` annotates a duplicated name with the run URL only on the lines it actually reports — a run still pending, or one that finished badly. A **passing** duplicated name produces no line at all, so it is never annotated, and the manual lookup above is the only thing that resolves it. That is precisely the case this section was written from: the passing row belonged to the wrong workflow, and nothing in the script’s output would have said so.
+
+    - **Do:** take the workflow from the check run’s own URL before attributing a pass or a failure.
+    - **Don’t:** read a job name as identifying a workflow — it identifies a job, and two workflows may define the same one.
+
+    (Measured 2026-08-21 on `ucdavis/bcs`: `ubuntu-latest (release)` exists in both `R-CMD-check.yaml` and `check-readme`. On a PR fixing an `R CMD check` failure, the passing row was `check-readme`, while `R-CMD-check.yaml`’s matrix legs had not started — they are gated on `needs: [matrix, update-snapshots]`. Reporting the regression fixed on that row would have cited an unrelated workflow.)
+
     **Every subsection above explains a check list that is short for a per-PR reason, and a platform outage produces the same shape for a reason none of them can reach.**
+
+    **A job’s conclusion is set by whichever step failed, which need not be the step whose verdict you read.** Every rule above is about an enumeration that came back short. This one is the opposite case: the enumeration is complete and terminal, and the answer you read came from the wrong member of it. A workflow can carry a guard step that decides what a run *meant* — a review guard classifying an outcome, a summarizer, a status resolver — and that step can conclude “this is fine”, write its output, and end `success`, while the job is red because an earlier step failed without `continue-on-error`. Reading the guard’s own log line then reports the opposite of the check. So when a red job’s log carries a green verdict, do not treat it as a contradiction to explain: enumerate the steps and find the one whose conclusion is `failure`. The same reading also settles what to do next: whether a fix to the classifier can clear the check at all, since a classifier the job does not consult is fixable without changing anything the reader sees.
+
+    - **Do:** identify the failing *step* before diagnosing a failing job, rather than reasoning from whichever step’s output you happened to read.
+    - **Do:** treat a green guard step beside a red job as evidence about the wiring, since the two were decided by different steps.
+    - **Don’t:** read a guard step’s own log line as the job’s verdict — the two are decided by different steps, so agreeing is a coincidence rather than a confirmation.
+    - **Don’t:** claim a fix to a classifier clears a check until you have confirmed the job’s conclusion actually depends on that classifier.
+
+    See [`fully-clean.cases.md`](fully-clean.cases.md), “A green guard step beside a red job”.
+
+    **One SHA can carry two check runs of the same name, from the same workflow, with opposite conclusions — because a workflow gated on a base-ref diff runs VACUOUSLY on `push` and meaningfully on `pull_request`.** The subsection above covers a green step inside a red job. This is the mirror at the run level, and it is worse, because nothing about the green one looks partial: it reports the same check name, it completed, and it passed.
+
+    The mechanism is a workflow that needs a base to diff against. `check-new-line-breaks.yml` passes `base-ref` only when `github.event_name == 'pull_request'`, so the `push`-triggered run of the identical workflow has no base, examines zero added lines, and passes having measured nothing. Both runs attach to the same commit, so `gh pr checks` prints two rows with one name, one `pass` and one `fail`, and reading the list top-down finds whichever came first.
+
+    The vacuous run is the one to discard, and the trigger event is the only field that separates them. `gh api "repos/<owner>/<repo>/actions/runs/<id>" --jq '.event'` settles it in one read per run. A `pass` from a run whose event supplies no base is [`batch-merge-and-resolve`](batch-merge-and-resolve.md)’s zero-matrix problem arriving as a green check. That fragment states it as “a matrix of zeros is indistinguishable from a detector that never ran”, and prescribes a negative control before trusting any zero. The same remedy applies here, and the trigger event is what supplies it: a run given no base examined nothing, so its `pass` is the zero rather than a result.
+
+    Note that this is not the same as [ai-config#1870](https://github.com/Morrison-Lab/ai-config/pull/1870)’s ambiguity, where two *different* workflows contribute check runs sharing a name. Here it is one workflow, and the disambiguator is the event rather than the workflow name — so a fix keyed on `workflowName` cannot see it.
+
+    - **Do:** read the `event` of any run whose verdict you are about to rely on, whenever the same check name appears twice on one head.
+    - **Do:** take the verdict from the `pull_request`-triggered run for any check that diffs against a base.
+    - **Don’t:** read a `pass` as evidence the check examined anything — ask what population it was given first.
+    - **Don’t:** resolve a same-name disagreement by workflow name. On this shape both runs carry the same one.
+
+    (Measured 2026-08-22 on [ai-config#1884](https://github.com/Morrison-Lab/ai-config/pull/1884). Run `32545283504` (`event=push`) and run `32545289903` (`event=pull_request`) both had `head_sha=8c456074`, both were named `new-line-breaks / check-new-line-breaks`, and they concluded `success` and `failure` respectively. The push run was read first and taken as the verdict. The PR run was the one carrying four real findings.)
 
 2.  **The latest review is totally clean:** no nits, and every item that wasn’t directly **Addressed** is either **Deferred** to a tracked follow-up issue, or **Rebutted with a rebuttal that actually convinced the reviewer** — i.e. the reviewer did *not* re-raise it on the next round.
 
 **Criterion 2’s test is the absence of findings, not the presence of a verdict line saying so.**
 
 So when the two disagree inside one comment, **the findings win**. Read to the end of the comment before calling anything clean, and count the items under every heading, whatever that heading is called — [`address-every-comment`](address-every-comment.md) already establishes that “non-blocking”, “nit”, “minor”, and “optional” are prioritization labels rather than a pass, and a reviewer files findings under exactly those words in the section that contradicts its own verdict line.
+
+**Final approval comes from Claude where Claude is reachable.** Another agent’s clean verdict clears CI’s review gate; it does not clear criterion 2 on its own.
+
+This is a directive rather than a derivation, so treat it as a standing preference and not as a claim about any agent’s general competence. What it settles is which verdict a PR is reported **ready** on.
+
+The reason it needs stating is that the two are indistinguishable from the PR page. Every agent posts the same shape — a summary, some analysis, a positive closing line — so a findings-free report reads as approval whichever agent produced it, and the review-gate check goes green either way.
+
+Two failure modes make the preference concrete, and both have recurred:
+
+- **A clean verdict over tooling that errored.** A report can open by saying its own grep failed and then approve on the strength of the analysis that grep was supposed to support. The error line sits above the verdict, so it reads as a caveat rather than as the verdict’s foundation collapsing.
+- **A clean verdict at a head another agent finds a real defect in.** Not a difference of opinion about a nit — a checkable factual error, at the same commit, that the clean verdict passed over.
+
+So when Claude is reachable, its verdict is the one to report on:
+
+- **Do:** dispatch a Claude review and wait for its verdict before reporting a PR ready, whatever another agent has already said.
+- **Do:** name which agent produced the verdict you are reporting, so “clean” is attributable rather than anonymous.
+- **Do:** treat another agent’s findings as real findings — this ranks whose *approval* is final, not whose objections count.
+- **Don’t:** report a PR ready on a non-Claude clean verdict while Claude is reachable, however thorough that report reads.
+- **Don’t:** read a green review-gate check as settling this; the gate does not know which agent answered, and on a selector-based setup the agent is chosen at random.
+
+This is a different question from how much two reviewers **agreeing** is worth, which [`self-review-fallback`](self-review-fallback.md)’s cross-vendor section settles: there, same-vendor agreement measures a shared blind spot, and a cross-vendor split is a prompt to check the item yourself. That section weighs corroboration; this one names whose approval is terminal. They compose — a cross-vendor reviewer is still worth chasing, and its clean verdict still is not the one a PR is reported ready on while Claude is reachable.
+
+Where Claude is genuinely unreachable — quota-skipped, a stub with no stated verdict, or not configured — fall back per [`self-review-fallback`](self-review-fallback.md), which already governs that case. Another agent’s clean verdict is worth more than nothing there, and it is still not Claude’s; say which one you have.
+
+See [`fully-clean.cases.md`](fully-clean.cases.md), “Two agents, one head, opposite verdicts”.
 
 **Both criteria are per-PR, and a stack is where that stops being automatic.**
 
@@ -707,11 +877,15 @@ See [`fully-clean.cases.md`](fully-clean.cases.md), “Both criteria are per-PR,
 
 - **An out-of-diff finding never becomes a thread.** A finding about a line the diff did not touch cannot be attached as an inline comment, so it appears only in the body — reviewers say so explicitly (“inline comments were unavailable for out-of-diff lines”). A thread count therefore cannot see it. Zero unresolved threads is not evidence of zero findings.
 
+- **A notification that truncates the body hides exactly that finding.** The rule above says to read the body, and assumes you are reading the body. A CI-monitor or webhook event delivers the review as *quoted text*, capped at some length, and the inline findings are enumerated first because they are numbered — so what gets cut is the tail, which is where an out-of-diff finding and the verdict both live. The event is honest about it, and that is the trap: it prints a marker like `[truncated --- full text: gh api repos/<owner>/<repo>/issues/comments/<id>]`, which reads as a courtesy rather than as an instruction, and the visible portion looks like a complete, well-structured review. Acting on the inline comments alone then feels like having addressed the round, and the thread sweep confirms it, because the missed finding was never a thread. So run that command before treating a finding list as complete, whenever the review reached you through a notification rather than through a direct read.
+
 - **An empty body hides the mirror case.** A review can post a completely empty top-level body and carry its entire finding in one inline comment, so a body-only read finds nothing to act on and concludes there is nothing.
 
-- **A clean overview can hide a collapsed findings block.** Copilot can say it “generated no new comments” and create zero inline comments while placing substantive findings inside a collapsed `<details>` suppression block in the review body. The heading moves, so match case-insensitively on `suppressed` **inside the `<summary>` heading**, not anywhere in the body: PR \#660 emitted `Comments suppressed due to low confidence (3)`, while PRs \#1029 and \#1031 emitted `Suppressed comments (4)`. A literal grep for either exact phrase can return a false zero. A body-wide match over-corrects the other way and can permanently reject a genuinely clean review, since ordinary overview prose can also contain the word — review 4837572117’s summary table read “suppressed Copilot findings” outside any collapsed block. A body read that stops at the overview is therefore not a body read, and a match against the whole body is not the right instrument either.
+- **A clean overview can hide a collapsed findings block.** Copilot can say it “generated no new comments” and create zero inline comments while placing substantive findings inside a collapsed `<details>` suppression block in the review body. Match case-insensitively on `suppressed` **inside the `<summary>` heading**, not anywhere in the body. See [`fully-clean.cases.md`](fully-clean.cases.md), “The collapsed-block case (Morrison-Lab/ai-config#1029)”.
 
 - **“No verdict” is its own state, distinct from “a verdict with no findings”.** A review job can fail having posted *nothing* — not a stub, not an empty comment. Zero findings and zero review are indistinguishable by any count, and they call for opposite responses: one is done, the other needs a self-review and a re-run. Read the job’s step outcomes when a review is missing rather than inferring from the absence of comments.
+
+- **The notification that wakes you carries a SUBSET of the findings, and nothing in it says so.** Every case above is a surface *on GitHub* that a query can reach. This one is the channel that tells you to look in the first place: a `pull_request_review_comment.created` wake delivers **one** comment, and a review posting five of them wakes you five times, asynchronously, with no count and no “1 of 5”. So the first wake is indistinguishable from the only wake, and acting on it reads as responsive while leaving the rest unaddressed. It is worse than an ordinary partial read because the thread then *looks* handled: a reply and a resolved thread sit under the one finding you saw. Re-fetch `get_review_comments` on every review wake and act on the whole set, never on the wake’s own payload.
 
 - **Do:** read all review surfaces before calling a PR clean, every round, including collapsed suppressed-comments blocks.
 
@@ -725,6 +899,8 @@ See [`fully-clean.cases.md`](fully-clean.cases.md), “Both criteria are per-PR,
 
 - **Don’t:** read a reviewer’s silence as a verdict — a job that posted nothing leaves the same zero counts as a job that found nothing.
 
+- **Don’t:** act on a review wake’s own payload — it is one comment out of however many the round posted, and it never says which.
+
 **A comment can be evidence-dense, correct throughout, and state no verdict at all — and its density is what gets read as the conclusion.**
 
 **A later comment stating no verdict does not supersede an earlier one.**
@@ -736,6 +912,14 @@ See [`fully-clean.cases.md`](fully-clean.cases.md), “Both criteria are per-PR,
 
 See [`fully-clean.cases.md`](fully-clean.cases.md), “A later comment stating no verdict does not supersede an earlier one”.
 
+**A reviewer skip notice (e.g. for workflow edits or quota exhaustion) does NOT clear or supersede prior review findings.**
+
+When a review run skips (e.g. self-modification workflow guard or quota limits) and falls back to a self-review or human review per [`self-review-fallback`](self-review-fallback.md), that fallback authorizes **merging** only in the absence of prior unresolved findings. It does NOT wipe the slate clean, and it does NOT license merging over an unaddressed `Needs more work` verdict or open finding list from an earlier or concurrent review run.
+
+- **Do:** scan the complete PR review comment history for any `Needs more work` verdicts or open finding sections before declaring a PR clean or ready to merge.
+- **Do:** address, rebut (with convincing acceptance), or defer every previously raised finding even if the most recent review run skipped.
+- **Don’t:** treat a reviewer skip notice or self-review fallback as an all-clear or as permission to ignore open findings on the PR.
+
 **Another surface, and the one that defeats the gate itself: the review check can pass on a blocking verdict.**
 
 - **Do:** grep the verdict body for its own conclusion, and treat a `require-review` pass as orthogonal to whether the PR is clean.
@@ -746,12 +930,101 @@ See [`fully-clean.cases.md`](fully-clean.cases.md), “A later comment stating n
 - **Do:** read the verdict’s own conclusion when the script reports findings against a review whose prose merely discusses finding vocabulary.
 - **Don’t:** treat a `contains findings (matched pattern ...)` line as a real finding without reading the verdict body it matched.
 
+**Calling the checker is not consuming it: grepping its PROSE instead of reading its EXIT STATUS re-opens the whole failure one layer up.**
+
+The rule above and `no-handrolled-verdict-parse.py` both govern *bypassing* the instrument. This is the case where you run it, correctly, on the right PR — and then decide what it said by matching a string in its output.
+
+`check-pr-fully-clean.py` answers twice. It prints findings for a human, and it exits 0 for clean and non-zero otherwise. Only the second is a stable interface. The prose is free to gain a line, split across two lines, or word a finding differently, and every one of those silently changes what a `grep` decides.
+
+Two properties make this worse than an ordinary parsing slip.
+
+**It fails toward clean.** The natural spelling is a positive test for the bad state — `if output matches "NOT fully clean" then not-clean, else clean` — so *any* failure of the match, including the check erroring or printing its header separately, lands in the `else` branch and reports clean. A missed match and a genuinely clean PR are the same observable, which is [`fail-fast`](../principles/fail-fast.md)’s pass-path-equals-failure-path shape arriving through a tool built to prevent exactly this.
+
+**It launders.** The report reads as the instrument’s verdict rather than as your reading of it, so “the checker says clean” is what reaches the human — and nothing in that sentence exposes that a `grep` stood between the two.
+
+**The status is three-valued, and collapsing it to a boolean is the same mistake one layer further in.** `check-pr-fully-clean.py` exits **0** clean, **1** not clean, and **2** for a usage or environment error. That third code is deliberate — its own source says `USAGE_EXIT = 2` exists so “a usage or environment error would have been read as a verdict about the PR” — so `if ! checker; then not_clean` throws away the distinction the script went out of its way to provide.
+
+The cost is a **false regression**: a transient `gh` failure, a rate limit, a network blip in a polling loop, all report a PR as having gone not-clean. That is the mirror of the grep bug above, which failed toward clean; this one fails toward alarm, and both are a two-branch reading of a three-branch answer.
+
+This is the rule [`errexit-is-not-uniform`](../coding/errexit-is-not-uniform.md) states as 0, 1, and anything else being three answers and not two — itself a paraphrase of [`fail-fast`](../principles/fail-fast.md)’s hand-check guidance to treat 0 as found, 1 as clean, and anything else as the check having failed to run. It applies to a purpose-built checker exactly as it does to `grep`.
+
+**But `2` does not cover every non-verdict, so the three-way read is necessary and still not sufficient.** `USAGE_EXIT = 2` is raised by `die()`, on the paths the script anticipated. An **unhandled exception** exits **1** — the code reserved for “not clean” — so a crash is indistinguishable from a verdict by status alone.
+
+That is why the status read has to be paired with a look at the output rather than replacing it. A genuine not-clean prints `-` finding bullets; a crash prints a traceback. One `grep -q '^ - '` separates them, and unlike the phrase search above it is keyed on the report’s *structure* rather than on its wording.
+
+**The wrong-repo case is the one to expect**, because the script resolves the repo from the **current working directory** unless `-R/--repo` is passed. A background poller inherits the session’s cwd, which on a multi-repo session is routinely not the repo the PR lives in — so the same command answers correctly by hand and crashes in the loop. Pass `-R OWNER/REPO` explicitly in anything that is not a one-off typed inside that checkout. See [`fully-clean.cases.md`](fully-clean.cases.md), “Checker unhandled exception on wrong repo”.
+
+**A remote or web session has no `gh` at all, so the checker cannot answer there — and that is a property of the session rather than of the PR.** The wrong-repo case above is a mistake you can stop making. This one is not: `check-pr-fully-clean.py` shells out to `gh`, and a remote/web Claude Code session has no `gh` on `PATH`, so the script refuses with `` `gh` is not installed or not on PATH `` and exits **2** on every invocation, whatever the PR’s real state.
+
+That lands in the third branch of the read above, which is the right answer and an easy one to skip past, because the mandated instrument failing feels like a step to work around rather than a result to report. Two things follow.
+
+**Say that the checker did not run.** [`ardi`](../../skills/ardi/SKILL.md)’s fully-clean exit checklist opens by requiring exit `0` from it, so reporting a PR clean without noting the substitution asserts a check that never happened. The substitution itself is ordinary — root `CLAUDE.md`’s “Skills that call gh/glab: fall back to tool-mappings.md in remote sessions” already governs it — so establish both criteria from the GitHub MCP surfaces instead: the paginated check-runs endpoint for criterion 1, the review body and thread list for criterion 2.
+
+**Do not read the `2` as a verdict in either direction.** It is neither “not clean” nor a licence to assume clean. It is the check declining to answer, which is exactly what the three-valued read above exists to preserve.
+
+- **Do:** state which surfaces supplied the verdict when the checker could not run, so “clean” stays attributable.
+- **Don’t:** report the checklist item satisfied on a session where the script exits 2 — it did not run.
+- **Don’t:** treat the refusal as a PR problem, or spend a round diagnosing it; the absence of `gh` is the whole cause.
+
+(Measured 2026-08-19 on a remote session driving [ai-config#1673](https://github.com/Morrison-Lab/ai-config/pull/1673). Tracked as [ai-config#1679](https://github.com/Morrison-Lab/ai-config/issues/1679), which weighs teaching the script a REST fallback against documenting the branch; until one lands, every remote-session ARDI run hits this.)
+
+So read the status, and read all three of it:
+
+``` bash
+python3 scripts/check-pr-fully-clean.py "$n" -R "$OWNER/$REPO" >/tmp/fc.txt 2>&1
+rc=$?
+case $rc in
+  0) echo "#$n CLEAN" ;;
+  1) if grep -q '^  - ' /tmp/fc.txt; then
+       echo "#$n NOT clean"; cat /tmp/fc.txt
+     else
+       echo "#$n CHECK CRASHED (rc=1, no finding bullets) -- not a verdict"
+       tail -3 /tmp/fc.txt
+     fi ;;
+  *) echo "#$n CHECK FAILED (rc=$rc) -- not a verdict"; cat /tmp/fc.txt ;;
+esac
+```
+
+- **Do:** branch on the checker’s exit status, treating 0 as clean, 1 as a verdict of not-clean, and anything else as the check having failed to answer.
+- **Do:** re-verify the agent and the head yourself before reporting ready, since the exit status is necessary and this file’s own SHA-surface caveats still apply.
+- **Don’t:** grep a purpose-built checker’s output for a phrase — its prose is a human-facing report, not an API.
+- **Do:** pass `-R OWNER/REPO` from any poller or script, since the repo comes from the working directory otherwise and a background loop inherits whatever cwd the session happened to be in.
+- **Don’t:** collapse the status to a boolean either; `rc != 0` reports a broken check as a regressed PR, which is the same conflation wearing the remedy’s clothes.
+- **Don’t:** read `1` as a verdict without checking the output has finding bullets — an unhandled exception exits 1 too, so `2` is not the only non-verdict code.
+- **Don’t:** read “I called the right instrument” as having consumed it; the bypass guard fires on the call, and nothing fires on the misreading.
+
+See [`fully-clean.cases.md`](fully-clean.cases.md), “Three PRs reported clean by grepping the checker’s own output”.
+
+**Exit 0 is not the whole answer either: read the `verdict scan:` line the checker prints, because it can say `0 bore a verdict, latest = NONE` on a run that exits clean.** The three-way read above governs every status that is *not* 0, so it cannot reach this one — the false clean arrives as exit **0**, the one value nothing above tells you to look behind. `check_latest_verdict()` blocks on `not-clean` alone, and an empty verdict is not `not-clean`, so a head reviewed by nobody takes the clean return. A reviewer’s own **skip notice** is enough to occupy the slot.
+
+- **Do:** read the `verdict scan:` line on every invocation, including the ones that exit 0.
+- **Do:** treat `latest = NONE` as no review at all, and fall back per [`self-review-fallback`](self-review-fallback.md).
+- **Don’t:** read exit 0 as “a reviewer approved this” — it says only that nothing blocking was found, and an empty review history finds nothing.
+- **Don’t:** count a skip notice as the review; it is admitted as a review item and states no verdict, which is exactly the state that exits 0.
+
+**The author filter gates formal reviews and not comments, so a human-authored comment enters that same scan on body text alone.** The comment loop admits on `is_bot_author or is_review_header`, and `is_review_header` matches `### verdict`, `verdict:`, and `code review` with no author check — so your own disposition comment, or any reply quoting a reviewer’s verdict line, can be counted as a review item. Reading the formal-review loop and generalizing its author check to comments is [`verify-the-right-artifact`](verify-the-right-artifact.md)’s “a neighbour for the target” shape applied to source.
+
+- **Do:** read the loop that handles the artifact class you are making a claim about — comments and formal reviews are separate populations here.
+- **Do:** check a comment’s admission against its body markers, not its author.
+- **Don’t:** generalize one loop’s filter to a neighbouring loop in the same function.
+- **Don’t:** read “no human comment appeared in `matching_items`” as evidence that human comments are excluded; the SHA test is what excluded it.
+
+See [`fully-clean.rationale.md`](fully-clean.rationale.md) for both mechanisms, and [`fully-clean.cases.md`](fully-clean.cases.md), “A skip notice exits the checker clean over an empty verdict scan”.
+
 **A verdict comment quotes verdict phrases, so a phrase search identifies nothing — and it misreads in both directions at once.**
 
 - **Do:** call `check-pr-fully-clean.py` for a sweep’s verdict column, exactly as [`ardi`](ardi.md) requires for one PR.
 - **Do:** anchor on the last `### Verdict` heading when parsing by hand, after selecting candidates on the `**Claude finished` marker.
 - **Don’t:** take the first verdict phrase in a body as that body’s verdict — quoting other verdicts is part of what a review comment does.
 - **Don’t:** assume such a misread has a safe direction; one sweep produced a false-clean and a false-blocked.
+
+**That “anchor on the last `### Verdict` heading” line describes the by-hand method, not what `check-pr-fully-clean.py` itself does — the script has no heading anchor at all.** It matches verdict *phrases* with a regex (`Verdict:\s*(?:Clean|Approved|Ready)\b` and its not-clean counterpart), never a `^###\s*Verdict` heading line, so a doubled or malformed `### Verdict` heading in a review comment cannot break something the script never checks. Reading this fragment’s hand-parsing advice as a description of the script’s own mechanism produces a confident, wrong claim about our own tooling — worth naming because the fragment sits right next to the script it is easy to assume it summarizes.
+
+- **Do:** read `scripts/check-pr-fully-clean.py` itself when the claim under test is about what the script does, even when this fragment already describes the by-hand procedure.
+- **Do:** treat “anchor on the last `### Verdict` heading” as guidance for a human parsing a comment, distinct from the script’s own phrase-matching logic.
+- **Don’t:** infer the script’s parsing mechanism from this fragment’s by-hand advice — verify against the script’s source before filing an issue that names a mechanism.
+
+See [`fully-clean.cases.md`](fully-clean.cases.md), “A fragment’s by-hand parsing advice mistaken for the script’s own mechanism”.
 
 **A review comment’s header SHA can be stale, so take the reviewed commit from the run’s own `head_sha`.**
 
@@ -859,12 +1132,28 @@ See [`address-every-comment.cases.md`](address-every-comment.cases.md), “A fin
 
 **When a prose fix changes wording that’s also paraphrased elsewhere in the same PR (a CHANGELOG entry, a PR description, a cross-reference), sync that copy too.** A CHANGELOG entry written before the review lands often quotes or paraphrases the exact phrase a reviewer later flags; fixing the source prose but leaving the paraphrase stale reintroduces the same wording issue one file over. Grep the diff for the flagged phrase before considering the finding closed.
 
+**A scope-widening fix makes its stale copies invisible to every diff-scoped sweep, so there the search space is the whole file, not the diff.** The whole-diff rules below are right for a fix that changes a claim’s wording: the synced copies entered the diff when you edited them. A fix that *broadens* a concept’s scope inverts that. The restatements that are now too narrow are precisely the lines the fix did **not** touch, so they appear in the diff as context or not at all, and an added-lines sweep structurally cannot see them — it reports a confident zero over exactly the population the finding is about. Grep the whole file (and any file restating the concept) for the concept that widened, and read each hit against the new scope.
+
+- **Do:** after a broadening fix, sweep every restatement of the concept in the whole file, not the diff’s added lines.
+- **Don’t:** read a clean added-lines sweep as closing a broadened-scope finding — the stale copies are unchanged lines by construction.
+
+(Morrison-Lab/ai-config#1490, 2026-08-15/16: rounds 1, 2, and 4 each found a sentence still Copilot-only after the surrounding passage was broadened to cover human reviews. The round-2 fix swept the diff’s added lines for `Copilot` — 17 hits, all legitimately Copilot-specific — and round 4 still found an un-broadened copy in the `## Output` section, because that copy was an unchanged line the added-lines sweep could never have matched.)
+
 **When syncing copies, search the diff for the claim, not the files or symptom already in front of you.**
 
 - **Do:** run whole-diff searches for synchronized figures and phrases, after committing the fix, and report the before/after counts.
 - **Do:** when a rationale is retired, search for every wording that states that rationale or criterion, not only for the symptom word that made it fail.
 - **Don’t:** substitute `grep -rn <term> <files-you-had-open>` for grepping the diff.
 - **Don’t:** accept a search for the visible contradiction as proof that the retired claim itself is gone.
+
+**That same search settles a narrower question about placement: a correction written NEAR the flagged sentence reads as having replaced it, while the flagged sentence survives and the file then states both.** Edit the sentence the reviewer named, and use the search above — for the claim, not for the symptom — to confirm that wording is gone.
+
+- **Do:** delete or rewrite the flagged sentence itself, rather than adding a truer one beside it.
+- **Do:** mark superseded text as superseded, explicitly, where it is worth keeping as a record of why something was done.
+- **Don’t:** read “the file now contains a true sentence” as having addressed a finding about a false one.
+- **Don’t:** let a commit message assert a deletion that the diff shows as an addition beside unchanged text.
+
+See [`address-every-comment.cases.md`](address-every-comment.cases.md), “A correction added beside the flagged sentence, which survived”.
 
 **When the wrong thing is a figure, the unit of repair is the figure — across every artifact carrying the twin, not just the diff.**
 
@@ -931,6 +1220,32 @@ See [`address-every-comment.cases.md`](address-every-comment.cases.md), “A bod
 - **Don’t:** enumerate which markup to strip and treat that list as the fix.
 - **Don’t:** test a raw search term against normalized text, however plain the term looks.
 
+**Symmetry is necessary and not sufficient once the haystack is source code, because a line-comment leader is inserted by the medium rather than by the author.** The rule above governs inline markup — backticks, asterisks, underscores — which an author types *inside* a phrase, so stripping it with a character class is the right shape. A `##`, `#`, `//`, or `--` leader differs in two ways that each defeat that class. It appears at a **line start** rather than mid-token, so it interrupts a phrase only where the phrase happens to wrap. And `#` is not in the class at all, so applying the same normalizer to both sides leaves it in the haystack and absent from the needle — which is exactly the asymmetry the rule was written to remove, arriving through a character nobody enumerated.
+
+The failure direction is the expensive one. A verbatim phrase that *is* present reports absent, so the natural response is to re-add content that was never missing.
+
+Widening the class is the wrong repair, and the Do/Don’t block one paragraph up already says so: **don’t** enumerate which markup to strip and treat that list as the fix. The rationale companion puts it more sharply — “Enumerating is the wrong shape, not merely an incomplete list.” Adding `#` to `` [\`*_\s] `` also strips a `#` a phrase legitimately contains — an issue reference, a colour literal, a quoted shell comment — so the normalizer starts erasing content in order to find it.
+
+Strip the leader **per line, anchored**, before collapsing whitespace:
+
+``` python
+strip_leader = lambda s: re.sub(r"(?m)^[ \t]*(##|#|//|--)(?=[ \t]|$)[ \t]?", "", s)
+norm = lambda s: re.sub(r"[\`*_\s]+", " ", strip_leader(s))
+norm(needle) in norm(haystack)
+```
+
+The anchor is what keeps this from being the wider-class move. `^` under the `(?m)` flag confines the strip to a position the medium owns, so a `#` inside a line is untouched.
+
+The lookahead is load-bearing rather than decorative, and dropping it reintroduces the exact defect this section removes. A bare optional separator (`\s?`) lets the pattern strip any line-initial `#` or `--` whatever follows it: the `#` of a wrapped `#1257` reference, and — worse in a corpus that writes them constantly — a line-initial `---`, which is left as a stray `-`. Requiring the separator to be present, or the line to end there, leaves both intact while still stripping `## text`, `-- text`, and a bare `##`. Prefer `[ \t]` over `\s` for that separator, since `\s` matches the newline and would join the stripped line to the next one.
+
+- **Do:** strip a line-comment leader with an anchored per-line pattern before whitespace collapse, whenever the haystack is source code.
+- **Do:** apply that strip to both sides — this adds a stage, it does not replace the symmetry rule above.
+- **Do:** require the leader to be followed by whitespace or a line end, so a line-initial `#1257` or `---` survives the strip.
+- **Don’t:** add `#`, `/`, or `-` to the inline-markup character class; that strips them wherever they appear, including inside the content you are searching for.
+- **Don’t:** read an absent verdict against a source file as evidence the phrase is missing until the leader has been accounted for.
+
+(2026-08-16, verifying `Lacaedemon/sparta` PR \#1257 after merge: a probe checking that two merged doc-comment phrases had landed on `main` reported both missing. Both were present. Each phrase wraps across lines in `scripts/SoldierEnemyContact.gd`, and every continuation line opens with GDScript’s `##` doc-comment leader, so the haystack carried `##` mid-phrase where the needle carried a space. The normalizer was applied to both sides, exactly as the rule above requires, and `#` is not in its character class — so the symmetry held and the check still failed.)
+
 **A flagged item that came in via a `main`-sync merge, not your own diff, is still a Defer — just one where the follow-up is fixing it on `main` directly, not filing a per-PR issue.** This is not the ARD skill’s “Acknowledge” disposition: `skills/ard/SKILL.md` reserves Acknowledge for praise or a no-ask observation, and explicitly warns against stretching it to dodge a real finding — a redundant config line a reviewer flags is a real finding with an implied fix request, so it needs a real disposition, not a label that means “no change requested.” When a reviewer flags something (a redundant config line, a stale pattern) inside a file your branch only touches because you merged `main` in to resolve a conflict, check provenance before fixing it: `git log`/`git blame` the flagged line, or just compare against `origin/main`’s current content. If it’s identical to `main`, “fixing” it on your branch alone doesn’t fix anything — it just makes your branch disagree with `main` on unrelated content the next person to touch that file will have to reconcile again. Reply agreeing the finding is correct but out of scope for this PR, and leave it for whoever owns that file’s actual content to fix on `main` directly — no follow-up issue needed, since the fix target is `main` itself, not this PR’s own change.
 
 **This generalizes to a skill’s own inline restatement of a fragment it links to.** A `SKILL.md` that links a backing `shared/` fragment for the full detail often *also* restates the fragment’s approach or word list inline (in its `description` field, or a short procedure-step summary) so a reader doesn’t have to open the linked file. Fixing a bug in the fragment doesn’t automatically fix these inline restatements — they’re a second, independent copy of the same claim, and a review round after the fragment fix can catch them going stale exactly like a CHANGELOG paraphrase does. Grep the whole PR diff for the fixed phrase/word-list, not just the fragment file, before considering a fragment fix complete.
@@ -956,6 +1271,19 @@ See [`address-every-comment.cases.md`](address-every-comment.cases.md), “A bod
 - **Do:** use `git log -S "<exact line>" -- <file>` or an equivalent provenance query when the question is which PR introduced text.
 - **Don’t:** adopt a reviewer’s corrected issue or PR number because the original was wrong.
 - **Don’t:** use word overlap and same-day timing as a substitute for source history.
+
+**The same check one artifact over: a reviewer’s replacement DIFFSTAT is a factual claim too, and the usual way it goes wrong is summing per-commit churn rather than diffing the merge base.**
+
+A branch that edits the same lines across review rounds accumulates churn. Round 1 adds a line and round 2 rewrites it, so a per-commit sum counts that line twice and reports a deletion the merge-base diff never sees. The inflation is therefore worst on exactly the branches most likely to carry a verification table worth checking, which are the multi-round ones.
+
+What makes this cost more than one wrong number is that [`ardi`](ardi.md)’s pre-push checklist already requires every figure in a PR body to be re-derived by command at each push. A reviewer supplying replacement figures looks like that derivation having been done for you, so the natural move is to paste them straight in. That substitutes an unverified figure for a stale one and leaves the body just as wrong, while feeling like the finding was addressed.
+
+- **Do:** re-derive a reviewer’s replacement figures with `git diff --numstat <merge-base> <head>` before pasting them into a PR body.
+- **Do:** cross-check against GitHub’s own `additions`/`deletions` fields, which are computed against the merge base and so agree with that command.
+- **Don’t:** treat a reviewer’s supplied figures as discharging the re-derive requirement — a correct finding about staleness says nothing about the replacement’s accuracy.
+- **Don’t:** sum per-commit `--numstat` to get a branch’s diffstat. On a multi-round branch that double-counts rewritten lines and reports deletions the merge base never sees.
+
+See [`address-every-comment.cases.md`](address-every-comment.cases.md), “A reviewer’s replacement diffstat summed per-commit churn”.
 
 **The highest-yield version of that check: when a comment names an edge case in its own prose and also supplies a fix, run the fix against that edge case.**
 
@@ -1028,6 +1356,23 @@ See [`address-every-comment.cases.md`](address-every-comment.cases.md), “A fin
 - **Do:** hold the change regardless when the note turns out correct but genuinely optional — verifying decides what is true, not what ships.
 - **Don’t:** treat a PR title, commit subject, or changelog line as evidence about what the code does; each states an intent, and a refactor can keep the very thing it says it replaced.
 - **Don’t:** let your own refutation past the check you would have applied to the reviewer’s finding — it is a fresh claim, and overturning something feels like having verified it.
+
+**Count a round’s findings before pushing its fix, because disposing of one correctly generates no evidence about the others.**
+
+The rule above governs the finding you decline to act on. This governs the finding you never see, having already acted on its sibling.
+
+A round can carry several findings, and acting on one produces every artifact that handling the whole round produces: a verified claim, a commit, a reply, a resolved thread. Completeness is a property of the **set**, so nothing in that sequence reports that a second finding existed. There is no moment that feels like stopping early, because each step was performed properly — which is why this needs a count rather than more care.
+
+**The body-only finding is where it hides**, and [`fully-clean`](fully-clean.md) already names why: a finding about something the diff did not touch cannot be attached as an inline comment, so it appears in the verdict body alone. Inline threads produce a visible checklist and a body-only finding produces nothing to tick off, so “all threads resolved” reads as “round handled”. A **PR title** is the pure case, being out-of-diff by construction — and on a multi-commit PR a squash merge takes its commit subject from that title under GitHub’s default, so an overclaiming title can outlive the PR page it was raised on.
+
+The remedy is mechanical, and it is a count rather than a judgment: before pushing, re-read the verdict body **and** re-fetch the thread list, then state how many findings the round raised and dispose of all of them in one push. Say explicitly which are deferred, per [`issue-first`](issue-first.md).
+
+- **Do:** state the round’s finding count before pushing, derived from both the body and the thread list.
+- **Do:** read a title, a changelog line, and a PR body as reviewable surfaces — a finding about any of them can only arrive in the body.
+- **Don’t:** read “every thread is resolved” as “every finding is handled”; the thread list cannot see an out-of-diff finding.
+- **Don’t:** treat a correct, complete disposition of one finding as evidence about the round — that is a per-finding claim wearing a per-round shape.
+
+(Measured twice within half an hour on 2026-08-21, in both available shapes. On [ai-config#1833](https://github.com/Morrison-Lab/ai-config/pull/1833) round 1 posted two inline findings; the first was fixed and pushed, and round 2 opened by re-raising the second — “the text at this location is essentially unchanged from what was flagged before” — at a cost of \$2.20. On [gha#550](https://github.com/Morrison-Lab/gha/pull/550) round 1 posted three inline findings and a fourth in the verdict body only, about the PR title claiming work that had been deferred to another issue. All three threads were addressed, resolved, and pushed; the body-only one was missed. The second occurrence came after the first had already been written up, which is the argument for a count rather than for intending to look harder. The two are anchored by the re-raise at 17:12:39Z and by noticing the second miss at 17:41:36Z — derived from the PR timestamps rather than carried over from a figure quoted in a live comment, which is how “ninety minutes” reached the first draft of this entry.)
 
 # 7 Reviewing AI-generated work
 
