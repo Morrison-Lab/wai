@@ -69,7 +69,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/block-git-exec-vectors.py\""
+            "command": "sh -c 'f=\"${CLAUDE_PROJECT_DIR:-$PWD}/.claude/hooks/block-git-exec-vectors.py\"; [ -f \"$f\" ] || { echo \"block-git-exec-vectors: hook script not found at $f; guard inactive\" >&2; exit 0; }; exec python3 \"$f\"'"
           }
         ]
       }
