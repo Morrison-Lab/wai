@@ -43,6 +43,8 @@ website:
             href: chapters/coding-agents.qmd
           - text: "Orchestrating Teams of Agents"
             href: chapters/agent-orchestration.qmd
+          - text: "Grok Bot and Alternatives"
+            href: chapters/grok-bot-and-alternatives.qmd
           - text: "Pull-Request Workflow with Agents"
             href: chapters/pr-workflow-with-agents.qmd
     right:
