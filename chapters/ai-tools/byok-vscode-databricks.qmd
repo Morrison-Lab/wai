@@ -143,7 +143,8 @@ The context and delay columns are one setting expressed twice,
 so changing either alone breaks the pairing.
 
 A workspace admits `ITPM` input tokens per minute.
-A model advertises `context_length` minus `max_tokens` as its input budget,
+The extension advertises `context_length` minus `max_tokens`
+as the model's input budget,
 and the delay sets how often a request can be sent.
 Sustained work therefore needs
 
@@ -151,7 +152,7 @@ $$\text{input budget} \times \text{requests per minute} \le \text{ITPM}$$
 
 The Claude row is tuned to sit just under that ceiling.
 A 15,000 ms delay allows four requests per minute,
-and 64,000 minus 16,000 leaves 48,000 input tokens,
+and each request carries the 48,000-token input budget derived above,
 so a busy client draws about 192,000 against a 200,000 ITPM tier.
 That is roughly 96 percent of the allowance,
 which is why the 64,000 value looks conservative and is not.
@@ -184,7 +185,7 @@ and it is not available at that quota.
 
 Agent mode spends the input budget faster than chat does,
 because tool definitions and file contents are sent before any conversation.
-Two responses are available,
+Two configurations are possible,
 and the tier decides which one is open.
 
 On a 200,000 ITPM tier the budget can be spent on a large window
