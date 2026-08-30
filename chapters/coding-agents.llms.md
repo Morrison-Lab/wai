@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-29 21:38:14 (PDT)
+Last modified: 2026-08-29 21:49:25 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -2237,6 +2237,18 @@ This site’s Quarto sources already use [Semantic Line Breaks](https://sembr.or
 - [Pi](https://pi.dev): `pi install git:github.com/sembr/skills`
 
 Ask the agent to apply SemBr on new or revised prose (the `sembr-reformat` skill); there is no need to reformat an entire document in one pass.
+
+[ponytail](https://github.com/DietrichGebert/ponytail) makes the agent think like the laziest senior dev in the room: the best code is the one you never write. Before writing, the agent walks a seven-rung ladder:
+
+1.  does this need to exist (YAGNI);
+2.  is it already in the codebase;
+3.  is it in the stdlib;
+4.  is it a native platform feature;
+5.  is it an installed dependency;
+6.  can it be one line;
+7.  only then write the minimum that works.
+
+The agent reads the touched code first and is lazy about the solution, never about reading, and never cuts validation, error handling, security, or accessibility. Measured on twelve real Claude Code tasks in a FastAPI + React repo (Haiku 4.5, n=4), it averages about 54 percent less code (up to 94 percent where the agent would otherwise overbuild, for example a date picker) with about 20 percent lower cost and 27 percent faster, while staying fully safe. It installs as a plugin or skill for more than twenty agents (Claude Code, Codex, Copilot, Cursor, OpenCode, Gemini, and others) and works from a checkout via `AGENTS.md` where a plugin is not needed.
 
 The lab’s portable agent config lives in [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config) (the same repository as [`d-morrison/ai-config`](https://github.com/d-morrison/ai-config)). It is a plugin-or-symlink install of skills, hooks, and memories — not a third marketplace next to SemBr. How that config actually reaches a machine, and how a doubled plugin install fails, is [Section 27](#sec-ai-config-install). [Section 26](#sec-ai-customization) is the worked example of what the corpus contains.
 

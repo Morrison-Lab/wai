@@ -330,7 +330,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-08-29 21:38:14 (PDT)</p>
+  <p class="date">Last modified: 2026-08-29 21:49:25 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -2837,7 +2837,7 @@ while the selected main agent model is BYOK.</code></pre>
 <h1><span class="header-section-number">25</span> Useful plugins</h1>
 
 </section>
-<section class="slide level2">
+<section class="slide level2 scrollable">
 
 <p>This site’s Quarto sources already use <a href="https://sembr.org/">Semantic Line Breaks</a> (SemBr): a line break after each substantial unit of thought, so the source is easier to edit while the rendered HTML still reads as ordinary paragraphs.</p>
 <p><a href="https://github.com/sembr/skills">sembr/skills</a> packages that convention as Agent Skills for any skills-compatible tool. Install it one of these ways:</p>
@@ -2848,6 +2848,17 @@ while the selected main agent model is BYOK.</code></pre>
 <li><a href="https://pi.dev">Pi</a>: <code>pi install git:github.com/sembr/skills</code></li>
 </ul>
 <p>Ask the agent to apply SemBr on new or revised prose (the <code>sembr-reformat</code> skill); there is no need to reformat an entire document in one pass.</p>
+<p><a href="https://github.com/DietrichGebert/ponytail">ponytail</a> makes the agent think like the laziest senior dev in the room: the best code is the one you never write. Before writing, the agent walks a seven-rung ladder:</p>
+<ol type="1">
+<li>does this need to exist (YAGNI);</li>
+<li>is it already in the codebase;</li>
+<li>is it in the stdlib;</li>
+<li>is it a native platform feature;</li>
+<li>is it an installed dependency;</li>
+<li>can it be one line;</li>
+<li>only then write the minimum that works.</li>
+</ol>
+<p>The agent reads the touched code first and is lazy about the solution, never about reading, and never cuts validation, error handling, security, or accessibility. Measured on twelve real Claude Code tasks in a FastAPI + React repo (Haiku 4.5, n=4), it averages about 54 percent less code (up to 94 percent where the agent would otherwise overbuild, for example a date picker) with about 20 percent lower cost and 27 percent faster, while staying fully safe. It installs as a plugin or skill for more than twenty agents (Claude Code, Codex, Copilot, Cursor, OpenCode, Gemini, and others) and works from a checkout via <code>AGENTS.md</code> where a plugin is not needed.</p>
 <p>The lab’s portable agent config lives in <a href="https://github.com/Morrison-Lab/ai-config"><code>Morrison-Lab/ai-config</code></a> (the same repository as <a href="https://github.com/d-morrison/ai-config"><code>d-morrison/ai-config</code></a>). It is a plugin-or-symlink install of skills, hooks, and memories — not a third marketplace next to SemBr. How that config actually reaches a machine, and how a doubled plugin install fails, is <a href="#/sec-ai-config-install" class="quarto-xref">Section&nbsp;27</a>. <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;26</a> is the worked example of what the corpus contains.</p>
 </section></section>
 <section>
