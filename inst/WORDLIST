@@ -61,9 +61,11 @@ OpenCode
 OpenDevin
 OpenHands
 OpenRouter
+Parquet
 PEFT
 Pipedream
 Playwright
+Posit
 Positron
 QLoRA
 Qwen
@@ -85,6 +87,7 @@ UCD
 VRAM
 Wachowskis
 Workspaces
+YAML
 xAI
 agentic
 aider
@@ -134,6 +137,7 @@ symlinked
 symlinks
 toolset
 toolsets
+tidyverse
 transcriptomics
 translational
 uarto
