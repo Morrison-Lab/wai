@@ -45,6 +45,8 @@ website:
             href: chapters/agent-orchestration.qmd
           - text: "Grok Bot and Alternatives"
             href: chapters/grok-bot-and-alternatives.qmd
+          - text: "Data Dictionaries for Humans and Agents"
+            href: chapters/data-dict.qmd
           - text: "Benchbook: A Personal Wiki Under Contract"
             href: chapters/benchbook.qmd
           - text: "Pull-Request Workflow with Agents"

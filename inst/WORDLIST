@@ -20,6 +20,7 @@ Cowork
 DOCX
 Databricks
 Daytona
+DDI
 DeepSeek
 Devstral
 Docker
@@ -65,9 +66,11 @@ OpenCode
 OpenDevin
 OpenHands
 OpenRouter
+Parquet
 PEFT
 Pipedream
 Playwright
+Posit
 Positron
 QLoRA
 Qwen
@@ -91,6 +94,7 @@ VRAM
 Wachowskis
 Workspaces
 YAGNI
+YAML
 xAI
 agentic
 aider
@@ -98,10 +102,13 @@ allowlist
 autofix
 callout
 codebase
+dabstep
+dbt
 ebsite
 edu
 emplate
 errored
+foodbank
 gh
 github
 glitchy
@@ -141,6 +148,7 @@ symlinked
 symlinks
 toolset
 toolsets
+tidyverse
 transcriptomics
 translational
 uarto
