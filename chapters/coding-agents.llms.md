@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-29 22:06:57 (PDT)
+Last modified: 2026-08-29 22:10:28 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
