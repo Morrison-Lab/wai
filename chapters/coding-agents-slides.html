@@ -329,7 +329,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-08-29 21:57:39 (PDT)</p>
+  <p class="date">Last modified: 2026-08-29 21:59:18 (PDT)</p>
 </section><section class="slide level2"><p>We recommend working with <strong><a href="https://github.com/features/copilot/agents">AI coding agents</a></strong> to <a href="https://en.wikipedia.org/wiki/AI-assisted_software_development">help you code</a>.</p>
 </section><section><section id="sec-ai-language-model" class="title-slide slide level1 center" data-number="1"><h1>
 <span class="header-section-number">1</span> What Is a Language Model?</h1>
@@ -3910,6 +3910,10 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <li>Once a tool is enabled, Copilot uses it without asking for approval, so allowlist specific read-only tools rather than <code>*</code>.</li>
 </ul>
 <p>Do not copy a local <code>claude mcp add</code> registration into that JSON and expect it to work.</p>
+<h4 id="granola-mcp-your-meetings-as-context">Granola MCP: your meetings as context</h4>
+<p><a href="https://www.granola.ai/blog/granola-mcp">Granola MCP</a> is the other side of that same pattern: it is not a code-host server but a meeting-context server. Granola is an AI notepad for back-to-back meetings; its MCP exposes your meeting notes to any MCP client.</p>
+<p>The gap it closes is the copy-paste loop: without it, using something you discussed in a meeting while working in Claude, ChatGPT, or Cursor means finding the note, copying the relevant bit, and pasting it in. With the MCP connected, that context rides with you. Use it to turn a standup into Linear tickets, scaffold a feature from what was agreed, or draft a follow-up from what was actually said.</p>
+<p>It connects through the standard <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> (MCP) as a remote server at <code>https://mcp.granola.ai/mcp</code>. For Claude or ChatGPT, enable it from the app’s connector/app settings and authenticate; for Cursor, Claude Code, or any other MCP client that supports a manual URL, register that URL directly (see <a href="https://www.granola.ai/blog/granola-mcp">the announcement</a> for per-client steps). On an Enterprise plan it is an early-access beta, off by default until an admin enables it.</p>
 </section></section><section><section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="39"><h1>
 <span class="header-section-number">39</span> Managing Gemini API Spend and Cost Optimization</h1>
 

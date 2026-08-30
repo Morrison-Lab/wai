@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-29 21:57:39 (PDT)
+Last modified: 2026-08-29 21:59:18 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3112,6 +3112,14 @@ Repository administrators configure those agents from **Settings \> Copilot \> M
 - Once a tool is enabled, Copilot uses it without asking for approval, so allowlist specific read-only tools rather than `*`.
 
 Do not copy a local `claude mcp add` registration into that JSON and expect it to work.
+
+#### Granola MCP: your meetings as context
+
+[Granola MCP](https://www.granola.ai/blog/granola-mcp) is the other side of that same pattern: it is not a code-host server but a meeting-context server. Granola is an AI notepad for back-to-back meetings; its MCP exposes your meeting notes to any MCP client.
+
+The gap it closes is the copy-paste loop: without it, using something you discussed in a meeting while working in Claude, ChatGPT, or Cursor means finding the note, copying the relevant bit, and pasting it in. With the MCP connected, that context rides with you. Use it to turn a standup into Linear tickets, scaffold a feature from what was agreed, or draft a follow-up from what was actually said.
+
+It connects through the standard [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) as a remote server at `https://mcp.granola.ai/mcp`. For Claude or ChatGPT, enable it from the app’s connector/app settings and authenticate; for Cursor, Claude Code, or any other MCP client that supports a manual URL, register that URL directly (see [the announcement](https://www.granola.ai/blog/granola-mcp) for per-client steps). On an Enterprise plan it is an early-access beta, off by default until an admin enables it.
 
 # 39 Managing Gemini API Spend and Cost Optimization
 
