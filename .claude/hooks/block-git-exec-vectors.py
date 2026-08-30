@@ -85,9 +85,13 @@ def tokenize(command):
 def _filter_heredoc_bodies(tokens):
     """Return tokens with heredoc bodies removed.
 
-    A heredoc ``<<[ -]WORD`` body is prose, not a command, so a line like
+    A heredoc ``<<[ -]WORD`` body fed to a non-executing consumer like
+    ``cat`` is prose, not a command, so a line like
     ``git grep -O runs a pager`` inside it should not be flagged. The body
     runs from the ``<<`` operator through the matching terminator line.
+    Heredocs whose target *does* execute the body (``bash``, ``sh``,
+    ``ssh``, ``python3``, etc.) are not stripped, since the body there
+    genuinely runs.
 
     With ``punctuation_chars``, ``<<-EOF`` (no space) tokenizes as
     ``<<`` + ``-EOF``, and ``<<- EOF`` (with space) as ``<<`` + ``-`` +
@@ -97,10 +101,20 @@ def _filter_heredoc_bodies(tokens):
     """
     import re
 
+    # Heredocs fed to these consumers are prose, not execution.
+    SAFE_HEREDOC_CONSUMERS = {"cat", "tee"}
+
     filtered = []
     i = 0
     while i < len(tokens):
         if tokens[i] == "<<" and i + 1 < len(tokens):
+            # Only strip when the heredoc target is a known non-executing
+            # consumer. ``bash <<EOF ...`` genuinely executes its body.
+            prev = tokens[i - 1] if i > 0 else ""
+            if prev not in SAFE_HEREDOC_CONSUMERS:
+                filtered.append(tokens[i])
+                i += 1
+                continue
             # Determine delimiter token, handling ``<<-`` split forms.
             nxt = tokens[i + 1]
             if nxt == "-" and i + 2 < len(tokens):
