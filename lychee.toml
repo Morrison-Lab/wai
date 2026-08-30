@@ -34,4 +34,9 @@ exclude = [
   # reader follows, and 401 is its correct reply to an unauthenticated
   # request, so there is nothing here to fix by editing the URL.
   "https://api.githubcopilot.com/mcp/?.*",
+  # Granola MCP endpoint, an authenticated MCP server URL quoted in
+  # chapters/ai-tools/mcp-server-setup.qmd. Like the GitHub MCP URL above,
+  # it is not a browsable web page and is not expected to return 200 to an
+  # unauthenticated GET.
+  "https://mcp.granola.ai/mcp.*",
 ]
