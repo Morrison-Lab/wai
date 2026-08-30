@@ -19,6 +19,7 @@ Cowork
 DOCX
 Databricks
 Daytona
+DDI
 DeepSeek
 Devstral
 Docker
@@ -95,10 +96,13 @@ allowlist
 autofix
 callout
 codebase
+dabstep
+dbt
 ebsite
 edu
 emplate
 errored
+foodbank
 gh
 github
 glitchy

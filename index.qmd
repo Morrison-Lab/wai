@@ -45,6 +45,9 @@ as best practices and capabilities continue to evolve.
 - [**Grok Bot and Alternatives**](chapters/grok-bot-and-alternatives.qmd):
   persistent teammates with their own computer (Grok Bot, Rakazo, OpenClaw,
   Claude Cowork, ChatGPT Work) and how they differ from our coding-agent stack
+- [**Data Dictionaries for Humans and Agents**](chapters/data-dict.qmd):
+  `data-dict.yaml` for making dataset context accessible to both humans and AI
+  agents (see [data-dict.tidyverse.org](https://data-dict.tidyverse.org/))
 - [**Pull-Request Workflow with Agents**](chapters/pr-workflow-with-agents.qmd):
   filing issues, claiming work, and driving a pull request to a clean,
   mergeable state

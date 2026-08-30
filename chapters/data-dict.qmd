@@ -1,5 +1,13 @@
 ---
 title: "Data Dictionaries for Humans and Agents"
+format:
+  html: default
+  revealjs:
+    output-file: data-dict-slides.html
+  pdf:
+    output-file: data-dict-handout.pdf
+  docx:
+    output-file: data-dict.docx
 ---
 
 `data-dict.yaml` is a lightweight,
