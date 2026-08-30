@@ -48,11 +48,25 @@ def is_pager_long_abbrev(token):
 
 
 def is_pager_short_bundle(token):
-    """Matches -O and any short-option bundle ending in -O (e.g. -lO<pager>),
-    since git only defines uppercase O among grep's short flags."""
+    """Matches -O and any short-option bundle containing -O (e.g. -lO<pager>).
+
+    Walks the bundle left to right and stops at the first value-taking
+    short flag (-e, -f, -m, -A, -B, -C), since the remainder of the token
+    is that flag's attached argument, not additional flags. This avoids
+    misclassifying e.g. ``-eOK`` (pattern "OK") as containing -O.
+    """
     if token.startswith("--") or not token.startswith("-"):
         return False
-    return "O" in token[1:]
+    if token == "-":
+        return False
+    value_flags = {"e", "f", "m", "A", "B", "C"}
+    for ch in token[1:]:
+        if ch == "O":
+            return True
+        if ch in value_flags:
+            # Remaining characters are the value for this flag, not flags.
+            return False
+    return False
 
 
 def tokenize(command):
@@ -75,6 +89,16 @@ def find_violations(command):
         # Unbalanced quotes etc. -- don't try to out-clever a command we
         # can't safely parse; fall back on the existing deny patterns.
         return []
+
+    # Note: heredoc bodies are intentionally *not* stripped. Prior
+    # attempts to treat ``<<`` bodies as inert prose (whether by
+    # truncating at the first ``<<`` or by skipping to the terminator
+    # for ``cat``-like consumers) introduced repeated bypasses for
+    # heredocs piped to real interpreters (``bash <<EOF``,
+    # ``cat <<EOF | bash``, etc.), where the body genuinely executes
+    # and must still be scanned. The remaining false positive
+    # (``cat <<EOF`` prose mentioning ``git grep -O``) is
+    # security-conservative and preferable to a false negative.
 
     violations = []
     i = 0
