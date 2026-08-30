@@ -48,6 +48,9 @@ as best practices and capabilities continue to evolve.
 - [**Data Dictionaries for Humans and Agents**](chapters/data-dict.qmd):
   `data-dict.yaml` for making dataset context accessible to both humans and AI
   agents (see [data-dict.tidyverse.org](https://data-dict.tidyverse.org/))
+- [**Benchbook: A Personal Wiki Under Contract**](chapters/benchbook.qmd):
+  a plain-markdown, git-versioned wiki that an AI agent maintains under a
+  written contract (see [benchbook](https://github.com/Ulef1005/benchbook))
 - [**Pull-Request Workflow with Agents**](chapters/pr-workflow-with-agents.qmd):
   filing issues, claiming work, and driving a pull request to a clean,
   mergeable state
