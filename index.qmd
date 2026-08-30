@@ -51,6 +51,9 @@ as best practices and capabilities continue to evolve.
 - [**Benchbook: A Personal Wiki Under Contract**](chapters/benchbook.qmd):
   a plain-markdown, git-versioned wiki that an AI agent maintains under a
   written contract (see [benchbook](https://github.com/Ulef1005/benchbook))
+- [**Make: Visual Automation and AI Agents**](chapters/make.qmd):
+  visual, no-code canvas for 3,000+ apps, scenarios, and AI agents with Make
+  Grid and MCP (see [make.com](https://www.make.com/en))
 - [**Pull-Request Workflow with Agents**](chapters/pr-workflow-with-agents.qmd):
   filing issues, claiming work, and driving a pull request to a clean,
   mergeable state

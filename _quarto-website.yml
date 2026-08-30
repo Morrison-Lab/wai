@@ -49,6 +49,8 @@ website:
             href: chapters/data-dict.qmd
           - text: "Benchbook: A Personal Wiki Under Contract"
             href: chapters/benchbook.qmd
+          - text: "Make: Visual Automation and AI Agents"
+            href: chapters/make.qmd
           - text: "Pull-Request Workflow with Agents"
             href: chapters/pr-workflow-with-agents.qmd
     right:
