@@ -393,6 +393,51 @@ A second VS Code installation on the same machine carried the same stale host
 in its own copy of the setting.
 ::::
 
+:::: {.callout-important}
+## A 403 that no new token can fix --- IP access list
+
+There is a third 403 with the same status line
+but a different message body and a different remedy:
+
+```
+[403] Forbidden
+{"error_code":403,"message":"Source IP address: <ip> is blocked by Databricks IP ACL for workspace: <workspace-id> [ReqId: ...]"}
+```
+
+The request left from an address outside the workspace's IP access list,
+typically because a VPN dropped or was never connected.
+The token is valid,
+the host is correct,
+and the endpoint exists,
+so the request succeeds in intent and fails at the network boundary.
+No credential change resolves it ---
+minting a fresh token repeats the same failure indefinitely,
+the same shape as the stale-host case one layer further out.
+
+Connect to the network that the workspace allows
+(restore the VPN or move to an allowed address)
+and retry;
+the existing token will then succeed without replacement.
+
+All three 403 variants print `[403] Forbidden`
+but are distinguishable by their message body:
+
+| Message body | Cause | Remedy |
+|---|---:|---|
+| `Invalid access token` | expired or revoked token | mint a new token |
+| `Invalid access to Org: <id>` | `baseUrl` names the wrong workspace | correct the host (preceding callout) |
+| `Source IP address: ... blocked by Databricks IP ACL for workspace: <workspace-id>` | off-network / VPN down | connect to the allowed network; no credential change |
+
+The workspace id in the IP-ACL message
+and the org id in the `Invalid access to Org` message
+are different identifiers,
+so the two workspace-identity failures are not the same.
+
+Observed 2026-08-26 on `databricks-gpt-5-6-sol`
+against `dbc-440c7148-9ff6`,
+three consecutive requests while a VPN connection was down.
+::::
+
 #### Three failures that name no error in the chat panel
 
 The four errors above print their own text.
