@@ -150,12 +150,34 @@ Sustained work therefore needs
 
 $$\text{input budget} \times \text{requests per minute} \le \text{ITPM}$$
 
+```{r}
+#| echo: false
+# Raw constants from @tbl-databricks-oaicopilot-defaults and pacing
+claude_context <- 64000
+claude_max <- 16000
+claude_budget <- claude_context - claude_max
+claude_itpm <- 200000
+claude_rpm <- 4L  # 15,000 ms delay
+claude_draw <- claude_budget * claude_rpm
+claude_pct <- round(claude_draw / claude_itpm * 100)
+
+large_window <- 1000000
+large_budget <- large_window - claude_max
+large_ratio <- round(large_budget / claude_itpm, 1)
+large_secs <- round(large_budget / (claude_itpm / 60))
+
+sol_context <- 400000
+sol_budget <- sol_context - claude_max
+sol_ratio <- round(sol_budget / claude_budget)
+sol_rpm <- 5L  # no delay, ~5/min at this budget on the 2,000,000 tier
+```
+
 The Claude row is tuned to sit just under that ceiling.
 A 15,000 ms delay allows four requests per minute,
-and each request carries the 48,000-token input budget derived above,
-so a busy client draws about 192,000 against a 200,000 ITPM tier.
-That is roughly 96 percent of the allowance,
-which is why the 64,000 value looks conservative and is not.
+and each request carries the `r formatC(claude_budget, format="d", big.mark=",")`-token input budget derived above,
+so a busy client draws about `r formatC(claude_draw, format="d", big.mark=",")` against a `r formatC(claude_itpm, format="d", big.mark=",")` ITPM tier.
+That is roughly `r claude_pct` percent of the allowance,
+which is why the `r formatC(claude_context, format="d", big.mark=",")` value looks conservative and is not.
 
 This is what makes a larger window expensive.
 Raising `context_length` while leaving the delay alone
@@ -174,10 +196,10 @@ at a given pace.
 A model's own maximum window is a separate quantity from either column,
 and it is usually far larger.
 Registering it directly is the common mistake.
-Advertising a 1,000,000-token window on a 200,000 ITPM tier
-offers a single prompt of 984,000 input tokens,
-which is 4.9 times the entire per-minute allowance,
-so two full prompts would need about 295 seconds between them.
+Advertising a `r formatC(large_window, format="d", big.mark=",")`-token window on a `r formatC(claude_itpm, format="d", big.mark=",")` ITPM tier
+offers a single prompt of `r formatC(large_budget, format="d", big.mark=",")` input tokens,
+which is `r large_ratio` times the entire per-minute allowance,
+so two full prompts would need about `r large_secs` seconds between them.
 The window is a real capability of the model
 and it is not available at that quota.
 
@@ -195,13 +217,13 @@ so an agent that reads several files per turn slows to a crawl
 exactly when it is doing the most work.
 
 The higher tiers change the answer rather than easing it.
-GPT-5.6 Sol, Terra, and Luna sit on a 2,000,000 ITPM tier,
+GPT-5.6 Sol, Terra, and Luna sit on a `r formatC(2000000, format="d", big.mark=",")` ITPM tier,
 ten times the Claude and Gemini families,
-and carry a 400,000 context with no delay.
-That is 384,000 input tokens at roughly five requests per minute:
-eight times the Claude window and faster turns at the same time.
+and carry a `r formatC(sol_context, format="d", big.mark=",")` context with no delay.
+That is `r formatC(sol_budget, format="d", big.mark=",")` input tokens at roughly `r sol_rpm` requests per minute:
+`r sol_ratio` times the Claude window and faster turns at the same time.
 Prefer that family for agent work on a standard pay-per-token workspace,
-and keep the 200,000 ITPM families for chat.
+and keep the `r formatC(claude_itpm, format="d", big.mark=",")` ITPM families for chat.
 
 Note the direction of the trade,
 which is the opposite of the intuition.
@@ -215,9 +237,9 @@ which is the only reading that reflects what a client actually sends.
 Read it in a **new** chat,
 since an existing one keeps the context metadata it was created with.
 
-The 64,000/16,000 combination limits one prompt to about 48,000 input tokens.
+The `r formatC(claude_context, format="d", big.mark=",")`/`r formatC(claude_max, format="d", big.mark=",")` combination limits one prompt to about `r formatC(claude_budget, format="d", big.mark=",")` input tokens.
 Together with 15-second pacing,
-that keeps one busy client near rather than far above a 200,000 ITPM tier.
+that keeps one busy client near rather than far above a `r formatC(claude_itpm, format="d", big.mark=",")` ITPM tier.
 It is not a guarantee:
 the quota is shared across the workspace,
 prompt sizes vary,
