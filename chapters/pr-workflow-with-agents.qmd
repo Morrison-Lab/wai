@@ -42,6 +42,21 @@ request moving toward a clean, mergeable state.
 
 {{< include ai-tools/reviewing-ai-generated-work.qmd >}}
 
+# Auto-fix PRs with Claude Code {#sec-autofix-pr}
+
+[Claude Code's `/autofix-pr`](https://code.claude.com/docs/en/commands#autofix-pr)
+watches the current branch's pull request from Claude Code on the web
+and pushes fixes when CI fails or reviewers leave comments.
+It detects the open PR from your checked-out branch via `gh pr view`;
+to watch a different PR, check out its branch first.
+By default it fixes every CI failure and review comment;
+pass a prompt to scope it, for example `/autofix-pr only fix lint and type errors`.
+It requires the `gh` CLI and access to Claude Code on the web,
+and is available from v2.1.221 or later.
+A Marketplace action at
+[pr-autofix-with-claude-code](https://github.com/marketplace/actions/pr-autofix-with-claude-code)
+offers the same capability as a GitHub Action.
+
 # References {.unnumbered}
 
 ::: {#refs}
