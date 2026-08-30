@@ -45,6 +45,9 @@ as best practices and capabilities continue to evolve.
 - [**Grok Bot and Alternatives**](chapters/grok-bot-and-alternatives.qmd):
   persistent teammates with their own computer (Grok Bot, Rakazo, OpenClaw,
   Claude Cowork, ChatGPT Work) and how they differ from our coding-agent stack
+- [**Make: Visual Automation and AI Agents**](chapters/make.qmd):
+  visual, no-code canvas for 3,000+ apps, scenarios, and AI agents with Make
+  Grid and MCP (see [make.com](https://www.make.com/en))
 - [**Pull-Request Workflow with Agents**](chapters/pr-workflow-with-agents.qmd):
   filing issues, claiming work, and driving a pull request to a clean,
   mergeable state

@@ -45,6 +45,8 @@ website:
             href: chapters/agent-orchestration.qmd
           - text: "Grok Bot and Alternatives"
             href: chapters/grok-bot-and-alternatives.qmd
+          - text: "Make: Visual Automation and AI Agents"
+            href: chapters/make.qmd
           - text: "Pull-Request Workflow with Agents"
             href: chapters/pr-workflow-with-agents.qmd
     right:

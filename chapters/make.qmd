@@ -1,5 +1,13 @@
 ---
 title: "Make: Visual Automation and AI Agents"
+format:
+  html: default
+  revealjs:
+    output-file: make-slides.html
+  pdf:
+    output-file: make-handout.pdf
+  docx:
+    output-file: make.docx
 ---
 
 [Make](https://www.make.com/en) (formerly Integromat) is a visual,
@@ -36,6 +44,6 @@ the relevance is as a no-code counterpart to code-centric harnesses:
 where Claude Code or Kepler run agents in worktrees,
 Make runs them on a visual canvas with shared team visibility.
 It is enterprise-ready (GDPR, SOC 2, SSO, role-based access)
-and part of Celonis since 2015,
+and part of Celonis since 2020,
 so the trade is control and visibility for a learning investment
 before the first scenario runs clean.
