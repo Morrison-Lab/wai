@@ -46,6 +46,20 @@ It installs as a plugin or skill for more than twenty agents
 (Claude Code, Codex, Copilot, Cursor, OpenCode, Gemini, and others)
 and works from a checkout via `AGENTS.md` where a plugin is not needed.
 
+[Contextify](https://contextify.sh/)
+keeps your Claude Code and Codex history forever
+in a private, searchable timeline.
+Claude Code deletes history after 30 days;
+Contextify watches both tools,
+summarizes each message (on-device via Apple Intelligence on macOS 26,
+or Lite Mode on macOS 15),
+and lets you search every conversation you ever had.
+It runs local-first with no account required,
+and optionally syncs across devices via Cloud Sync
+or a self-hosted instance you operate.
+The ambient timeline lets you follow sessions in real time
+or skim what happened while you were away.
+
 The lab's portable agent config lives in
 [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config)
 (the same repository as [`d-morrison/ai-config`](https://github.com/d-morrison/ai-config)).
