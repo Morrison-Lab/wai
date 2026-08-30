@@ -16,6 +16,16 @@ The following catalog is a starting point rather than an endorsement:
 | [Gemini CLI](https://github.com/google-gemini/gemini-cli) | Command line | Inspect, edit, and test the current local checkout |
 | [Cursor](https://www.cursor.com/) | IDE | Edit interactively with path-scoped `.cursor/rules` context |
 | [Aider](https://aider.chat/) | Command line | Pair locally with explicit files and Git commits |
+| [GitKraken Kepler](https://gitkraken.com/kepler) | Agentic development environment (desktop) | Start a Task from an issue, PR, or idea; run multiple agents in parallel isolated worktrees via reusable Actions; review per-branch diffs and open PRs |
+
+Kepler is not an agent itself but an orchestration layer.
+It hosts agents you already use
+(Claude Code, Codex, Copilot, Cursor, OpenCode)
+rather than locking in one model,
+and builds on a decade of GitKraken plumbing for branches, worktrees, diffs, and merges.
+Where a single-agent platform handles one repo at a time,
+a Kepler Task can span many repos,
+and its Agent Graph visualizes every session, turn, tool call, and subagent live.
 
 Before connecting any platform, check:
 
