@@ -366,7 +366,9 @@ the error can persist until the sliding rate-limit window recovers.
 A quick way to tell 404 from 403:
 a 404 means the request authenticated but named a missing endpoint
 (a model-name or configuration problem),
-while a 403 means the token itself was rejected (an authentication problem).
+while a 403 usually means the token itself was rejected (an authentication problem).
+The IP access-list 403 below is the exception ---
+there the token is valid and the failure is at the network boundary.
 ::::
 
 :::: {.callout-important}
@@ -419,19 +421,17 @@ Connect to the network that the workspace allows
 and retry;
 the existing token will then succeed without replacement.
 
-All three 403 variants print `[403] Forbidden`
-but are distinguishable by their message body:
+The IP-ACL variant is distinguishable by its message body,
+which names your source IP and a workspace id.
+The other two 403 situations are not distinguishable by body alone ---
+both the expired-token case and the wrong-workspace case described
+in the preceding callout surface as `Invalid access token`
+(and, for a missing endpoint, as `ENDPOINT_NOT_FOUND`):
 
 | Message body | Cause | Remedy |
-|---|---:|---|
-| `Invalid access token` | expired or revoked token | mint a new token |
-| `Invalid access to Org: <id>` | `baseUrl` names the wrong workspace | correct the host (preceding callout) |
+|---|---|---|
+| `Invalid access token` | expired or revoked token, or `baseUrl` names the wrong workspace | mint a new token or correct the host (see preceding callout) |
 | `Source IP address: ... blocked by Databricks IP ACL for workspace: <workspace-id>` | off-network / VPN down | connect to the allowed network; no credential change |
-
-The workspace id in the IP-ACL message
-and the org id in the `Invalid access to Org` message
-are different identifiers,
-so the two workspace-identity failures are not the same.
 
 Observed 2026-08-26 on `databricks-gpt-5-6-sol`
 against `dbc-440c7148-9ff6`,
