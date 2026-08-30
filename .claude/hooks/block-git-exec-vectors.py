@@ -82,6 +82,56 @@ def tokenize(command):
     return list(lexer)
 
 
+def _filter_heredoc_bodies(tokens):
+    """Return tokens with heredoc bodies removed.
+
+    A heredoc ``<<[ -]WORD`` body is prose, not a command, so a line like
+    ``git grep -O runs a pager`` inside it should not be flagged. The body
+    runs from the ``<<`` operator through the matching terminator line.
+
+    With ``punctuation_chars``, ``<<-EOF`` (no space) tokenizes as
+    ``<<`` + ``-EOF``, and ``<<- EOF`` (with space) as ``<<`` + ``-`` +
+    ``EOF``, so both forms are handled. Only a plausible delimiter
+    (word-like, not numeric) is treated as a heredoc; this avoids
+    misclassifying arithmetic ``1<<2`` as a heredoc start.
+    """
+    import re
+
+    filtered = []
+    i = 0
+    while i < len(tokens):
+        if tokens[i] == "<<" and i + 1 < len(tokens):
+            # Determine delimiter token, handling ``<<-`` split forms.
+            nxt = tokens[i + 1]
+            if nxt == "-" and i + 2 < len(tokens):
+                delim_token = tokens[i + 2]
+                delim_start = i + 1
+            elif nxt.startswith("-") and len(nxt) > 1:
+                delim_token = nxt[1:]
+                delim_start = i + 1
+            else:
+                delim_token = nxt
+                delim_start = i + 1
+
+            # Heredoc delimiters are typically word-like (EOF, END, etc.),
+            # not numeric. This distinguishes ``cat <<EOF`` from ``1<<2``.
+            plausible = bool(re.match(r"^[A-Za-z_][A-Za-z0-9_-]*$", delim_token))
+            if plausible:
+                # Find the terminator line (next occurrence of delimiter).
+                term_idx = None
+                for k in range(delim_start + 1, len(tokens)):
+                    if tokens[k] == delim_token:
+                        term_idx = k
+                        break
+                if term_idx is not None:
+                    # Skip the entire heredoc: <<, delimiter, body, terminator.
+                    i = term_idx + 1
+                    continue
+        filtered.append(tokens[i])
+        i += 1
+    return filtered
+
+
 def find_violations(command):
     try:
         tokens = tokenize(command)
@@ -90,14 +140,10 @@ def find_violations(command):
         # can't safely parse; fall back on the existing deny patterns.
         return []
 
-    # Heredoc bodies are prose, not commands. Stop scanning at the first
-    # heredoc operator so a line like ``git grep -O runs a pager`` inside
-    # the body is not flagged. With punctuation_chars, ``<<-`` tokenizes
-    # as ``<<`` + ``-...``, so checking for ``<<`` covers both forms.
-    for idx, tok in enumerate(tokens):
-        if tok == "<<" or tok == "<<-" or tok.startswith("<<"):
-            tokens = tokens[:idx]
-            break
+    # Strip heredoc bodies so prose inside them is not scanned as commands,
+    # but resume scanning after the terminator so a real command following
+    # the heredoc is still checked (avoids a full bypass).
+    tokens = _filter_heredoc_bodies(tokens)
 
     violations = []
     i = 0
