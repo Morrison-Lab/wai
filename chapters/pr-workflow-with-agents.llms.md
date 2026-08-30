@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-29 23:08:45 (PDT)
+Last modified: 2026-08-29 23:12:14 (PDT)
 
 The practices below apply whether you are driving an agent’s work or doing the work yourself. They keep parallel sessions from colliding and keep a pull request moving toward a clean, mergeable state.
 
@@ -1387,6 +1387,10 @@ Plausible, fluent prose is the main risk, not a comfort. It conceals errors that
 Author-side validation ([Responsibility for validation](../chapters/ai-use-policies.llms.md#responsibility-for-validation)) is necessary and not sufficient. A second person (or a later pass by the author wearing a reviewer hat) should still try to break the work.
 
 Automated review is a filter, not a substitute for this stance. Those tools miss domain errors and sometimes invent findings; they do not license a lighter human review.
+
+# 8 Auto-fix PRs with Claude Code
+
+[Claude Code’s `/autofix-pr`](https://code.claude.com/docs/en/commands#autofix-pr) watches the current branch’s pull request from Claude Code on the web and pushes fixes when CI fails or reviewers leave comments. It detects the open PR from your checked-out branch via `gh pr view`; to watch a different PR, check out its branch first. By default it fixes every CI failure and review comment; pass a prompt to scope it, for example `/autofix-pr only fix lint and type errors`. It requires the `gh` CLI and access to Claude Code on the web. A Marketplace action at [pr-autofix-with-claude-code](https://github.com/marketplace/actions/pr-autofix-with-claude-code) offers the same capability as a GitHub Action.
 
 # References
 

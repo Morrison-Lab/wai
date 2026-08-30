@@ -327,7 +327,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-08-29 23:08:45 (PDT)</p>
+  <p class="date">Last modified: 2026-08-29 23:12:14 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -1449,6 +1449,15 @@ gh issue comment &lt;N&gt; --body "Working on this --- paws off until I'm done."
 </ul>
 <p>Author-side validation (<a href="../chapters/ai-use-policies.html#responsibility-for-validation">Responsibility for validation</a>) is necessary and not sufficient. A second person (or a later pass by the author wearing a reviewer hat) should still try to break the work.</p>
 <p>Automated review is a filter, not a substitute for this stance. Those tools miss domain errors and sometimes invent findings; they do not license a lighter human review.</p>
+</section></section>
+<section>
+<section id="sec-autofix-pr" class="title-slide slide level1 center" data-number="8">
+<h1><span class="header-section-number">8</span> Auto-fix PRs with Claude Code</h1>
+
+</section>
+<section class="slide level2">
+
+<p><a href="https://code.claude.com/docs/en/commands#autofix-pr">Claude Code’s <code>/autofix-pr</code></a> watches the current branch’s pull request from Claude Code on the web and pushes fixes when CI fails or reviewers leave comments. It detects the open PR from your checked-out branch via <code>gh pr view</code>; to watch a different PR, check out its branch first. By default it fixes every CI failure and review comment; pass a prompt to scope it, for example <code>/autofix-pr only fix lint and type errors</code>. It requires the <code>gh</code> CLI and access to Claude Code on the web. A Marketplace action at <a href="https://github.com/marketplace/actions/pr-autofix-with-claude-code">pr-autofix-with-claude-code</a> offers the same capability as a GitHub Action.</p>
 </section></section>
 <section>
 <section id="references" class="title-slide slide level1 unnumbered center">
