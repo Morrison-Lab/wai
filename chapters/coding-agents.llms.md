@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-27 00:29:31 (PDT)
+Last modified: 2026-08-29 21:30:38 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -1953,7 +1953,7 @@ For an OTPM error, lower `max_tokens` first. For either type, the error can pers
 
 > **TIP:**
 >
-> A quick way to tell 404 from 403: a 404 means the request authenticated but named a missing endpoint (a model-name or configuration problem), while a 403 means the token itself was rejected (an authentication problem).
+> A quick way to tell 404 from 403: a 404 means the request authenticated but named a missing endpoint (a model-name or configuration problem), while a 403 usually means the token itself was rejected (an authentication problem). The IP access-list 403 below is the exception — there the token is valid and the failure is at the network boundary.
 
 > **IMPORTANT:**
 >
@@ -1962,6 +1962,26 @@ For an OTPM error, lower `max_tokens` first. For either type, the error can pers
 > Compare the host in `oaicopilot.baseUrl` against the invocations URL shown at the top of the endpoint’s page in the Databricks console (**Serving**, then the endpoint). Check every per-model `baseUrl` as well: each model entry may carry its own copy of the host, so a single corrected setting can leave dozens of stale ones behind it.
 >
 > Observed 2026-08-20, where a stale host appeared 42 times in one `settings.json`: once at the top level and once in each of 41 model entries. A second VS Code installation on the same machine carried the same stale host in its own copy of the setting.
+
+> **IMPORTANT:**
+>
+> There is a third 403 with the same status line but a different message body and a different remedy:
+>
+>     [403] Forbidden
+>     {"error_code":403,"message":"Source IP address: <ip> is blocked by Databricks IP ACL for workspace: <workspace-id> [ReqId: ...]"}
+>
+> The request left from an address outside the workspace’s IP access list, typically because a VPN dropped or was never connected. The token is valid, the host is correct, and the endpoint exists, so the request succeeds in intent and fails at the network boundary. No credential change resolves it — minting a fresh token repeats the same failure indefinitely, the same shape as the stale-host case one layer further out.
+>
+> Connect to the network that the workspace allows (restore the VPN or move to an allowed address) and retry; the existing token will then succeed without replacement.
+>
+> The IP-ACL variant is distinguishable by its message body, which names your source IP and a workspace id. The other two 403 situations are not distinguishable by body alone — both the expired-token case and the wrong-workspace case described in the preceding callout surface as `Invalid access token` (and, for a missing endpoint, as `ENDPOINT_NOT_FOUND`):
+>
+> | Message body | Cause | Remedy |
+> |----|----|----|
+> | `Invalid access token` | expired or revoked token, or `baseUrl` names the wrong workspace | mint a new token or correct the host (see preceding callout) |
+> | `Source IP address: ... blocked by Databricks IP ACL for workspace: <workspace-id>` | off-network / VPN down | connect to the allowed network; no credential change |
+>
+> Observed 2026-08-26 on `databricks-gpt-5-6-sol` against `dbc-440c7148-9ff6`, three consecutive requests while a VPN connection was down.
 
 #### Three failures that name no error in the chat panel
 

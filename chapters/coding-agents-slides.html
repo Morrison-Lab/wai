@@ -330,7 +330,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-08-27 00:29:31 (PDT)</p>
+  <p class="date">Last modified: 2026-08-29 21:30:38 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -2583,7 +2583,7 @@ while the selected main agent model is BYOK.</code></pre>
 <p><strong>Tip</strong></p>
 </div>
 <div class="callout-content">
-<p>A quick way to tell 404 from 403: a 404 means the request authenticated but named a missing endpoint (a model-name or configuration problem), while a 403 means the token itself was rejected (an authentication problem).</p>
+<p>A quick way to tell 404 from 403: a 404 means the request authenticated but named a missing endpoint (a model-name or configuration problem), while a 403 usually means the token itself was rejected (an authentication problem). The IP access-list 403 below is the exception — there the token is valid and the failure is at the network boundary.</p>
 </div>
 </div>
 </div>
@@ -2602,17 +2602,62 @@ while the selected main agent model is BYOK.</code></pre>
 </div>
 </div>
 </div>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>A 403 that no new token can fix — IP access list</strong></p>
+</div>
+<div class="callout-content">
+<p>There is a third 403 with the same status line but a different message body and a different remedy:</p>
+<pre><code>[403] Forbidden
+{"error_code":403,"message":"Source IP address: &lt;ip&gt; is blocked by Databricks IP ACL for workspace: &lt;workspace-id&gt; [ReqId: ...]"}</code></pre>
+<p>The request left from an address outside the workspace’s IP access list, typically because a VPN dropped or was never connected. The token is valid, the host is correct, and the endpoint exists, so the request succeeds in intent and fails at the network boundary. No credential change resolves it — minting a fresh token repeats the same failure indefinitely, the same shape as the stale-host case one layer further out.</p>
+<p>Connect to the network that the workspace allows (restore the VPN or move to an allowed address) and retry; the existing token will then succeed without replacement.</p>
+<p>The IP-ACL variant is distinguishable by its message body, which names your source IP and a workspace id. The other two 403 situations are not distinguishable by body alone — both the expired-token case and the wrong-workspace case described in the preceding callout surface as <code>Invalid access token</code> (and, for a missing endpoint, as <code>ENDPOINT_NOT_FOUND</code>):</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Message body</th>
+<th>Cause</th>
+<th>Remedy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Invalid access token</code></td>
+<td>expired or revoked token, or <code>baseUrl</code> names the wrong workspace</td>
+<td>mint a new token or correct the host (see preceding callout)</td>
+</tr>
+<tr class="even">
+<td><code>Source IP address: ... blocked by Databricks IP ACL for workspace: &lt;workspace-id&gt;</code></td>
+<td>off-network / VPN down</td>
+<td>connect to the allowed network; no credential change</td>
+</tr>
+</tbody>
+</table>
+<p>Observed 2026-08-26 on <code>databricks-gpt-5-6-sol</code> against <code>dbc-440c7148-9ff6</code>, three consecutive requests while a VPN connection was down.</p>
+</div>
+</div>
+</div>
 <h4 id="three-failures-that-name-no-error-in-the-chat-panel">Three failures that name no error in the chat panel</h4>
 <p>The four errors above print their own text. These three do not name an error. Failures 5 and 6 leave an ordinary-looking reply in the chat panel, and the only record is in VS Code’s <strong>GitHub Copilot Chat</strong> output channel (<strong>View</strong>, then <strong>Output</strong>, then pick that channel). Failure 7 is visible in the panel as a <code>[object Object]</code> prefix on the reply; it is still a display bug rather than a named error. Open the output channel first whenever a BYOK reply is wrong in a way that names no error.</p>
 <p>A reply that begins <code>[object Object]</code> and then answers as though you had asked nothing is the symptom that produced all three of these at once. Observed 2026-08-20 with VS Code 1.135.0-insider, Copilot Chat 0.63.2026082004, <code>oai-compatible-copilot</code> 0.4.2, and <code>databricks-claude-sonnet-5</code>.</p>
 <p><strong>5. <code>OAI Compatible API key not found</code></strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb48-1"><a aria-label="1"></a>OAI Compatible API key not found</span>
-<span id="cb48-2"><a aria-label="2"></a>  at ...provideLanguageModelChatResponse (out/provider.js:173)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb49-1"><a aria-label="1"></a>OAI Compatible API key not found</span>
+<span id="cb49-2"><a aria-label="2"></a>  at ...provideLanguageModelChatResponse (out/provider.js:173)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The extension keeps the token in VS Code’s encrypted secret storage, which is per install, not per profile. <code>settings.json</code> travels through Settings Sync; the secret does not. So a second install, such as Insiders beside stable, shows a complete-looking <code>oaicopilot</code> configuration with no token behind it. A new profile in the same install still sees the existing token. Re-run <strong>Set OAI Compatible Multi-Provider Apikey</strong> in the install that is failing.</p>
 <p>This is not the same as the 403 above. There, a token was sent and the provider rejected it; here, no request reaches the provider at all.</p>
 <p><strong>6. <code>No lowest priority node found</code></strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb49-1"><a aria-label="1"></a>Error: No lowest priority node found (path: ...)</span>
-<span id="cb49-2"><a aria-label="2"></a>  ... [ConversationHistorySummarizer] summarization failed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb50-1"><a aria-label="1"></a>Error: No lowest priority node found (path: ...)</span>
+<span id="cb50-2"><a aria-label="2"></a>  ... [ConversationHistorySummarizer] summarization failed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This one comes from Copilot Chat’s prompt renderer, not from Databricks. The renderer drops prompt elements in priority order until the prompt fits the input budget the extension advertises, which is <code>context_length</code> minus <code>max_tokens</code>, or 48,000 tokens at the Claude defaults in <a href="#/tbl-databricks-oaicopilot-defaults" class="quarto-xref">Table&nbsp;3</a>. The error is what it raises when it has nothing left to drop and the prompt is still over budget. A prompt pruned that far need not still contain your own message, which fits a model that replies it cannot see a request.</p>
 <p>Agent mode reaches this sooner than ordinary chat, because tool definitions and instruction files consume the budget before any conversation does. Raise the model’s <code>context_length</code> and leave <code>max_tokens</code> alone: that widens the input allowance without reserving more output tokens per minute. Reducing the number of active tools and instruction files works too. Weigh both against <a href="#/tbl-databricks-oaicopilot-defaults" class="quarto-xref">Table&nbsp;3</a>, whose context values are chosen to keep one client inside an ITPM tier, so buying prompt headroom this way costs more 429s. Raising the window without lengthening the delay breaks the pairing those two columns encode, and on a 200,000 ITPM tier the headroom is not there to buy. Switching to a higher-tier family is the move that gets both, as <a href="#/tbl-databricks-itpm-pacing" class="quarto-xref">Table&nbsp;4</a> sets out.</p>
 <p><strong>7. <code>[object Object]</code> in the reply text</strong></p>
@@ -2664,8 +2709,8 @@ while the selected main agent model is BYOK.</code></pre>
 </ul>
 <p>Without an explicit checkout step, these dependency installation commands will fail because the necessary files won’t be available yet.</p>
 <p><strong>Basic checkout:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb50-1"><a aria-label="1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Checkout code</span></span>
-<span id="cb50-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb51-1"><a aria-label="1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Checkout code</span></span>
+<span id="cb51-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Important:</strong> The Copilot coding agent overrides any <code>fetch-depth</code> value you set in the checkout step. According to <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment">GitHub’s official documentation</a>, this override happens “to allow the agent to rollback commits upon request, while mitigating security risks.” The agent dynamically determines the appropriate fetch depth based on the pull request context.</p>
 <p>While you cannot control the fetch depth used by Copilot, the agent still has access to sufficient git history to perform its work effectively, including comparing changes and understanding the context of your pull request.</p>
 <h4 id="configurable-options">Configurable Options</h4>
@@ -2681,30 +2726,30 @@ while the selected main agent model is BYOK.</code></pre>
 <p>All other workflow settings are ignored by Copilot.</p>
 <h4 id="common-setup-tasks">Common Setup Tasks</h4>
 <p><strong>For Node.js/TypeScript projects:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb51-1"><a aria-label="1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up Node.js</span></span>
-<span id="cb51-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/setup-node@v4</span></span>
-<span id="cb51-3"><a aria-label="3"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb51-4"><a aria-label="4"></a><span class="at">    </span><span class="fu">node-version</span><span class="kw">:</span><span class="at"> </span><span class="st">"20"</span></span>
-<span id="cb51-5"><a aria-label="5"></a><span class="at">    </span><span class="fu">cache</span><span class="kw">:</span><span class="at"> </span><span class="st">"npm"</span></span>
-<span id="cb51-6"><a aria-label="6"></a></span>
-<span id="cb51-7"><a aria-label="7"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install dependencies</span></span>
-<span id="cb51-8"><a aria-label="8"></a><span class="at">  </span><span class="fu">run</span><span class="kw">:</span><span class="at"> npm ci</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>For Python projects:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb52-1"><a aria-label="1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up Python</span></span>
-<span id="cb52-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/setup-python@v5</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb52-1"><a aria-label="1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up Node.js</span></span>
+<span id="cb52-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/setup-node@v4</span></span>
 <span id="cb52-3"><a aria-label="3"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb52-4"><a aria-label="4"></a><span class="at">    </span><span class="fu">python-version</span><span class="kw">:</span><span class="at"> </span><span class="st">"3.11"</span></span>
-<span id="cb52-5"><a aria-label="5"></a></span>
-<span id="cb52-6"><a aria-label="6"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install dependencies</span></span>
-<span id="cb52-7"><a aria-label="7"></a><span class="at">  </span><span class="fu">run</span><span class="kw">:</span><span class="at"> pip install -r requirements.txt</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>For R projects:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb53-1"><a aria-label="1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up R</span></span>
-<span id="cb53-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-r@v2</span></span>
+<span id="cb52-4"><a aria-label="4"></a><span class="at">    </span><span class="fu">node-version</span><span class="kw">:</span><span class="at"> </span><span class="st">"20"</span></span>
+<span id="cb52-5"><a aria-label="5"></a><span class="at">    </span><span class="fu">cache</span><span class="kw">:</span><span class="at"> </span><span class="st">"npm"</span></span>
+<span id="cb52-6"><a aria-label="6"></a></span>
+<span id="cb52-7"><a aria-label="7"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install dependencies</span></span>
+<span id="cb52-8"><a aria-label="8"></a><span class="at">  </span><span class="fu">run</span><span class="kw">:</span><span class="at"> npm ci</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>For Python projects:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb53-1"><a aria-label="1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up Python</span></span>
+<span id="cb53-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/setup-python@v5</span></span>
 <span id="cb53-3"><a aria-label="3"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb53-4"><a aria-label="4"></a><span class="at">    </span><span class="fu">r-version</span><span class="kw">:</span><span class="at"> </span><span class="st">'release'</span></span>
+<span id="cb53-4"><a aria-label="4"></a><span class="at">    </span><span class="fu">python-version</span><span class="kw">:</span><span class="at"> </span><span class="st">"3.11"</span></span>
 <span id="cb53-5"><a aria-label="5"></a></span>
-<span id="cb53-6"><a aria-label="6"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install R dependencies</span></span>
-<span id="cb53-7"><a aria-label="7"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-renv@v2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb53-6"><a aria-label="6"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install dependencies</span></span>
+<span id="cb53-7"><a aria-label="7"></a><span class="at">  </span><span class="fu">run</span><span class="kw">:</span><span class="at"> pip install -r requirements.txt</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>For R projects:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb54-1"><a aria-label="1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up R</span></span>
+<span id="cb54-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-r@v2</span></span>
+<span id="cb54-3"><a aria-label="3"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb54-4"><a aria-label="4"></a><span class="at">    </span><span class="fu">r-version</span><span class="kw">:</span><span class="at"> </span><span class="st">'release'</span></span>
+<span id="cb54-5"><a aria-label="5"></a></span>
+<span id="cb54-6"><a aria-label="6"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install R dependencies</span></span>
+<span id="cb54-7"><a aria-label="7"></a><span class="at">  </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> r-lib/actions/setup-renv@v2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <h4 id="environment-variables-and-secrets">Environment Variables and Secrets</h4>
 <p>To set environment variables for Copilot:</p>
 <ol type="1">
@@ -2719,18 +2764,18 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Setup logs appear in the agent session logs when Copilot starts working. If a step fails, Copilot will skip remaining steps and begin working with the current environment state.</p>
 <h4 id="advanced-configuration">Advanced Configuration</h4>
 <p><strong>Larger runners:</strong> For projects requiring more resources, you can use larger GitHub-hosted runners:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb54-1"><a aria-label="1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
-<span id="cb54-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">copilot-setup-steps</span><span class="kw">:</span></span>
-<span id="cb54-3"><a aria-label="3"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-4-core</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Self-hosted runners (ARC):</strong> For access to internal resources or private registries, use Actions Runner Controller (ARC) self-hosted runners:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb55-1"><a aria-label="1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
 <span id="cb55-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">copilot-setup-steps</span><span class="kw">:</span></span>
-<span id="cb55-3"><a aria-label="3"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> arc-scale-set-name</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb55-3"><a aria-label="3"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-4-core</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Self-hosted runners (ARC):</strong> For access to internal resources or private registries, use Actions Runner Controller (ARC) self-hosted runners:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb56-1"><a aria-label="1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb56-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">copilot-setup-steps</span><span class="kw">:</span></span>
+<span id="cb56-3"><a aria-label="3"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> arc-scale-set-name</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Note: When using self-hosted runners, you must disable Copilot’s integrated firewall in repository settings and configure appropriate network security controls.</p>
 <p><strong>Git Large File Storage (LFS):</strong> If your repository uses Git LFS:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb56-1"><a aria-label="1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span>
-<span id="cb56-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb56-3"><a aria-label="3"></a><span class="at">    </span><span class="fu">lfs</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb57"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb57-1"><a aria-label="1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span>
+<span id="cb57-2"><a aria-label="2"></a><span class="at">  </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb57-3"><a aria-label="3"></a><span class="at">    </span><span class="fu">lfs</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <h4 id="further-reading-1">Further Reading</h4>
 <p>For complete details, see <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment">Customizing the development environment for GitHub Copilot coding agent</a>.</p>
 </section></section>
@@ -3109,9 +3154,9 @@ while the selected main agent model is BYOK.</code></pre>
 <p>An <code>AGENTS.md</code> file is optional, but it lets the reviewer follow repository-specific guidance.</p>
 <h4 id="requesting-and-automating-reviews">Requesting and automating reviews</h4>
 <p>After an administrator or repository owner connects the repository and enables code review in Codex settings, request a review by adding this comment to a pull request:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb58-1"><a aria-label="1"></a>@codex review</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb59-1"><a aria-label="1"></a>@codex review</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>You can add a one-off focus to the same comment, for example:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb59-1"><a aria-label="1"></a>@codex review for security regressions and missing tests</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb60-1"><a aria-label="1"></a>@codex review for security regressions and missing tests</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Where the workspace configuration permits it, Codex can also review new pull requests automatically. In GitHub, the general code review reports only high-priority P0 and P1 findings to keep its comments focused.</p>
 <p>A separate <strong>Security Review</strong> (research preview) is a deeper pass on security-specific risks. Request it with <code>@codex security review</code>. It can overlap with the general review’s security findings.</p>
 <h4 id="when-an-administrator-has-disabled-codex-cloud">When an administrator has disabled Codex Cloud</h4>
@@ -3139,11 +3184,11 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Do not copy personal ChatGPT or Codex login credentials into CI secrets.</p>
 <h4 id="adding-repository-specific-review-rules">Adding repository-specific review rules</h4>
 <p>Codex reads applicable <code>AGENTS.md</code> files. Put broad guidance in the repository root and narrower guidance in a file closer to the code it governs. Review-only guidance belongs under a <code>## Code Review Rules</code> heading:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb60-1"><a aria-label="1"></a><span class="fu">## Code Review Rules</span></span>
-<span id="cb60-2"><a aria-label="2"></a></span>
-<span id="cb60-3"><a aria-label="3"></a><span class="ss">- </span>Flag schema changes that are not backward compatible.</span>
-<span id="cb60-4"><a aria-label="4"></a>  A safe migration must support both deployed application versions.</span>
-<span id="cb60-5"><a aria-label="5"></a><span class="ss">- </span>Flag behavior changes without a regression test.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb61-1"><a aria-label="1"></a><span class="fu">## Code Review Rules</span></span>
+<span id="cb61-2"><a aria-label="2"></a></span>
+<span id="cb61-3"><a aria-label="3"></a><span class="ss">- </span>Flag schema changes that are not backward compatible.</span>
+<span id="cb61-4"><a aria-label="4"></a>  A safe migration must support both deployed application versions.</span>
+<span id="cb61-5"><a aria-label="5"></a><span class="ss">- </span>Flag behavior changes without a regression test.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Keep deterministic formatting and lint checks in continuous integration. Code-review guidance should:</p>
 <ul>
 <li>focus on consequential behavior</li>
@@ -3575,10 +3620,10 @@ while the selected main agent model is BYOK.</code></pre>
 <p>There are two common routes:</p>
 <ol type="1">
 <li><p><strong>Native installer</strong> (recommended):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb61-1"><a aria-label="1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb62-1"><a aria-label="1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This installs the binary to <code>~/.local/bin</code>. If your organization’s policy requires it, download and inspect the script before running it rather than piping it straight to <code>bash</code>.</p></li>
 <li><p><strong>npm</strong> (requires <a href="https://nodejs.org/">Node.js</a>):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb62-1"><a aria-label="1"></a><span class="ex">npm</span> install <span class="at">-g</span> @anthropic-ai/claude-code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb63-1"><a aria-label="1"></a><span class="ex">npm</span> install <span class="at">-g</span> @anthropic-ai/claude-code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 </ol>
 <div class="callout callout-important callout-titled callout-style-default">
 <div class="callout-body">
@@ -3597,11 +3642,11 @@ while the selected main agent model is BYOK.</code></pre>
 <h4 id="make-sure-your-shell-can-find-claude">Make sure your shell can find <code>claude</code></h4>
 <p>The native binary lives in <code>~/.local/bin</code>. The installer adds this directory to <code>PATH</code> for ordinary shells, but on Windows two things commonly break that.</p>
 <p><strong>MSYS2 does not inherit the Windows <code>PATH</code> by default.</strong> It starts in a “minimal” path mode, so tools installed elsewhere on Windows are invisible to it. Add the binary’s directory explicitly in your <code>~/.zshrc</code> (or <code>~/.bashrc</code>). Because MSYS2’s <code>$HOME</code> is <code>/home/&lt;you&gt;</code> (its own home, not the Windows profile where the installer puts the binary), point <code>PATH</code> at the absolute Windows path:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb63-1"><a aria-label="1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"/c/Users/&lt;you&gt;/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># MSYS2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb64-1"><a aria-label="1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"/c/Users/&lt;you&gt;/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># MSYS2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>In <strong>Git Bash</strong>, <code>$HOME</code> already is <code>/c/Users/&lt;you&gt;</code> (your Windows user profile), so the shorthand works there:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb64-1"><a aria-label="1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"</span><span class="va">$HOME</span><span class="st">/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># Git Bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb65"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb65-1"><a aria-label="1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"</span><span class="va">$HOME</span><span class="st">/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># Git Bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Rehash after changing <code>PATH</code>.</strong> <code>zsh</code> and <code>bash</code> cache the locations of executables. If you add a directory to <code>PATH</code> in your shell config, the shell may still report <code>command not found</code> <em>even though the directory is on <code>PATH</code></em>, because its command table is stale. Force a rebuild in the same shell right after editing <code>PATH</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb65"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb65-1"><a aria-label="1"></a><span class="ex">rehash</span>        <span class="co"># zsh; use 'hash -r' in bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb66"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb66-1"><a aria-label="1"></a><span class="ex">rehash</span>        <span class="co"># zsh; use 'hash -r' in bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This bites hardest with <a href="https://ohmyz.sh/">oh-my-zsh</a>, which builds zsh’s command table <em>before</em> your custom <code>PATH</code> line runs, so opening a fresh window may not clear the stale <code>command not found</code> on its own until you <code>rehash</code> (or move the <code>PATH</code> line before oh-my-zsh initializes).</p>
 <h4 id="do-not-edit-dotfiles-with-powershell-redirection">Do not edit dotfiles with PowerShell redirection</h4>
 <div class="callout callout-warning callout-titled callout-style-default">
@@ -3623,11 +3668,11 @@ while the selected main agent model is BYOK.</code></pre>
 <p>If you also use the <a href="https://cli.github.com/">GitHub CLI</a> (<code>gh</code>) to push code or open pull requests, <code>gh auth login</code> may fail with:</p>
 <pre><code>could not prompt: … running in MinTTY without pseudo terminal support</code></pre>
 <p>Git Bash and MSYS2 both default to the MinTTY terminal, which can’t host the interactive prompt. Wrap the command with <code>winpty</code>, or run it from PowerShell / Windows Terminal instead:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb68"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb68-1"><a aria-label="1"></a><span class="ex">winpty</span> gh auth login</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb69"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb69-1"><a aria-label="1"></a><span class="ex">winpty</span> gh auth login</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>winpty</code> ships with Git Bash, but in MSYS2 it’s a separate package — install it first with <code>pacman -S winpty</code> if you get <code>command not found</code>.</p>
 <h4 id="verify-the-install">Verify the install</h4>
 <p>Open a <strong>new</strong> terminal window (so it picks up your updated config) and run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb69"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb69-1"><a aria-label="1"></a><span class="ex">claude</span> <span class="at">--version</span>      <span class="co"># prints the installed version number</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb70"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb70-1"><a aria-label="1"></a><span class="ex">claude</span> <span class="at">--version</span>      <span class="co"># prints the installed version number</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If you get a version number, you’re ready to run <code>claude</code> in your project directory. If you get <code>command not found</code>, re-check the two <code>PATH</code> issues above: the directory must be on <code>PATH</code>, and you must <code>rehash</code> (or open a fresh window) after changing it.</p>
 </section></section>
 <section>
@@ -3654,7 +3699,7 @@ while the selected main agent model is BYOK.</code></pre>
 <h4 id="installed-is-not-registered">Installed is not registered</h4>
 <p>A server binary sitting on disk is not available to your agent. The harness knows only what its configuration declares, so installing <a href="https://github.com/github/github-mcp-server"><code>github-mcp-server</code></a> and <em>registering</em> it are two separate acts. Skipping the second is easy to miss, because the first one felt like the hard part.</p>
 <p>The check is one command:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb70"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb70-1"><a aria-label="1"></a><span class="ex">claude</span> mcp list</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb71"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb71-1"><a aria-label="1"></a><span class="ex">claude</span> mcp list</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <h4 id="a-broken-server-can-occupy-the-name-your-working-one-wanted">A broken server can occupy the name your working one wanted</h4>
 <p>This is the failure worth knowing about, and it is nastier than a missing entry, because <code>claude mcp list</code> shows you something that looks right.</p>
 <p>Plugin marketplaces can register servers of their own. An official GitHub plugin may install a <strong>remote</strong> server under exactly the name you meant to give your <strong>local</strong> one. The listing then reports a <code>github</code> server that is not your setup at all, and the local binary you installed goes unregistered and unnoticed.</p>
@@ -3665,7 +3710,7 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <h4 id="and-401-mean-different-things">400 and 401 mean different things</h4>
 <p>The status code is the whole diagnosis here, and it is easy to skim past.</p>
 <p>The configuration a plugin ships may hardcode a credential placeholder:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb72"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb72-1"><a aria-label="1"></a><span class="fu">{</span><span class="dt">"headers"</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">"Authorization"</span><span class="fu">:</span> <span class="st">"Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}"</span><span class="fu">}}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb73"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb73-1"><a aria-label="1"></a><span class="fu">{</span><span class="dt">"headers"</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">"Authorization"</span><span class="fu">:</span> <span class="st">"Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}"</span><span class="fu">}}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If that variable has no value when the harness starts, the header goes out as a bare <code>Bearer</code> with nothing after it. That is <strong>malformed</strong>, not <strong>unauthorized</strong>:</p>
 <ul>
 <li><strong>401</strong> means the server read your token and rejected it — a real credential problem: expired, wrong scopes, wrong account.</li>
@@ -3674,42 +3719,42 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <p>Chasing a 400 as though it were a 401 sends you to the token-minting page for a problem that lives in a config file.</p>
 <h4 id="install-the-binary-the-platforms-own-way">Install the binary the platform’s own way</h4>
 <p>These notes started from a Linux install, where the binary lands under <code>$HOME/.local/bin</code>. On macOS the same server is a Homebrew formula, and getting it is one command:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb73"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb73-1"><a aria-label="1"></a><span class="ex">brew</span> install github-mcp-server</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb74"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb74-1"><a aria-label="1"></a><span class="ex">brew</span> install github-mcp-server</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>That installs to <code>/opt/homebrew/bin</code> on Apple silicon (<code>/usr/local/bin</code> under Intel Homebrew), so no manual download is needed.</p>
 <p>The official install guide leads with a Docker recipe instead, and it has a catch worth knowing before you follow it: <code>docker</code> being on <code>PATH</code> does not mean the daemon is running. With Docker Desktop stopped, the server fails to connect to the Docker API, and that failure surfaces at <em>server start</em>, not at registration — so <code>claude mcp add</code> succeeds, and the break only shows up later, as a silent absence of tools. That is one more reason to prefer the binary path above.</p>
 <p>Because the binary’s location differs by platform and by installer, a launch wrapper should resolve it from <code>PATH</code> rather than hardcode it, with an override for the case where it isn’t on one.</p>
 <h4 id="supply-credentials-without-storing-a-token">Supply credentials without storing a token</h4>
 <p>The obvious registration bakes a token straight into harness config:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb74"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb74-1"><a aria-label="1"></a><span class="ex">claude</span> mcp add github <span class="at">-e</span> GITHUB_PERSONAL_ACCESS_TOKEN=<span class="op">&lt;</span>pat<span class="op">&gt;</span> -- <span class="op">&lt;</span>server<span class="op">&gt;</span> stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb75"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb75-1"><a aria-label="1"></a><span class="ex">claude</span> mcp add github <span class="at">-e</span> GITHUB_PERSONAL_ACCESS_TOKEN=<span class="op">&lt;</span>pat<span class="op">&gt;</span> -- <span class="op">&lt;</span>server<span class="op">&gt;</span> stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>That writes a live credential to a config file in plain text, and pins you to one token that will eventually expire.</p>
 <p>A launch wrapper avoids both. It reads the credential at start time from a tool that already holds one, so nothing is stored and the server follows whatever account you are currently logged in as:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb75"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb75-1"><a aria-label="1"></a><span class="co">#!/bin/sh</span></span>
-<span id="cb75-2"><a aria-label="2"></a><span class="bu">set</span> <span class="at">-eu</span></span>
-<span id="cb75-3"><a aria-label="3"></a></span>
-<span id="cb75-4"><a aria-label="4"></a><span class="va">SERVER</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_MCP_SERVER_BIN</span><span class="op">:-</span><span class="va">$(</span><span class="bu">command</span> <span class="at">-v</span> github-mcp-server <span class="kw">||</span> <span class="fu">true</span><span class="va">)}</span><span class="st">"</span></span>
-<span id="cb75-5"><a aria-label="5"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$SERVER</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
-<span id="cb75-6"><a aria-label="6"></a>  <span class="bu">echo</span> <span class="st">"github-mcp-server not on PATH; install it or set GITHUB_MCP_SERVER_BIN"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
-<span id="cb75-7"><a aria-label="7"></a>  <span class="bu">exit</span> 1</span>
-<span id="cb75-8"><a aria-label="8"></a><span class="cf">fi</span></span>
-<span id="cb75-9"><a aria-label="9"></a></span>
-<span id="cb75-10"><a aria-label="10"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_TOOLSETS</span><span class="op">:-</span>default,actions<span class="va">}</span><span class="st">"</span></span>
-<span id="cb75-11"><a aria-label="11"></a><span class="bu">export</span> <span class="va">GITHUB_TOOLSETS</span></span>
-<span id="cb75-12"><a aria-label="12"></a></span>
-<span id="cb75-13"><a aria-label="13"></a><span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="op">=</span><span class="st">"</span><span class="va">$(</span><span class="ex">gh</span> auth token<span class="va">)</span><span class="st">"</span></span>
-<span id="cb75-14"><a aria-label="14"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
-<span id="cb75-15"><a aria-label="15"></a>  <span class="bu">echo</span> <span class="st">"empty token; run 'gh auth login'"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
-<span id="cb75-16"><a aria-label="16"></a>  <span class="bu">exit</span> 1</span>
-<span id="cb75-17"><a aria-label="17"></a><span class="cf">fi</span></span>
-<span id="cb75-18"><a aria-label="18"></a><span class="bu">export</span> <span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span></span>
-<span id="cb75-19"><a aria-label="19"></a></span>
-<span id="cb75-20"><a aria-label="20"></a><span class="bu">exec</span> <span class="st">"</span><span class="va">$SERVER</span><span class="st">"</span> stdio <span class="st">"</span><span class="va">$@</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb76"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb76-1"><a aria-label="1"></a><span class="co">#!/bin/sh</span></span>
+<span id="cb76-2"><a aria-label="2"></a><span class="bu">set</span> <span class="at">-eu</span></span>
+<span id="cb76-3"><a aria-label="3"></a></span>
+<span id="cb76-4"><a aria-label="4"></a><span class="va">SERVER</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_MCP_SERVER_BIN</span><span class="op">:-</span><span class="va">$(</span><span class="bu">command</span> <span class="at">-v</span> github-mcp-server <span class="kw">||</span> <span class="fu">true</span><span class="va">)}</span><span class="st">"</span></span>
+<span id="cb76-5"><a aria-label="5"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$SERVER</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb76-6"><a aria-label="6"></a>  <span class="bu">echo</span> <span class="st">"github-mcp-server not on PATH; install it or set GITHUB_MCP_SERVER_BIN"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb76-7"><a aria-label="7"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb76-8"><a aria-label="8"></a><span class="cf">fi</span></span>
+<span id="cb76-9"><a aria-label="9"></a></span>
+<span id="cb76-10"><a aria-label="10"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_TOOLSETS</span><span class="op">:-</span>default,actions<span class="va">}</span><span class="st">"</span></span>
+<span id="cb76-11"><a aria-label="11"></a><span class="bu">export</span> <span class="va">GITHUB_TOOLSETS</span></span>
+<span id="cb76-12"><a aria-label="12"></a></span>
+<span id="cb76-13"><a aria-label="13"></a><span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="op">=</span><span class="st">"</span><span class="va">$(</span><span class="ex">gh</span> auth token<span class="va">)</span><span class="st">"</span></span>
+<span id="cb76-14"><a aria-label="14"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb76-15"><a aria-label="15"></a>  <span class="bu">echo</span> <span class="st">"empty token; run 'gh auth login'"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb76-16"><a aria-label="16"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb76-17"><a aria-label="17"></a><span class="cf">fi</span></span>
+<span id="cb76-18"><a aria-label="18"></a><span class="bu">export</span> <span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span></span>
+<span id="cb76-19"><a aria-label="19"></a></span>
+<span id="cb76-20"><a aria-label="20"></a><span class="bu">exec</span> <span class="st">"</span><span class="va">$SERVER</span><span class="st">"</span> stdio <span class="st">"</span><span class="va">$@</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Register the wrapper rather than the binary:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb76"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb76-1"><a aria-label="1"></a><span class="ex">claude</span> mcp add <span class="at">--scope</span> user github <span class="at">--</span> ~/.local/bin/github-mcp-server-stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb77"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb77-1"><a aria-label="1"></a><span class="ex">claude</span> mcp add <span class="at">--scope</span> user github <span class="at">--</span> ~/.local/bin/github-mcp-server-stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Note the explicit failure when the token comes back empty. A wrapper that silently exports an empty string reproduces the bare-<code>Bearer</code> bug you just finished diagnosing.</p>
 <h4 id="toolsets-are-opt-in-and-the-default-may-omit-what-you-need">Toolsets are opt-in, and the default may omit what you need</h4>
 <p>A server does not necessarily expose everything it can do. GitHub’s server exposes a default group, and that default carries <strong>no continuous-integration access at all</strong> — no workflow runs, no job logs, no re-run trigger. As of this writing (server v1.7.0) the actions toolset’s four tools are <code>actions_get</code>, <code>actions_list</code>, <code>actions_run_trigger</code>, and <code>get_job_logs</code> — the exact names have moved around across releases, so treat this list as a snapshot rather than a promise.</p>
 <p>If your workflow involves driving pull requests to a clean state, that omission matters, because reading check status is most of the job. Request the extra group explicitly:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb77"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb77-1"><a aria-label="1"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span>default,actions</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb78"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb78-1"><a aria-label="1"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span>default,actions</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Note that the selection <strong>replaces</strong> the default rather than extending it, which is why the value above names <code>default</code> explicitly. Writing <code>actions</code> alone would silently trade away every default tool for the four you asked for — a net <em>loss</em> that looks like a successful configuration change.</p>
 <p>So compare the tool list before and after, and confirm the count went up rather than sideways. On the same v1.7.0 server, the default group carries 44 tools, and <code>default,actions,discussions,dependabot,labels,notifications</code> carries 63 — the count moving the right direction, as the check above expects.</p>
 <h4 id="subscribe_pr_activity-isnt-a-local-server-tool"><code>subscribe_pr_activity</code> isn’t a local-server tool</h4>
