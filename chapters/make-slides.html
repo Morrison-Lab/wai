@@ -9,7 +9,7 @@
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.10.18">
 
-  <title>Working with AI – Data Dictionaries for Humans and Agents</title>
+  <title>Working with AI – Make: Visual Automation and AI Agents</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -237,7 +237,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Data Dictionaries for Humans and Agents</h1>
+  <h1 class="title">Make: Visual Automation and AI Agents</h1>
 
 <div class="quarto-title-authors">
 </div>
@@ -246,11 +246,10 @@
 </section>
 <section class="slide level2">
 
-<p><code>data-dict.yaml</code> is a lightweight, human- and agent-readable data dictionary that records a collection of related tables: their contents, constraints, connections, and the specialized vocabulary needed to understand them. It is described at <a href="https://data-dict.tidyverse.org/">data-dict.tidyverse.org</a> and developed openly by Posit as a companion to a self-contained CLI, <code>data-dict</code>.</p>
-<p>The specification is intentionally small. It is a plain-text YAML 1.2 document that assumes data lives in Parquet or database tables, so it does not need to describe CSV wrinkles and it encourages compact, performant storage. It focuses on the most important structures (variable names, types, ranges, uniqueness, and relationships) and leaves the remainder to free-text fields that a human or an LLM can interpret. It does not itself clean data, but it validates that data and dictionary stay consistent, and it is designed to track understanding as it evolves.</p>
-<p>A data-dict lives with the data it describes. You can use it before any data exists to make expectations concrete, when first encountering a new dataset to record what you learn, retrospectively to get the knowledge out of your head for collaborators, or to guard regularly updated data from unannounced changes. Future tooling will turn a dictionary into a browsable site, simulate data from it, generate a skeleton from Parquet or a database, and index many dictionaries at once.</p>
-<p>The project is explicit about why now is the right time. AI lowers the cost of creating a dictionary (an agent can draft boilerplate and surface ambiguities) and raises the benefit (agents need the context that currently lives only in your head). LLMs also change what must be machine-readable: only the most important structures need strict encoding, unusual quirks can stay as prose that an agent reads.</p>
-<p>The site shows the same idea through five worked examples (dabstep, elevators, foodbank, loan-application, otters) and notes inspirations that shaped the design (Frictionless Data, Hex semantic models, Snowflake semantic views, Soda, dbt tests, Data Package Standard, BIDS, and DDI), while distinguishing <code>data-dict.yaml</code> from a semantic model. For our purposes, it is a practical way to make an AI coding assistant work more accurately: give it the dictionary and it has the context it would otherwise have to ask for.</p>
+<p><a href="https://www.make.com/en">Make</a> (formerly Integromat) is a visual, no-code automation platform that connects more than 3,000 pre-built apps on a canvas of scenarios. You drag modules onto a canvas, connect them with lines, and add routers, filters, and loops for branching logic that a simple trigger-action tool cannot express. Each action in a scenario consumes a credit (usually one per operation), and plans scale by monthly credit allowance, which is why the platform is often described as the value play against Zapier: more complex workflows per dollar, with a steeper learning curve.</p>
+<p>A scenario typically triggers on data from one app (for example, a new row in Google Sheets), transforms it, and sends it to another app. Make Grid gives a live map of every scenario, agent, and app so teams can see the whole automation landscape at once, and the analytics dashboard tracks utilization over time.</p>
+<p>The platform has added AI-native pieces around that same canvas. Maia by Make builds automations and agents from a natural-language prompt, Make AI Agents add reasoning and tool use across the connected apps with a transparent reasoning panel on the canvas, and a cloud-hosted MCP server lets any AI interface invoke scenarios. More than 400 pre-built AI apps are available, and you can run custom JavaScript or Python with the Make Code app.</p>
+<p>For our lab, the relevance is as a no-code counterpart to code-centric harnesses: where Claude Code or Kepler run agents in worktrees, Make runs them on a visual canvas with shared team visibility. It is enterprise-ready (GDPR, SOC 2, SSO, role-based access) and part of Celonis since 2020, so the trade is control and visibility for a learning investment before the first scenario runs clean.</p>
 
 
 <script>
