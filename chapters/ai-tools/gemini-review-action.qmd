@@ -3,25 +3,24 @@ is an open-source GitHub Action
 that provides automated code reviews on pull requests
 and automated triage on issues
 using Google's Gemini models
-(measured 2026-08-31; repository at `v1.8.0`).
+(measured 2026-08-31; repository at `v1.6.6`).
 
 #### Key capabilities
 
 The action operates as a composite GitHub Action
-designed to run directly in your CI pipelines.
+designed to run directly in CI pipelines.
 Notable features include:
 
 - **Model selection and defaults**:
   Defaults to `gemini-3.7-flash`,
-  with support for configuring model overrides
-  (such as `gemini-3.7-pro` or custom model identifiers)
-  via the `model` input.
+  configurable via the `gemini_model` input.
 - **Dual authentication modes**:
   Supports standard API key authentication
-  via the `gemini-api-key` input,
-  as well as keyless authentication
-  using Google Cloud Workload Identity Federation (WIF)
-  via `workload-identity-provider` and `service-account`.
+  via the `gemini_api_key` input,
+  as well as keyless Google Cloud Workload Identity Federation (WIF)
+  by running `google-github-actions/auth` beforehand
+  and setting `GOOGLE_GENAI_USE_VERTEXAI`, `GOOGLE_CLOUD_PROJECT`,
+  and `GOOGLE_CLOUD_LOCATION` environment variables.
 - **Hybrid codebase context enrichment**:
   Beyond analyzing git diffs,
   the action indexes repository context
@@ -68,9 +67,9 @@ jobs:
       - name: Run Gemini Code Review
         uses: derailed-dash/gemini-review-action@v1
         with:
-          gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          model: gemini-3.7-flash
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          gemini_model: gemini-3.7-flash
 ```
 
 #### Comparison with native review integrations
