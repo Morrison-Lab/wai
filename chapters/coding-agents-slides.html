@@ -329,7 +329,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-08-31 17:35:26 (PDT)</p>
+  <p class="date">Last modified: 2026-08-31 20:22:45 (PDT)</p>
 </section><section class="slide level2"><p>We recommend working with <strong><a href="https://github.com/features/copilot/agents">AI coding agents</a></strong> to <a href="https://en.wikipedia.org/wiki/AI-assisted_software_development">help you code</a>.</p>
 </section><section><section id="sec-ai-language-model" class="title-slide slide level1 center" data-number="1"><h1>
 <span class="header-section-number">1</span> What Is a Language Model?</h1>
@@ -3073,7 +3073,7 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Rules are written as <code>Tool(specifier)</code> — for example <code>Bash(npm run test *)</code>, <code>Read(./.env)</code>, or <code>Skill(commit)</code> — and sorted into <code>allow</code>, <code>ask</code>, and <code>deny</code>. Because a project’s rules merge with yours rather than replacing them, a repository can tighten what you allow, and cannot quietly loosen it.</p>
 <h4 id="mcp-servers-are-a-different-axis-entirely">MCP Servers Are a Different Axis Entirely</h4>
 <p>Everything above changes what the agent <em>knows or must do</em>. An <a href="https://modelcontextprotocol.io/">MCP</a> server changes what it <em>can reach</em>: typed tools, data resources, and reusable templates exposed over a standard protocol. The specification is explicit that it “does not dictate how AI applications use LLMs or manage the provided context.”</p>
-<p>So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;40</a> covers configuration and its failure modes.</p>
+<p>So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;41</a> covers configuration and its failure modes.</p>
 <h4 id="choosing">Choosing</h4>
 <table class="caption-top">
 <colgroup>
@@ -3558,7 +3558,7 @@ while the selected main agent model is BYOK.</code></pre>
 <p><code>subscribe_pr_activity</code> and <code>unsubscribe_pr_activity</code> are ordinary tool calls, taking an owner, a repository, and a pull-request number. Subscribing delivers that pull request’s activity into the conversation as <code>&lt;github-webhook-activity&gt;</code> messages until the session unsubscribes, or the pull request merges or closes.</p>
 <p>Two caveats are worth knowing before relying on it.</p>
 <p><strong>A successful subscribe does not guarantee delivery.</strong> If a PR Steward agent already holds the watch on that pull request, the call still succeeds — but this session receives nothing. The tool result says so in as many words, so read the result rather than the exit status. Taking over the watch requires opting the steward out first, by removing its watching label on the pull request.</p>
-<p><strong>The tool does not exist on a locally-run GitHub MCP server.</strong> Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;40</a> covers the local analogues to reach for instead.</p>
+<p><strong>The tool does not exist on a locally-run GitHub MCP server.</strong> Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;41</a> covers the local analogues to reach for instead.</p>
 <p><strong>Webhook delivery is also not exhaustive</strong>, which is the failure mode most likely to be mistaken for “nothing has happened”. CI <em>successes</em>, new pushes, and merge-conflict transitions can arrive late or not at all. A session that treats silence as “still green” will sit indefinitely on a pull request that has gone stale or conflicted, so a subscription is a supplement to periodically re-reading the pull request’s real state, not a replacement for it.</p>
 <h4 id="the-channel-only-a-human-controls">The channel only a human controls</h4>
 <p>Claude Code on the web shows a per-pull-request <strong>CI monitoring</strong> panel in the session sidebar, with two checkboxes: <strong>Auto-fix CI &amp; address comments</strong> and <strong>Auto-merge when ready</strong>.</p>
@@ -3831,8 +3831,43 @@ while the selected main agent model is BYOK.</code></pre>
 <li>The team should update the PR’s “Assignees” field and comments or description to reflect the current PR manager</li>
 </ol>
 <p>This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.</p>
-</section></section><section><section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="39"><h1>
-<span class="header-section-number">39</span> Installing Claude Code on Windows</h1>
+</section></section><section><section id="sec-ai-vscode-agent-sessions" class="title-slide slide level1 center" data-number="39"><h1>
+<span class="header-section-number">39</span> Agent Sessions and Handoff in Visual Studio Code</h1>
+
+</section><section class="slide level2"><p>In Visual Studio Code, interactions with AI coding assistants are structured around <a href="https://code.visualstudio.com/docs/agents/concepts/sessions">Agent Sessions and Handoff</a> (measured 2026-08-31). Understanding how sessions organize work and transfer state across tools is essential for managing multi-step agent workflows.</p>
+<h4 id="anatomy-of-an-agent-session">Anatomy of an agent session</h4>
+<p>An agent session represents a stateful stream of interaction between a developer and an agent. Each session maintains:</p>
+<ul>
+<li>
+<strong>Chats and model selection</strong>: One or more chats within a session, each with its own agent or model selection.</li>
+<li>
+<strong>Interaction history</strong>: User prompts, assistant responses, and tool calls executed during the task.</li>
+<li>
+<strong>Accumulated context</strong>: Referenced files, code snippets, and conversational state gathered across turns.</li>
+<li>
+<strong>Checkpoints and branching</strong>: Points in session history allowing developers to fork or roll back state when exploring alternative implementation paths.</li>
+</ul>
+<h4 id="managing-sessions-across-surfaces">Managing sessions across surfaces</h4>
+<p>VS Code provides unified session discovery and access across editor surfaces:</p>
+<ul>
+<li>
+<strong>Shared surfaces</strong>: The primary Chat view and the dedicated Agents window share the same sessions, allowing developers to switch views without losing conversational context.</li>
+<li>
+<strong>External session discovery</strong>: VS Code discovers sessions initiated outside the primary GUI, including CLI agent sessions (such as Copilot CLI, Claude Code, and Codex).</li>
+<li>
+<strong>Cloud synchronization</strong>: Synced sessions are backed up to your GitHub account, enabling developers to access active and past sessions across devices.</li>
+</ul>
+<h4 id="session-handoff-types">Session handoff types</h4>
+<p>Session handoff transfers context and intent from an active session to a specialized workflow without manual re-prompting:</p>
+<ul>
+<li>
+<strong>Harness to harness</strong>: Switch the active session between different agent harnesses to leverage distinct agent runtime capabilities on the same task.</li>
+<li>
+<strong>Plan to implementation</strong>: Hand off a high-level architectural plan or task specification directly to an implementation session to generate code.</li>
+<li>
+<strong>Continue in the cloud</strong>: Hand off a local session to run in a cloud-hosted agent environment (such as background tasks leading to pull requests), freeing local editor resources while the agent executes in the background.</li>
+</ul></section></section><section><section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="40"><h1>
+<span class="header-section-number">40</span> Installing Claude Code on Windows</h1>
 
 </section><section class="slide level2 scrollable"><p><a href="https://www.anthropic.com/claude-code">Claude Code</a> is Anthropic’s command-line coding agent. Installing it on Windows works well, but a few platform-specific pitfalls can cost you hours if you don’t know about them. These notes capture a setup that works, and the gotchas to watch for.</p>
 <div class="callout callout-note callout-titled callout-style-default">
@@ -3922,8 +3957,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Open a <strong>new</strong> terminal window (so it picks up your updated config) and run:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb71"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb71-1"><a aria-label="1"></a><span class="ex">claude</span> <span class="at">--version</span>      <span class="co"># prints the installed version number</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If you get a version number, you’re ready to run <code>claude</code> in your project directory. If you get <code>command not found</code>, re-check the two <code>PATH</code> issues above: the directory must be on <code>PATH</code>, and you must <code>rehash</code> (or open a fresh window) after changing it.</p>
-</section></section><section><section id="sec-ai-mcp-server-setup" class="title-slide slide level1 center" data-number="40"><h1>
-<span class="header-section-number">40</span> Setting up MCP servers</h1>
+</section></section><section><section id="sec-ai-mcp-server-setup" class="title-slide slide level1 center" data-number="41"><h1>
+<span class="header-section-number">41</span> Setting up MCP servers</h1>
 
 </section><section class="slide level2"><p>The <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> (MCP) is how a harness gains typed access to external systems. Configuring a server is usually a one-line command. Diagnosing one that <em>silently</em> isn’t working is the part worth writing down, because the common failure mode produces no error at all — only a quiet absence of tools you assumed were there.</p>
 <div class="callout callout-note callout-titled callout-style-default">
@@ -4027,8 +4062,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <p><a href="https://www.granola.ai/blog/granola-mcp">Granola MCP</a> is the other side of that same pattern: it is not a code-host server but a meeting-context server. Granola is an AI notepad for back-to-back meetings; its MCP exposes your meeting notes to any MCP client.</p>
 <p>The gap it closes is the copy-paste loop: without it, using something you discussed in a meeting while working in Claude, ChatGPT, or Cursor means finding the note, copying the relevant bit, and pasting it in. With the MCP connected, that context rides with you. Use it to turn a standup into Linear tickets, scaffold a feature from what was agreed, or draft a follow-up from what was actually said.</p>
 <p>It connects through the standard <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> (MCP) as a remote server at <code>https://mcp.granola.ai/mcp</code>. For Claude or ChatGPT, enable it from the app’s connector/app settings and authenticate; for Cursor, Claude Code, or any other MCP client that supports a manual URL, register that URL directly (see <a href="https://www.granola.ai/blog/granola-mcp">the announcement</a> for per-client steps). On an Enterprise plan it is an early-access beta, off by default until an admin enables it.</p>
-</section></section><section><section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="41"><h1>
-<span class="header-section-number">41</span> Managing Gemini API Spend and Cost Optimization</h1>
+</section></section><section><section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="42"><h1>
+<span class="header-section-number">42</span> Managing Gemini API Spend and Cost Optimization</h1>
 
 </section><section class="slide level2 scrollable"><p>This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.</p>
 <h4 id="identifying-paused-projects-project-numbers-vs.-friendly-names">Identifying Paused Projects (Project Numbers vs.&nbsp;Friendly Names)</h4>
