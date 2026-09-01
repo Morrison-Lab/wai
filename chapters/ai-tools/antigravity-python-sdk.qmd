@@ -1,0 +1,42 @@
+The
+[`google-antigravity/antigravity-sdk-python`](https://github.com/google-antigravity/antigravity-sdk-python)
+repository provides the official Python SDK
+for building and automating agents on the Google Antigravity agent runtime
+(measured 2026-08-31; distributed via PyPI as `google-antigravity`).
+
+#### Architecture and runtime model
+
+The SDK embeds the compiled Antigravity runtime engine directly into Python applications:
+
+- **Lifecycle management**:
+  Agents are instantiated through `Agent` objects configured via `LocalAgentConfig`,
+  managed within asynchronous Python context managers (`async with`).
+- **Autonomous agentic loop**:
+  The underlying runtime drives multi-turn reasoning, streaming model responses,
+  subagent spawning, and tool dispatch without requiring hand-rolled state machines.
+- **Binary distribution**:
+  The Python package packages the native runtime binary,
+  ensuring consistent agent execution across macOS and Linux environments.
+
+#### Extensibility and policy enforcement
+
+Developers can customize agent behavior and enforce safety policies:
+
+- **Custom tools and MCP servers**:
+  Register custom Python functions as callable agent tools
+  or connect external Model Context Protocol (MCP) server endpoints.
+- **Steering hooks**:
+  Attach pre-tool and post-tool lifecycle hooks to inspect, steer,
+  or veto actions (such as restricting command execution or gating repository modifications).
+- **Skill discovery**:
+  Load skill catalogs (`skills/**/SKILL.md`) dynamically,
+  allowing agents to leverage shared procedural instructions.
+
+#### Comparison with interactive Antigravity surfaces
+
+| Dimension | Antigravity Python SDK | Antigravity CLI & IDE Extensions |
+|---|---|---|
+| **Primary use case** | Automated pipelines, CI evaluation, custom harnesses | Interactive terminal and GUI pair programming |
+| **Control plane** | Python API (`async with Agent(...)`) | Interactive CLI prompt or editor chat panel |
+| **Tool definitions** | In-process Python callables & MCP | JSON manifests, plugins, and CLI scripts |
+| **Runtime engine** | Embedded native binary | Managed local service |
