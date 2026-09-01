@@ -11,8 +11,8 @@ UCD-SERG lab notes on working responsibly and effectively with AI coding assista
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/d-morrison/wai}
-  \item Report bugs at \url{https://github.com/d-morrison/wai/issues}
+  \item \url{https://github.com/Morrison-Lab/wai}
+  \item Report bugs at \url{https://github.com/Morrison-Lab/wai/issues}
 }
 
 }

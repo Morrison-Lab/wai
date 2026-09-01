@@ -475,7 +475,7 @@ QLoRA adds 4-bit quantization of the frozen weights on top of that,
 which is what actually shrinks the memory footprint enough to
 fine-tune a mid-sized model on a single consumer GPU
 [@qlora].
-[Hugging Face's PEFT library](https://huggingface.co/docs/peft) is the
+[Hugging Face's PEFT library](https://huggingface.co/docs/peft/index) is the
 common tooling entry point;
 the specifics of running it against this lab's own repositories belong
 in `ai-config`,

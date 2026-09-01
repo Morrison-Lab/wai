@@ -29,7 +29,7 @@ website:
   back-to-top-navigation: true
   page-navigation: true
   reader-mode: true
-  repo-url: https://github.com/d-morrison/wai
+  repo-url: https://github.com/Morrison-Lab/wai
   repo-actions: [edit, issue, source]
   navbar:
     left:
@@ -55,7 +55,7 @@ website:
             href: chapters/pr-workflow-with-agents.qmd
     right:
       - icon: github
-        href: https://github.com/d-morrison/wai
+        href: https://github.com/Morrison-Lab/wai
         aria-label: GitHub
 
 callouty-theorem:

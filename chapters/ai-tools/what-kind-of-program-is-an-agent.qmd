@@ -53,7 +53,7 @@ clearest way to see this shape in real code is to read an open-source one:
 - **[SWE-agent](https://github.com/SWE-agent/SWE-agent)** --- a research
   coding-agent harness from Princeton NLP,
   described in its associated paper.
-- **[OpenHands](https://github.com/All-Hands-AI/OpenHands)** (formerly
+- **[OpenHands](https://github.com/OpenHands/OpenHands)** (formerly
   OpenDevin) --- a general-purpose open-source agent platform.
 
 Their orchestration code runs to thousands of lines,

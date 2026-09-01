@@ -61,8 +61,7 @@ The ambient timeline lets you follow sessions in real time
 or skim what happened while you were away.
 
 The lab's portable agent config lives in
-[`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config)
-(the same repository as [`d-morrison/ai-config`](https://github.com/d-morrison/ai-config)).
+[`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config).
 It is a plugin-or-symlink install of skills, hooks, and memories ---
 not a third marketplace next to SemBr.
 How that config actually reaches a machine,

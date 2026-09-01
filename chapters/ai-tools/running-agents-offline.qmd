@@ -389,7 +389,7 @@ re-measure rather than assuming either way.
 Ollama also serves an **Anthropic-compatible** endpoint at `/v1/messages`,
 alongside the OpenAI-compatible one used above.
 Any client that speaks the Anthropic API can therefore be pointed at a local model,
-including [Claude Code](https://claude.com/claude-code) itself,
+including [Claude Code](https://claude.com/product/claude-code) itself,
 with no proxy in between.
 Check that the endpoint answers before wiring anything to it:
 

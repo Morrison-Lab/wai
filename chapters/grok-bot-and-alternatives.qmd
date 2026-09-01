@@ -332,7 +332,7 @@ inside Claude Desktop (with web and mobile access described as rolling out).
 You describe an outcome;
 Claude works across local files and connected tools
 and returns documents, spreadsheets, or organized folders.
-[Claude in Chrome](https://claude.com/chrome) is the browser path.
+[Claude in Chrome](https://claude.com/claude-in-chrome) is the browser path.
 Sub-agents split parallel workstreams.
 
 Cowork is on paid Claude plans.

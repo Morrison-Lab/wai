@@ -64,7 +64,7 @@ website option, which requires **Quarto 1.9.36 or newer**.
 Clone the repository and its submodule (`macros/`):
 
 ```bash
-git clone https://github.com/d-morrison/wai.git
+git clone https://github.com/Morrison-Lab/wai.git
 cd wai
 git submodule update --init --recursive
 ```
@@ -119,7 +119,7 @@ Released under the MIT License --- see [`LICENSE`](LICENSE).
 ## Acknowledgments
 
 Built from the
-[UCD-SERG `qwt` (Quarto Website Template)](https://github.com/UCD-SERG/qwt),
+[UCD-SERG `qwt` (Quarto Website Template)](https://github.com/Morrison-Lab/qwt),
 whose structure is based on the
 [UCD-SERG Lab Manual](https://github.com/UCD-SERG/lab-manual), adapted in turn
 from the
