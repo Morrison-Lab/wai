@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 12:52:17 (PDT)
+Last modified: 2026-09-01 13:11:19 (PDT)
 
 Coding agents edit a checkout and return a branch or pull request ([coding-agent platforms](../chapters/coding-agents.llms.md#sec-ai-coding-agent-platforms)). *Grok Bot-style* products are a different shape: a named, persistent teammate with its own computer, so it can click through apps and websites the way a person would and keep going after you close your laptop. This chapter reviews [Grok Bot](https://docs.x.ai/grok-bot/overview) and the alternatives we could verify from primary sources, including [Rakazo](https://github.com/elie222/rakazo).
 
