@@ -13,6 +13,9 @@ To work with coding agents safely and successfully:
 3. **Test thoroughly**:
    AI-generated code must be tested as rigorously as code you write yourself.
    Don't skip testing because "the AI wrote it."
+   Budget for it, too:
+   practitioners reporting on agent-built projects independently identify manual testing as the dominant cost once generation is cheap,
+   and a defect-free result takes either deep domain experience or heavy testing.
 
 4. **Start small**:
    Begin with small,

@@ -57,7 +57,7 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/technological-singularity.qmd >}}
 
-# Relative Advantages of AI and Humans
+# Relative Advantages of AI and Humans {#sec-ai-relative-advantages}
 
 {{< include ai-tools/relative-advantages-ai-humans.qmd >}}
 
@@ -204,6 +204,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 # Anatomy of Agent Plugins {#sec-ai-plugins-deep-dive}
 
 {{< include ai-tools/plugins-deep-dive.qmd >}}
+
+# Plan Expensive, Implement Cheap: Model Tiering {#sec-ai-model-tiering}
+
+{{< include ai-tools/model-tiering.qmd >}}
 
 # Managing Gemini API Spend and Cost Optimization {#sec-ai-gemini-spend-management}
 
