@@ -328,7 +328,8 @@ who built a browser racing game over four months with coding agents:
 plan with the strongest model available,
 implement with cheaper ones,
 and keep the scope to what can realistically ship,
-for a reported total of roughly $200 in project-specific subscriptions over the four months.
+for a reported total of roughly $200 in project-specific subscriptions over the four months,
+on top of a general-purpose subscription the author already held.
 The lab's machine-facing configuration,
 [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config),
 states the same routing rule for agents.
