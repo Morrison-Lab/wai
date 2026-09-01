@@ -13,6 +13,14 @@ To work with coding agents safely and successfully:
 3. **Test thoroughly**:
    AI-generated code must be tested as rigorously as code you write yourself.
    Don't skip testing because "the AI wrote it."
+   Budget for it, too.
+   Two commenters on the same field report
+   (["Vibe coded this game in four months"](https://www.reddit.com/r/ClaudeCode/comments/1vvhrfq/),
+   r/ClaudeCode, 2026-08-22;
+   summarized in [issue #98](https://github.com/Morrison-Lab/wai/issues/98))
+   independently named manual testing as the dominant cost once generation is cheap.
+   One put it as needing either deep domain experience or heavy testing
+   to get a defect-free result.
 
 4. **Start small**:
    Begin with small,
