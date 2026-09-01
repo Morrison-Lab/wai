@@ -3,6 +3,7 @@ Antigravity
 Apache
 Apikey
 Asimov
+Atlas
 BYOK
 Badham
 Belcak
@@ -39,6 +40,7 @@ GitKraken
 Granola
 Graphile
 Grok
+Hephaestus
 Herbert
 Homebrew
 Inflexa
@@ -56,10 +58,12 @@ LoRA
 MCP
 Maia
 MattFlower
+Metis
 MiniMax
 Mistral
 MoE
 Modelfile
+Momus
 Moonshot
 Mostow
 NVIDIA
@@ -69,6 +73,7 @@ OSS
 Ollama
 Ollama's
 OpenAI
+OpenAgent
 OpenClaw
 OpenCode
 OpenDevin
@@ -80,6 +85,7 @@ Pipedream
 Playwright
 Posit
 Positron
+Prometheus
 QLoRA
 Qwen
 Rakazo
@@ -88,6 +94,7 @@ RevealJS
 SERG
 SWE
 SemBr
+Sisyphus
 Stanford
 SuperGrok
 TORQCLAW
@@ -105,6 +112,7 @@ YAGNI
 YAML
 Z.ai
 Zapier
+Zsh
 xAI
 agentic
 aider
@@ -133,6 +141,7 @@ mistyped
 nano
 navbar
 omics
+omo
 opencode
 orchestrator
 orchestrators
@@ -156,6 +165,7 @@ submodule
 symlink
 symlinked
 symlinks
+tmux
 toolset
 toolsets
 tidyverse

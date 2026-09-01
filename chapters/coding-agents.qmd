@@ -197,6 +197,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/plugins-deep-dive.qmd >}}
 
+# Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent {#sec-ai-oh-my-opencode}
+
+{{< include ai-tools/oh-my-opencode.qmd >}}
+
 # Managing Gemini API Spend and Cost Optimization {#sec-ai-gemini-spend-management}
 
 {{< include ai-tools/gemini-spend-management.qmd >}}
