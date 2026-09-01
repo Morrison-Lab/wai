@@ -329,7 +329,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-09-01 11:07:47 (PDT)</p>
+  <p class="date">Last modified: 2026-09-01 11:13:46 (PDT)</p>
 </section><section class="slide level2"><p>We recommend working with <strong><a href="https://github.com/features/copilot/agents">AI coding agents</a></strong> to <a href="https://en.wikipedia.org/wiki/AI-assisted_software_development">help you code</a>.</p>
 </section><section><section id="sec-ai-language-model" class="title-slide slide level1 center" data-number="1"><h1>
 <span class="header-section-number">1</span> What Is a Language Model?</h1>
@@ -4143,8 +4143,59 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <strong>Deferred background extraction</strong>: Memory analysis and summarization tasks are deferred to idle windows or subagent threads, preventing token churn and latency spikes during high-tempo coding loops.</li>
 <li>
 <strong>Cross-session persistence</strong>: Extracted knowledge persists in lightweight local stores across IDE restarts, enabling coding agents to resume work with full institutional memory of past decisions.</li>
-</ul></section></section><section><section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="44"><h1>
-<span class="header-section-number">44</span> Managing Gemini API Spend and Cost Optimization</h1>
+</ul></section></section><section><section id="sec-ai-conductor-extension" class="title-slide slide level1 center" data-number="44"><h1>
+<span class="header-section-number">44</span> Spec-Driven Development with Conductor</h1>
+
+</section><section class="slide level2"><p><a href="https://github.com/gemini-cli-extensions/conductor"><code>gemini-cli-extensions/conductor</code></a> is an open-source plugin for AI coding agents (including Google Antigravity and Claude Code) that implements <strong>Spec-Driven Development</strong> (measured 2026-08-31). Rather than relying on conversational chat history that degrades over extended sessions, Conductor anchors agent behavior in structured, version-controlled Markdown artifacts stored directly in the repository, providing persistent context across multi-session workflows.</p>
+<h4 id="core-workflow-phases">Core workflow phases</h4>
+<p>Conductor structures development into four distinct, sequential phases:</p>
+<ul>
+<li>
+<strong>Context establishment (<code>/conductor:conductor-setup</code>)</strong>: Interactively initializes baseline project documentation (including product goals, technical stack choices, and testing guidelines), giving coding agents persistent reference material across subsequent sessions.</li>
+<li>
+<strong>Specification and track planning (<code>/conductor:conductor-new-track</code>)</strong>: Transforms feature requests or bug fixes into a dedicated track containing a <code>spec.md</code> (functional scope and acceptance criteria) and a <code>plan.md</code> (ordered implementation phases broken into verifiable task checklists).</li>
+<li>
+<strong>Phased implementation (<code>/conductor:conductor-implement</code>)</strong>: Guides the agent through the active track’s plan sequentially, executing file edits, running local test suites, and marking tasks complete as acceptance criteria are met.</li>
+<li>
+<strong>Track review and plan compliance (<code>/conductor:conductor-review</code>)</strong>: Conducts an adversarial verification pass against the original track specification, ensuring that all declared acceptance criteria are satisfied and no architectural drift occurred during execution.</li>
+</ul>
+<h4 id="architectural-benefits-of-spec-driven-development">Architectural benefits of Spec-Driven Development</h4>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead><tr class="header">
+<th>Dimension</th>
+<th>Conversational Prompting</th>
+<th>Spec-Driven Development (Conductor)</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><strong>Context persistence</strong></td>
+<td>Volatile in-memory chat buffer</td>
+<td>Version-controlled Markdown artifacts</td>
+</tr>
+<tr class="even">
+<td><strong>Task boundaries</strong></td>
+<td>Ad-hoc user instructions per turn</td>
+<td>Structured <code>spec.md</code> and <code>plan.md</code> checklists</td>
+</tr>
+<tr class="odd">
+<td><strong>Verification loop</strong></td>
+<td>Manual spot-checking</td>
+<td>Milestone-level automated tests and <code>/conductor:conductor-review</code>
+</td>
+</tr>
+<tr class="even">
+<td><strong>Handoff &amp; resumption</strong></td>
+<td>Requires re-prompting or context replay</td>
+<td>Any agent resumes from the checked-in track state</td>
+</tr>
+</tbody>
+</table></section></section><section><section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="45"><h1>
+<span class="header-section-number">45</span> Managing Gemini API Spend and Cost Optimization</h1>
 
 </section><section class="slide level2 scrollable"><p>This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.</p>
 <h4 id="identifying-paused-projects-project-numbers-vs.-friendly-names">Identifying Paused Projects (Project Numbers vs.&nbsp;Friendly Names)</h4>
