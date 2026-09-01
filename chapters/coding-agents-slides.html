@@ -329,7 +329,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-09-01 09:56:36 (PDT)</p>
+  <p class="date">Last modified: 2026-09-01 10:48:42 (PDT)</p>
 </section><section class="slide level2"><p>We recommend working with <strong><a href="https://github.com/features/copilot/agents">AI coding agents</a></strong> to <a href="https://en.wikipedia.org/wiki/AI-assisted_software_development">help you code</a>.</p>
 </section><section><section id="sec-ai-language-model" class="title-slide slide level1 center" data-number="1"><h1>
 <span class="header-section-number">1</span> What Is a Language Model?</h1>
@@ -569,7 +569,7 @@
 <li>
 <strong><a href="https://github.com/SWE-agent/SWE-agent">SWE-agent</a></strong> — a research coding-agent harness from Princeton NLP, described in its associated paper.</li>
 <li>
-<strong><a href="https://github.com/All-Hands-AI/OpenHands">OpenHands</a></strong> (formerly OpenDevin) — a general-purpose open-source agent platform.</li>
+<strong><a href="https://github.com/OpenHands/OpenHands">OpenHands</a></strong> (formerly OpenDevin) — a general-purpose open-source agent platform.</li>
 </ul>
 <p>Their orchestration code runs to thousands of lines, because that is where the real engineering lives: retries, streaming, permission checks, and state management. A single <em>agent definition</em> running on top of that engine, by contrast, is typically tens of lines (see <a href="#/sec-ai-harness-construction" class="quarto-xref">Section&nbsp;6</a>).</p>
 <h4 id="where-it-runs">Where It Runs</h4>
@@ -1480,7 +1480,7 @@ Table&nbsp;2: Relative advantages of humans and Agents
 </div>
 </div>
 <h4 id="connecting-claude-code-to-ollama">Connecting Claude Code to Ollama</h4>
-<p>Ollama also serves an <strong>Anthropic-compatible</strong> endpoint at <code>/v1/messages</code>, alongside the OpenAI-compatible one used above. Any client that speaks the Anthropic API can therefore be pointed at a local model, including <a href="https://claude.com/claude-code">Claude Code</a> itself, with no proxy in between. Check that the endpoint answers before wiring anything to it:</p>
+<p>Ollama also serves an <strong>Anthropic-compatible</strong> endpoint at <code>/v1/messages</code>, alongside the OpenAI-compatible one used above. Any client that speaks the Anthropic API can therefore be pointed at a local model, including <a href="https://claude.com/product/claude-code">Claude Code</a> itself, with no proxy in between. Check that the endpoint answers before wiring anything to it:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a aria-label="1"></a><span class="ex">curl</span> <span class="at">-s</span> http://localhost:11434/v1/messages <span class="at">-H</span> <span class="st">'content-type: application/json'</span> <span class="dt">\</span></span>
 <span id="cb20-2"><a aria-label="2"></a>  <span class="at">-d</span> <span class="st">'{"model":"granite4-32k","max_tokens":50,</span></span>
 <span id="cb20-3"><a aria-label="3"></a><span class="st">       "messages":[{"role":"user","content":"Say OK only."}]}'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2070,7 +2070,7 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <li>
 <strong>Prompting</strong>, stating the conventions directly — this repository’s own <code>CLAUDE.md</code> and <code>.github/copilot-instructions.md</code> are examples of exactly that.</li>
 </ul>
-<p>When those are not enough, <strong>LoRA</strong> (Low-Rank Adaptation) and its 4-bit variant <strong>QLoRA</strong> are the standard way to close an idiom gap without retraining a whole model. Both freeze the pretrained weights and train a small set of additional low-rank matrices on top, which cuts the trainable parameter count by orders of magnitude compared to full fine-tuning <span class="citation" data-cites="lora">(<a href="#/references" role="doc-biblioref" onclick="">Hu et al. 2021</a>)</span>. QLoRA adds 4-bit quantization of the frozen weights on top of that, which is what actually shrinks the memory footprint enough to fine-tune a mid-sized model on a single consumer GPU <span class="citation" data-cites="qlora">(<a href="#/references" role="doc-biblioref" onclick="">Dettmers et al. 2023</a>)</span>. <a href="https://huggingface.co/docs/peft">Hugging Face’s PEFT library</a> is the common tooling entry point; the specifics of running it against this lab’s own repositories belong in <code>ai-config</code>, not here.</p>
+<p>When those are not enough, <strong>LoRA</strong> (Low-Rank Adaptation) and its 4-bit variant <strong>QLoRA</strong> are the standard way to close an idiom gap without retraining a whole model. Both freeze the pretrained weights and train a small set of additional low-rank matrices on top, which cuts the trainable parameter count by orders of magnitude compared to full fine-tuning <span class="citation" data-cites="lora">(<a href="#/references" role="doc-biblioref" onclick="">Hu et al. 2021</a>)</span>. QLoRA adds 4-bit quantization of the frozen weights on top of that, which is what actually shrinks the memory footprint enough to fine-tune a mid-sized model on a single consumer GPU <span class="citation" data-cites="qlora">(<a href="#/references" role="doc-biblioref" onclick="">Dettmers et al. 2023</a>)</span>. <a href="https://huggingface.co/docs/peft/index">Hugging Face’s PEFT library</a> is the common tooling entry point; the specifics of running it against this lab’s own repositories belong in <code>ai-config</code>, not here.</p>
 <p>Whatever you fine-tune on, keep a held-out evaluation set of real tasks from your own codebase that the training data never touched, and re-check it after every fine-tuning run — a model that has memorized its training examples will look better on paper than it performs on the next genuinely new task.</p>
 <h4 id="companion-work">Companion work</h4>
 <p>This page explains the reasoning; it does not implement a launcher or a CI gate. Two companion issues carry the runnable parts, each linking back here for rationale:</p>
@@ -2799,7 +2799,7 @@ while the selected main agent model is BYOK.</code></pre>
 <h4 id="file-location-and-structure">File Location and Structure</h4>
 <p>The workflow file must be located at <code>.github/workflows/copilot-setup-steps.yml</code> in your repository’s <strong>default branch</strong>. It follows GitHub Actions workflow syntax but must contain a single job named <code>copilot-setup-steps</code>.</p>
 <h4 id="basic-configuration-example">Basic Configuration Example</h4>
-<p>See this repository’s own <a href="https://github.com/d-morrison/wai/blob/main/.github/workflows/copilot-setup-steps.yml"><code>.github/workflows/copilot-setup-steps.yml</code></a> for a configuration adapted for R and Quarto projects.</p>
+<p>See this repository’s own <a href="https://github.com/Morrison-Lab/wai/blob/main/.github/workflows/copilot-setup-steps.yml"><code>.github/workflows/copilot-setup-steps.yml</code></a> for a configuration adapted for R and Quarto projects.</p>
 <h4 id="using-actionscheckout">Using <code>actions/checkout</code>
 </h4>
 <p>The <a href="https://github.com/actions/checkout"><code>actions/checkout</code></a> action is used to check out your repository code so that the workflow can access it. While Copilot will automatically check out your repository if you don’t include this step, <strong>explicitly including it is necessary</strong> when your setup steps need to access repository files.</p>
@@ -2971,7 +2971,7 @@ while the selected main agent model is BYOK.</code></pre>
 </ol>
 <p>The agent reads the touched code first and is lazy about the solution, never about reading, and never cuts validation, error handling, security, or accessibility. Measured on twelve real Claude Code tasks in a FastAPI + React repo (Haiku 4.5, n=4), it averages about 54 percent less code (up to 94 percent where the agent would otherwise overbuild, for example a date picker) with about 20 percent lower cost and 27 percent faster, while staying fully safe. It installs as a plugin or skill for more than twenty agents (Claude Code, Codex, Copilot, Cursor, OpenCode, Gemini, and others) and works from a checkout via <code>AGENTS.md</code> where a plugin is not needed.</p>
 <p><a href="https://contextify.sh/">Contextify</a> keeps your Claude Code and Codex history forever in a private, searchable timeline. Claude Code deletes history after 30 days; Contextify watches both tools, summarizes each message (on-device via Apple Intelligence on macOS 26, or Lite Mode on macOS 15), and lets you search every conversation you ever had. It runs local-first with no account required, and optionally syncs across devices via Cloud Sync or a self-hosted instance you operate. The ambient timeline lets you follow sessions in real time or skim what happened while you were away.</p>
-<p>The lab’s portable agent config lives in <a href="https://github.com/Morrison-Lab/ai-config"><code>Morrison-Lab/ai-config</code></a> (the same repository as <a href="https://github.com/d-morrison/ai-config"><code>d-morrison/ai-config</code></a>). It is a plugin-or-symlink install of skills, hooks, and memories — not a third marketplace next to SemBr. How that config actually reaches a machine, and how a doubled plugin install fails, is <a href="#/sec-ai-config-install" class="quarto-xref">Section&nbsp;27</a>. <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;26</a> is the worked example of what the corpus contains.</p>
+<p>The lab’s portable agent config lives in <a href="https://github.com/Morrison-Lab/ai-config"><code>Morrison-Lab/ai-config</code></a>. It is a plugin-or-symlink install of skills, hooks, and memories — not a third marketplace next to SemBr. How that config actually reaches a machine, and how a doubled plugin install fails, is <a href="#/sec-ai-config-install" class="quarto-xref">Section&nbsp;27</a>. <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;26</a> is the worked example of what the corpus contains.</p>
 </section></section><section><section id="sec-ai-customization" class="title-slide slide level1 center" data-number="26"><h1>
 <span class="header-section-number">26</span> Customizing an Agent</h1>
 
@@ -3680,7 +3680,7 @@ while the selected main agent model is BYOK.</code></pre>
 <li>Repository-specific best practices</li>
 </ul>
 <p>By having these instructions in <code>.github/copilot-instructions.md</code>, you ensure that coding agents produce consistent, high-quality contributions that align with the project’s established practices. This reduces the review burden and helps maintain consistency across all contributions, whether made by humans or AI assistants.</p>
-<p>See this repository’s own <a href="https://github.com/d-morrison/wai/blob/main/.github/copilot-instructions.md"><code>.github/copilot-instructions.md</code></a> for a working example.</p>
+<p>See this repository’s own <a href="https://github.com/Morrison-Lab/wai/blob/main/.github/copilot-instructions.md"><code>.github/copilot-instructions.md</code></a> for a working example.</p>
 </section></section><section><section id="using-copilot-review-before-human-review" class="title-slide slide level1 center" data-number="37"><h1>
 <span class="header-section-number">37</span> Using Copilot Review Before Human Review</h1>
 
