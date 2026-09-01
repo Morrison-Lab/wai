@@ -248,10 +248,10 @@ and always a candidate answer to "how do I let the agent query our issue tracker
 
 | Mechanism | Portable? | Evidence |
 |---|---|---|
-| Agent Skills (`SKILL.md`) | yes, in format | open standard with a published specification, adopted across Claude Code, Gemini CLI, Codex, Copilot, and Cursor |
-| `AGENTS.md` | yes, as an open specification | standardizes filename, location, and precedence across Codex, Gemini CLI, Cursor, Aider, and Copilot (Claude Code reads `CLAUDE.md` by default, or imports `@AGENTS.md`) |
+| Agent Skills (`SKILL.md`) | yes, in format | open standard with a published specification, adopted across Claude Code, Codex, Copilot, Cursor, and Google Antigravity (and legacy Gemini CLI; see @sec-ai-harness-landscape on Gemini CLI's sunset and folding into Antigravity CLI) |
+| `AGENTS.md` | yes, as an open specification | standardizes filename, location, and precedence across Codex, Google Antigravity (and legacy Gemini CLI; see @sec-ai-harness-landscape), Cursor, Aider, and Copilot (Claude Code reads `CLAUDE.md` by default, or imports `@AGENTS.md`) |
 | MCP servers | yes | open protocol with multiple independent clients |
-| `CLAUDE.md` / `GEMINI.md` | by courtesy | vendor instruction files read by default in their respective CLI environments, and supported by courtesy in GitHub Copilot |
+| `CLAUDE.md` / `GEMINI.md` | by courtesy | vendor instruction files read by default in their respective environments (Claude Code and Google Antigravity; see @sec-ai-harness-landscape on the legacy Gemini CLI product folding into Antigravity CLI), and supported by courtesy in GitHub Copilot |
 | Cursor Rules (`.cursor/rules/*.mdc`) | no | Markdown Cursor (`.mdc`) files with `alwaysApply` and `globs` frontmatter, scoped to Cursor |
 | `.github/copilot-instructions.md` | no | GitHub Copilot only |
 | `.github/instructions/*.instructions.md` | no | GitHub Copilot only, and not on every Copilot surface |

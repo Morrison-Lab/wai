@@ -1,4 +1,4 @@
-In modern AI coding assistants (such as Google Antigravity, Gemini CLI, and Claude Code),
+In modern AI coding assistants (such as Google Antigravity and Claude Code; see @sec-ai-harness-landscape on the sunset of legacy Gemini CLI and its folding into Antigravity CLI),
 **plugins** serve as the top-level packaging and distribution layer for agent capabilities
 (measured 2026-09-01).
 While individual skills or Model Context Protocol (MCP) servers extend specific tasks,
