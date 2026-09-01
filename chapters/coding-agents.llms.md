@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-31 20:22:45 (PDT)
+Last modified: 2026-08-31 21:09:48 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3234,7 +3234,36 @@ The gap it closes is the copy-paste loop: without it, using something you discus
 
 It connects through the standard [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) as a remote server at `https://mcp.granola.ai/mcp`. For Claude or ChatGPT, enable it from the app’s connector/app settings and authenticate; for Cursor, Claude Code, or any other MCP client that supports a manual URL, register that URL directly (see [the announcement](https://www.granola.ai/blog/granola-mcp) for per-client steps). On an Enterprise plan it is an early-access beta, off by default until an admin enables it.
 
-# 42 Managing Gemini API Spend and Cost Optimization
+# 42 Google Antigravity Python SDK
+
+The [`google-antigravity/antigravity-sdk-python`](https://github.com/google-antigravity/antigravity-sdk-python) repository provides the official Python SDK for building and automating agents on the Google Antigravity agent runtime (measured 2026-08-31; distributed via PyPI as `google-antigravity`).
+
+#### Architecture and runtime model
+
+The SDK embeds the compiled Antigravity runtime engine directly into Python applications:
+
+- **Lifecycle management**: Agents are instantiated through `Agent` objects configured via `LocalAgentConfig`, managed within asynchronous Python context managers (`async with`).
+- **Autonomous agentic loop**: The underlying runtime drives multi-turn reasoning, streaming model responses, subagent spawning, and tool dispatch without requiring hand-rolled state machines.
+- **Binary distribution**: The Python package packages the native runtime binary, ensuring consistent agent execution across macOS and Linux environments.
+
+#### Extensibility and policy enforcement
+
+Developers can customize agent behavior and enforce safety policies:
+
+- **Custom tools and MCP servers**: Register custom Python functions as callable agent tools or connect external Model Context Protocol (MCP) server endpoints.
+- **Steering hooks**: Attach pre-tool and post-tool lifecycle hooks to inspect, steer, or veto actions (such as restricting command execution or gating repository modifications).
+- **Skill discovery**: Load skill catalogs (`skills/**/SKILL.md`) dynamically, allowing agents to leverage shared procedural instructions.
+
+#### Comparison with interactive Antigravity surfaces
+
+| Dimension | Antigravity Python SDK | Antigravity CLI & IDE Extensions |
+|----|----|----|
+| **Primary use case** | Automated pipelines, CI evaluation, custom harnesses | Interactive terminal and GUI pair programming |
+| **Control plane** | Python API (`async with Agent(...)`) | Interactive CLI prompt or editor chat panel |
+| **Tool definitions** | In-process Python callables & MCP | JSON manifests, plugins, and CLI scripts |
+| **Runtime engine** | Embedded native binary | Managed local service |
+
+# 43 Managing Gemini API Spend and Cost Optimization
 
 This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.
 

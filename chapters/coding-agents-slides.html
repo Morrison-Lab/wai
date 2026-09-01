@@ -329,7 +329,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-08-31 20:22:45 (PDT)</p>
+  <p class="date">Last modified: 2026-08-31 21:09:48 (PDT)</p>
 </section><section class="slide level2"><p>We recommend working with <strong><a href="https://github.com/features/copilot/agents">AI coding agents</a></strong> to <a href="https://en.wikipedia.org/wiki/AI-assisted_software_development">help you code</a>.</p>
 </section><section><section id="sec-ai-language-model" class="title-slide slide level1 center" data-number="1"><h1>
 <span class="header-section-number">1</span> What Is a Language Model?</h1>
@@ -4062,8 +4062,66 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <p><a href="https://www.granola.ai/blog/granola-mcp">Granola MCP</a> is the other side of that same pattern: it is not a code-host server but a meeting-context server. Granola is an AI notepad for back-to-back meetings; its MCP exposes your meeting notes to any MCP client.</p>
 <p>The gap it closes is the copy-paste loop: without it, using something you discussed in a meeting while working in Claude, ChatGPT, or Cursor means finding the note, copying the relevant bit, and pasting it in. With the MCP connected, that context rides with you. Use it to turn a standup into Linear tickets, scaffold a feature from what was agreed, or draft a follow-up from what was actually said.</p>
 <p>It connects through the standard <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> (MCP) as a remote server at <code>https://mcp.granola.ai/mcp</code>. For Claude or ChatGPT, enable it from the app’s connector/app settings and authenticate; for Cursor, Claude Code, or any other MCP client that supports a manual URL, register that URL directly (see <a href="https://www.granola.ai/blog/granola-mcp">the announcement</a> for per-client steps). On an Enterprise plan it is an early-access beta, off by default until an admin enables it.</p>
-</section></section><section><section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="42"><h1>
-<span class="header-section-number">42</span> Managing Gemini API Spend and Cost Optimization</h1>
+</section></section><section><section id="sec-ai-antigravity-python-sdk" class="title-slide slide level1 center" data-number="42"><h1>
+<span class="header-section-number">42</span> Google Antigravity Python SDK</h1>
+
+</section><section class="slide level2"><p>The <a href="https://github.com/google-antigravity/antigravity-sdk-python"><code>google-antigravity/antigravity-sdk-python</code></a> repository provides the official Python SDK for building and automating agents on the Google Antigravity agent runtime (measured 2026-08-31; distributed via PyPI as <code>google-antigravity</code>).</p>
+<h4 id="architecture-and-runtime-model">Architecture and runtime model</h4>
+<p>The SDK embeds the compiled Antigravity runtime engine directly into Python applications:</p>
+<ul>
+<li>
+<strong>Lifecycle management</strong>: Agents are instantiated through <code>Agent</code> objects configured via <code>LocalAgentConfig</code>, managed within asynchronous Python context managers (<code>async with</code>).</li>
+<li>
+<strong>Autonomous agentic loop</strong>: The underlying runtime drives multi-turn reasoning, streaming model responses, subagent spawning, and tool dispatch without requiring hand-rolled state machines.</li>
+<li>
+<strong>Binary distribution</strong>: The Python package packages the native runtime binary, ensuring consistent agent execution across macOS and Linux environments.</li>
+</ul>
+<h4 id="extensibility-and-policy-enforcement">Extensibility and policy enforcement</h4>
+<p>Developers can customize agent behavior and enforce safety policies:</p>
+<ul>
+<li>
+<strong>Custom tools and MCP servers</strong>: Register custom Python functions as callable agent tools or connect external Model Context Protocol (MCP) server endpoints.</li>
+<li>
+<strong>Steering hooks</strong>: Attach pre-tool and post-tool lifecycle hooks to inspect, steer, or veto actions (such as restricting command execution or gating repository modifications).</li>
+<li>
+<strong>Skill discovery</strong>: Load skill catalogs (<code>skills/**/SKILL.md</code>) dynamically, allowing agents to leverage shared procedural instructions.</li>
+</ul>
+<h4 id="comparison-with-interactive-antigravity-surfaces">Comparison with interactive Antigravity surfaces</h4>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead><tr class="header">
+<th>Dimension</th>
+<th>Antigravity Python SDK</th>
+<th>Antigravity CLI &amp; IDE Extensions</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><strong>Primary use case</strong></td>
+<td>Automated pipelines, CI evaluation, custom harnesses</td>
+<td>Interactive terminal and GUI pair programming</td>
+</tr>
+<tr class="even">
+<td><strong>Control plane</strong></td>
+<td>Python API (<code>async with Agent(...)</code>)</td>
+<td>Interactive CLI prompt or editor chat panel</td>
+</tr>
+<tr class="odd">
+<td><strong>Tool definitions</strong></td>
+<td>In-process Python callables &amp; MCP</td>
+<td>JSON manifests, plugins, and CLI scripts</td>
+</tr>
+<tr class="even">
+<td><strong>Runtime engine</strong></td>
+<td>Embedded native binary</td>
+<td>Managed local service</td>
+</tr>
+</tbody>
+</table></section></section><section><section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="43"><h1>
+<span class="header-section-number">43</span> Managing Gemini API Spend and Cost Optimization</h1>
 
 </section><section class="slide level2 scrollable"><p>This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.</p>
 <h4 id="identifying-paused-projects-project-numbers-vs.-friendly-names">Identifying Paused Projects (Project Numbers vs.&nbsp;Friendly Names)</h4>
