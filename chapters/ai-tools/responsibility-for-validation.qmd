@@ -21,14 +21,16 @@ take the time to learn or ask a colleague for help.
 #### A worked example: the defects the builder cannot see
 
 A public field report from a non-programmer
-(r/ClaudeCode, 2026-08-22, "Vibe coded this game in four months")
+([r/ClaudeCode](https://www.reddit.com/r/ClaudeCode/), 2026-08-22, "Vibe coded this game in four months"; summarized in [issue #98](https://github.com/Morrison-Lab/wai/issues/98))
 describes four months of building a browser racing game with coding agents,
 and reports that most things worked on the first try.
 The comment thread under it says otherwise.
-Players reported a minimap announcing a turn in the wrong direction,
-speed boosts invisible from any distance,
-an orbit track with no visible route,
-and an accelerator with no consequences.
+Players reported:
+
+- a minimap announcing a turn in the wrong direction
+- speed boosts invisible from any distance
+- an orbit track with no visible route
+- an accelerator with no consequences
 
 Every one of those defects looks correct to the person who built it,
 because the builder reads the underlying state in their own head and sees the display agree with it.

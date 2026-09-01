@@ -56,10 +56,10 @@ you'll still need enough domain judgment to:
 - Make creative decisions about architecture and design
 - Understand when agent suggestions are incorrect or suboptimal
 
-Strong coding skills are the usual route to that judgment,
+Strong coding skills are one route to that judgment,
 and not the only one.
 A public field report from a non-programmer
-(r/ClaudeCode, 2026-08-22, "Vibe coded this game in four months")
+([r/ClaudeCode](https://www.reddit.com/r/ClaudeCode/), 2026-08-22, "Vibe coded this game in four months"; summarized in [issue #98](https://github.com/Morrison-Lab/wai/issues/98))
 describes four months of building a browser racing game with coding agents on no coding experience at all,
 crediting knowledge of game technology and design,
 plus long practice with language models,
