@@ -1,0 +1,34 @@
+[`gemini-cli-extensions/conductor`](https://github.com/gemini-cli-extensions/conductor)
+is an open-source plugin for AI coding agents (including Google Antigravity and Claude Code)
+that implements **Spec-Driven Development**
+(measured 2026-08-31).
+Rather than relying on conversational chat history that degrades over extended sessions,
+Conductor anchors agent behavior in structured, version-controlled Markdown artifacts stored directly in the repository,
+providing persistent context across multi-session workflows.
+
+#### Core workflow phases
+
+Conductor structures development into four distinct, sequential phases:
+
+- **Context establishment (`/conductor:conductor-setup`)**:
+  Interactively initializes baseline project documentation
+  (including product goals, technical stack choices, and testing guidelines),
+  giving coding agents persistent reference material across subsequent sessions.
+- **Specification and track planning (`/conductor:conductor-new-track`)**:
+  Transforms feature requests or bug fixes into a dedicated track containing a `spec.md` (functional scope and acceptance criteria)
+  and a `plan.md` (ordered implementation phases broken into verifiable task checklists).
+- **Phased implementation (`/conductor:conductor-implement`)**:
+  Guides the agent through the active track's plan sequentially,
+  executing file edits, running local test suites, and marking tasks complete as acceptance criteria are met.
+- **Track review and plan compliance (`/conductor:conductor-review`)**:
+  Conducts an adversarial verification pass against the original track specification,
+  ensuring that all declared acceptance criteria are satisfied and no architectural drift occurred during execution.
+
+#### Architectural benefits of Spec-Driven Development
+
+| Dimension | Conversational Prompting | Spec-Driven Development (Conductor) |
+|---|---|---|
+| **Context persistence** | Volatile in-memory chat buffer | Version-controlled Markdown artifacts |
+| **Task boundaries** | Ad-hoc user instructions per turn | Structured `spec.md` and `plan.md` checklists |
+| **Verification loop** | Manual spot-checking | Milestone-level automated tests and `/conductor:conductor-review` |
+| **Handoff & resumption** | Requires re-prompting or context replay | Any agent resumes from the checked-in track state |

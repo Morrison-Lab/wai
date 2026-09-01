@@ -185,6 +185,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/magic-context.qmd >}}
 
+# Spec-Driven Development with Conductor {#sec-ai-conductor-extension}
+
+{{< include ai-tools/conductor-extension.qmd >}}
+
 # Managing Gemini API Spend and Cost Optimization {#sec-ai-gemini-spend-management}
 
 {{< include ai-tools/gemini-spend-management.qmd >}}
