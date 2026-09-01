@@ -52,5 +52,5 @@ exclude = [
   # Amp's site answers lychee's HTTP/2 probe with a protocol error
   # ("Server may not support HTTP/2 properly") while loading normally in a
   # browser; linked from chapters/ai-tools/ai-harness-landscape.qmd.
-  "https://ampcode.com/",
+  "^https://ampcode\\.com/?$",
 ]

@@ -14,10 +14,6 @@ AutoGenAI
 BYOK
 Badham
 Belcak
-aiagents
-auditability
-auditable
-benchbook
 CAPTCHAs
 Celonis
 CLI
@@ -109,12 +105,9 @@ Pipedream
 Playwright
 Posit
 Positron
-<<<<<<< HEAD
 Prometheus
-=======
 Prowlo
 PydanticAI
->>>>>>> ea2eede (docs(guidance): catalog the Reddit communities where agent practice is discussed (closes #94))
 QLoRA
 Qwen
 Rakazo
@@ -130,11 +123,8 @@ SDKs
 SERG
 SWE
 SemBr
-<<<<<<< HEAD
 Sisyphus
-=======
 Sourcegraph
->>>>>>> 1c3808e (docs(harnesses): summarize the 2026 landscape of AI agent harnesses (closes #95))
 Stanford
 SuperGrok
 TORQCLAW
@@ -154,32 +144,19 @@ YAGNI
 YAML
 Z.ai
 Zapier
-<<<<<<< HEAD
-Zsh
-=======
 Zechner
-crewai
-gapped
-leaderboard
-maximalist
-mcp
-modelcontextprotocol
-observability
-rebranded
-stateful
-<<<<<<< HEAD
->>>>>>> 1c3808e (docs(harnesses): summarize the 2026 landscape of AI agent harnesses (closes #95))
-=======
-usefulai
-vibecoding
->>>>>>> ea2eede (docs(guidance): catalog the Reddit communities where agent practice is discussed (closes #94))
-xAI
+Zsh
 agentic
+aiagents
 aider
 allowlist
+auditability
+auditable
 autofix
+benchbook
 callout
 codebase
+crewai
 dabstep
 dbt
 ebsite
@@ -187,19 +164,25 @@ edu
 emplate
 errored
 foodbank
+gapped
 gh
 github
 glitchy
 io
 launchd
+leaderboard
 lee2py
 lintr
 llama
+maximalist
+mcp
 mergeability
 mergeable
 mistyped
+modelcontextprotocol
 nano
 navbar
+observability
 omics
 omo
 opencode
@@ -211,6 +194,7 @@ plugin
 plugins
 ponytail
 proteomics
+rebranded
 renderer
 repurposing
 rulesets
@@ -219,21 +203,25 @@ sandboxing
 schemas
 sembr
 serology
+stateful
 subagent
 subagents
 submodule
 symlink
 symlinked
 symlinks
+tidyverse
 tmux
 toolset
 toolsets
-tidyverse
 transcriptomics
 translational
 uarto
 ucdavis
+usefulai
 vLLM
+vibecoding
 webhook
 worktree
 worktrees
+xAI

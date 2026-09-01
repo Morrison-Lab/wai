@@ -1,4 +1,4 @@
-The practice of working with AI agents changes faster than any static page, these notes included, can track.
+The practice of working with AI agents changes faster than any static page (these notes included) can track.
 Much of the current guidance circulates as forum discussion:
 tool comparisons, configuration recipes, failure reports, and launch announcements.
 This section catalogs the Reddit communities where that discussion concentrates,
