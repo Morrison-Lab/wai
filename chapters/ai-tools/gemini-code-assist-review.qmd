@@ -1,0 +1,50 @@
+Google Cloud provides a native code-review capability through
+[Gemini Code Assist](https://docs.cloud.google.com/gemini/docs/code-review/review-repo-code)
+(measured 2026-08-31; documentation in Enterprise preview).
+Unlike GitHub Actions that run inside individual repository workflows,
+Gemini Code Assist operates as a managed service connected at the organization or repository level.
+
+#### Architecture and setup
+
+Gemini Code Assist connects to GitHub, GitHub Enterprise Cloud,
+or GitHub Enterprise Server through Google Cloud Developer Connect:
+
+- **Connection host**:
+  Repositories connect via Developer Connect connections
+  provisioned in Google Cloud region `us-east1`.
+- **Console enablement**:
+  Code review is enabled through the Google Cloud Agents & Tools Console
+  (under **Code review** in the Gemini Cloud Assist navigation).
+- **Automated triggers**:
+  Once connected, Gemini automatically generates pull-request summaries
+  and posts line-level review comments when pull requests are opened or updated.
+- **Interactive commands**:
+  Reviewers and authors can trigger on-demand reviews or ask questions
+  by posting a comment starting with `@gemini-code-assist` or `/gemini`
+  directly in the pull-request thread.
+
+#### Review scope and security boundaries
+
+Gemini Code Assist enforces several deliberate boundaries on review scope:
+
+- **Workflow file exclusion**:
+  Files under `.github/workflows/` are explicitly excluded from reviews
+  to prevent automated agents from analyzing or suggesting edits to CI credentials and pipeline definitions.
+- **Style and policy customization**:
+  Repositories can provide custom review guidelines and coding standards
+  configured centrally in the Google Cloud Console,
+  applying uniform review standards across multiple connected repositories.
+- **Enterprise governance**:
+  Because access is managed through Google Cloud IAM and Developer Connect,
+  organization administrators can enable or disable reviews across projects
+  without checking workflow files into individual repositories.
+
+#### Trade-offs versus Action-based reviews
+
+| Dimension | Gemini Code Assist | [Gemini Review Action](#sec-ai-gemini-review-action) / [Claude Code Action](#sec-ai-claude-code-action-review) |
+|---|---|---|
+| **Hosting** | Managed Google Cloud service | GitHub Actions runner |
+| **Configuration** | Google Cloud Console & Developer Connect | In-repo `.github/workflows/*.yml` |
+| **Workflow maintenance** | Zero workflow files in repository | Repository owns workflow YAML and prompts |
+| **Interactive mode** | Built-in `/gemini` comment tags | Configurable via `@claude` or Action triggers |
+| **Credential location** | Google Cloud IAM & Developer Connect token | GitHub Secrets or Workload Identity Federation |
