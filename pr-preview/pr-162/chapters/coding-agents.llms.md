@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-31 21:19:20 (PDT)
+Last modified: 2026-09-01 09:27:25 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3279,7 +3279,7 @@ Rather than requiring the primary coding agent to interrupt its execution to pru
 
 A key challenge with dynamic prompt injection is preserving prompt caching efficiency. `magic-context` addresses this through cache-conscious orchestration:
 
-- **Prefix preservation**: Static system prompts and canonical project facts are positioned at the head of the context buffer, allowing providers’ prompt caching mechanisms to cache stable instructions across turns.
+- **Cache-stable prompt layout**: Maintains a deterministic prompt layout and replay ordering, preserving provider prompt caching prefixes across conversational turns without invalidating cached tokens.
 - **Deferred background extraction**: Memory analysis and summarization tasks are deferred to idle windows or subagent threads, preventing token churn and latency spikes during high-tempo coding loops.
 - **Cross-session persistence**: Extracted knowledge persists in lightweight local stores across IDE restarts, enabling coding agents to resume work with full institutional memory of past decisions.
 
