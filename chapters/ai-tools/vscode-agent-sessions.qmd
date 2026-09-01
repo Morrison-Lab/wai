@@ -1,0 +1,51 @@
+In Visual Studio Code, interactions with AI coding assistants are structured around
+[Agent Sessions and Handoff](https://code.visualstudio.com/docs/agents/concepts/sessions)
+(measured 2026-08-31).
+Understanding how sessions organize work and transfer state across tools
+is essential for managing multi-step agent workflows.
+
+#### Anatomy of an agent session
+
+An agent session represents a stateful stream of interaction between a developer and an agent.
+Each session maintains:
+
+- **Chats and model selection**:
+  One or more chats within a session,
+  each with its own agent or model selection.
+- **Interaction history**:
+  User prompts, assistant responses, and tool calls executed during the task.
+- **Accumulated context**:
+  Referenced files, code snippets, and conversational state gathered across turns.
+- **Checkpoints and branching**:
+  Points in session history allowing developers to fork or roll back state
+  when exploring alternative implementation paths.
+
+#### Managing sessions across surfaces
+
+VS Code provides unified session discovery and access across editor surfaces:
+
+- **Shared surfaces**:
+  The primary Chat view and the dedicated Agents window share the same sessions,
+  allowing developers to switch views without losing conversational context.
+- **External session discovery**:
+  VS Code discovers sessions initiated outside the primary GUI,
+  including CLI agent sessions (such as Copilot CLI, Claude Code, and Codex).
+- **Cloud synchronization**:
+  Synced sessions are backed up to your GitHub account,
+  enabling developers to access active and past sessions across devices.
+
+#### Session handoff types
+
+Session handoff transfers context and intent from an active session
+to a specialized workflow without manual re-prompting:
+
+- **Harness to harness**:
+  Switch the active session between different agent harnesses
+  to leverage distinct agent runtime capabilities on the same task.
+- **Plan to implementation**:
+  Hand off a high-level architectural plan or task specification
+  directly to an implementation session to generate code.
+- **Continue in the cloud**:
+  Hand off a local session to run in a cloud-hosted agent environment
+  (such as background tasks leading to pull requests),
+  freeing local editor resources while the agent executes in the background.
