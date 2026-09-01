@@ -1,12 +1,17 @@
+ADK
 Anthropic
 Antigravity
 Apache
 Apikey
+Armin
 Asimov
 Atlas
+AutoGen
 BYOK
 Badham
 Belcak
+auditability
+auditable
 benchbook
 CAPTCHAs
 Celonis
@@ -21,6 +26,7 @@ Composio
 Contextify
 Conchords
 Cowork
+CrewAI
 DOCX
 Databricks
 Daytona
@@ -46,17 +52,20 @@ Homebrew
 Inflexa
 Integromat
 Jules
+Kanban
 Karpathy
 Kepler
 Kimi
 Kong
 Kubrick
 LLMs
+LangGraph
 LeCun
 LiteLLM
 LoRA
 MCP
 Maia
+Mastra
 MattFlower
 Metis
 MiniMax
@@ -90,14 +99,24 @@ QLoRA
 Qwen
 Rakazo
 REPL
+Replit
 RevealJS
+Ronacher
+Roo
+SDK
+SDKs
 SERG
 SWE
 SemBr
+<<<<<<< HEAD
 Sisyphus
+=======
+Sourcegraph
+>>>>>>> 1c3808e (docs(harnesses): summarize the 2026 landscape of AI agent harnesses (closes #95))
 Stanford
 SuperGrok
 TORQCLAW
+Tabnine
 Treg
 TUI
 TinyTeX
@@ -112,7 +131,17 @@ YAGNI
 YAML
 Z.ai
 Zapier
+<<<<<<< HEAD
 Zsh
+=======
+Zechner
+gapped
+leaderboard
+maximalist
+observability
+rebranded
+stateful
+>>>>>>> 1c3808e (docs(harnesses): summarize the 2026 landscape of AI agent harnesses (closes #95))
 xAI
 agentic
 aider
