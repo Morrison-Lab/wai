@@ -322,6 +322,18 @@ Two shapes of this pattern are worth knowing:
   wire a cloud-with-local-fallback endpoint,
   which composes with this split.
 
+The same split is the main cost lever in a public field report from a non-programmer
+([r/ClaudeCode](https://www.reddit.com/r/ClaudeCode/), 2026-08-22, "Vibe coded this game in four months"; summarized in [issue #98](https://github.com/Morrison-Lab/wai/issues/98)),
+who built a browser racing game over four months with coding agents:
+plan with the strongest model available,
+implement with cheaper ones,
+and keep the scope to what can realistically ship,
+for a reported total of roughly $200 in project-specific subscriptions over the four months,
+on top of a general-purpose subscription the author already held.
+The lab's machine-facing configuration,
+[`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config),
+states the same routing rule for agents.
+
 None of these routing choices substitutes for the guardrails below.
 A well-chosen planner still hands off to an executor that can make a
 per-step mistake,
