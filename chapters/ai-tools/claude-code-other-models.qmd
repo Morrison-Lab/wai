@@ -1,5 +1,6 @@
 Claude Code is built around the Anthropic Messages API,
-and its documentation describes how to point the harness at any endpoint that speaks that format.
+and its documentation describes how to point the harness at any endpoint that speaks that format
+(measured 2026-09-01).
 That mechanism is what makes it possible to run Claude Code against models Anthropic does not make,
 and the same documentation says plainly that doing so is unsupported.
 This section summarizes:
@@ -13,7 +14,7 @@ This section summarizes:
 #### A fast-moving snapshot
 
 The configuration claims in this section were checked against the
-[Claude Code documentation](https://code.claude.com/docs/en/llm-gateway) on 2026-09-01.
+[Claude Code documentation](https://code.claude.com/docs/en/llm-gateway) on that date.
 The community practice and the policy history come from the research summary in
 [issue #96](https://github.com/Morrison-Lab/wai/issues/96),
 compiled from press coverage and forum discussion up to August 2026;
