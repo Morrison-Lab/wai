@@ -322,8 +322,11 @@ Two shapes of this pattern are worth knowing:
   wire a cloud-with-local-fallback endpoint,
   which composes with this split.
 
-The same split is the main cost lever in a public field report from a non-programmer
-(["Vibe coded this game in four months"](https://www.reddit.com/r/ClaudeCode/comments/1vvhrfq/), r/ClaudeCode, 2026-08-22; summarized in [issue #98](https://github.com/Morrison-Lab/wai/issues/98)),
+The same split is the main cost lever in a public field report
+from a non-programmer
+(["Vibe coded this game in four months"](https://www.reddit.com/r/ClaudeCode/comments/1vvhrfq/),
+r/ClaudeCode, 2026-08-22;
+summarized in [issue #98](https://github.com/Morrison-Lab/wai/issues/98)),
 who built a browser racing game over four months with coding agents.
 The report names three levers:
 
