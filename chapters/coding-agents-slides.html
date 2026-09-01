@@ -329,7 +329,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-08-31 21:09:48 (PDT)</p>
+  <p class="date">Last modified: 2026-09-01 09:56:36 (PDT)</p>
 </section><section class="slide level2"><p>We recommend working with <strong><a href="https://github.com/features/copilot/agents">AI coding agents</a></strong> to <a href="https://en.wikipedia.org/wiki/AI-assisted_software_development">help you code</a>.</p>
 </section><section><section id="sec-ai-language-model" class="title-slide slide level1 center" data-number="1"><h1>
 <span class="header-section-number">1</span> What Is a Language Model?</h1>
@@ -4120,8 +4120,31 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <td>Managed local service</td>
 </tr>
 </tbody>
-</table></section></section><section><section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="43"><h1>
-<span class="header-section-number">43</span> Managing Gemini API Spend and Cost Optimization</h1>
+</table></section></section><section><section id="sec-ai-magic-context" class="title-slide slide level1 center" data-number="43"><h1>
+<span class="header-section-number">43</span> Unbounded Context with Magic Context</h1>
+
+</section><section class="slide level2"><p><a href="https://github.com/cortexkit/magic-context"><code>cortexkit/magic-context</code></a> is an open-source self-managing memory engine designed to provide unbounded context for AI coding agents (measured 2026-08-31). It operates as a background memory subsystem—often described as a “hippocampus for coding agents”—that extracts, consolidates, and retrieves long-term repository state without pausing the active coding turn.</p>
+<h4 id="core-architecture-and-agent-roles">Core architecture and agent roles</h4>
+<p>Rather than requiring the primary coding agent to interrupt its execution to prune conversation buffers, <code>magic-context</code> delegates memory lifecycle operations to specialized background workers:</p>
+<ul>
+<li>
+<strong>The Historian</strong>: Runs background context compaction on completed turns, compressing verbose tool outputs and dialog history while preserving architectural decisions and code rationale.</li>
+<li>
+<strong>The Dreamer</strong>: Executes periodic consolidation passes to deduplicate memory records across multiple sessions, distilling recurring observations into canonical project facts and persistent guidelines.</li>
+<li>
+<strong>The Sidekick</strong>: Acts as an on-demand retrieval companion that augments active prompts with relevant project context, supplying historical context matched to the current file or task.</li>
+</ul>
+<h4 id="cache-aware-memory-management">Cache-aware memory management</h4>
+<p>A key challenge with dynamic prompt injection is preserving prompt caching efficiency. <code>magic-context</code> addresses this through cache-conscious orchestration:</p>
+<ul>
+<li>
+<strong>Cache-stable prompt layout</strong>: Maintains a deterministic prompt layout and replay ordering, preserving provider prompt caching prefixes across conversational turns without invalidating cached tokens.</li>
+<li>
+<strong>Deferred background extraction</strong>: Memory analysis and summarization tasks are deferred to idle windows or subagent threads, preventing token churn and latency spikes during high-tempo coding loops.</li>
+<li>
+<strong>Cross-session persistence</strong>: Extracted knowledge persists in lightweight local stores across IDE restarts, enabling coding agents to resume work with full institutional memory of past decisions.</li>
+</ul></section></section><section><section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="44"><h1>
+<span class="header-section-number">44</span> Managing Gemini API Spend and Cost Optimization</h1>
 
 </section><section class="slide level2 scrollable"><p>This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.</p>
 <h4 id="identifying-paused-projects-project-numbers-vs.-friendly-names">Identifying Paused Projects (Project Numbers vs.&nbsp;Friendly Names)</h4>
