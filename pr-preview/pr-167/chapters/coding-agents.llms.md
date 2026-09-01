@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 10:27:05 (PDT)
+Last modified: 2026-09-01 11:31:30 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3283,17 +3283,39 @@ A key challenge with dynamic prompt injection is preserving prompt caching effic
 - **Deferred background extraction**: Memory analysis and summarization tasks are deferred to idle windows or subagent threads, preventing token churn and latency spikes during high-tempo coding loops.
 - **Cross-session persistence**: Extracted knowledge persists in lightweight local stores across IDE restarts, enabling coding agents to resume work with full institutional memory of past decisions.
 
-# 44 Anatomy of Agent Plugins
+# 44 Spec-Driven Development with Conductor
+
+[`gemini-cli-extensions/conductor`](https://github.com/gemini-cli-extensions/conductor) is an open-source plugin for AI coding agents (including Google Antigravity and Claude Code) that implements **Spec-Driven Development** (measured 2026-08-31). Rather than relying on conversational chat history that degrades over extended sessions, Conductor anchors agent behavior in structured, version-controlled Markdown artifacts stored directly in the repository, providing persistent context across multi-session workflows.
+
+#### Core workflow phases
+
+Conductor structures development into four distinct, sequential phases:
+
+- **Context establishment (`/conductor:conductor-setup`)**: Interactively initializes baseline project documentation (including product goals, technical stack choices, and testing guidelines), giving coding agents persistent reference material across subsequent sessions.
+- **Specification and track planning (`/conductor:conductor-new-track`)**: Transforms feature requests or bug fixes into a dedicated track containing a `spec.md` (functional scope and acceptance criteria) and a `plan.md` (ordered implementation phases broken into verifiable task checklists).
+- **Phased implementation (`/conductor:conductor-implement`)**: Guides the agent through the active track’s plan sequentially, executing file edits, running local test suites, and marking tasks complete as acceptance criteria are met.
+- **Track review and plan compliance (`/conductor:conductor-review`)**: Conducts an adversarial verification pass against the original track specification, ensuring that all declared acceptance criteria are satisfied and no architectural drift occurred during execution.
+
+#### Architectural benefits of Spec-Driven Development
+
+| Dimension | Conversational Prompting | Spec-Driven Development (Conductor) |
+|----|----|----|
+| **Context persistence** | Volatile in-memory chat buffer | Version-controlled Markdown artifacts |
+| **Task boundaries** | Ad-hoc user instructions per turn | Structured `spec.md` and `plan.md` checklists |
+| **Verification loop** | Manual spot-checking | Milestone-level automated tests and `/conductor:conductor-review` |
+| **Handoff & resumption** | Requires re-prompting or context replay | Any agent resumes from the checked-in track state |
+
+# 45 Anatomy of Agent Plugins
 
 In modern AI coding assistants (such as Google Antigravity, Gemini CLI, and Claude Code), **plugins** serve as the top-level packaging and distribution layer for agent capabilities (measured 2026-09-01). While individual skills or Model Context Protocol (MCP) servers extend specific tasks, a plugin aggregates multiple extensibility primitives into a unified, version-controlled bundle.
 
 #### Anatomy of a plugin bundle
 
-A plugin manifest (such as `plugin.json` or `.cursor-plugin/plugin.json`) orchestrates four distinct architectural components:
+A plugin manifest (such as `plugin.json` or `.claude-plugin/plugin.json`) orchestrates four distinct architectural components:
 
-- **Skills (`skills/**/SKILL.md`)**: Procedural markdown instructions that teach the agent domain-specific workflows, coding conventions, and structured checklists.
+- **Skills (`skills/**/SKILL.md`)**: Procedural Markdown instructions that teach the agent domain-specific workflows, coding conventions, and structured checklists.
 - **Model Context Protocol (MCP) servers**: External process definitions exposing executable tool functions, database connectors, and live workspace resources via standard MCP JSON-RPC endpoints.
-- **Lifecycle hooks**: Deterministic executable scripts configured via hook manifests (such as `hooks.json`) attached to agent lifecycle events (such as `PreToolUse` command inspection, `Stop` review-gate verification, and `PreInvocation` context injection).
+- **Lifecycle hooks**: Deterministic executable scripts configured via hook manifests (such as `hooks.json`) attached to agent lifecycle events (such as `PreToolUse` command inspection, `Stop` review-gate verification, and `UserPromptSubmit` context injection).
 - **Specialized agent roles and slash commands**: Pre-configured subagent personas (such as dedicated reviewers or researchers) and user-facing shortcut commands (`/command`).
 
 #### Comparison: Skills vs. MCP Servers & Tools vs. Plugins
@@ -3302,7 +3324,7 @@ A plugin manifest (such as `plugin.json` or `.cursor-plugin/plugin.json`) orches
 |----|----|----|----|
 | **Primary purpose** | Procedural guidance & workflows | External tool execution & data access | Unified packaging & distribution |
 | **Execution model** | Progressively loaded on demand | Executed by agent harness over IPC | Discovered & loaded by agent platform |
-| **Dependencies** | Plain markdown & scripts | Language runtimes (Node.js, Python, binaries) | Bundles skills, MCP configs, and hooks |
+| **Dependencies** | Plain Markdown & scripts | Language runtimes (Node.js, Python, binaries) | Bundles skills, MCP configs, and hooks |
 | **Lifecycle control** | Passive context instructions | Dynamic tool calls during agent turn | Active deterministic hook gates |
 
 #### Managing token budget and context bloat
@@ -3315,7 +3337,7 @@ Effective plugin architectures mitigate this through several strategies:
 - **On-demand skill activation**: Agents search skill catalogs dynamically when relevant keywords appear, rather than loading the entire skill directory into the initial system prompt.
 - **Prefix caching preservation**: Static plugin definitions are placed at the root of prompt structures so provider-level prompt caching remains undisturbed during multi-turn sessions.
 
-# 45 Managing Gemini API Spend and Cost Optimization
+# 46 Managing Gemini API Spend and Cost Optimization
 
 This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.
 
