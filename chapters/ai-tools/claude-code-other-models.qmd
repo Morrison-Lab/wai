@@ -88,7 +88,7 @@ from fewest moving parts to most:
   so Claude Code can talk to it with no local proxy;
   @sec-ai-opencode-openrouter covers the same aggregator from the OpenCode side.
 - **A self-hosted gateway.**
-  [LiteLLM](https://docs.litellm.ai) and [Kong](https://konghq.com/) are the examples Anthropic's own environment-variable reference names for gateway model discovery.
+  [LiteLLM](https://docs.litellm.ai) and [Kong](https://konghq.com/) are the examples that Anthropic's own environment-variable reference names for gateway model discovery.
   LiteLLM translates Messages-format requests to many providers and adds virtual keys, fallbacks, and cost tracking;
   @sec-ai-offline shows a LiteLLM configuration for local models.
 - **A community router.**
