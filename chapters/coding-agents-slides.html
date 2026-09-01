@@ -329,7 +329,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-09-01 16:49:22 (PDT)</p>
+  <p class="date">Last modified: 2026-09-01 16:51:49 (PDT)</p>
 </section><section class="slide level2"><p>We recommend working with <strong><a href="https://github.com/features/copilot/agents">AI coding agents</a></strong> to <a href="https://en.wikipedia.org/wiki/AI-assisted_software_development">help you code</a>.</p>
 </section><section><section id="sec-ai-language-model" class="title-slide slide level1 center" data-number="1"><h1>
 <span class="header-section-number">1</span> What Is a Language Model?</h1>
@@ -3727,12 +3727,12 @@ while the selected main agent model is BYOK.</code></pre>
 <tr class="odd">
 <td>Agent Skills (<code>SKILL.md</code>)</td>
 <td>yes, in format</td>
-<td>open standard with a published specification, adopted across Claude Code, Gemini CLI, Codex, Copilot, and Cursor</td>
+<td>open standard with a published specification, adopted across Claude Code, Codex, Copilot, Cursor, and Google Antigravity (and legacy Gemini CLI; see <a href="#/sec-ai-harness-landscape" class="quarto-xref">Section&nbsp;9</a> on Gemini CLI’s sunset and folding into Antigravity CLI)</td>
 </tr>
 <tr class="even">
 <td><code>AGENTS.md</code></td>
 <td>yes, as an open specification</td>
-<td>standardizes filename, location, and precedence across Codex, Gemini CLI, Cursor, Aider, and Copilot (Claude Code reads <code>CLAUDE.md</code> by default, or imports <code>@AGENTS.md</code>)</td>
+<td>standardizes filename, location, and precedence across Codex, Google Antigravity (and legacy Gemini CLI; see <a href="#/sec-ai-harness-landscape" class="quarto-xref">Section&nbsp;9</a>), Cursor, Aider, and Copilot (Claude Code reads <code>CLAUDE.md</code> by default, or imports <code>@AGENTS.md</code>)</td>
 </tr>
 <tr class="odd">
 <td>MCP servers</td>
@@ -3744,7 +3744,7 @@ while the selected main agent model is BYOK.</code></pre>
 <code>CLAUDE.md</code> / <code>GEMINI.md</code>
 </td>
 <td>by courtesy</td>
-<td>vendor instruction files read by default in their respective CLI environments, and supported by courtesy in GitHub Copilot</td>
+<td>vendor instruction files read by default in their respective environments (Claude Code and Google Antigravity; see <a href="#/sec-ai-harness-landscape" class="quarto-xref">Section&nbsp;9</a> on the legacy Gemini CLI product folding into Antigravity CLI), and supported by courtesy in GitHub Copilot</td>
 </tr>
 <tr class="odd">
 <td>Cursor Rules (<code>.cursor/rules/*.mdc</code>)</td>
@@ -4785,7 +4785,7 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </table></section></section><section><section id="sec-ai-plugins-deep-dive" class="title-slide slide level1 center" data-number="48"><h1>
 <span class="header-section-number">48</span> Anatomy of Agent Plugins</h1>
 
-</section><section class="slide level2"><p>In modern AI coding assistants (such as Google Antigravity, Gemini CLI, and Claude Code), <strong>plugins</strong> serve as the top-level packaging and distribution layer for agent capabilities (measured 2026-09-01). While individual skills or Model Context Protocol (MCP) servers extend specific tasks, a plugin aggregates multiple extensibility primitives into a unified, version-controlled bundle.</p>
+</section><section class="slide level2"><p>In modern AI coding assistants (such as Google Antigravity and Claude Code; see <a href="#/sec-ai-harness-landscape" class="quarto-xref">Section&nbsp;9</a> on the sunset of legacy Gemini CLI and its folding into Antigravity CLI), <strong>plugins</strong> serve as the top-level packaging and distribution layer for agent capabilities (measured 2026-09-01). While individual skills or Model Context Protocol (MCP) servers extend specific tasks, a plugin aggregates multiple extensibility primitives into a unified, version-controlled bundle.</p>
 <h4 id="anatomy-of-a-plugin-bundle">Anatomy of a plugin bundle</h4>
 <p>A plugin manifest (such as <code>plugin.json</code> or <code>.claude-plugin/plugin.json</code>) orchestrates four distinct architectural components:</p>
 <ul>

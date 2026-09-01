@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 16:49:22 (PDT)
+Last modified: 2026-09-01 16:51:49 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -2656,10 +2656,10 @@ So MCP is never the answer to “how do I make the agent follow our convention�
 
 | Mechanism | Portable? | Evidence |
 |----|----|----|
-| Agent Skills (`SKILL.md`) | yes, in format | open standard with a published specification, adopted across Claude Code, Gemini CLI, Codex, Copilot, and Cursor |
-| `AGENTS.md` | yes, as an open specification | standardizes filename, location, and precedence across Codex, Gemini CLI, Cursor, Aider, and Copilot (Claude Code reads `CLAUDE.md` by default, or imports `@AGENTS.md`) |
+| Agent Skills (`SKILL.md`) | yes, in format | open standard with a published specification, adopted across Claude Code, Codex, Copilot, Cursor, and Google Antigravity (and legacy Gemini CLI; see [Section 9](#sec-ai-harness-landscape) on Gemini CLI’s sunset and folding into Antigravity CLI) |
+| `AGENTS.md` | yes, as an open specification | standardizes filename, location, and precedence across Codex, Google Antigravity (and legacy Gemini CLI; see [Section 9](#sec-ai-harness-landscape)), Cursor, Aider, and Copilot (Claude Code reads `CLAUDE.md` by default, or imports `@AGENTS.md`) |
 | MCP servers | yes | open protocol with multiple independent clients |
-| `CLAUDE.md` / `GEMINI.md` | by courtesy | vendor instruction files read by default in their respective CLI environments, and supported by courtesy in GitHub Copilot |
+| `CLAUDE.md` / `GEMINI.md` | by courtesy | vendor instruction files read by default in their respective environments (Claude Code and Google Antigravity; see [Section 9](#sec-ai-harness-landscape) on the legacy Gemini CLI product folding into Antigravity CLI), and supported by courtesy in GitHub Copilot |
 | Cursor Rules (`.cursor/rules/*.mdc`) | no | Markdown Cursor (`.mdc`) files with `alwaysApply` and `globs` frontmatter, scoped to Cursor |
 | `.github/copilot-instructions.md` | no | GitHub Copilot only |
 | `.github/instructions/*.instructions.md` | no | GitHub Copilot only, and not on every Copilot surface |
@@ -3591,7 +3591,7 @@ Conductor structures development into four distinct, sequential phases:
 
 # 48 Anatomy of Agent Plugins
 
-In modern AI coding assistants (such as Google Antigravity, Gemini CLI, and Claude Code), **plugins** serve as the top-level packaging and distribution layer for agent capabilities (measured 2026-09-01). While individual skills or Model Context Protocol (MCP) servers extend specific tasks, a plugin aggregates multiple extensibility primitives into a unified, version-controlled bundle.
+In modern AI coding assistants (such as Google Antigravity and Claude Code; see [Section 9](#sec-ai-harness-landscape) on the sunset of legacy Gemini CLI and its folding into Antigravity CLI), **plugins** serve as the top-level packaging and distribution layer for agent capabilities (measured 2026-09-01). While individual skills or Model Context Protocol (MCP) servers extend specific tasks, a plugin aggregates multiple extensibility primitives into a unified, version-controlled bundle.
 
 #### Anatomy of a plugin bundle
 
