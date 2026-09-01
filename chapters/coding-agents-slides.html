@@ -329,7 +329,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-09-01 11:13:46 (PDT)</p>
+  <p class="date">Last modified: 2026-09-01 11:41:54 (PDT)</p>
 </section><section class="slide level2"><p>We recommend working with <strong><a href="https://github.com/features/copilot/agents">AI coding agents</a></strong> to <a href="https://en.wikipedia.org/wiki/AI-assisted_software_development">help you code</a>.</p>
 </section><section><section id="sec-ai-language-model" class="title-slide slide level1 center" data-number="1"><h1>
 <span class="header-section-number">1</span> What Is a Language Model?</h1>
@@ -4194,8 +4194,75 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <td>Any agent resumes from the checked-in track state</td>
 </tr>
 </tbody>
-</table></section></section><section><section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="45"><h1>
-<span class="header-section-number">45</span> Managing Gemini API Spend and Cost Optimization</h1>
+</table></section></section><section><section id="sec-ai-plugins-deep-dive" class="title-slide slide level1 center" data-number="45"><h1>
+<span class="header-section-number">45</span> Anatomy of Agent Plugins</h1>
+
+</section><section class="slide level2"><p>In modern AI coding assistants (such as Google Antigravity, Gemini CLI, and Claude Code), <strong>plugins</strong> serve as the top-level packaging and distribution layer for agent capabilities (measured 2026-09-01). While individual skills or Model Context Protocol (MCP) servers extend specific tasks, a plugin aggregates multiple extensibility primitives into a unified, version-controlled bundle.</p>
+<h4 id="anatomy-of-a-plugin-bundle">Anatomy of a plugin bundle</h4>
+<p>A plugin manifest (such as <code>plugin.json</code> or <code>.claude-plugin/plugin.json</code>) orchestrates four distinct architectural components:</p>
+<ul>
+<li>
+<strong>Skills (<code>skills/**/SKILL.md</code>)</strong>: Procedural Markdown instructions that teach the agent domain-specific workflows, coding conventions, and structured checklists.</li>
+<li>
+<strong>Model Context Protocol (MCP) servers</strong>: External process definitions exposing executable tool functions, database connectors, and live workspace resources via standard MCP JSON-RPC endpoints.</li>
+<li>
+<strong>Lifecycle hooks</strong>: Deterministic executable scripts configured via hook manifests (such as <code>hooks.json</code>) attached to agent lifecycle events (such as <code>PreToolUse</code> command inspection, <code>Stop</code> review-gate verification, and <code>UserPromptSubmit</code> context injection).</li>
+<li>
+<strong>Specialized agent roles and slash commands</strong>: Pre-configured subagent personas (such as dedicated reviewers or researchers) and user-facing shortcut commands (<code>/command</code>).</li>
+</ul>
+<h4 id="comparison-skills-vs.-mcp-servers-tools-vs.-plugins">Comparison: Skills vs.&nbsp;MCP Servers &amp; Tools vs.&nbsp;Plugins</h4>
+<table class="caption-top">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead><tr class="header">
+<th>Dimension</th>
+<th>Skills (<code>SKILL.md</code>)</th>
+<th>MCP Servers &amp; Tools</th>
+<th>Plugins (<code>plugin.json</code>)</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><strong>Primary purpose</strong></td>
+<td>Procedural guidance &amp; workflows</td>
+<td>External tool execution &amp; data access</td>
+<td>Unified packaging &amp; distribution</td>
+</tr>
+<tr class="even">
+<td><strong>Execution model</strong></td>
+<td>Progressively loaded on demand</td>
+<td>Executed by agent harness over IPC</td>
+<td>Discovered &amp; loaded by agent platform</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencies</strong></td>
+<td>Plain Markdown &amp; scripts</td>
+<td>Language runtimes (Node.js, Python, binaries)</td>
+<td>Bundles skills, MCP configs, and hooks</td>
+</tr>
+<tr class="even">
+<td><strong>Lifecycle control</strong></td>
+<td>Passive context instructions</td>
+<td>Dynamic tool calls during agent turn</td>
+<td>Active deterministic hook gates</td>
+</tr>
+</tbody>
+</table>
+<h4 id="managing-token-budget-and-context-bloat">Managing token budget and context bloat</h4>
+<p>A common hazard when adopting large community plugin bundles is context window saturation. When multiple plugins eagerly inject verbose instructions and exhaustive tool schemas into every turn, available context for actual code and reasoning shrinks.</p>
+<p>Effective plugin architectures mitigate this through several strategies:</p>
+<ul>
+<li>
+<strong>Lazy tool discovery</strong>: Only core system tools load eagerly; specialized plugin tools declare schemas that load lazily on demand.</li>
+<li>
+<strong>On-demand skill activation</strong>: Agents search skill catalogs dynamically when relevant keywords appear, rather than loading the entire skill directory into the initial system prompt.</li>
+<li>
+<strong>Prefix caching preservation</strong>: Static plugin definitions are placed at the root of prompt structures so provider-level prompt caching remains undisturbed during multi-turn sessions.</li>
+</ul></section></section><section><section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="46"><h1>
+<span class="header-section-number">46</span> Managing Gemini API Spend and Cost Optimization</h1>
 
 </section><section class="slide level2 scrollable"><p>This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.</p>
 <h4 id="identifying-paused-projects-project-numbers-vs.-friendly-names">Identifying Paused Projects (Project Numbers vs.&nbsp;Friendly Names)</h4>

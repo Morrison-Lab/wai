@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 11:13:46 (PDT)
+Last modified: 2026-09-01 11:41:54 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3305,7 +3305,39 @@ Conductor structures development into four distinct, sequential phases:
 | **Verification loop** | Manual spot-checking | Milestone-level automated tests and `/conductor:conductor-review` |
 | **Handoff & resumption** | Requires re-prompting or context replay | Any agent resumes from the checked-in track state |
 
-# 45 Managing Gemini API Spend and Cost Optimization
+# 45 Anatomy of Agent Plugins
+
+In modern AI coding assistants (such as Google Antigravity, Gemini CLI, and Claude Code), **plugins** serve as the top-level packaging and distribution layer for agent capabilities (measured 2026-09-01). While individual skills or Model Context Protocol (MCP) servers extend specific tasks, a plugin aggregates multiple extensibility primitives into a unified, version-controlled bundle.
+
+#### Anatomy of a plugin bundle
+
+A plugin manifest (such as `plugin.json` or `.claude-plugin/plugin.json`) orchestrates four distinct architectural components:
+
+- **Skills (`skills/**/SKILL.md`)**: Procedural Markdown instructions that teach the agent domain-specific workflows, coding conventions, and structured checklists.
+- **Model Context Protocol (MCP) servers**: External process definitions exposing executable tool functions, database connectors, and live workspace resources via standard MCP JSON-RPC endpoints.
+- **Lifecycle hooks**: Deterministic executable scripts configured via hook manifests (such as `hooks.json`) attached to agent lifecycle events (such as `PreToolUse` command inspection, `Stop` review-gate verification, and `UserPromptSubmit` context injection).
+- **Specialized agent roles and slash commands**: Pre-configured subagent personas (such as dedicated reviewers or researchers) and user-facing shortcut commands (`/command`).
+
+#### Comparison: Skills vs. MCP Servers & Tools vs. Plugins
+
+| Dimension | Skills (`SKILL.md`) | MCP Servers & Tools | Plugins (`plugin.json`) |
+|----|----|----|----|
+| **Primary purpose** | Procedural guidance & workflows | External tool execution & data access | Unified packaging & distribution |
+| **Execution model** | Progressively loaded on demand | Executed by agent harness over IPC | Discovered & loaded by agent platform |
+| **Dependencies** | Plain Markdown & scripts | Language runtimes (Node.js, Python, binaries) | Bundles skills, MCP configs, and hooks |
+| **Lifecycle control** | Passive context instructions | Dynamic tool calls during agent turn | Active deterministic hook gates |
+
+#### Managing token budget and context bloat
+
+A common hazard when adopting large community plugin bundles is context window saturation. When multiple plugins eagerly inject verbose instructions and exhaustive tool schemas into every turn, available context for actual code and reasoning shrinks.
+
+Effective plugin architectures mitigate this through several strategies:
+
+- **Lazy tool discovery**: Only core system tools load eagerly; specialized plugin tools declare schemas that load lazily on demand.
+- **On-demand skill activation**: Agents search skill catalogs dynamically when relevant keywords appear, rather than loading the entire skill directory into the initial system prompt.
+- **Prefix caching preservation**: Static plugin definitions are placed at the root of prompt structures so provider-level prompt caching remains undisturbed during multi-turn sessions.
+
+# 46 Managing Gemini API Spend and Cost Optimization
 
 This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.
 
