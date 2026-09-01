@@ -89,8 +89,10 @@ four tools (read, bash, edit, write),
 a system prompt plus tool definitions under a thousand tokens,
 no MCP, plan mode, to-do list, or subagents,
 and extension by asking the agent to write its own TypeScript extensions.
-In its author's own Terminal-Bench 2.0 run (December 2025, on Claude Opus 4.5) it placed second,
-behind only the benchmark's minimal reference agent.
+In its author's own Terminal-Bench 2.0 run
+([December 2025, on Claude Opus 4.5](https://mariozechner.at/posts/2025-11-30-pi-coding-agent/))
+it placed eighth,
+which its author read as evidence that a minimal harness competes with the heavy ones.
 
 The maximalist reply is that the extra tokens in a heavy harness encode product features
 (memory, scheduled tasks, subagents, plan mode, worktree support)
