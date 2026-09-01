@@ -44,4 +44,9 @@ exclude = [
   "https://openrouter.ai/credits",
   "https://openrouter.ai/workspaces/.*",
   "https://ollama.com/install.sh",
+  # A pull request in a private repository, cited from the vendored
+  # ai-config fragment shared/workflow/address-every-comment.md; lychee's
+  # GitHub fallback cannot see it with this repo's token, so it always
+  # reads as broken. Anchored to that one URL so nothing else is masked.
+  "^https://github\\.com/ucdavis/matt\\.contracts/pull/2$",
 ]

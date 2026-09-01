@@ -47,16 +47,15 @@ jobs:
     secrets:
       CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}   # empty; this repo uses OAuth
-      SUBMODULES_TOKEN: ${{ secrets.SUBMODULES_TOKEN }}      # empty; both submodules are public
+      SUBMODULES_TOKEN: ${{ secrets.SUBMODULES_TOKEN }}      # empty; the macros submodule is public
     with:
       # Wires the workflow_dispatch input through so claude.yml can re-dispatch
       # a review on Claude's own commits; empty (and ignored) on pull_request
       # runs.
       pr-number: ${{ inputs.pr_number }}
-      # This repo vendors two submodules (macros, .ai-config); the previous
-      # standalone workflow checked them out (`submodules: recursive`) so the
-      # reviewer could read their contents instead of reporting them as
-      # uninitialized.
+      # This repo vendors the macros submodule; the previous standalone
+      # workflow checked it out (`submodules: recursive`) so the reviewer
+      # could read its contents instead of reporting it as uninitialized.
       checkout-submodules: true
       prompt-addendum: |
         In addition to the standard checks above, this is the qwt Quarto

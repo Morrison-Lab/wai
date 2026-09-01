@@ -16,27 +16,27 @@ request moving toward a clean, mergeable state.
 
 # File an Issue Before Starting
 
-{{< include ../.ai-config/shared/workflow/issue-first.md >}}
+{{< include ../shared/workflow/issue-first.md >}}
 
 # Claim a PR or Issue Before Working on It
 
-{{< include ../.ai-config/shared/workflow/claim-pr.md >}}
+{{< include ../shared/workflow/claim-pr.md >}}
 
 # Keep Your Branch Synced with Main
 
-{{< include ../.ai-config/shared/workflow/sync-with-main.md >}}
+{{< include ../shared/workflow/sync-with-main.md >}}
 
 # Driving a Pull Request to Clean
 
-{{< include ../.ai-config/shared/workflow/ardi.md >}}
+{{< include ../shared/workflow/ardi.md >}}
 
 # What "Fully Clean" Means {#sec-fully-clean}
 
-{{< include ../.ai-config/shared/workflow/fully-clean.md >}}
+{{< include ../shared/workflow/fully-clean.md >}}
 
 # Address Every In-Scope Review Comment
 
-{{< include ../.ai-config/shared/workflow/address-every-comment.md >}}
+{{< include ../shared/workflow/address-every-comment.md >}}
 
 # Reviewing AI-generated work {#sec-invalidate-ai-review}
 

@@ -17,8 +17,10 @@ Authoritative style guide: [UCD-SERG Lab Manual](https://ucd-serg.github.io/lab-
 - `_quarto.yml`, `_quarto-website.yml` --- Quarto project + website config
 - `_extensions/` --- vendored Quarto extensions
 - `macros/` --- git submodule for shortcode/macro definitions (see `.gitmodules`)
-- `.ai-config/` --- git submodule of shared agent-workflow fragments;
-  `chapters/pr-workflow-with-agents.qmd` includes them (see `.gitmodules`)
+- `shared/` --- vendored prose fragments included by chapters; `shared/workflow/`
+  holds copies of `Morrison-Lab/ai-config` workflow fragments, refreshed by
+  `scripts/vendor-ai-config-fragments.py` (do not edit those copies by hand)
+- `scripts/` --- maintainer scripts run by hand (not by CI)
 - `R/`, `man/`, `DESCRIPTION`, `NAMESPACE` --- the project is also a small R package
 - `references.bib` --- BibTeX bibliography
 - `styles.css` --- website styling; `styles-reveal.scss`, `qwt-reveal-toggle.html`, and the `revealjs-*.lua` filters drive the reveal.js slide output
@@ -42,10 +44,12 @@ Mirrors [`.github/copilot-instructions.md`](.github/copilot-instructions.md). Ke
 
 - **Don't edit generated files**: `README.md` is built from `README.Rmd`; `_site/` and `_freeze/` are build outputs.
 - **Local preview**: `quarto preview` (live reload). Full build: `quarto render`. When verifying a single edited page, render just that page (`quarto render <file>.qmd --to html`) rather than the whole site --- the `/render` command is for the full build.
-- **Submodules**: see `.gitmodules` for the current set (`macros/` and `.ai-config/`).
+- **Submodules**: see `.gitmodules` for the current set (`macros/`).
   Run `git submodule update --init --recursive` after cloning.
-  `chapters/pr-workflow-with-agents.qmd` includes files from `.ai-config/`,
-  so that chapter fails to render if the submodule is not checked out.
+- **Vendored ai-config fragments**: `chapters/pr-workflow-with-agents.qmd` includes
+  the `shared/workflow/*.md` copies of `Morrison-Lab/ai-config` fragments.
+  To pick up upstream changes, run `python3 scripts/vendor-ai-config-fragments.py`
+  and commit the result rather than editing the copies.
 - **Spell check**: words go in `inst/WORDLIST` (see `.github/workflows/check-spelling.yaml`). Update the wordlist instead of disabling the check.
 - **Link check**: tuned in `lychee.toml`; prefer fixing broken links over adding exceptions.
 - **Other CI checks**: workflows also verify bibliography DOIs (`check-bibliography-dois.yml`) and flag non-standard characters (`check-non-standard-chars.yaml`). Fix the flagged source rather than relaxing the check.

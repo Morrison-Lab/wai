@@ -13,3 +13,4 @@ _freeze/
 ^README\.Rmd$
 ^data-raw$
 ^\.quarto$
+^scripts$
