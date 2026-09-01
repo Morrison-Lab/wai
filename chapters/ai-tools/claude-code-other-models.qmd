@@ -1,21 +1,18 @@
 Claude Code is built around the Anthropic Messages API,
-and its documentation describes how to point the harness at any endpoint that speaks that format
-(checked 2026-09-01).
+and its documentation describes how to point the harness at any endpoint that speaks that format.
 That mechanism is what makes it possible to run Claude Code against models Anthropic does not make,
 and the same documentation says plainly that doing so is unsupported.
-This section summarizes what the mechanism is,
-how people use it,
-what breaks,
-and which billing rules apply.
+This section summarizes the mechanism, the routes people use, what breaks, and which billing rules apply.
 
 ::: {.callout-warning}
 #### A fast-moving snapshot
 
-The configuration variables below were checked against the
+The configuration claims in this section were checked against the
 [Claude Code documentation](https://code.claude.com/docs/en/llm-gateway) on 2026-09-01.
-The policy history and the community practice were compiled from
-press coverage and forum discussion up to August 2026,
-and Anthropic has revised the subscription rules more than once during 2026.
+The community practice and the policy history come from the research summary in
+[issue #96](https://github.com/Morrison-Lab/wai/issues/96),
+compiled from press coverage and forum discussion up to August 2026;
+Anthropic revised the subscription rules more than once during 2026.
 Re-read the current
 [gateway documentation](https://code.claude.com/docs/en/llm-gateway#subscriptions-and-gateways)
 and the consumer terms before relying on any of it.
@@ -26,7 +23,7 @@ and the consumer terms before relying on any of it.
 Anthropic's
 [gateway documentation](https://code.claude.com/docs/en/llm-gateway)
 is written for organizations that run their own gateway in front of **Claude** models,
-for credential management, usage tracking, cost controls, and audit logging.
+so that credentials, usage tracking, cost controls, and audit logging live in one place.
 It states that "any gateway that exposes a supported API format works,"
 and in the same paragraph that Anthropic
 "doesn't endorse, maintain, or audit third-party gateway products,
@@ -38,7 +35,7 @@ The supported non-default backends are all Claude models on other clouds:
 - [Google Cloud's Agent Platform, formerly Vertex AI](https://code.claude.com/docs/en/google-vertex-ai) (`CLAUDE_CODE_USE_VERTEX=1`)
 - [Microsoft Foundry](https://code.claude.com/docs/en/microsoft-foundry) (`CLAUDE_CODE_USE_FOUNDRY=1`)
 
-Routing to a different model family (GPT, Gemini, Llama, GLM, Kimi, Qwen, DeepSeek) is the unsupported case.
+Routing to a different model family is the unsupported case.
 It works because the gateway mechanism is provider-agnostic,
 not because Anthropic tests it.
 
@@ -52,8 +49,9 @@ and the [environment-variable reference](https://code.claude.com/docs/en/env-var
 - `ANTHROPIC_BASE_URL` points the harness at a gateway.
   The documentation is explicit that it "changes where requests are sent, not which model answers them."
 - `ANTHROPIC_AUTH_TOKEN` (sent as `Authorization: Bearer`) or `ANTHROPIC_API_KEY` (sent as `x-api-key`) carries the credential.
-  While either is set, a saved claude.ai login is not used.
-- `ANTHROPIC_MODEL`, and `ANTHROPIC_DEFAULT_SONNET_MODEL`, `ANTHROPIC_DEFAULT_OPUS_MODEL`, `ANTHROPIC_DEFAULT_HAIKU_MODEL`, and `ANTHROPIC_DEFAULT_FABLE_MODEL`,
+  `ANTHROPIC_AUTH_TOKEN` takes precedence over a saved claude.ai login immediately;
+  `ANTHROPIC_API_KEY` takes over after a one-time approval prompt in interactive mode.
+- `ANTHROPIC_MODEL`, and the `ANTHROPIC_DEFAULT_SONNET_MODEL`, `ANTHROPIC_DEFAULT_OPUS_MODEL`, `ANTHROPIC_DEFAULT_HAIKU_MODEL`, and `ANTHROPIC_DEFAULT_FABLE_MODEL` family,
   map the built-in aliases to whatever model IDs the backend accepts.
 - `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1` makes Claude Code query the gateway's `/v1/models` endpoint at startup
   and add the results to the `/model` picker.
@@ -62,67 +60,72 @@ and the [environment-variable reference](https://code.claude.com/docs/en/env-var
 - `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1` stops Claude Code from sending pre-release request fields and beta headers.
   The connection guide lists it as the fix for `400` errors naming `context_management` or `Extra inputs are not permitted`,
   which is what a non-Anthropic upstream returns when it rejects Claude-specific fields.
-- `CLAUDE_CODE_MAX_CONTEXT_TOKENS` declares the context window for a model ID Claude Code does not recognize,
-  so compaction happens at the model's real limit rather than at a guessed one.
+- `CLAUDE_CODE_MAX_CONTEXT_TOKENS` declares the context window for a model ID Claude Code does not recognize;
+  @sec-ai-offline shows it in use for a local model.
 
 Claude Code reads these at startup,
 either from the shell or from the `env` block of `~/.claude/settings.json`.
 
 #### The routes people use
 
-Community practice as of mid-2026 falls into a few shapes,
+The forum reports collected in the tracking issue fall into a few shapes,
 from fewest moving parts to most:
 
 - **A model vendor's Anthropic-compatible endpoint.**
-  Several labs (Z.ai for GLM, Moonshot for Kimi, MiniMax) publish endpoints that speak the Messages format directly,
+  Several labs, including [Z.ai](https://z.ai/) (GLM), [Moonshot](https://www.kimi.com/) (Kimi), and [MiniMax](https://www.minimax.io/),
+  publish endpoints that speak the Messages format directly,
   so the whole setup is `ANTHROPIC_BASE_URL` plus the vendor's key.
-  This is the most common route in forum reports and the one bundled with the vendors' "coding plan" subscriptions.
+  It is the route those reports describe most often,
+  and the one bundled with the vendors' "coding plan" subscriptions.
 - **A hosted aggregator.**
-  OpenRouter exposes an Anthropic-format endpoint,
+  [OpenRouter](https://openrouter.ai/) exposes an Anthropic-format endpoint,
   so Claude Code can talk to it with no local proxy;
   @sec-ai-opencode-openrouter covers the same aggregator from the OpenCode side.
 - **A self-hosted gateway.**
-  [LiteLLM](https://docs.litellm.ai) is the example Anthropic's own environment-variable reference names for gateway model discovery,
-  alongside Kong;
-  it translates Messages-format requests to many providers and adds virtual keys, fallbacks, and cost tracking.
+  [LiteLLM](https://docs.litellm.ai) and [Kong](https://konghq.com/) are the examples Anthropic's own environment-variable reference names for gateway model discovery.
+  LiteLLM translates Messages-format requests to many providers and adds virtual keys, fallbacks, and cost tracking;
   @sec-ai-offline shows a LiteLLM configuration for local models.
 - **A community router.**
   [Claude Code Router](https://github.com/musistudio/claude-code-router)
   intercepts each request and routes it by type
   (background, thinking, long-context, default) to a different provider or model.
-  It is the option with the most features and the one most often described in its own issue tracker as unstable and hard to configure.
+  It has the most features of the four,
+  and the tracking issue quotes its own issue tracker describing it as unstable and hard to configure.
 - **A local model server.**
-  vLLM implements the Messages API directly,
-  and Ollama works through an OpenAI-compatible proxy;
+  [vLLM](https://docs.vllm.ai/) and [Ollama](https://ollama.com/) both serve the Messages API directly,
+  so Claude Code can point at either with no proxy;
   @sec-ai-offline covers the mechanics,
   and @sec-ai-small-local-models covers which local models can sustain an autonomous loop.
 
+Treat any self-hosted gateway or community router as infrastructure:
+pin its version, and keep the official `claude` launcher as a fallback.
+The tracking issue records a 2026 incident in which malicious LiteLLM releases were briefly published to PyPI,
+which is the concrete reason for pinning.
+
 #### What degrades
 
-The reports are consistent about where the seams are:
+The forum reports in the tracking issue agree on three seams:
 
 - **The harness is tuned for Claude.**
   Tool-call conventions, context compaction, and the prompt structure behind plan mode and subagents were built against Claude's behavior.
   Other models, reached through a translating gateway, show worse tool-call reliability
-  (a model describing an edit instead of making it is the commonly reported failure),
+  (a model describing an edit instead of making it is the failure reported most often),
   occasional compaction failures,
   and behavior that is hard to debug because two layers are involved.
 - **Prompt caching depends on the gateway.**
-  Claude Code re-sends the system prompt, tool schemas, and history on every turn and relies on caching to make that cheap.
+  Claude Code re-sends the system prompt, tool schemas, and history on every turn and relies on
+  [prompt caching](https://code.claude.com/docs/en/prompt-caching) to make that cheap.
   The [gateway protocol reference](https://code.claude.com/docs/en/llm-gateway-protocol)
-  lists prompt caching among the features a gateway has to pass through,
-  and a gateway that does not (or an upstream with no equivalent) bills every turn at full input price,
+  lists caching among the features a gateway has to pass through;
+  a gateway that does not, or an upstream with no equivalent, bills every turn at full input price,
   which erodes much of the per-token saving from a cheaper model.
-- **Claude-specific features are rejected or missing.**
-  Pre-release request fields produce `400` errors until disabled,
-  and Claude-only server-side tools (web search, computer use, citations) are unavailable.
-- **The context window is guessed.**
-  For an unrecognized model ID, Claude Code assumes a window that may not match the model's real one;
-  the model configuration page documents `CLAUDE_CODE_MAX_CONTEXT_TOKENS` as the correction.
+- **Claude-specific request fields are rejected.**
+  The `400` errors and the `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` remedy in the configuration list above are the documented form of this;
+  the reports add that the context window Claude Code assumes for an unrecognized model ID rarely matches the real one.
 
-Benchmark gaps between the strongest open-weight coding models and Claude have narrowed during 2026,
-but several of the headline figures come from the model vendors' own launch reporting,
-and harness-level reliability is a separate question from benchmark score.
+The summary also notes that benchmark gaps between the strongest open-weight coding models and Claude narrowed during 2026,
+while cautioning that the open-weight figures it saw were largely the vendors' own launch numbers.
+Harness-level reliability is a separate question from benchmark score in any case.
 
 #### Billing and policy
 
@@ -137,33 +140,29 @@ Two rules from the gateway documentation settle most questions:
   The documented case for that is an organization's own gateway forwarding to Anthropic,
   not a third-party harness serving other models.
 
-The policy that changed during 2026 concerns the other direction:
+The policy history in the tracking issue concerns the other direction,
 using a Claude **subscription** login to drive third-party harnesses or proxies.
-Anthropic announced in early April 2026 that, from 2026-04-04,
-subscriptions would no longer cover usage in third-party tools,
-which would instead draw on separately purchased extra usage or an API key,
-and its terms describe using subscription OAuth tokens in other products as a violation.
-Provisioning your own API keys or third-party inference credentials remains allowed,
-provided the usage is billed to the key owner.
-The terms have been reworded since,
-so treat that summary as a pointer to what to check rather than as the current text.
+As that summary records it,
+Anthropic announced in April 2026 that subscriptions would stop covering usage in third-party tools from 2026-04-04,
+with such usage drawing on separately purchased extra usage or an API key instead,
+while provisioning your own API keys or provider credentials, billed to the key owner, stayed allowed.
+The summary also notes that the terms were reworded afterwards,
+so read it as a pointer to what to check rather than as the current text.
 
 #### Recommendations
 
 | Goal | Suggested route |
 |---|---|
-| Model flexibility is the priority | A model-agnostic harness (OpenCode, Aider, Cline), which is built for it; see @sec-ai-opencode-ollama and @sec-ai-opencode-openrouter |
+| Model flexibility is the priority | A model-agnostic harness ([OpenCode](https://opencode.ai), [Aider](https://aider.chat/), [Cline](https://github.com/cline/cline)), which is built for it; see @sec-ai-opencode-ollama and @sec-ai-opencode-openrouter |
 | Claude Code's skills and plugins with one cheaper model | The vendor's Anthropic-compatible endpoint with your own key |
-| Several models with team governance | A self-hosted gateway such as LiteLLM, or an enterprise gateway product |
-| Per-request-type cost routing | Claude Code Router, treated as infrastructure: pin the version and keep the official `claude` launcher as a fallback |
+| Several models with team governance | A self-hosted gateway such as LiteLLM, or an enterprise gateway product, pinned as infrastructure |
+| Per-request-type cost routing | Claude Code Router, pinned as infrastructure |
 | Claude models at subscription prices | The official Claude Code CLI signed in with the subscription, which remains fully supported |
 
 : Choosing a route for running Claude Code with other models {#tbl-claude-code-other-models-routes}
 
-Whichever route you pick:
-
-- Authenticate non-Claude traffic with your own API key or provider credential, never with a subscription login.
-- Set `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1` at the first `400` error mentioning unrecognized fields.
-- Assume prompt caching is off until the gateway proves otherwise, and budget on that basis.
-- Measure cost per completed task on your own work rather than comparing token prices;
-  if the alternative is not cheaper on that measure, or tool-call failures disrupt sessions, go back to a supported configuration.
+Whichever route you pick,
+authenticate non-Claude traffic with your own API key or provider credential rather than a subscription login,
+assume prompt caching is off until the gateway proves otherwise,
+and measure cost per completed task on your own work rather than comparing token prices.
+If the alternative is not cheaper on that measure, or tool-call failures disrupt sessions, go back to a supported configuration.
