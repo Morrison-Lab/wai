@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 11:09:53 (PDT)
+Last modified: 2026-09-01 12:24:21 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3244,7 +3244,7 @@ The SDK embeds the compiled Antigravity runtime engine directly into Python appl
 
 - **Lifecycle management**: Agents are instantiated through `Agent` objects configured via `LocalAgentConfig`, managed within asynchronous Python context managers (`async with`).
 - **Autonomous agentic loop**: The underlying runtime drives multi-turn reasoning, streaming model responses, subagent spawning, and tool dispatch without requiring hand-rolled state machines.
-- **Binary distribution**: The Python package packages the native runtime binary, ensuring consistent agent execution across macOS and Linux environments.
+- **Binary distribution**: The Python package distributes pre-compiled native runtime binaries via wheels, ensuring consistent agent execution across Windows, macOS, and Linux environments.
 
 #### Extensibility and policy enforcement
 
@@ -3283,26 +3283,82 @@ A key challenge with dynamic prompt injection is preserving prompt caching effic
 - **Deferred background extraction**: Memory analysis and summarization tasks are deferred to idle windows or subagent threads, preventing token churn and latency spikes during high-tempo coding loops.
 - **Cross-session persistence**: Extracted knowledge persists in lightweight local stores across IDE restarts, enabling coding agents to resume work with full institutional memory of past decisions.
 
-# 44 Multi-Agent Orchestration with Oh My OpenCode
+# 44 Spec-Driven Development with Conductor
 
-[`opensoft/oh-my-opencode`](https://github.com/opensoft/oh-my-opencode) (often referenced as **Oh My OpenCode** or `omo`) is an open-source multi-agent orchestration framework and plugin for the OpenCode coding agent harness (measured 2026-09-01). Inspired by modular terminal configuration frameworks (such as Oh My Zsh), it expands single-agent coding into a specialized multi-agent system with automated model routing and background task execution.
+[`gemini-cli-extensions/conductor`](https://github.com/gemini-cli-extensions/conductor) is an open-source plugin for AI coding agents (including Google Antigravity and Claude Code) that implements **Spec-Driven Development** (measured 2026-08-31). Rather than relying on conversational chat history that degrades over extended sessions, Conductor anchors agent behavior in structured, version-controlled Markdown artifacts stored directly in the repository, providing persistent context across multi-session workflows.
+
+#### Core workflow phases
+
+Conductor structures development into four distinct, sequential phases:
+
+- **Context establishment (`/conductor:conductor-setup`)**: Interactively initializes baseline project documentation (including product goals, technical stack choices, and testing guidelines), giving coding agents persistent reference material across subsequent sessions.
+- **Specification and track planning (`/conductor:conductor-new-track`)**: Transforms feature requests or bug fixes into a dedicated track containing a `spec.md` (functional scope and acceptance criteria) and a `plan.md` (ordered implementation phases broken into verifiable task checklists).
+- **Phased implementation (`/conductor:conductor-implement`)**: Guides the agent through the active track’s plan sequentially, executing file edits, running local test suites, and marking tasks complete as acceptance criteria are met.
+- **Track review and plan compliance (`/conductor:conductor-review`)**: Conducts an adversarial verification pass against the original track specification, ensuring that all declared acceptance criteria are satisfied and no architectural drift occurred during execution.
+
+#### Architectural benefits of Spec-Driven Development
+
+| Dimension | Conversational Prompting | Spec-Driven Development (Conductor) |
+|----|----|----|
+| **Context persistence** | Volatile in-memory chat buffer | Version-controlled Markdown artifacts |
+| **Task boundaries** | Ad-hoc user instructions per turn | Structured `spec.md` and `plan.md` checklists |
+| **Verification loop** | Manual spot-checking | Milestone-level automated tests and `/conductor:conductor-review` |
+| **Handoff & resumption** | Requires re-prompting or context replay | Any agent resumes from the checked-in track state |
+
+# 45 Anatomy of Agent Plugins
+
+In modern AI coding assistants (such as Google Antigravity, Gemini CLI, and Claude Code), **plugins** serve as the top-level packaging and distribution layer for agent capabilities (measured 2026-09-01). While individual skills or Model Context Protocol (MCP) servers extend specific tasks, a plugin aggregates multiple extensibility primitives into a unified, version-controlled bundle.
+
+#### Anatomy of a plugin bundle
+
+A plugin manifest (such as `plugin.json` or `.claude-plugin/plugin.json`) orchestrates four distinct architectural components:
+
+- **Skills (`skills/**/SKILL.md`)**: Procedural Markdown instructions that teach the agent domain-specific workflows, coding conventions, and structured checklists.
+- **Model Context Protocol (MCP) servers**: External process definitions exposing executable tool functions, database connectors, and live workspace resources via standard MCP JSON-RPC endpoints.
+- **Lifecycle hooks**: Deterministic executable scripts configured via hook manifests (such as `hooks.json`) attached to agent lifecycle events (such as `PreToolUse` command inspection, `Stop` review-gate verification, and `UserPromptSubmit` context injection).
+- **Specialized agent roles and slash commands**: Pre-configured subagent personas (such as dedicated reviewers or researchers) and user-facing shortcut commands (`/command`).
+
+#### Comparison: Skills vs. MCP Servers & Tools vs. Plugins
+
+| Dimension | Skills (`SKILL.md`) | MCP Servers & Tools | Plugins (`plugin.json`) |
+|----|----|----|----|
+| **Primary purpose** | Procedural guidance & workflows | External tool execution & data access | Unified packaging & distribution |
+| **Execution model** | Progressively loaded on demand | Executed by agent harness over IPC | Discovered & loaded by agent platform |
+| **Dependencies** | Plain Markdown & scripts | Language runtimes (Node.js, Python, binaries) | Bundles skills, MCP configs, and hooks |
+| **Lifecycle control** | Passive context instructions | Dynamic tool calls during agent turn | Active deterministic hook gates |
+
+#### Managing token budget and context bloat
+
+A common hazard when adopting large community plugin bundles is context window saturation. When multiple plugins eagerly inject verbose instructions and exhaustive tool schemas into every turn, available context for actual code and reasoning shrinks.
+
+Effective plugin architectures mitigate this through several strategies:
+
+- **Lazy tool discovery**: Only core system tools load eagerly; specialized plugin tools declare schemas that load lazily on demand.
+- **On-demand skill activation**: Agents search skill catalogs dynamically when relevant keywords appear, rather than loading the entire skill directory into the initial system prompt.
+- **Prefix caching preservation**: Static plugin definitions are placed at the root of prompt structures so provider-level prompt caching remains undisturbed during multi-turn sessions.
+
+# 46 Multi-Agent Orchestration with Oh My OpenCode
+
+[`code-yeongyu/oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent) (originally published as **Oh My OpenCode** or `omo`, with community forks such as [`opensoft/oh-my-opencode`](https://github.com/opensoft/oh-my-opencode)) is an open-source multi-agent orchestration framework and plugin for AI coding agent harnesses (including OpenCode and OpenAI Codex CLI) (measured 2026-09-01). Inspired by modular terminal configuration frameworks (such as [Oh My Zsh](https://ohmyz.sh/)), it expands single-agent coding into a specialized multi-agent system with automated model routing and background task execution.
 
 #### Hub-and-spoke agent architecture
 
 Rather than relying on a single generalist agent to perform all research, design, coding, and review steps, Oh My OpenCode implements a hub-and-spoke delegation model with specialized agent personas:
 
-- **Sisyphus (Primary Orchestrator)**: Acts as the lead coordinator that breaks user requests into discrete work packages, delegates subtasks to specialized agents, and aggregates results into a coherent solution.
-- **Oracle (Strategic Advisor & Architect)**: Focuses on architectural planning, system design tradeoffs, and reviewing complex implementation strategies before code changes are made.
-- **Librarian (Research & Codebase Navigator)**: Conducts fast codebase exploration, documentation lookups, and dependency inspection to supply targeted context without bloating the orchestrator’s context window.
-- **Designer (UI/UX Specialist)**: Specializes in frontend component architecture, styling conventions, and interactive UI workflows.
+- **Sisyphus (Primary Orchestrator & Task Lead)**: Acts as the lead coordinator that breaks complex user requests into discrete work packages, delegates subtasks to specialized agents, and aggregates results into a coherent solution.
+- **Prometheus (Strategic Planner)**: Focuses on high-level strategic planning, work breakdown structures, and execution roadmap design before code modifications begin.
+- **Metis (Plan Consultant)**: Acts as a planning consultant that reviews proposed execution plans and collaborates with Prometheus to refine task boundaries.
+- **Oracle (Architecture & Debugging Consultant)**: Serves as a read-only architecture and deep debugging consultant, analyzing system design trade-offs and diagnosing subtle runtime failures.
+- **Librarian (Documentation & Code Search)**: Conducts targeted external documentation lookups and code search to supply focused context without bloating the orchestrator’s context window.
+- **Explore (Codebase Navigation & Fast Grep)**: Specializes in fast pattern searches, codebase navigation, and file structure discovery.
 
 #### Heterogeneous model routing
 
 A central capability of Oh My OpenCode is decoupling agent roles from a single model provider. Developers can route distinct tasks to the model family best suited for each workload:
 
-- **High-reasoning tiers** (such as Claude Sonnet or OpenAI reasoning models) for architectural planning and refactoring.
-- **High-throughput or large-context models** (such as Google Gemini) for extensive repository research and log analysis.
-- **Lightweight local or specialized models** (via Ollama or OpenRouter) for routine linting and documentation lookups.
+- **High-reasoning tiers** (such as Anthropic Claude Sonnet or Opus) for architectural planning and deep refactoring.
+- **High-throughput models** (such as OpenAI GPT models) for rapid code generation and unit testing.
+- **Large-context models** (such as Google Gemini) for extensive repository research and multi-file context indexing.
 
 #### Operational capabilities
 
@@ -3310,10 +3366,10 @@ A central capability of Oh My OpenCode is decoupling agent roles from a single m
 |----|----|----|
 | **Agent topology** | Single sequential agent loop | Hub-and-spoke multi-agent team |
 | **Model routing** | Single active model per session | Dynamic per-agent model assignment |
-| **Execution monitoring** | Standard terminal output | Background execution and tmux session multiplexing |
+| **Execution monitoring** | Standard terminal output | Interactive `tmux`-backed session management |
 | **Extensibility** | Individual plugins and MCPs | Curated bundle of tools, agents, and MCP integrations |
 
-# 45 Managing Gemini API Spend and Cost Optimization
+# 47 Managing Gemini API Spend and Cost Optimization
 
 This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.
 
