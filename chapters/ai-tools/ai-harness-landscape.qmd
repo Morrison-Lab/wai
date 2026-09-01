@@ -1,0 +1,160 @@
+@sec-ai-harnesses explains what a harness is,
+and @sec-ai-coding-agent-platforms lists the platforms the lab meets most often.
+This section is the wider map:
+which harnesses exist as of August 2026,
+how they group,
+and how to choose among them.
+
+::: {.callout-warning}
+#### A fast-moving, opinionated snapshot
+
+This section condenses a research summary compiled in August 2026
+([issue #95](https://github.com/Morrison-Lab/wai/issues/95)),
+which drew on vendor announcements, project repositories, and community discussion.
+Harness releases arrive weekly,
+default models changed several times during 2026,
+and the corporate landscape reshuffled more than once,
+so treat every named version, figure, and ownership claim as dated to that month.
+Check the linked project pages before acting on any of it.
+:::
+
+#### The organizing idea: agent = model + harness
+
+The consensus across the comparisons surveyed is that the frontier models have converged on the standard coding benchmarks,
+so the scaffolding around the model
+(the loop, the tools, memory, permissions, and context management)
+now does most of the differentiating.
+The commonly cited puzzle is that the same Claude model performs noticeably better inside Claude Code than inside a model-agnostic harness,
+and the answer offered is always the same word: the harness.
+
+Two consequences follow for reading the rest of this section:
+
+- **Benchmarks are saturating.**
+  Leading models cluster within about a point on SWE-bench Verified,
+  which is widely regarded as near its ceiling and exposed to training-data contamination.
+  Harder successors (SWE-bench Pro, Terminal-Bench 2.x) show much lower absolute scores and separate tools better,
+  but their figures are vendor-reported and version-specific.
+- **Your own tasks are the benchmark that matters.**
+  A day of real work on a repository you ship reveals more than any leaderboard,
+  which is why the recommendations below end in a pilot rather than a ranking.
+
+#### Terminal-first harnesses
+
+| Harness | License | Character (August 2026) |
+|---|---|---|
+| [Claude Code](https://code.claude.com/docs) (Anthropic) | Proprietary | The deepest programmable harness: hooks, skills, plugins, subagents, MCP, and multi-agent workflows. Widely rated first on code quality, and consistently the heaviest token spender, with real volume starting on the higher subscription tiers. |
+| [OpenAI Codex](https://github.com/openai/codex) | Apache 2.0 CLI; proprietary cloud | The reach leader: terminal, cloud, IDE, ChatGPT app, and browser surfaces. Strong on terminal benchmarks, sandboxed at the OS level, markedly more token-efficient than Claude Code, and now carrying skills, plugins, subagents, and a small hook system. |
+| [OpenCode](https://opencode.ai) | MIT | The most-starred open harness: model-agnostic across many providers including local models, client-server architecture with a headless server mode, custom agents, MCP, and `AGENTS.md`. Claude works only through an API key, not a subscription login. |
+| [Aider](https://aider.chat/) | Apache 2.0 | The git-native pioneer: maps the repository and commits each edit. Reported to be in maintenance mode since early 2026, still respected for auditability and local-model flexibility. |
+| [Goose](https://github.com/block/goose) (Block, now Linux Foundation) | Apache 2.0 | Rust terminal agent with vendor-neutral governance, many model providers and MCP extensions, parallel subagents, and Agent Client Protocol support. Local-first with no hosted option. |
+| [Gemini CLI](https://github.com/google-gemini/gemini-cli) (Google) | Apache 2.0 | Being folded into Antigravity CLI, with free individual access reported to end in mid-2026. |
+| [Amp](https://ampcode.com) | Proprietary | Deliberately optimizes for the best outcome regardless of token cost: multi-model routing, parallel subagents, and an "Oracle" deep-reasoning mode. Spun out of Sourcegraph. |
+
+: Terminal-first coding harnesses {#tbl-harness-landscape-terminal}
+
+#### Editor-integrated harnesses
+
+| Harness | License | Character (August 2026) |
+|---|---|---|
+| [Cursor](https://www.cursor.com/) | Proprietary | The in-editor leader: a VS Code fork with a deep agent loop, an in-house model tuned for fast agentic editing, and rules, MCP, hooks, skills, plugins, and subagents. Reads `.cursor`, `.claude/agents`, and `.codex/agents` configuration. |
+| [GitHub Copilot](https://github.com/features/copilot) | Proprietary | The most widely distributed option, multi-model, with a cloud agent that turns an issue into a pull request in an ephemeral Actions environment; framed by GitHub for low-to-medium complexity tasks in well-tested codebases. |
+| [Cline](https://github.com/cline/cline) | Apache 2.0 | The open-source VS Code standard: a plan-then-act workflow with human approval at each step, bring-your-own-key across many providers including local Ollama, and a Kanban surface for orchestrating parallel agents. The usual pick for audit-sensitive environments. |
+| [Google Antigravity](https://antigravity.google/) | Proprietary | Google's agent-first development platform, built around an agent manager surface and now the center of its coding strategy; early reception focused on rate limits. |
+| Devin Desktop (Cognition) | Proprietary | The former Windsurf editor, rebranded in mid-2026 with a local Devin agent, an agent command center, and Agent Client Protocol support. |
+| Continue, Tabnine, Kilo Code, Zed | Mixed | Specialists: Continue adds an open-source agent to an existing editor; Tabnine is the on-premises, air-gapped enterprise pick; Kilo Code carries on the Roo Code lineage after that project shut down; Zed is an open-source AI-native editor. |
+
+: Editor-integrated coding harnesses {#tbl-harness-landscape-editor}
+
+#### Autonomous and cloud harnesses
+
+- **Devin** (Cognition) is the archetype:
+  delegate a task, and parallel managed instances each run in an isolated cloud machine and open pull requests.
+  Early trials were poor, and the product has matured since.
+- **[OpenHands](https://github.com/All-Hands-AI/OpenHands)** (MIT) is the open-source autonomous leader,
+  running headless in CI to browse, edit, test, and retry.
+- **The cloud tiers of interactive tools**
+  (Copilot's cloud agent, Codex Cloud, Cursor's cloud agents)
+  share one design assumption:
+  the bottleneck is no longer what one agent can do,
+  but how many you can direct and review at once.
+  [When orchestration helps](agent-orchestration.qmd#sec-orch-when) covers when that parallelism is worth having.
+
+#### The minimalist counter-trend
+
+Against the deep-harness orthodoxy,
+a 2026 movement argues that frontier models already know what a coding agent is,
+so a harness should get out of the way.
+Its flagship is [Pi](https://github.com/badlogic/pi-mono) (MIT),
+built by Mario Zechner and championed by Armin Ronacher:
+four tools (read, bash, edit, write),
+a system prompt plus tool definitions under a thousand tokens,
+no MCP, plan mode, to-do list, or subagents,
+and extension by asking the agent to write its own TypeScript extensions.
+In its author's own Terminal-Bench 2.0 run it placed second,
+behind only the benchmark's minimal reference agent.
+
+The maximalist reply is that the extra tokens in a heavy harness encode product features
+(memory, scheduled tasks, subagents, plan mode, worktree support)
+rather than waste.
+Even the minimalists concede that task queues, orchestration, and durable sessions will matter more over time,
+so the two camps may converge.
+
+#### Open source versus proprietary
+
+- **Open source:** OpenCode, Codex CLI, Cline, Aider, OpenHands, Goose, Continue, Gemini CLI, Pi, and Zed.
+  You pay only your model provider, or run local models.
+- **Proprietary:** Claude Code, Cursor, GitHub Copilot, Devin, Amp, Antigravity, Replit Agent, and Tabnine.
+
+For raw capability the proprietary leaders still edge ahead,
+but the open options are competitive and win outright on cost, privacy, auditability, and model freedom.
+The 2026 signature of open-source use is bring-your-own-key,
+with one friction point worth knowing:
+Anthropic restricted third-party harnesses' use of flat-rate Claude subscriptions in April 2026,
+so Claude in an open harness means per-token billing
+(@sec-ai-claude-code-other-models covers the same rule from the Claude Code side).
+
+#### Local-model coding
+
+Local coding has matured to the point where the strongest open-weight models compete on the standard benchmarks.
+The community favorites for consumer hardware are the Qwen, Devstral, Gemma, and DeepSeek families,
+and the typical stack pairs OpenCode or Aider with a local OpenAI-compatible endpoint.
+@sec-ai-offline and @sec-ai-small-local-models cover the mechanics and the model choice.
+
+#### Beyond coding: general agent frameworks
+
+The general agent-framework layer settled into three tiers:
+
+- **Graph-based orchestration:** [LangGraph](https://github.com/langchain-ai/langgraph),
+  the production default for stateful, auditable, human-in-the-loop workflows, and Mastra for TypeScript.
+- **Role-based multi-agent:** [CrewAI](https://github.com/crewAIInc/crewAI),
+  and AutoGen, now merged with Semantic Kernel into the
+  [Microsoft Agent Framework](https://github.com/microsoft/agent-framework).
+- **Lab SDKs:** the OpenAI Agents SDK, Anthropic's Claude Agent SDK, and Google's ADK.
+
+MCP and the Agent-to-Agent protocol moved to Linux Foundation stewardship,
+and `AGENTS.md` and `SKILL.md` have become cross-tool standards in practice.
+The practitioner warning that recurs in production surveys is that most deployed agents are short-horizon and single-agent,
+and that multi-agent designs add real cost and debugging complexity,
+so the prevailing advice is to start single-agent.
+
+Browser-use agents are a fast-growing adjacent category,
+and they remain structurally vulnerable to indirect prompt injection;
+do not give one credentials or financial access without sandboxing and human checkpoints.
+
+#### Choosing
+
+| If you want | Reach for |
+|---|---|
+| Maximum code quality and programmable depth, and can absorb the token cost | Claude Code on a high-volume plan; drop to Codex or Cursor if the bill or the task mix does not justify it |
+| Cross-surface continuity, terminal tasks, and lower cost | Codex, the safest default on price for most teams |
+| To stay in the editor | Cursor, or Copilot if you are GitHub-native and want issue-to-pull-request automation |
+| Open source, self-hosting, local models, or auditability | Cline (editor, approval-gated), OpenCode (terminal, headless), or OpenHands (autonomous CI); Tabnine for air-gapped deployments |
+| Hands-off delegation of well-scoped backlog work | Devin or the cloud agents in Codex, Cursor, and Copilot, with humans still reviewing the pull requests |
+| Control, observability, and cheap parallel runs in a sandbox | Pi or Goose; stay with a heavier harness for long unattended runs |
+
+: Matching a harness to the job {#tbl-harness-landscape-choice}
+
+Then pilot two of them on a repository you actually ship.
+Token or usage-limit pain points toward Codex or an open bring-your-own-key harness;
+a need for audit trails points toward Cline or LangGraph;
+a need for private inference points toward OpenCode or Aider with a local model.
