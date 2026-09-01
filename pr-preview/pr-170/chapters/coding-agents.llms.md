@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 10:27:30 (PDT)
+Last modified: 2026-09-01 11:09:53 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3244,7 +3244,7 @@ The SDK embeds the compiled Antigravity runtime engine directly into Python appl
 
 - **Lifecycle management**: Agents are instantiated through `Agent` objects configured via `LocalAgentConfig`, managed within asynchronous Python context managers (`async with`).
 - **Autonomous agentic loop**: The underlying runtime drives multi-turn reasoning, streaming model responses, subagent spawning, and tool dispatch without requiring hand-rolled state machines.
-- **Binary distribution**: The Python package distributes pre-compiled native runtime binaries via wheels, ensuring consistent agent execution across Windows, macOS, and Linux environments.
+- **Binary distribution**: The Python package packages the native runtime binary, ensuring consistent agent execution across macOS and Linux environments.
 
 #### Extensibility and policy enforcement
 
@@ -3285,7 +3285,7 @@ A key challenge with dynamic prompt injection is preserving prompt caching effic
 
 # 44 Multi-Agent Orchestration with Oh My OpenCode
 
-[`code-yeongyu/oh-my-opencode`](https://github.com/code-yeongyu/oh-my-opencode) (often referenced as **Oh My OpenCode** or `omo`) is an open-source multi-agent orchestration framework and plugin for the OpenCode coding agent harness (measured 2026-09-01). Inspired by modular terminal configuration frameworks (such as Oh My Zsh), it expands single-agent coding into a specialized multi-agent system with automated model routing and background task execution.
+[`opensoft/oh-my-opencode`](https://github.com/opensoft/oh-my-opencode) (often referenced as **Oh My OpenCode** or `omo`) is an open-source multi-agent orchestration framework and plugin for the OpenCode coding agent harness (measured 2026-09-01). Inspired by modular terminal configuration frameworks (such as Oh My Zsh), it expands single-agent coding into a specialized multi-agent system with automated model routing and background task execution.
 
 #### Hub-and-spoke agent architecture
 
