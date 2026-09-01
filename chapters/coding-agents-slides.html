@@ -329,7 +329,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-09-01 13:06:56 (PDT)</p>
+  <p class="date">Last modified: 2026-09-01 13:54:49 (PDT)</p>
 </section><section class="slide level2"><p>We recommend working with <strong><a href="https://github.com/features/copilot/agents">AI coding agents</a></strong> to <a href="https://en.wikipedia.org/wiki/AI-assisted_software_development">help you code</a>.</p>
 </section><section><section id="sec-ai-language-model" class="title-slide slide level1 center" data-number="1"><h1>
 <span class="header-section-number">1</span> What Is a Language Model?</h1>
@@ -4390,8 +4390,78 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <strong>On-demand skill activation</strong>: Agents search skill catalogs dynamically when relevant keywords appear, rather than loading the entire skill directory into the initial system prompt.</li>
 <li>
 <strong>Prefix caching preservation</strong>: Static plugin definitions are placed at the root of prompt structures so provider-level prompt caching remains undisturbed during multi-turn sessions.</li>
-</ul></section></section><section><section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="47"><h1>
-<span class="header-section-number">47</span> Managing Gemini API Spend and Cost Optimization</h1>
+</ul></section></section><section><section id="sec-ai-oh-my-opencode" class="title-slide slide level1 center" data-number="47"><h1>
+<span class="header-section-number">47</span> Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent</h1>
+
+</section><section class="slide level2"><p><a href="https://github.com/code-yeongyu/oh-my-openagent"><code>code-yeongyu/oh-my-openagent</code></a> (originally published as <strong>Oh My OpenCode</strong> or <code>omo</code>, with community forks such as <a href="https://github.com/opensoft/oh-my-opencode"><code>opensoft/oh-my-opencode</code></a>) is an open-source multi-agent orchestration framework and plugin for AI coding agent harnesses (including OpenCode and OpenAI Codex CLI) with over 65,000 GitHub stars (measured 2026-09-01). Inspired by modular terminal configuration frameworks (such as <a href="https://ohmyz.sh/">Oh My Zsh</a>), it expands single-agent coding into a specialized multi-agent system with automated model routing and background task execution.</p>
+<h4 id="hub-and-spoke-agent-architecture">Hub-and-spoke agent architecture</h4>
+<p>Rather than relying on a single generalist agent to perform all research, design, coding, and review steps, the framework implements a hub-and-spoke delegation model with specialized agent personas:</p>
+<ul>
+<li>
+<strong>Sisyphus (Primary Orchestrator &amp; Task Lead)</strong>: Acts as the lead coordinator that breaks complex user requests into discrete work packages, delegates subtasks to specialized agents, and aggregates results into a coherent solution.</li>
+<li>
+<strong>Prometheus (Strategic Planner)</strong>: Interviews the user to clarify scope and ambiguities, formulating detailed implementation plans before code modifications begin.</li>
+<li>
+<strong>Metis (Pre-Planning Gap Analyzer)</strong>: Conducts pre-planning analysis alongside Prometheus to identify hidden requirements, ambiguities, and potential failure points before plans are finalized.</li>
+<li>
+<strong>Momus (Plan Reviewer)</strong>: Validates proposed execution plans against clarity, verification, and context criteria before execution.</li>
+<li>
+<strong>Atlas (Plan Executor)</strong>: Executes approved Prometheus plans step-by-step, managing task progress and session continuity across execution sessions.</li>
+<li>
+<strong>Hephaestus (Autonomous Deep Worker)</strong>: Specializes in autonomous architectural refactoring and complex multi-file debugging.</li>
+<li>
+<strong>Oracle (Architecture &amp; Debugging Consultant)</strong>: Serves as a read-only architecture and deep debugging consultant, analyzing system design trade-offs and diagnosing subtle runtime failures.</li>
+<li>
+<strong>Librarian (Documentation &amp; Code Search)</strong>: Conducts targeted external documentation lookups and code search to supply focused context without bloating the orchestrator’s context window.</li>
+<li>
+<strong>Explore (Codebase Navigation &amp; Fast Grep)</strong>: Specializes in fast pattern searches, codebase navigation, and file structure discovery.</li>
+</ul>
+<h4 id="heterogeneous-model-routing">Heterogeneous model routing</h4>
+<p>A central capability of the framework is decoupling agent roles from a single model provider. Developers can route distinct tasks to the model family best suited for each workload:</p>
+<ul>
+<li>
+<strong>High-reasoning tiers</strong> (such as Anthropic Claude Sonnet or Opus) for architectural planning and deep refactoring.</li>
+<li>
+<strong>High-throughput models</strong> (such as OpenAI GPT models) for rapid code generation and unit testing.</li>
+<li>
+<strong>Large-context models</strong> (such as Google Gemini) for extensive repository research and multi-file context indexing.</li>
+</ul>
+<h4 id="operational-capabilities">Operational capabilities</h4>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead><tr class="header">
+<th>Dimension</th>
+<th>Standard OpenCode</th>
+<th>Oh My OpenCode / Oh My OpenAgent</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><strong>Agent topology</strong></td>
+<td>Single sequential agent loop</td>
+<td>Hub-and-spoke multi-agent team</td>
+</tr>
+<tr class="even">
+<td><strong>Model routing</strong></td>
+<td>Single active model per session</td>
+<td>Dynamic per-agent model assignment</td>
+</tr>
+<tr class="odd">
+<td><strong>Execution monitoring</strong></td>
+<td>Standard terminal output</td>
+<td>Interactive <code>tmux</code>-backed session management</td>
+</tr>
+<tr class="even">
+<td><strong>Extensibility</strong></td>
+<td>Individual plugins and MCPs</td>
+<td>Curated bundle of tools, agents, and MCP integrations</td>
+</tr>
+</tbody>
+</table></section></section><section><section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="48"><h1>
+<span class="header-section-number">48</span> Managing Gemini API Spend and Cost Optimization</h1>
 
 </section><section class="slide level2 scrollable"><p>This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.</p>
 <h4 id="identifying-paused-projects-project-numbers-vs.-friendly-names">Identifying Paused Projects (Project Numbers vs.&nbsp;Friendly Names)</h4>

@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 13:06:56 (PDT)
+Last modified: 2026-09-01 13:54:49 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3425,7 +3425,42 @@ Effective plugin architectures mitigate this through several strategies:
 - **On-demand skill activation**: Agents search skill catalogs dynamically when relevant keywords appear, rather than loading the entire skill directory into the initial system prompt.
 - **Prefix caching preservation**: Static plugin definitions are placed at the root of prompt structures so provider-level prompt caching remains undisturbed during multi-turn sessions.
 
-# 47 Managing Gemini API Spend and Cost Optimization
+# 47 Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent
+
+[`code-yeongyu/oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent) (originally published as **Oh My OpenCode** or `omo`, with community forks such as [`opensoft/oh-my-opencode`](https://github.com/opensoft/oh-my-opencode)) is an open-source multi-agent orchestration framework and plugin for AI coding agent harnesses (including OpenCode and OpenAI Codex CLI) with over 65,000 GitHub stars (measured 2026-09-01). Inspired by modular terminal configuration frameworks (such as [Oh My Zsh](https://ohmyz.sh/)), it expands single-agent coding into a specialized multi-agent system with automated model routing and background task execution.
+
+#### Hub-and-spoke agent architecture
+
+Rather than relying on a single generalist agent to perform all research, design, coding, and review steps, the framework implements a hub-and-spoke delegation model with specialized agent personas:
+
+- **Sisyphus (Primary Orchestrator & Task Lead)**: Acts as the lead coordinator that breaks complex user requests into discrete work packages, delegates subtasks to specialized agents, and aggregates results into a coherent solution.
+- **Prometheus (Strategic Planner)**: Interviews the user to clarify scope and ambiguities, formulating detailed implementation plans before code modifications begin.
+- **Metis (Pre-Planning Gap Analyzer)**: Conducts pre-planning analysis alongside Prometheus to identify hidden requirements, ambiguities, and potential failure points before plans are finalized.
+- **Momus (Plan Reviewer)**: Validates proposed execution plans against clarity, verification, and context criteria before execution.
+- **Atlas (Plan Executor)**: Executes approved Prometheus plans step-by-step, managing task progress and session continuity across execution sessions.
+- **Hephaestus (Autonomous Deep Worker)**: Specializes in autonomous architectural refactoring and complex multi-file debugging.
+- **Oracle (Architecture & Debugging Consultant)**: Serves as a read-only architecture and deep debugging consultant, analyzing system design trade-offs and diagnosing subtle runtime failures.
+- **Librarian (Documentation & Code Search)**: Conducts targeted external documentation lookups and code search to supply focused context without bloating the orchestrator’s context window.
+- **Explore (Codebase Navigation & Fast Grep)**: Specializes in fast pattern searches, codebase navigation, and file structure discovery.
+
+#### Heterogeneous model routing
+
+A central capability of the framework is decoupling agent roles from a single model provider. Developers can route distinct tasks to the model family best suited for each workload:
+
+- **High-reasoning tiers** (such as Anthropic Claude Sonnet or Opus) for architectural planning and deep refactoring.
+- **High-throughput models** (such as OpenAI GPT models) for rapid code generation and unit testing.
+- **Large-context models** (such as Google Gemini) for extensive repository research and multi-file context indexing.
+
+#### Operational capabilities
+
+| Dimension | Standard OpenCode | Oh My OpenCode / Oh My OpenAgent |
+|----|----|----|
+| **Agent topology** | Single sequential agent loop | Hub-and-spoke multi-agent team |
+| **Model routing** | Single active model per session | Dynamic per-agent model assignment |
+| **Execution monitoring** | Standard terminal output | Interactive `tmux`-backed session management |
+| **Extensibility** | Individual plugins and MCPs | Curated bundle of tools, agents, and MCP integrations |
+
+# 48 Managing Gemini API Spend and Cost Optimization
 
 This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.
 
