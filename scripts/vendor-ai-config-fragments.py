@@ -29,6 +29,7 @@ applied to its prose (never to code spans or fenced blocks):
 from __future__ import annotations
 
 import json
+import os
 import posixpath
 import re
 import sys
@@ -46,12 +47,17 @@ INCLUDE = re.compile(r"\{\{<\s*include\s+\.\./shared/workflow/([\w.-]+\.md)\s*>\
 # A Markdown link target that is neither absolute, an anchor, nor a mailto,
 # with an optional "title" after it.
 RELATIVE_LINK = re.compile(r'\]\((?!https?://|#|mailto:)([^)\s]+)((?:\s+"[^"]*")?)\)')
-# An inline code span (any backtick run, possibly wrapping across lines).
-CODE_SPAN = re.compile(r"`+[^`]*`+")
-# A bare @mention such as "@claude" in prose, which Pandoc reads as a citation.
-MENTION = re.compile(r"(?<![\w`\\])@(?=[A-Za-z])")
+# An inline code span: a backtick run closed by a run of the same length,
+# possibly wrapping across lines, so a double-backtick span may contain a
+# single backtick.
+CODE_SPAN = re.compile(r"(`+)(?:(?!\1)[\s\S])*?\1")
+# A bare @mention such as "@claude" in prose, which Pandoc reads as a citation
+# (GitHub logins may start with a digit).
+MENTION = re.compile(r"(?<![\w`\\])@(?=[A-Za-z0-9])")
 # A fenced-block delimiter; four or more leading spaces make an indented block.
-FENCE = re.compile(r"^ {0,3}(```|~~~)")
+# A block closes only on a run of the same character at least as long as the
+# run that opened it.
+FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
 ASCII_PUNCTUATION = {
     "—": "---",
     "–": "--",
@@ -64,7 +70,12 @@ ASCII_PUNCTUATION = {
 
 
 def fetch(url: str) -> bytes:
-    with urllib.request.urlopen(url, timeout=60) as response:
+    """Fetch a URL, sending GITHUB_TOKEN when set to lift the anonymous rate limit."""
+    request = urllib.request.Request(url)
+    token = os.environ.get("GITHUB_TOKEN")
+    if token:
+        request.add_header("Authorization", f"Bearer {token}")
+    with urllib.request.urlopen(request, timeout=60) as response:
         return response.read()
 
 
@@ -84,7 +95,7 @@ def map_prose(text: str, transform: Callable[[str], str]) -> str:
     """Apply ``transform`` to prose only, leaving fenced blocks and code spans intact."""
     out: list[str] = []
     chunk: list[str] = []
-    in_fence = False
+    opener = ""
 
     def flush() -> None:
         joined = "\n".join(chunk)
@@ -99,15 +110,15 @@ def map_prose(text: str, transform: Callable[[str], str]) -> str:
         chunk.clear()
 
     for line in text.split("\n"):
-        if FENCE.match(line):
-            if in_fence:
-                out.append(line)
-            else:
-                flush()
-                out.append(line)
-            in_fence = not in_fence
-        elif in_fence:
+        fence = FENCE.match(line)
+        if opener:
             out.append(line)
+            if fence and fence.group(1)[0] == opener[0] and len(fence.group(1)) >= len(opener):
+                opener = ""
+        elif fence:
+            flush()
+            out.append(line)
+            opener = fence.group(1)
         else:
             chunk.append(line)
     flush()
