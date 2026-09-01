@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-31 22:03:08 (PDT)
+Last modified: 2026-09-01 09:33:04 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3263,26 +3263,26 @@ Developers can customize agent behavior and enforce safety policies:
 | **Tool definitions** | In-process Python callables & MCP | JSON manifests, plugins, and CLI scripts |
 | **Runtime engine** | Embedded native binary | Managed local service |
 
-# 43 Context-Driven Development with Conductor
+# 43 Spec-Driven Development with Conductor
 
-[`gemini-cli-extensions/conductor`](https://github.com/gemini-cli-extensions/conductor) is an open-source extension for the Gemini CLI and Google Antigravity that implements **Context-Driven Development (CDD)** (measured 2026-08-31). Rather than relying on conversational chat history that degrades over extended sessions, Conductor anchors agent behavior in structured, version-controlled Markdown artifacts stored directly in the repository.
+[`gemini-cli-extensions/conductor`](https://github.com/gemini-cli-extensions/conductor) is an open-source extension for the Gemini CLI and Google Antigravity that implements **Spec-Driven Development** (measured 2026-08-31). Rather than relying on conversational chat history that degrades over extended sessions, Conductor anchors agent behavior in structured, version-controlled Markdown artifacts stored directly in the repository.
 
 #### Core workflow phases
 
 Conductor structures development into four distinct, sequential phases:
 
-- **Context establishment (`/conductor:setup`)**: Interactively initializes baseline project documentation (including product goals, technical stack choices, and testing guidelines), giving coding agents persistent reference material across subsequent sessions.
-- **Specification and track planning (`/conductor:newTrack`)**: Transforms feature requests or bug fixes into a dedicated track containing a `spec.md` (functional scope and acceptance criteria) and a `plan.md` (ordered implementation phases broken into verifiable task checklists).
-- **Phased implementation (`/conductor:implement`)**: Guides the agent through the active track’s plan sequentially, executing file edits, running local test suites, and marking tasks complete as acceptance criteria are met.
-- **Track review and plan compliance (`/conductor:review`)**: Conducts an adversarial verification pass against the original track specification, ensuring that all declared acceptance criteria are satisfied and no architectural drift occurred during execution.
+- **Context establishment (`/conductor:conductor-setup`)**: Interactively initializes baseline project documentation (including product goals, technical stack choices, and testing guidelines), giving coding agents persistent reference material across subsequent sessions.
+- **Specification and track planning (`/conductor:conductor-new-track`)**: Transforms feature requests or bug fixes into a dedicated track containing a `spec.md` (functional scope and acceptance criteria) and a `plan.md` (ordered implementation phases broken into verifiable task checklists).
+- **Phased implementation (`/conductor:conductor-implement`)**: Guides the agent through the active track’s plan sequentially, executing file edits, running local test suites, and marking tasks complete as acceptance criteria are met.
+- **Track review and plan compliance (`/conductor:conductor-review`)**: Conducts an adversarial verification pass against the original track specification, ensuring that all declared acceptance criteria are satisfied and no architectural drift occurred during execution.
 
-#### Architectural benefits of Context-Driven Development
+#### Architectural benefits of Spec-Driven Development
 
-| Dimension | Conversational Prompting | Context-Driven Development (Conductor) |
+| Dimension | Conversational Prompting | Spec-Driven Development (Conductor) |
 |----|----|----|
 | **Context persistence** | Volatile in-memory chat buffer | Version-controlled Markdown artifacts |
 | **Task boundaries** | Ad-hoc user instructions per turn | Structured `spec.md` and `plan.md` checklists |
-| **Verification loop** | Manual spot-checking | Milestone-level automated tests and `/conductor:review` |
+| **Verification loop** | Manual spot-checking | Milestone-level automated tests and `/conductor:conductor-review` |
 | **Handoff & resumption** | Requires re-prompting or context replay | Any agent resumes from the checked-in track state |
 
 # 44 Managing Gemini API Spend and Cost Optimization
