@@ -331,7 +331,8 @@ The report names three levers:
 - implement with cheaper ones
 - keep the scope to what can realistically ship
 
-The reported total was roughly $200 in project-specific subscriptions over the four months,
+The reported total was roughly $200
+in project-specific subscriptions over the four months,
 on top of a general-purpose subscription the author already held.
 The lab's machine-facing configuration,
 [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config),

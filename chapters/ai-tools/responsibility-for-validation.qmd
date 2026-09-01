@@ -33,7 +33,8 @@ Players reported:
 - an accelerator with no consequences
 
 Every one of those defects looks correct to the person who built it,
-because the builder reads the underlying state in their own head and sees the display agree with it.
+because the builder reads the underlying state in their own head
+and sees the display agree with it.
 They surface only on contact with someone who has nothing but the display.
 Neither the report nor its thread mentions any automated verification.
 That is the answer to "why bother instrumenting checks when the thing looks fine":
