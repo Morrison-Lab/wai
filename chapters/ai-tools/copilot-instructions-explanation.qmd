@@ -25,5 +25,5 @@ across all contributions,
 whether made by humans or AI assistants.
 
 See this repository's own
-[`.github/copilot-instructions.md`](https://github.com/d-morrison/wai/blob/main/.github/copilot-instructions.md)
+[`.github/copilot-instructions.md`](https://github.com/Morrison-Lab/wai/blob/main/.github/copilot-instructions.md)
 for a working example.

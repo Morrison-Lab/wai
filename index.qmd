@@ -68,7 +68,7 @@ The notes are available in multiple formats:
 ## About this website
 
 This website is built with [Quarto](https://quarto.org/), an open-source scientific and technical publishing system, from the
-[UCD-SERG `qwt` (Quarto Website Template)](https://github.com/UCD-SERG/qwt).
+[UCD-SERG `qwt` (Quarto Website Template)](https://github.com/Morrison-Lab/qwt).
 
 ## Building the website
 
@@ -88,10 +88,9 @@ The rendered output will be in the `_site/` directory, which is published to Git
 
 ## License
 
-See [`LICENSE`](https://github.com/d-morrison/wai/blob/main/LICENSE).
+See [`LICENSE`](https://github.com/Morrison-Lab/wai/blob/main/LICENSE).
 
 ## References {.unnumbered}
 
 ::: {#refs}
 :::
-

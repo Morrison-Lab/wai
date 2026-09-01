@@ -39,4 +39,9 @@ exclude = [
   # it is not a browsable web page and is not expected to return 200 to an
   # unauthenticated GET.
   "https://mcp.granola.ai/mcp.*",
+  # OpenRouter authenticated dashboard links and Ollama install script redirect
+  "https://openrouter.ai/settings/.*",
+  "https://openrouter.ai/credits",
+  "https://openrouter.ai/workspaces/.*",
+  "https://ollama.com/install.sh",
 ]

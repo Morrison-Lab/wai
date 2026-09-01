@@ -28,7 +28,7 @@ but must contain a single job named `copilot-setup-steps`.
 #### Basic Configuration Example
 
 See this repository's own
-[`.github/workflows/copilot-setup-steps.yml`](https://github.com/d-morrison/wai/blob/main/.github/workflows/copilot-setup-steps.yml)
+[`.github/workflows/copilot-setup-steps.yml`](https://github.com/Morrison-Lab/wai/blob/main/.github/workflows/copilot-setup-steps.yml)
 for a configuration adapted for R and Quarto projects.
 
 #### Using `actions/checkout`
