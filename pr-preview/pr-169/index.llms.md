@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 09:33:56 (PDT)
+Last modified: 2026-09-01 10:24:45 (PDT)
 
 This site collects the UCD-SERG lab’s notes on working responsibly and effectively with AI coding assistants: what they are, how to use them, and the policies lab members follow when using them. It was migrated out of the [UCD-SERG Lab Manual](https://ucd-serg.github.io/lab-manual/)’s “Working with AI” chapter, which had grown large enough to deserve a dedicated site. For the lab’s broader coding, reproducibility, and collaboration conventions, see the lab manual itself.
 
@@ -32,7 +32,7 @@ The notes are available in multiple formats:
 
 ## 2 About this website
 
-This website is built with [Quarto](https://quarto.org/), an open-source scientific and technical publishing system, from the [UCD-SERG `qwt` (Quarto Website Template)](https://github.com/UCD-SERG/qwt).
+This website is built with [Quarto](https://quarto.org/), an open-source scientific and technical publishing system, from the [UCD-SERG `qwt` (Quarto Website Template)](https://github.com/Morrison-Lab/qwt).
 
 ## 3 Building the website
 
@@ -52,7 +52,7 @@ The rendered output will be in the `_site/` directory, which is published to Git
 
 ## 4 License
 
-See [`LICENSE`](https://github.com/d-morrison/wai/blob/main/LICENSE).
+See [`LICENSE`](https://github.com/Morrison-Lab/wai/blob/main/LICENSE).
 
 ## References
 
