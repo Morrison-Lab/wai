@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-31 18:19:50 (PDT)
+Last modified: 2026-08-31 20:06:06 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -2965,7 +2965,7 @@ An agent session represents a stateful stream of interaction between a developer
 VS Code provides unified session discovery and access across editor surfaces:
 
 - **Shared surfaces**: The primary Chat view and the dedicated Agents window share the same sessions, allowing developers to switch views without losing conversational context.
-- **External session discovery**: VS Code discovers sessions initiated outside the primary GUI, including command-line agent runs and background tasks.
+- **External session discovery**: VS Code discovers sessions initiated outside the primary GUI, including CLI agent sessions (such as Copilot CLI, Claude Code, and Codex).
 - **Cloud synchronization**: Synced sessions are backed up to your GitHub account, enabling developers to access active and past sessions across devices.
 
 #### Session handoff types
@@ -2974,7 +2974,7 @@ Session handoff transfers context and intent from an active session to a special
 
 - **Harness to harness**: Switch the active session between different agent harnesses to leverage distinct agent runtime capabilities on the same task.
 - **Plan to implementation**: Hand off a high-level architectural plan or task specification directly to an implementation session to generate code.
-- **Continue in the cloud**: Hand off a local session to run in a cloud-hosted agent environment, freeing local editor resources while the agent executes in the background.
+- **Continue in the cloud**: Hand off a local session to run in a cloud-hosted agent environment (such as background tasks leading to pull requests), freeing local editor resources while the agent executes in the background.
 
 # 40 Installing Claude Code on Windows
 
