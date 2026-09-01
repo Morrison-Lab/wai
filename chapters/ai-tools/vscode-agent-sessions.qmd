@@ -1,0 +1,49 @@
+In Visual Studio Code, interactions with AI coding assistants are structured around
+[Agent Sessions and Handoff](https://code.visualstudio.com/docs/agents/concepts/sessions)
+(measured 2026-08-31).
+Understanding how sessions preserve context and transfer state is essential
+when managing long-running or multi-agent workflows.
+
+#### Anatomy of an agent session
+
+An agent session represents a continuous, stateful unit of work between a developer and an agent.
+Each session maintains:
+
+- **Conversation history**:
+  User prompts, intermediate assistant reasoning, and structured responses.
+- **Working context**:
+  Referenced workspace files, symbol definitions, open editor tabs, and terminal selections.
+- **Tool permissions and executions**:
+  Decisions made during file edits, command execution requests, and MCP tool invocations.
+- **Configuration state**:
+  Selected model tier, temperature, and active project instructions (such as `.github/copilot-instructions.md`).
+
+#### Multi-session management
+
+Rather than funneling all tasks through a single linear chat buffer,
+VS Code supports running and managing multiple concurrent sessions:
+
+- **Surface flexibility**:
+  Sessions can run inside the primary Chat view, secondary side panels,
+  or a dedicated multi-session Agents window.
+- **Task isolation**:
+  Developers can isolate concurrent tasks---such as investigating a bug in one session
+  while drafting unit tests in another---preventing context pollution between unrelated tasks.
+- **Persistence and resumption**:
+  Sessions remain persisted across IDE restarts,
+  allowing developers to review past decisions or resume interrupted tasks.
+
+#### Session handoff across surfaces and agents
+
+Session handoff provides the mechanism to transfer in-flight context and intent
+without re-prompting or copying past history manually:
+
+- **Local to remote handoff**:
+  Transfer a local in-editor session to a background task agent,
+  a cloud environment, or a remote container.
+- **Agent-to-agent delegation**:
+  Hand off a high-level task from an orchestrator agent
+  to a specialized subagent (such as a test runner or code reviewer)
+  with task boundaries and relevant context pre-populated.
+- **Workspace handoff**:
+  Migrate session state across workspace boundaries when refactoring spans multiple repositories.
