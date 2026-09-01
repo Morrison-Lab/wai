@@ -2,7 +2,8 @@ name: Check Non-Standard Characters
 
 # Thin caller for the shared reusable workflow in Morrison-Lab/gha.
 # The reusable workflow (and its bundled composite) reproduce the previous
-# standalone behavior: detect curly quotes / en/em dashes in .qmd and .R files.
+# standalone behavior: detect curly quotes / en/em dashes in .qmd, .R, and
+# .md files (gha's default `extensions`; the vendored shared/ copies count).
 # See https://github.com/Morrison-Lab/gha for inputs and versioning.
 
 on:
