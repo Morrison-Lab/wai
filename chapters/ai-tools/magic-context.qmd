@@ -1,0 +1,36 @@
+[`cortexkit/magic-context`](https://github.com/cortexkit/magic-context)
+is an open-source self-managing memory engine
+designed to provide unbounded context for AI coding agents
+(measured 2026-08-31).
+It operates as a background memory subsystem---often described as a "hippocampus for coding agents"---that extracts,
+consolidates, and retrieves long-term repository state without pausing the active coding turn.
+
+#### Core architecture and agent roles
+
+Rather than requiring the primary coding agent to interrupt its execution to prune conversation buffers,
+`magic-context` delegates memory lifecycle operations to specialized background workers:
+
+- **The Historian**:
+  Runs background context compaction on completed turns,
+  compressing verbose tool outputs and dialog history while preserving architectural decisions and code rationale.
+- **The Dreamer**:
+  Executes periodic consolidation passes to deduplicate memory records across multiple sessions,
+  distilling recurring observations into canonical project facts and persistent guidelines.
+- **The Sidekick**:
+  Acts as an on-demand retrieval companion that augments active prompts with relevant project context,
+  supplying historical context matched to the current file or task.
+
+#### Cache-aware memory management
+
+A key challenge with dynamic prompt injection is preserving prompt caching efficiency.
+`magic-context` addresses this through cache-conscious orchestration:
+
+- **Prefix preservation**:
+  Static system prompts and canonical project facts are positioned at the head of the context buffer,
+  allowing providers' prompt caching mechanisms to cache stable instructions across turns.
+- **Deferred background extraction**:
+  Memory analysis and summarization tasks are deferred to idle windows or subagent threads,
+  preventing token churn and latency spikes during high-tempo coding loops.
+- **Cross-session persistence**:
+  Extracted knowledge persists in lightweight local stores across IDE restarts,
+  enabling coding agents to resume work with full institutional memory of past decisions.
