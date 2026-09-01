@@ -90,7 +90,7 @@ a system prompt plus tool definitions under a thousand tokens,
 no MCP, plan mode, to-do list, or subagents,
 and extension by asking the agent to write its own TypeScript extensions.
 In its author's own Terminal-Bench 2.0 run
-([December 2025, on Claude Opus 4.5](https://mariozechner.at/posts/2025-11-30-pi-coding-agent/))
+([post dated 2025-11-30, on Claude Opus 4.5](https://mariozechner.at/posts/2025-11-30-pi-coding-agent/))
 it placed eighth,
 which its author read as evidence that a minimal harness competes with the heavy ones.
 
