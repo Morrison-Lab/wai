@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 09:33:04 (PDT)
+Last modified: 2026-09-01 10:27:50 (PDT)
 
 Coding agents edit a checkout and return a branch or pull request ([coding-agent platforms](../chapters/coding-agents.llms.md#sec-ai-coding-agent-platforms)). *Grok Bot-style* products are a different shape: a named, persistent teammate with its own computer, so it can click through apps and websites the way a person would and keep going after you close your laptop. This chapter reviews [Grok Bot](https://docs.x.ai/grok-bot/overview) and the alternatives we could verify from primary sources, including [Rakazo](https://github.com/elie222/rakazo).
 
@@ -123,7 +123,7 @@ This is not a Grok Bot clone. There is no vendor cloud VM per teammate. The Gate
 
 # 6 Claude Cowork
 
-[Claude Cowork](https://claude.com/docs/cowork/overview) ([Anthropic 2026](#ref-claude_cowork)) uses the same agentic architecture as Claude Code, inside Claude Desktop (with web and mobile access described as rolling out). You describe an outcome; Claude works across local files and connected tools and returns documents, spreadsheets, or organized folders. [Claude in Chrome](https://claude.com/chrome) is the browser path. Sub-agents split parallel workstreams.
+[Claude Cowork](https://claude.com/docs/cowork/overview) ([Anthropic 2026](#ref-claude_cowork)) uses the same agentic architecture as Claude Code, inside Claude Desktop (with web and mobile access described as rolling out). You describe an outcome; Claude works across local files and connected tools and returns documents, spreadsheets, or organized folders. [Claude in Chrome](https://claude.com/claude-in-chrome) is the browser path. Sub-agents split parallel workstreams.
 
 Cowork is on paid Claude plans. Connectors, skills, and plugins load from **Customize** on the claude.ai account at session start. Cowork **does not read** the Claude Code CLI’s `~/.claude` directory. A skill that exists only in the lab’s symlink install must be added again under Customize ([Anthropic 2026](#ref-claude_cowork)).
 

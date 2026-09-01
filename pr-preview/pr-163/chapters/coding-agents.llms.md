@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 09:33:04 (PDT)
+Last modified: 2026-09-01 10:27:50 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -212,7 +212,7 @@ Because most production coding-agent harnesses are closed source, the clearest w
 
 - **[aider](https://github.com/Aider-AI/aider)** — an open-source AI pair-programming CLI.
 - **[SWE-agent](https://github.com/SWE-agent/SWE-agent)** — a research coding-agent harness from Princeton NLP, described in its associated paper.
-- **[OpenHands](https://github.com/All-Hands-AI/OpenHands)** (formerly OpenDevin) — a general-purpose open-source agent platform.
+- **[OpenHands](https://github.com/OpenHands/OpenHands)** (formerly OpenDevin) — a general-purpose open-source agent platform.
 
 Their orchestration code runs to thousands of lines, because that is where the real engineering lives: retries, streaming, permission checks, and state management. A single *agent definition* running on top of that engine, by contrast, is typically tens of lines (see [Section 6](#sec-ai-harness-construction)).
 
@@ -1040,7 +1040,7 @@ This can improve results on multi-step changes, but on a machine without a stron
 
 #### Connecting Claude Code to Ollama
 
-Ollama also serves an **Anthropic-compatible** endpoint at `/v1/messages`, alongside the OpenAI-compatible one used above. Any client that speaks the Anthropic API can therefore be pointed at a local model, including [Claude Code](https://claude.com/claude-code) itself, with no proxy in between. Check that the endpoint answers before wiring anything to it:
+Ollama also serves an **Anthropic-compatible** endpoint at `/v1/messages`, alongside the OpenAI-compatible one used above. Any client that speaks the Anthropic API can therefore be pointed at a local model, including [Claude Code](https://claude.com/product/claude-code) itself, with no proxy in between. Check that the endpoint answers before wiring anything to it:
 
 ``` bash
 curl -s http://localhost:11434/v1/messages -H 'content-type: application/json' \
@@ -1512,7 +1512,7 @@ A local model’s non-idiomatic R or Julia, noted in the stack-specific table ab
 - **Retrieval**, giving the model your own package’s existing R or Julia code as context so it has concrete idiom to imitate.
 - **Prompting**, stating the conventions directly — this repository’s own `CLAUDE.md` and `.github/copilot-instructions.md` are examples of exactly that.
 
-When those are not enough, **LoRA** (Low-Rank Adaptation) and its 4-bit variant **QLoRA** are the standard way to close an idiom gap without retraining a whole model. Both freeze the pretrained weights and train a small set of additional low-rank matrices on top, which cuts the trainable parameter count by orders of magnitude compared to full fine-tuning ([Hu et al. 2021](#ref-lora)). QLoRA adds 4-bit quantization of the frozen weights on top of that, which is what actually shrinks the memory footprint enough to fine-tune a mid-sized model on a single consumer GPU ([Dettmers et al. 2023](#ref-qlora)). [Hugging Face’s PEFT library](https://huggingface.co/docs/peft) is the common tooling entry point; the specifics of running it against this lab’s own repositories belong in `ai-config`, not here.
+When those are not enough, **LoRA** (Low-Rank Adaptation) and its 4-bit variant **QLoRA** are the standard way to close an idiom gap without retraining a whole model. Both freeze the pretrained weights and train a small set of additional low-rank matrices on top, which cuts the trainable parameter count by orders of magnitude compared to full fine-tuning ([Hu et al. 2021](#ref-lora)). QLoRA adds 4-bit quantization of the frozen weights on top of that, which is what actually shrinks the memory footprint enough to fine-tune a mid-sized model on a single consumer GPU ([Dettmers et al. 2023](#ref-qlora)). [Hugging Face’s PEFT library](https://huggingface.co/docs/peft/index) is the common tooling entry point; the specifics of running it against this lab’s own repositories belong in `ai-config`, not here.
 
 Whatever you fine-tune on, keep a held-out evaluation set of real tasks from your own codebase that the training data never touched, and re-check it after every fine-tuning run — a model that has memorized its training examples will look better on paper than it performs on the next genuinely new task.
 
@@ -2043,7 +2043,7 @@ The workflow file must be located at `.github/workflows/copilot-setup-steps.yml`
 
 #### Basic Configuration Example
 
-See this repository’s own [`.github/workflows/copilot-setup-steps.yml`](https://github.com/d-morrison/wai/blob/main/.github/workflows/copilot-setup-steps.yml) for a configuration adapted for R and Quarto projects.
+See this repository’s own [`.github/workflows/copilot-setup-steps.yml`](https://github.com/Morrison-Lab/wai/blob/main/.github/workflows/copilot-setup-steps.yml) for a configuration adapted for R and Quarto projects.
 
 #### Using `actions/checkout`
 
@@ -2252,7 +2252,7 @@ The agent reads the touched code first and is lazy about the solution, never abo
 
 [Contextify](https://contextify.sh/) keeps your Claude Code and Codex history forever in a private, searchable timeline. Claude Code deletes history after 30 days; Contextify watches both tools, summarizes each message (on-device via Apple Intelligence on macOS 26, or Lite Mode on macOS 15), and lets you search every conversation you ever had. It runs local-first with no account required, and optionally syncs across devices via Cloud Sync or a self-hosted instance you operate. The ambient timeline lets you follow sessions in real time or skim what happened while you were away.
 
-The lab’s portable agent config lives in [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config) (the same repository as [`d-morrison/ai-config`](https://github.com/d-morrison/ai-config)). It is a plugin-or-symlink install of skills, hooks, and memories — not a third marketplace next to SemBr. How that config actually reaches a machine, and how a doubled plugin install fails, is [Section 27](#sec-ai-config-install). [Section 26](#sec-ai-customization) is the worked example of what the corpus contains.
+The lab’s portable agent config lives in [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config). It is a plugin-or-symlink install of skills, hooks, and memories — not a third marketplace next to SemBr. How that config actually reaches a machine, and how a doubled plugin install fails, is [Section 27](#sec-ai-config-install). [Section 26](#sec-ai-customization) is the worked example of what the corpus contains.
 
 # 26 Customizing an Agent
 
@@ -2829,7 +2829,7 @@ For a Quarto-based repository like this one, the copilot instructions file typic
 
 By having these instructions in `.github/copilot-instructions.md`, you ensure that coding agents produce consistent, high-quality contributions that align with the project’s established practices. This reduces the review burden and helps maintain consistency across all contributions, whether made by humans or AI assistants.
 
-See this repository’s own [`.github/copilot-instructions.md`](https://github.com/d-morrison/wai/blob/main/.github/copilot-instructions.md) for a working example.
+See this repository’s own [`.github/copilot-instructions.md`](https://github.com/Morrison-Lab/wai/blob/main/.github/copilot-instructions.md) for a working example.
 
 # 37 Using Copilot Review Before Human Review
 
@@ -3244,7 +3244,7 @@ The SDK embeds the compiled Antigravity runtime engine directly into Python appl
 
 - **Lifecycle management**: Agents are instantiated through `Agent` objects configured via `LocalAgentConfig`, managed within asynchronous Python context managers (`async with`).
 - **Autonomous agentic loop**: The underlying runtime drives multi-turn reasoning, streaming model responses, subagent spawning, and tool dispatch without requiring hand-rolled state machines.
-- **Binary distribution**: The Python package packages the native runtime binary, ensuring consistent agent execution across macOS and Linux environments.
+- **Binary distribution**: The Python package distributes pre-compiled native runtime binaries via wheels, ensuring consistent agent execution across Windows, macOS, and Linux environments.
 
 #### Extensibility and policy enforcement
 
@@ -3263,9 +3263,29 @@ Developers can customize agent behavior and enforce safety policies:
 | **Tool definitions** | In-process Python callables & MCP | JSON manifests, plugins, and CLI scripts |
 | **Runtime engine** | Embedded native binary | Managed local service |
 
-# 43 Spec-Driven Development with Conductor
+# 43 Unbounded Context with Magic Context
 
-[`gemini-cli-extensions/conductor`](https://github.com/gemini-cli-extensions/conductor) is an open-source extension for the Gemini CLI and Google Antigravity that implements **Spec-Driven Development** (measured 2026-08-31). Rather than relying on conversational chat history that degrades over extended sessions, Conductor anchors agent behavior in structured, version-controlled Markdown artifacts stored directly in the repository.
+[`cortexkit/magic-context`](https://github.com/cortexkit/magic-context) is an open-source self-managing memory engine designed to provide unbounded context for AI coding agents (measured 2026-08-31). It operates as a background memory subsystem—often described as a “hippocampus for coding agents”—that extracts, consolidates, and retrieves long-term repository state without pausing the active coding turn.
+
+#### Core architecture and agent roles
+
+Rather than requiring the primary coding agent to interrupt its execution to prune conversation buffers, `magic-context` delegates memory lifecycle operations to specialized background workers:
+
+- **The Historian**: Runs background context compaction on completed turns, compressing verbose tool outputs and dialog history while preserving architectural decisions and code rationale.
+- **The Dreamer**: Executes periodic consolidation passes to deduplicate memory records across multiple sessions, distilling recurring observations into canonical project facts and persistent guidelines.
+- **The Sidekick**: Acts as an on-demand retrieval companion that augments active prompts with relevant project context, supplying historical context matched to the current file or task.
+
+#### Cache-aware memory management
+
+A key challenge with dynamic prompt injection is preserving prompt caching efficiency. `magic-context` addresses this through cache-conscious orchestration:
+
+- **Cache-stable prompt layout**: Maintains a deterministic prompt layout and replay ordering, preserving provider prompt caching prefixes across conversational turns without invalidating cached tokens.
+- **Deferred background extraction**: Memory analysis and summarization tasks are deferred to idle windows or subagent threads, preventing token churn and latency spikes during high-tempo coding loops.
+- **Cross-session persistence**: Extracted knowledge persists in lightweight local stores across IDE restarts, enabling coding agents to resume work with full institutional memory of past decisions.
+
+# 44 Spec-Driven Development with Conductor
+
+[`gemini-cli-extensions/conductor`](https://github.com/gemini-cli-extensions/conductor) is an open-source plugin for AI coding agents (including Google Antigravity and Claude Code) that implements **Spec-Driven Development** (measured 2026-08-31). Rather than relying on conversational chat history that degrades over extended sessions, Conductor anchors agent behavior in structured, version-controlled Markdown artifacts stored directly in the repository, providing persistent context across multi-session workflows.
 
 #### Core workflow phases
 
@@ -3285,7 +3305,7 @@ Conductor structures development into four distinct, sequential phases:
 | **Verification loop** | Manual spot-checking | Milestone-level automated tests and `/conductor:conductor-review` |
 | **Handoff & resumption** | Requires re-prompting or context replay | Any agent resumes from the checked-in track state |
 
-# 44 Managing Gemini API Spend and Cost Optimization
+# 45 Managing Gemini API Spend and Cost Optimization
 
 This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.
 
