@@ -89,6 +89,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/opencode-openrouter.qmd >}}
 
+# Running Claude Code with Non-Anthropic Models {#sec-ai-claude-code-other-models}
+
+{{< include ai-tools/claude-code-other-models.qmd >}}
+
 # Small, Local Models for Autonomous Agentic Coding {#sec-ai-small-local-models}
 
 {{< include ai-tools/small-local-models-agentic.qmd >}}
