@@ -10,8 +10,6 @@ AutoGen
 BYOK
 Badham
 Belcak
-auditability
-auditable
 benchbook
 CAPTCHAs
 Celonis
@@ -108,11 +106,8 @@ SDKs
 SERG
 SWE
 SemBr
-<<<<<<< HEAD
 Sisyphus
-=======
 Sourcegraph
->>>>>>> 1c3808e (docs(harnesses): summarize the 2026 landscape of AI agent harnesses (closes #95))
 Stanford
 SuperGrok
 TORQCLAW
@@ -131,17 +126,16 @@ YAGNI
 YAML
 Z.ai
 Zapier
-<<<<<<< HEAD
-Zsh
-=======
 Zechner
+Zsh
+auditability
+auditable
 gapped
 leaderboard
 maximalist
 observability
 rebranded
 stateful
->>>>>>> 1c3808e (docs(harnesses): summarize the 2026 landscape of AI agent harnesses (closes #95))
 xAI
 agentic
 aider
