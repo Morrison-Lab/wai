@@ -17,7 +17,7 @@ If you don't completely understand what the AI has suggested,
 take the time to learn or ask a colleague for help.
 :::
 
-::: {.callout-tip}
+::: callout-tip
 #### A worked example: the defects the builder cannot see
 
 A public field report from a non-programmer
@@ -35,7 +35,7 @@ Players reported:
 Every one of those defects looks correct to the person who built it,
 because the builder reads the underlying state in their own head and sees the display agree with it.
 They surface only on contact with someone who has nothing but the display.
-No automated verification appears anywhere in the project.
+Neither the report nor its thread mentions any automated verification.
 That is the answer to "why bother instrumenting checks when the thing looks fine":
 the thing looks fine to you precisely because you know what it is supposed to do.
 :::
