@@ -2,7 +2,12 @@ Claude Code is built around the Anthropic Messages API,
 and its documentation describes how to point the harness at any endpoint that speaks that format.
 That mechanism is what makes it possible to run Claude Code against models Anthropic does not make,
 and the same documentation says plainly that doing so is unsupported.
-This section summarizes the mechanism, the routes people use, what breaks, and which billing rules apply.
+This section summarizes:
+
+- the mechanism
+- the routes people use
+- what breaks
+- which billing rules apply
 
 ::: {.callout-warning}
 #### A fast-moving snapshot
@@ -89,7 +94,7 @@ from fewest moving parts to most:
   [Claude Code Router](https://github.com/musistudio/claude-code-router)
   intercepts each request and routes it by type
   (background, thinking, long-context, default) to a different provider or model.
-  It has the most features of the four,
+  It has the most features of the five,
   and the tracking issue quotes its own issue tracker describing it as unstable and hard to configure.
 - **A local model server.**
   [vLLM](https://docs.vllm.ai/) and [Ollama](https://ollama.com/) both serve the Messages API directly,
@@ -120,8 +125,8 @@ The forum reports in the tracking issue agree on three seams:
   a gateway that does not, or an upstream with no equivalent, bills every turn at full input price,
   which erodes much of the per-token saving from a cheaper model.
 - **Claude-specific request fields are rejected.**
-  The `400` errors and the `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` remedy in the configuration list above are the documented form of this;
-  the reports add that the context window Claude Code assumes for an unrecognized model ID rarely matches the real one.
+  The `400` errors and the `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` remedy in the configuration list above are the documented form of this,
+  and the model configuration page adds that the context window Claude Code assumes for an unrecognized model ID may not match the real one.
 
 The summary also notes that benchmark gaps between the strongest open-weight coding models and Claude narrowed during 2026,
 while cautioning that the open-weight figures it saw were largely the vendors' own launch numbers.
@@ -161,8 +166,9 @@ so read it as a pointer to what to check rather than as the current text.
 
 : Choosing a route for running Claude Code with other models {#tbl-claude-code-other-models-routes}
 
-Whichever route you pick,
-authenticate non-Claude traffic with your own API key or provider credential rather than a subscription login,
-assume prompt caching is off until the gateway proves otherwise,
-and measure cost per completed task on your own work rather than comparing token prices.
-If the alternative is not cheaper on that measure, or tool-call failures disrupt sessions, go back to a supported configuration.
+Whichever route you pick:
+
+- Authenticate non-Claude traffic with your own API key or provider credential rather than a subscription login.
+- Assume prompt caching is off until the gateway proves otherwise.
+- Measure cost per completed task on your own work rather than comparing token prices;
+  if the alternative is not cheaper on that measure, or tool-call failures disrupt sessions, go back to a supported configuration.
