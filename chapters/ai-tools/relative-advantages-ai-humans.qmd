@@ -59,7 +59,7 @@ you'll still need enough domain judgment to:
 Strong coding skills are one route to that judgment,
 and not the only one.
 A public field report from a non-programmer
-([r/ClaudeCode](https://www.reddit.com/r/ClaudeCode/), 2026-08-22, "Vibe coded this game in four months"; summarized in [issue #98](https://github.com/Morrison-Lab/wai/issues/98))
+(["Vibe coded this game in four months"](https://www.reddit.com/r/ClaudeCode/comments/1vvhrfq/), r/ClaudeCode, 2026-08-22; summarized in [issue #98](https://github.com/Morrison-Lab/wai/issues/98))
 describes four months of building a browser racing game with coding agents and no coding experience at all,
 crediting knowledge of game technology and design,
 plus long practice with language models,

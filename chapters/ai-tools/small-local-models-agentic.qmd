@@ -323,7 +323,7 @@ Two shapes of this pattern are worth knowing:
   which composes with this split.
 
 The same split is the main cost lever in a public field report from a non-programmer
-([r/ClaudeCode](https://www.reddit.com/r/ClaudeCode/), 2026-08-22, "Vibe coded this game in four months"; summarized in [issue #98](https://github.com/Morrison-Lab/wai/issues/98)),
+(["Vibe coded this game in four months"](https://www.reddit.com/r/ClaudeCode/comments/1vvhrfq/), r/ClaudeCode, 2026-08-22; summarized in [issue #98](https://github.com/Morrison-Lab/wai/issues/98)),
 who built a browser racing game over four months with coding agents.
 The report names three levers:
 

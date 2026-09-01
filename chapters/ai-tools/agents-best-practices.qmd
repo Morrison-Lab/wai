@@ -15,7 +15,7 @@ To work with coding agents safely and successfully:
    Don't skip testing because "the AI wrote it."
    Budget for it, too:
    two commenters on the same field report
-   ([r/ClaudeCode](https://www.reddit.com/r/ClaudeCode/), 2026-08-22, "Vibe coded this game in four months"; summarized in [issue #98](https://github.com/Morrison-Lab/wai/issues/98))
+   (["Vibe coded this game in four months"](https://www.reddit.com/r/ClaudeCode/comments/1vvhrfq/), r/ClaudeCode, 2026-08-22; summarized in [issue #98](https://github.com/Morrison-Lab/wai/issues/98))
    independently named manual testing as the dominant cost once generation is cheap,
    and one put it as needing either deep domain experience or heavy testing to get a defect-free result.
 
