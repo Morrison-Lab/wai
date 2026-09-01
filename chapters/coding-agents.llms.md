@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 15:56:38 (PDT)
+Last modified: 2026-09-01 16:49:22 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -543,12 +543,14 @@ This pattern mirrors the evolution of programming itself. Just as almost no one 
 
 ------------------------------------------------------------------------
 
-For most tasks, you won’t need to step in and manipulate code yourself. However, you’ll still need strong coding skills to:
+For most tasks, you won’t need to step in and manipulate code yourself. However, you’ll still need enough domain judgment to:
 
 - Supervise and validate AI-generated code
 - Handle edge cases that agents struggle with
 - Make creative decisions about architecture and design
 - Understand when agent suggestions are incorrect or suboptimal
+
+Strong coding skills are one route to that judgment, and not the only one. A public field report from a non-programmer ([“Vibe coded this game in four months”](https://www.reddit.com/r/ClaudeCode/comments/1vvhrfq/), r/ClaudeCode, 2026-08-22; summarized in [issue \#98](https://github.com/Morrison-Lab/wai/issues/98)) describes four months of building a browser racing game with coding agents and no coding experience at all, crediting knowledge of game technology and design, plus long practice with language models, for the planning and the early catches that kept the project on track; by the author’s own account, lacking that knowledge as well would have stalled the project after a couple of prompts. The requirement is the supervision, whichever background supplies it.
 
 #### Future Developments: World Models
 
@@ -852,7 +854,7 @@ To work with coding agents safely and successfully:
 
 2.  **Understand before accepting**: If you don’t understand what the code does, don’t use it. Take time to learn or ask a colleague.
 
-3.  **Test thoroughly**: AI-generated code must be tested as rigorously as code you write yourself. Don’t skip testing because “the AI wrote it.”
+3.  **Test thoroughly**: AI-generated code must be tested as rigorously as code you write yourself. Don’t skip testing because “the AI wrote it.” Budget for it, too. Two commenters on the same field report ([“Vibe coded this game in four months”](https://www.reddit.com/r/ClaudeCode/comments/1vvhrfq/), r/ClaudeCode, 2026-08-22; summarized in [issue \#98](https://github.com/Morrison-Lab/wai/issues/98)) independently named manual testing as the dominant cost once generation is cheap. One put it as needing either deep domain experience or heavy testing to get a defect-free result.
 
 4.  **Start small**: Begin with small, well-defined tasks to build confidence and understanding of the agent’s capabilities and limitations.
 
@@ -1746,6 +1748,14 @@ Two shapes of this pattern are worth knowing:
 - **All-local**: a single strong local model (30–32B) does both planning and execution, which is simplest to set up and is the right default for a laptop or workstation with one GPU.
 - **Local planner, local executor**: a 30–32B planner drafts each step and a 7–8B executor applies it, trading some plan quality for throughput — worthwhile mainly on hardware that cannot comfortably hold two copies of a 32B model at once.
 - **Cloud planner, local executor**: a frontier cloud model plans and a local model executes, which keeps the bulk of file contents on your own machine while still using strong reasoning for the decisions that matter most. This is a hybrid rather than a fully local setup — see the LiteLLM fallback pattern in [Section 19](#sec-ai-offline) for one way to wire a cloud-with-local-fallback endpoint, which composes with this split.
+
+The same split is the main cost lever in a public field report from a non-programmer ([“Vibe coded this game in four months”](https://www.reddit.com/r/ClaudeCode/comments/1vvhrfq/), r/ClaudeCode, 2026-08-22; summarized in [issue \#98](https://github.com/Morrison-Lab/wai/issues/98)), who built a browser racing game over four months with coding agents. The report names three levers:
+
+- plan with the strongest model available
+- implement with cheaper ones
+- keep the scope to what can realistically ship
+
+The reported total was roughly \$200 in project-specific subscriptions over the four months, on top of a general-purpose subscription the author already held. The lab’s machine-facing configuration, [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config), states the same routing rule for agents.
 
 None of these routing choices substitutes for the guardrails below. A well-chosen planner still hands off to an executor that can make a per-step mistake, and the loop still needs a way to catch that.
 

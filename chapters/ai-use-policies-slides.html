@@ -261,7 +261,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-09-01 15:56:38 (PDT)</p>
+  <p class="date">Last modified: 2026-09-01 16:49:22 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -305,6 +305,26 @@
 </div>
 <div class="callout-content">
 <p>Never blindly use AI-generated code without fully understanding it. If you don’t completely understand what the AI has suggested, take the time to learn or ask a colleague for help.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-caution callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>A worked example: the defects the builder cannot see</strong></p>
+</div>
+<div class="callout-content">
+<p>A public field report from a non-programmer (<a href="https://www.reddit.com/r/ClaudeCode/comments/1vvhrfq/">“Vibe coded this game in four months”</a>, r/ClaudeCode, 2026-08-22; summarized in <a href="https://github.com/Morrison-Lab/wai/issues/98">issue #98</a>) describes four months of building a browser racing game with coding agents, and reports that most things worked on the first try. The comment thread under it says otherwise. Players reported:</p>
+<ul>
+<li>a minimap announcing a turn in the wrong direction</li>
+<li>speed boosts invisible from any distance</li>
+<li>an orbit track with no visible route</li>
+<li>an accelerator with no consequences</li>
+</ul>
+<p>Every one of those defects looks correct to the person who built it, because the builder reads the underlying state in their own head and sees the display agree with it. They surface only on contact with someone who has nothing but the display. Neither the report nor its thread mentions any automated verification. That is the answer to “why bother instrumenting checks when the thing looks fine”: the thing looks fine to you precisely because you know what it is supposed to do.</p>
 </div>
 </div>
 </div>

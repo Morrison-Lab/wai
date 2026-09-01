@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 15:56:38 (PDT)
+Last modified: 2026-09-01 16:49:22 (PDT)
 
 [AI-powered coding assistants](https://en.wikipedia.org/wiki/AI-assisted_software_development) can dramatically accelerate and improve your work, but they require careful and responsible use. Lab members who use AI tools must adhere to the following guidelines.
 
@@ -29,6 +29,17 @@ Ensure the code does not introduce security vulnerabilities or data privacy issu
 > **WARNING:**
 >
 > Never blindly use AI-generated code without fully understanding it. If you don’t completely understand what the AI has suggested, take the time to learn or ask a colleague for help.
+
+> **CAUTION:**
+>
+> A public field report from a non-programmer ([“Vibe coded this game in four months”](https://www.reddit.com/r/ClaudeCode/comments/1vvhrfq/), r/ClaudeCode, 2026-08-22; summarized in [issue \#98](https://github.com/Morrison-Lab/wai/issues/98)) describes four months of building a browser racing game with coding agents, and reports that most things worked on the first try. The comment thread under it says otherwise. Players reported:
+>
+> - a minimap announcing a turn in the wrong direction
+> - speed boosts invisible from any distance
+> - an orbit track with no visible route
+> - an accelerator with no consequences
+>
+> Every one of those defects looks correct to the person who built it, because the builder reads the underlying state in their own head and sees the display agree with it. They surface only on contact with someone who has nothing but the display. Neither the report nor its thread mentions any automated verification. That is the answer to “why bother instrumenting checks when the thing looks fine”: the thing looks fine to you precisely because you know what it is supposed to do.
 
 # 2 Disclosure of AI use
 

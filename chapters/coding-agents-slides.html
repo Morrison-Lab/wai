@@ -329,7 +329,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-09-01 15:56:38 (PDT)</p>
+  <p class="date">Last modified: 2026-09-01 16:49:22 (PDT)</p>
 </section><section class="slide level2"><p>We recommend working with <strong><a href="https://github.com/features/copilot/agents">AI coding agents</a></strong> to <a href="https://en.wikipedia.org/wiki/AI-assisted_software_development">help you code</a>.</p>
 </section><section><section id="sec-ai-language-model" class="title-slide slide level1 center" data-number="1"><h1>
 <span class="header-section-number">1</span> What Is a Language Model?</h1>
@@ -1207,13 +1207,14 @@ Table&nbsp;9: Relative advantages of humans and Agents
           width: 1px!important;
           overflow: hidden!important;
           display:block!important;
-      }</style></aside></section><section class="slide level2"><p>For most tasks, you won’t need to step in and manipulate code yourself. However, you’ll still need strong coding skills to:</p>
+      }</style></aside></section><section class="slide level2"><p>For most tasks, you won’t need to step in and manipulate code yourself. However, you’ll still need enough domain judgment to:</p>
 <ul>
 <li>Supervise and validate AI-generated code</li>
 <li>Handle edge cases that agents struggle with</li>
 <li>Make creative decisions about architecture and design</li>
 <li>Understand when agent suggestions are incorrect or suboptimal</li>
 </ul>
+<p>Strong coding skills are one route to that judgment, and not the only one. A public field report from a non-programmer (<a href="https://www.reddit.com/r/ClaudeCode/comments/1vvhrfq/">“Vibe coded this game in four months”</a>, r/ClaudeCode, 2026-08-22; summarized in <a href="https://github.com/Morrison-Lab/wai/issues/98">issue #98</a>) describes four months of building a browser racing game with coding agents and no coding experience at all, crediting knowledge of game technology and design, plus long practice with language models, for the planning and the early catches that kept the project on track; by the author’s own account, lacking that knowledge as well would have stalled the project after a couple of prompts. The requirement is the supervision, whichever background supplies it.</p>
 <h4 id="future-developments-world-models">Future Developments: World Models</h4>
 <p>As AI technology advances, the distinction between these strengths may shift. Yann LeCun, 2019 Turing Award winner and AI researcher at Meta and NYU, advocates for developing “world models”—AI systems that understand and reason about the physical world, not just language patterns <span class="citation" data-cites="lecun_world_models">(<a href="#/references" role="doc-biblioref" onclick="">LeCun 2022</a>)</span>.</p>
 <p>World models aim to give AI systems:</p>
@@ -1510,7 +1511,7 @@ Table&nbsp;9: Relative advantages of humans and Agents
 <ol type="1">
 <li><p><strong>Maintain active supervision</strong>: Never assume AI-generated code is correct. Review every line critically.</p></li>
 <li><p><strong>Understand before accepting</strong>: If you don’t understand what the code does, don’t use it. Take time to learn or ask a colleague.</p></li>
-<li><p><strong>Test thoroughly</strong>: AI-generated code must be tested as rigorously as code you write yourself. Don’t skip testing because “the AI wrote it.”</p></li>
+<li><p><strong>Test thoroughly</strong>: AI-generated code must be tested as rigorously as code you write yourself. Don’t skip testing because “the AI wrote it.” Budget for it, too. Two commenters on the same field report (<a href="https://www.reddit.com/r/ClaudeCode/comments/1vvhrfq/">“Vibe coded this game in four months”</a>, r/ClaudeCode, 2026-08-22; summarized in <a href="https://github.com/Morrison-Lab/wai/issues/98">issue #98</a>) independently named manual testing as the dominant cost once generation is cheap. One put it as needing either deep domain experience or heavy testing to get a defect-free result.</p></li>
 <li><p><strong>Start small</strong>: Begin with small, well-defined tasks to build confidence and understanding of the agent’s capabilities and limitations.</p></li>
 <li><p><strong>Verify logic and assumptions</strong>: Check that the AI hasn’t made incorrect assumptions about your data, requirements, or scientific context.</p></li>
 <li><p><strong>Review for security</strong>: Explicitly check for security issues, especially when handling sensitive data or user input.</p></li>
@@ -2573,6 +2574,13 @@ Table&nbsp;10: Choosing a route for running Claude Code with other models
 <li>
 <strong>Cloud planner, local executor</strong>: a frontier cloud model plans and a local model executes, which keeps the bulk of file contents on your own machine while still using strong reasoning for the decisions that matter most. This is a hybrid rather than a fully local setup — see the LiteLLM fallback pattern in <a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;19</a> for one way to wire a cloud-with-local-fallback endpoint, which composes with this split.</li>
 </ul>
+<p>The same split is the main cost lever in a public field report from a non-programmer (<a href="https://www.reddit.com/r/ClaudeCode/comments/1vvhrfq/">“Vibe coded this game in four months”</a>, r/ClaudeCode, 2026-08-22; summarized in <a href="https://github.com/Morrison-Lab/wai/issues/98">issue #98</a>), who built a browser racing game over four months with coding agents. The report names three levers:</p>
+<ul>
+<li>plan with the strongest model available</li>
+<li>implement with cheaper ones</li>
+<li>keep the scope to what can realistically ship</li>
+</ul>
+<p>The reported total was roughly $200 in project-specific subscriptions over the four months, on top of a general-purpose subscription the author already held. The lab’s machine-facing configuration, <a href="https://github.com/Morrison-Lab/ai-config"><code>Morrison-Lab/ai-config</code></a>, states the same routing rule for agents.</p>
 <p>None of these routing choices substitutes for the guardrails below. A well-chosen planner still hands off to an executor that can make a per-step mistake, and the loop still needs a way to catch that.</p>
 <h4 id="guardrails-for-autonomy">Guardrails for autonomy</h4>
 <div class="callout callout-important callout-titled callout-style-default">
