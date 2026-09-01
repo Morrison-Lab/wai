@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 10:48:42 (PDT)
+Last modified: 2026-09-01 11:07:47 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3244,7 +3244,7 @@ The SDK embeds the compiled Antigravity runtime engine directly into Python appl
 
 - **Lifecycle management**: Agents are instantiated through `Agent` objects configured via `LocalAgentConfig`, managed within asynchronous Python context managers (`async with`).
 - **Autonomous agentic loop**: The underlying runtime drives multi-turn reasoning, streaming model responses, subagent spawning, and tool dispatch without requiring hand-rolled state machines.
-- **Binary distribution**: The Python package packages the native runtime binary, ensuring consistent agent execution across macOS and Linux environments.
+- **Binary distribution**: The Python package distributes pre-compiled native runtime binaries via wheels, ensuring consistent agent execution across Windows, macOS, and Linux environments.
 
 #### Extensibility and policy enforcement
 
