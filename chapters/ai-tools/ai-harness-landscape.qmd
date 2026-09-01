@@ -45,7 +45,7 @@ Two consequences follow for reading the rest of this section:
 | [OpenAI Codex](https://github.com/openai/codex) | Apache 2.0 CLI; proprietary cloud | The reach leader: terminal, cloud, IDE, ChatGPT app, and browser surfaces. Strong on terminal benchmarks, sandboxed at the OS level, markedly more token-efficient than Claude Code, and now carrying skills, plugins, subagents, and a small hook system. |
 | [OpenCode](https://opencode.ai) | MIT | The most-starred open harness: model-agnostic across many providers including local models, client-server architecture with a headless server mode, custom agents, MCP, and `AGENTS.md`. Claude works only through an API key, not a subscription login. |
 | [Aider](https://aider.chat/) | Apache 2.0 | The git-native pioneer: maps the repository and commits each edit. Reported to be in maintenance mode since early 2026, still respected for auditability and local-model flexibility. |
-| [Goose](https://github.com/block/goose) (Block, now Linux Foundation) | Apache 2.0 | Rust terminal agent with vendor-neutral governance, many model providers and MCP extensions, parallel subagents, and Agent Client Protocol support. Local-first with no hosted option. |
+| [Goose](https://github.com/aaif-goose/goose) (Block, now Linux Foundation) | Apache 2.0 | Rust terminal agent with vendor-neutral governance, many model providers and MCP extensions, parallel subagents, and Agent Client Protocol support. Local-first with no hosted option. |
 | [Gemini CLI](https://github.com/google-gemini/gemini-cli) (Google) | Apache 2.0 | Being folded into Antigravity CLI; issue #95 records free individual access ending on 2026-06-18, with enterprise Code Assist licenses unaffected. |
 | [Amp](https://ampcode.com) | Proprietary | Deliberately optimizes for the best outcome regardless of token cost: multi-model routing, parallel subagents, and an "Oracle" deep-reasoning mode. Spun out of Sourcegraph. |
 
@@ -55,12 +55,12 @@ Two consequences follow for reading the rest of this section:
 
 | Harness | License | Character (August 2026) |
 |---|---|---|
-| [Cursor](https://www.cursor.com/) | Proprietary | The in-editor leader: a VS Code fork with a deep agent loop, an in-house model tuned for fast agentic editing, and rules, MCP, hooks, skills, plugins, and subagents. Reads `.cursor`, `.claude/agents`, and `.codex/agents` configuration, per issue #95. |
+| [Cursor](https://cursor.com/) | Proprietary | The in-editor leader: a VS Code fork with a deep agent loop, an in-house model tuned for fast agentic editing, and rules, MCP, hooks, skills, plugins, and subagents. Reads `.cursor`, `.claude/agents`, and `.codex/agents` configuration, per issue #95. |
 | [GitHub Copilot](https://github.com/features/copilot) | Proprietary | The most widely distributed option, multi-model, with a cloud agent that turns an issue into a pull request in an ephemeral Actions environment; framed by GitHub for low-to-medium complexity tasks in well-tested codebases. |
 | [Cline](https://github.com/cline/cline) | Apache 2.0 | The open-source VS Code standard: a plan-then-act workflow with human approval at each step, bring-your-own-key across many providers including local Ollama, and a Kanban surface for orchestrating parallel agents. The usual pick for audit-sensitive environments. |
 | [Google Antigravity](https://antigravity.google/) | Proprietary | Google's agent-first development platform, built around an agent manager surface and now the center of its coding strategy; early reception focused on rate limits. |
 | [Devin Desktop](https://devin.ai/) (Cognition) | Proprietary | The former Windsurf editor, rebranded in June 2026 with a local Devin agent, an agent command center, and Agent Client Protocol support. |
-| [Continue](https://www.continue.dev/), [Tabnine](https://www.tabnine.com/), [Kilo Code](https://kilocode.ai/), [Zed](https://zed.dev/) | Mixed | Specialists: Continue adds an open-source agent to an existing editor; Tabnine is the on-premises, air-gapped enterprise pick; Kilo Code carries on the Roo Code lineage after that project's 2026 shutdown; Zed is an open-source AI-native editor. |
+| [Continue](https://continue.dev/), [Tabnine](https://www.tabnine.com/), [Kilo Code](https://kilo.ai/), [Zed](https://zed.dev/) | Mixed | Specialists: Continue adds an open-source agent to an existing editor; Tabnine is the on-premises, air-gapped enterprise pick; Kilo Code carries on the Roo Code lineage after that project's 2026 shutdown; Zed is an open-source AI-native editor. |
 
 : Editor-integrated coding harnesses {#tbl-harness-landscape-editor}
 
@@ -69,7 +69,7 @@ Two consequences follow for reading the rest of this section:
 - **Devin** (Cognition) is the archetype:
   delegate a task, and parallel managed instances each run in an isolated cloud machine and open pull requests.
   Early trials were poor, and the product has matured since.
-- **[OpenHands](https://github.com/All-Hands-AI/OpenHands)** (MIT) is the open-source autonomous leader,
+- **[OpenHands](https://github.com/OpenHands/OpenHands)** (MIT) is the open-source autonomous leader,
   running headless in CI to browse, edit, test, and retry.
 - **The cloud tiers of interactive tools**
   (Copilot's cloud agent, Codex Cloud, Cursor's cloud agents)
@@ -83,7 +83,7 @@ Two consequences follow for reading the rest of this section:
 Against the deep-harness orthodoxy,
 a 2026 movement argues that frontier models already know what a coding agent is,
 so a harness should get out of the way.
-Its flagship is [Pi](https://github.com/badlogic/pi-mono) (MIT),
+Its flagship is [Pi](https://github.com/earendil-works/pi) (MIT),
 built by Mario Zechner and championed by Armin Ronacher:
 four tools (read, bash, edit, write),
 a system prompt plus tool definitions under a thousand tokens,

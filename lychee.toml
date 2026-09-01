@@ -49,4 +49,8 @@ exclude = [
   # GitHub fallback cannot see it with this repo's token, so it always
   # reads as broken. Anchored to that one URL so nothing else is masked.
   "^https://github\\.com/ucdavis/matt\\.contracts/pull/2$",
+  # Amp's site answers lychee's HTTP/2 probe with a protocol error
+  # ("Server may not support HTTP/2 properly") while loading normally in a
+  # browser; linked from chapters/ai-tools/ai-harness-landscape.qmd.
+  "https://ampcode.com/",
 ]
