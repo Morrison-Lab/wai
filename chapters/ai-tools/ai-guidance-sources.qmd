@@ -1,0 +1,96 @@
+The practice of working with AI agents changes faster than any static page (these notes included) can track.
+Much of the current guidance circulates as forum discussion:
+tool comparisons, configuration recipes, failure reports, and launch announcements.
+This section catalogs the Reddit communities where that discussion concentrates,
+grouped by what they are for,
+so you know where to look when a page here has gone stale.
+This section covers Reddit only:
+vendor documentation, project issue trackers, and the papers behind a technique are cited where the chapters use them,
+and the forum layer had no index here until this section.
+
+::: {.callout-warning}
+#### Counts and characterizations are snapshots
+
+The member counts and the one-line characterizations in these tables are approximate and dated.
+They come from a directory compiled in August 2026
+([issue #94](https://github.com/Morrison-Lab/wai/issues/94))
+from third-party trackers (Prowlo, GummySearch, usefulai.com, and ReddTrends),
+which disagree with each other by tens of percent for the same community depending on crawl date.
+GummySearch stopped accepting new signups or renewals after 2025-11-30,
+so some cells it supplies reflect older snapshots.
+Reddit stopped showing member totals on community pages in late 2025,
+so a figure cannot be checked against the page itself.
+Read the counts as orders of magnitude,
+and when precision matters use a tracker that reads the official Reddit API (ReddTrends is one).
+:::
+
+#### Dedicated to AI agents
+
+| Community | Members | What it is for |
+|---|---|---|
+| [r/AI_Agents](https://www.reddit.com/r/AI_Agents/) | ~425k (Aug 2026) | The largest dedicated community: building and deploying LLM-based agents, framework comparisons, showcases, and launches. One marketing tracker describes it as roughly doubling over the preceding year. |
+| [r/aiagents](https://www.reddit.com/r/aiagents/) | ~118k | A separate community (no underscore) focused on tools, stack recommendations, and business automation. |
+| [r/AgentsOfAI](https://www.reddit.com/r/AgentsOfAI/) | ~98k | Showcase-friendly; known for its "I Made This" flair. |
+| [r/automation](https://www.reddit.com/r/automation/) | ~228k | Workflow automation with heavy agent crossover; not agent-only. |
+
+: Communities dedicated to AI agents {#tbl-guidance-sources-agents}
+
+#### Frameworks and tools
+
+| Community | Members | What it is for |
+|---|---|---|
+| [r/LLMDevs](https://www.reddit.com/r/LLMDevs/) | ~161k | Developer discussion of LLM applications, agent architectures, memory, and MCP builds. |
+| [r/mcp](https://www.reddit.com/r/mcp/) | ~89k | The Model Context Protocol; a smaller [r/modelcontextprotocol](https://www.reddit.com/r/modelcontextprotocol/) (~23k) covers the same ground. |
+| [r/LangChain](https://www.reddit.com/r/LangChain/) | ~87k | The largest framework community; much LangGraph discussion happens here too. |
+| [r/n8n](https://www.reddit.com/r/n8n/) | ~220k | The n8n workflow platform, with heavy agent-workflow content. |
+| [r/AutoGPT](https://www.reddit.com/r/AutoGPT/) | ~21k | Grew out of the AutoGPT project into general agents and automation; tolerates launch posts. |
+| [r/AutoGenAI](https://www.reddit.com/r/AutoGenAI/) | ~7k | Microsoft's AutoGen; small but active. |
+| [r/crewai](https://www.reddit.com/r/crewai/) | ~1.6k | The CrewAI role-based framework. |
+
+: Framework and tool communities {#tbl-guidance-sources-frameworks}
+
+The framework-specific communities are much smaller than the general agent ones,
+and [r/PydanticAI](https://www.reddit.com/r/PydanticAI/), [r/LangGraph](https://www.reddit.com/r/LangGraph/), and [r/LlamaIndex](https://www.reddit.com/r/LlamaIndex/) exist but had no reliable counts at compilation time.
+In practice, framework discussion concentrates in [r/AI_Agents](https://www.reddit.com/r/AI_Agents/), [r/LLMDevs](https://www.reddit.com/r/LLMDevs/), and [r/LocalLLaMA](https://www.reddit.com/r/LocalLLaMA/) rather than in the niche communities.
+
+#### AI coding agents
+
+| Community | Members | What it is for |
+|---|---|---|
+| [r/ClaudeCode](https://www.reddit.com/r/ClaudeCode/) | ~253k-387k | Claude Code specifically; trackers disagree widely on its size (usefulai.com listed ~253k in May 2026, while GummySearch listed ~387k). |
+| [r/ChatGPTCoding](https://www.reddit.com/r/ChatGPTCoding/) | ~383k | The multi-tool coding community, where Claude Code, Cursor, Codex, and others are compared side by side. |
+| [r/vibecoding](https://www.reddit.com/r/vibecoding/) | ~343k | Building applications by directing agents; heavy Claude Code, Cursor, and Bolt content. |
+| [r/VibeCodeDevs](https://www.reddit.com/r/VibeCodeDevs/) | ~59k | Developers shipping real products with agents and automation. |
+| [r/Cursor](https://www.reddit.com/r/Cursor/) | not verified | The Cursor editor and its agent features. |
+
+: AI coding-agent communities {#tbl-guidance-sources-coding}
+
+#### General AI communities with heavy agent discussion
+
+| Community | Members | What it is for |
+|---|---|---|
+| [r/ChatGPT](https://www.reddit.com/r/ChatGPT/) | ~11.6M | The largest applied-AI community; frequent agent and automation threads. |
+| [r/singularity](https://www.reddit.com/r/singularity/) | ~4.0M | AI progress and futurism; skews toward hype. |
+| [r/MachineLearning](https://www.reddit.com/r/MachineLearning/) | ~3.0M | Research-grade, strictly moderated; agent papers. |
+| [r/OpenAI](https://www.reddit.com/r/OpenAI/) | ~2.7M | OpenAI products, including its agent offerings. |
+| [r/ArtificialInteligence](https://www.reddit.com/r/ArtificialInteligence/) | ~1.7-1.9M | Broad AI community (the misspelling is the actual handle). |
+| [r/artificial](https://www.reddit.com/r/artificial/) | ~1.3M | Broad AI news and tools. |
+| [r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/) | ~1.06M (Aug 2026) | Claude and Claude Code, with significant agentic crossover. |
+| [r/LocalLLaMA](https://www.reddit.com/r/LocalLLaMA/) | ~800k (Aug 2026) | The dominant local and open-weight model community; high signal on local agents and tooling. |
+| [r/LocalLLM](https://www.reddit.com/r/LocalLLM/) | ~207k | A second local-model community. |
+
+: General AI communities {#tbl-guidance-sources-general}
+
+#### How to use this list
+
+- **For the broadest agent discussion**, start with r/AI_Agents, then add r/AgentsOfAI and r/aiagents for showcases and use cases.
+- **For framework work**, monitor r/AI_Agents, r/LLMDevs, and r/LocalLLaMA, where much of the framework discussion actually lands,
+  and subscribe to a framework's own community once it reaches daily posting at a few tens of thousands of members.
+- **For coding agents**, prioritize r/ClaudeCode and r/ChatGPTCoding,
+  and add r/vibecoding for the builder angle.
+- **For research and trend-spotting**, follow r/LocalLLaMA, r/MachineLearning, and r/singularity,
+  filtering the last for hype.
+- **Treat a community as a lead, not a source.**
+  A forum thread is where a technique surfaces first;
+  verify it against the tool's documentation before you rely on it,
+  in the spirit of [reviewing AI-generated work](pr-workflow-with-agents.qmd#sec-invalidate-ai-review).
