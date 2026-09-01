@@ -45,6 +45,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/harness-agent-relationship.qmd >}}
 
+# The Harness Landscape in 2026 {#sec-ai-harness-landscape}
+
+{{< include ai-tools/ai-harness-landscape.qmd >}}
+
 # AI Agents and the Technological Singularity
 
 {{< include ai-tools/technological-singularity.qmd >}}
