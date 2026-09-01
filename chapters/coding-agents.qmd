@@ -49,6 +49,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/ai-harness-landscape.qmd >}}
 
+# Where Current Practice Is Discussed {#sec-ai-guidance-sources}
+
+{{< include ai-tools/ai-guidance-sources.qmd >}}
+
 # AI Agents and the Technological Singularity
 
 {{< include ai-tools/technological-singularity.qmd >}}

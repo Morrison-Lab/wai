@@ -1,15 +1,20 @@
 ADK
+AgentsOfAI
 Anthropic
 Antigravity
 Apache
 Apikey
 Armin
+ArtificialInteligence
 Asimov
 Atlas
+AutoGPT
 AutoGen
+AutoGenAI
 BYOK
 Badham
 Belcak
+aiagents
 auditability
 auditable
 benchbook
@@ -18,7 +23,10 @@ Celonis
 CLI
 CS336
 ChatGPT
+ChatGPTCoding
 Claude
+ClaudeAI
+ClaudeCode
 Cline
 Codestral
 Codex
@@ -46,6 +54,7 @@ GitKraken
 Granola
 Graphile
 Grok
+GummySearch
 Hephaestus
 Herbert
 Homebrew
@@ -58,12 +67,18 @@ Kepler
 Kimi
 Kong
 Kubrick
+LLMDevs
 LLMs
+LangChain
 LangGraph
 LeCun
 LiteLLM
+LlamaIndex
 LoRA
+LocalLLM
+LocalLLaMA
 MCP
+MachineLearning
 Maia
 Mastra
 MattFlower
@@ -94,11 +109,18 @@ Pipedream
 Playwright
 Posit
 Positron
+<<<<<<< HEAD
 Prometheus
+=======
+Prowlo
+PydanticAI
+>>>>>>> ea2eede (docs(guidance): catalog the Reddit communities where agent practice is discussed (closes #94))
 QLoRA
 Qwen
 Rakazo
 REPL
+ReddTrends
+Reddit
 Replit
 RevealJS
 Ronacher
@@ -125,6 +147,7 @@ UC
 UCD
 Ulef1005
 VRAM
+VibeCodeDevs
 Wachowskis
 Workspaces
 YAGNI
@@ -135,13 +158,21 @@ Zapier
 Zsh
 =======
 Zechner
+crewai
 gapped
 leaderboard
 maximalist
+mcp
+modelcontextprotocol
 observability
 rebranded
 stateful
+<<<<<<< HEAD
 >>>>>>> 1c3808e (docs(harnesses): summarize the 2026 landscape of AI agent harnesses (closes #95))
+=======
+usefulai
+vibecoding
+>>>>>>> ea2eede (docs(guidance): catalog the Reddit communities where agent practice is discussed (closes #94))
 xAI
 agentic
 aider
