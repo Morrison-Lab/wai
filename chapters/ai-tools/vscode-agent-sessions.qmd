@@ -29,7 +29,7 @@ VS Code provides unified session discovery and access across editor surfaces:
   allowing developers to switch views without losing conversational context.
 - **External session discovery**:
   VS Code discovers sessions initiated outside the primary GUI,
-  including command-line agent runs and background tasks.
+  including CLI agent sessions (such as Copilot CLI, Claude Code, and Codex).
 - **Cloud synchronization**:
   Synced sessions are backed up to your GitHub account,
   enabling developers to access active and past sessions across devices.
@@ -46,5 +46,6 @@ to a specialized workflow without manual re-prompting:
   Hand off a high-level architectural plan or task specification
   directly to an implementation session to generate code.
 - **Continue in the cloud**:
-  Hand off a local session to run in a cloud-hosted agent environment,
+  Hand off a local session to run in a cloud-hosted agent environment
+  (such as background tasks leading to pull requests),
   freeing local editor resources while the agent executes in the background.
