@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 12:51:34 (PDT)
+Last modified: 2026-09-01 13:32:59 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -337,7 +337,7 @@ Table 2: Editor-integrated coding harnesses
 
 #### The minimalist counter-trend
 
-Against the deep-harness orthodoxy, a 2026 movement argues that frontier models already know what a coding agent is, so a harness should get out of the way. Its flagship is [Pi](https://github.com/earendil-works/pi) (MIT), built by Mario Zechner and championed by Armin Ronacher: four tools (read, bash, edit, write), a system prompt plus tool definitions under a thousand tokens, no MCP, plan mode, to-do list, or subagents, and extension by asking the agent to write its own TypeScript extensions. In its author’s own Terminal-Bench 2.0 run ([December 2025, on Claude Opus 4.5](https://mariozechner.at/posts/2025-11-30-pi-coding-agent/)) it placed eighth, which its author read as evidence that a minimal harness competes with the heavy ones.
+Against the deep-harness orthodoxy, a 2026 movement argues that frontier models already know what a coding agent is, so a harness should get out of the way. Its flagship is [Pi](https://github.com/earendil-works/pi) (MIT), built by Mario Zechner and championed by Armin Ronacher: four tools (read, bash, edit, write), a system prompt plus tool definitions under a thousand tokens, no MCP, plan mode, to-do list, or subagents, and extension by asking the agent to write its own TypeScript extensions. In its author’s own Terminal-Bench 2.0 run ([post dated 2025-11-30, on Claude Opus 4.5](https://mariozechner.at/posts/2025-11-30-pi-coding-agent/)) it placed eighth, which its author read as evidence that a minimal harness competes with the heavy ones.
 
 The maximalist reply is that the extra tokens in a heavy harness encode product features (memory, scheduled tasks, subagents, plan mode, worktree support) rather than waste. Even Ronacher concedes that task queues, orchestration, and durable sessions will matter more over time, so the two camps may converge.
 
