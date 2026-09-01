@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 14:31:24 (PDT)
+Last modified: 2026-09-01 15:56:38 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -94,7 +94,7 @@ An **AI harness** is the scaffolding built around a language model that turns it
 Most coding-agent harnesses — including the [GitHub Copilot coding agent](https://github.com/features/copilot/agents) and [Claude Code](https://claude.com/product/claude-code) — share a similar set of layers:
 
 - **Core loop**: the [tool-calling loop](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview), permission and sandboxing model, and context management that keep the agent grounded in your repository.
-- **Skills**: reusable, named procedures that encode a workflow so it runs the same way every time, instead of being re-improvised in each conversation. See [Section 26](#sec-ai-agent-skills).
+- **Skills**: reusable, named procedures that encode a workflow so it runs the same way every time, instead of being re-improvised in each conversation. See [Section 27](#sec-ai-agent-skills).
 - **Subagents**: a way to spin up a worker with a fresh context window for a self-contained piece of research or work, keeping the main conversation’s context focused.
 - **Multi-agent orchestration**: deterministic fan-out and fan-in across many subagents — for example, running several independent reviewers over a diff and reconciling their findings — for work that is large or benefits from independent verification.
 - **MCP servers**: the [Model Context Protocol](https://modelcontextprotocol.io/) gives a harness typed access to external systems (issue trackers, chat tools, databases) beyond raw shell or API calls.
@@ -367,11 +367,11 @@ Proprietary:
 - Replit Agent
 - Tabnine
 
-For raw capability the proprietary leaders still edge ahead, but the open options are competitive and win outright on cost, privacy, auditability, and model freedom. The 2026 signature of open-source use is bring-your-own-key, with two friction points worth knowing. Anthropic restricted third-party harnesses’ use of flat-rate Claude subscriptions in April 2026, which pushed some of those users onto extra-usage or per-token billing ([Section 21](#sec-ai-claude-code-other-models) covers the same rule from the Claude Code side), and OpenCode lost Claude Pro and Max login access after a dispute with Anthropic.
+For raw capability the proprietary leaders still edge ahead, but the open options are competitive and win outright on cost, privacy, auditability, and model freedom. The 2026 signature of open-source use is bring-your-own-key, with two friction points worth knowing. Anthropic restricted third-party harnesses’ use of flat-rate Claude subscriptions in April 2026, which pushed some of those users onto extra-usage or per-token billing ([Section 22](#sec-ai-claude-code-other-models) covers the same rule from the Claude Code side), and OpenCode lost Claude Pro and Max login access after a dispute with Anthropic.
 
 #### Local-model coding
 
-Local coding has matured to the point where the strongest open-weight models compete on the standard benchmarks. The community favorites for consumer hardware are the Qwen, Devstral, Gemma, and DeepSeek families, and the typical stack pairs OpenCode or Aider with a local OpenAI-compatible endpoint. [Section 18](#sec-ai-offline) and [Section 22](#sec-ai-small-local-models) cover the mechanics and the model choice.
+Local coding has matured to the point where the strongest open-weight models compete on the standard benchmarks. The community favorites for consumer hardware are the Qwen, Devstral, Gemma, and DeepSeek families, and the typical stack pairs OpenCode or Aider with a local OpenAI-compatible endpoint. [Section 19](#sec-ai-offline) and [Section 23](#sec-ai-small-local-models) cover the mechanics and the model choice.
 
 #### Beyond coding: general agent frameworks
 
@@ -400,7 +400,78 @@ Table 3: Matching a harness to the job
 
 Then pilot two of them on a repository you actually ship. Token or usage-limit pain points toward Codex or an open bring-your-own-key harness; a need for audit trails points toward Cline or LangGraph; a need for private inference points toward OpenCode or Aider with a local model.
 
-# 10 AI Agents and the Technological Singularity
+# 10 Where Current Practice Is Discussed: Reddit Communities
+
+The practice of working with AI agents changes faster than any static page (these notes included) can track. Much of the current guidance circulates as forum discussion: tool comparisons, configuration recipes, failure reports, and launch announcements. This section catalogs the Reddit communities where that discussion concentrates, grouped by what they are for, so you know where to look when a page here has gone stale. This section covers Reddit only: vendor documentation, project issue trackers, and the papers behind a technique are cited where the chapters use them, and the forum layer had no index here until this section.
+
+> **WARNING:**
+>
+> The member counts and the one-line characterizations in these tables are approximate and dated. They come from a directory compiled in August 2026 ([issue \#94](https://github.com/Morrison-Lab/wai/issues/94)) from third-party trackers (Prowlo, GummySearch, usefulai.com, and ReddTrends), which disagree with each other by tens of percent for the same community depending on crawl date. GummySearch stopped accepting new signups or renewals after 2025-11-30, so some cells it supplies reflect older snapshots. Reddit stopped showing member totals on community pages in late 2025, so a figure cannot be checked against the page itself. Read the counts as orders of magnitude, and when precision matters use a tracker that reads the official Reddit API (ReddTrends is one).
+
+#### Dedicated to AI agents
+
+| Community | Members | What it is for |
+|----|----|----|
+| [r/AI_Agents](https://www.reddit.com/r/AI_Agents/) | ~425k (Aug 2026) | The largest dedicated community: building and deploying LLM-based agents, framework comparisons, showcases, and launches. One marketing tracker describes it as roughly doubling over the preceding year. |
+| [r/aiagents](https://www.reddit.com/r/aiagents/) | ~118k | A separate community (no underscore) focused on tools, stack recommendations, and business automation. |
+| [r/AgentsOfAI](https://www.reddit.com/r/AgentsOfAI/) | ~98k | Showcase-friendly; known for its “I Made This” flair. |
+| [r/automation](https://www.reddit.com/r/automation/) | ~228k | Workflow automation with heavy agent crossover; not agent-only. |
+
+Table 4: Communities dedicated to AI agents
+
+#### Frameworks and tools
+
+| Community | Members | What it is for |
+|----|----|----|
+| [r/LLMDevs](https://www.reddit.com/r/LLMDevs/) | ~161k | Developer discussion of LLM applications, agent architectures, memory, and MCP builds. |
+| [r/mcp](https://www.reddit.com/r/mcp/) | ~89k | The Model Context Protocol; a smaller [r/modelcontextprotocol](https://www.reddit.com/r/modelcontextprotocol/) (~23k) covers the same ground. |
+| [r/LangChain](https://www.reddit.com/r/LangChain/) | ~87k | The largest framework community; much LangGraph discussion happens here too. |
+| [r/n8n](https://www.reddit.com/r/n8n/) | ~220k | The n8n workflow platform, with heavy agent-workflow content. |
+| [r/AutoGPT](https://www.reddit.com/r/AutoGPT/) | ~21k | Grew out of the AutoGPT project into general agents and automation; tolerates launch posts. |
+| [r/AutoGenAI](https://www.reddit.com/r/AutoGenAI/) | ~7k | Microsoft’s AutoGen; small but active. |
+| [r/crewai](https://www.reddit.com/r/crewai/) | ~1.6k | The CrewAI role-based framework. |
+
+Table 5: Framework and tool communities
+
+The framework-specific communities are much smaller than the general agent ones, and [r/PydanticAI](https://www.reddit.com/r/PydanticAI/), [r/LangGraph](https://www.reddit.com/r/LangGraph/), and [r/LlamaIndex](https://www.reddit.com/r/LlamaIndex/) exist but had no reliable counts at compilation time. In practice, framework discussion concentrates in [r/AI_Agents](https://www.reddit.com/r/AI_Agents/), [r/LLMDevs](https://www.reddit.com/r/LLMDevs/), and [r/LocalLLaMA](https://www.reddit.com/r/LocalLLaMA/) rather than in the niche communities.
+
+#### AI coding agents
+
+| Community | Members | What it is for |
+|----|----|----|
+| [r/ClaudeCode](https://www.reddit.com/r/ClaudeCode/) | ~253k-387k | Claude Code specifically; trackers disagree widely on its size (usefulai.com listed ~253k in May 2026, while GummySearch listed ~387k). |
+| [r/ChatGPTCoding](https://www.reddit.com/r/ChatGPTCoding/) | ~383k | The multi-tool coding community, where Claude Code, Cursor, Codex, and others are compared side by side. |
+| [r/vibecoding](https://www.reddit.com/r/vibecoding/) | ~343k | Building applications by directing agents; heavy Claude Code, Cursor, and Bolt content. |
+| [r/VibeCodeDevs](https://www.reddit.com/r/VibeCodeDevs/) | ~59k | Developers shipping real products with agents and automation. |
+| [r/Cursor](https://www.reddit.com/r/Cursor/) | not verified | The Cursor editor and its agent features. |
+
+Table 6: AI coding-agent communities
+
+#### General AI communities with heavy agent discussion
+
+| Community | Members | What it is for |
+|----|----|----|
+| [r/ChatGPT](https://www.reddit.com/r/ChatGPT/) | ~11.6M | The largest applied-AI community; frequent agent and automation threads. |
+| [r/singularity](https://www.reddit.com/r/singularity/) | ~4.0M | AI progress and futurism; skews toward hype. |
+| [r/MachineLearning](https://www.reddit.com/r/MachineLearning/) | ~3.0M | Research-grade, strictly moderated; agent papers. |
+| [r/OpenAI](https://www.reddit.com/r/OpenAI/) | ~2.7M | OpenAI products, including its agent offerings. |
+| [r/ArtificialInteligence](https://www.reddit.com/r/ArtificialInteligence/) | ~1.7-1.9M | Broad AI community (the misspelling is the actual handle). |
+| [r/artificial](https://www.reddit.com/r/artificial/) | ~1.3M | Broad AI news and tools. |
+| [r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/) | ~1.06M (Aug 2026) | Claude and Claude Code, with significant agentic crossover. |
+| [r/LocalLLaMA](https://www.reddit.com/r/LocalLLaMA/) | ~800k (Aug 2026) | The dominant local and open-weight model community; high signal on local agents and tooling. |
+| [r/LocalLLM](https://www.reddit.com/r/LocalLLM/) | ~207k | A second local-model community. |
+
+Table 7: General AI communities
+
+#### How to use this list
+
+- **For the broadest agent discussion**, start with r/AI_Agents, then add r/AgentsOfAI and r/aiagents for showcases and use cases.
+- **For framework work**, monitor r/AI_Agents, r/LLMDevs, and r/LocalLLaMA, where much of the framework discussion actually lands, and subscribe to a framework’s own community once it reaches daily posting at a few tens of thousands of members.
+- **For coding agents**, prioritize r/ClaudeCode and r/ChatGPTCoding, and add r/vibecoding for the builder angle.
+- **For research and trend-spotting**, follow r/LocalLLaMA, r/MachineLearning, and r/singularity, filtering the last for hype.
+- **Treat a community as a lead, not a source.** A forum thread is where a technique surfaces first; verify it against the tool’s documentation before you rely on it, in the spirit of [reviewing AI-generated work](../chapters/pr-workflow-with-agents.llms.md#sec-invalidate-ai-review).
+
+# 11 AI Agents and the Technological Singularity
 
 The emergence of sophisticated [AI agents](https://en.wikipedia.org/wiki/Intelligent_agent) has prompted discussions about whether we are witnessing or approaching a [technological singularity](https://en.wikipedia.org/wiki/Technological_singularity). Understanding this concept helps contextualize the rapid evolution of AI tools and our responsibility in using them.
 
@@ -442,20 +513,20 @@ The value of AI coding agents lies in their ability to accelerate human producti
 
 For thoughtful perspectives on AI consciousness and intelligence, see Douglas Hofstadter’s reflections in [“I Thought I Was in an AI Apocalypse. Then I Started Looking Closer.”](https://www.nytimes.com/2023/07/13/opinion/ai-chatgpt-consciousness-hofstadter.html)
 
-# 11 Relative Advantages of AI and Humans
+# 12 Relative Advantages of AI and Humans
 
 AI coding agents and human coders have complementary strengths. Understanding these differences helps you decide when to delegate work to agents and when to handle tasks yourself.
 
 #### Comparative Strengths: Humans vs. AI Agents
 
-[Table 4](#tbl-ai-human-comparison) summarizes the relative advantages of human coders and AI coding agents across different types of tasks:
+[Table 8](#tbl-ai-human-comparison) summarizes the relative advantages of human coders and AI coding agents across different types of tasks:
 
 | Task Type | Humans 😊 | AI agents 🤖 |
 |----|----|----|
 | **Creative thinking** | 😊 Humans excel at understanding context, handling ambiguous requirements, and thinking creatively about novel problems | 😞 AI agents struggle with ambiguous requirements and creative problem-solving in unfamiliar domains |
 | **Algorithmic thinking** | 😞 Humans make mistakes when following repetitive instructions and may introduce inconsistencies | 😊 AI agents excel at executing well-defined, repetitive tasks with precision and consistency |
 
-Table 4: Relative advantages of humans and AI coding agents
+Table 8: Relative advantages of humans and AI coding agents
 
 ------------------------------------------------------------------------
 
@@ -463,10 +534,10 @@ Or, if you prefer a more visual representation:
 
 |  | Humans | AI Agents |
 |----|----|----|
-| **Creative thinking** | [![](assets/images/The-Matrix-Neo-Flying.png)](assets/images/The-Matrix-Neo-Flying.png "Table 5: Relative advantages of humans and Agents") | [![](assets/images/agent-smith-no-its-not-fair.jpg)](assets/images/agent-smith-no-its-not-fair.jpg "Table 5: Relative advantages of humans and Agents") |
-| **Algorithmic thinking** | [![](assets/images/sad-keanu.png)](assets/images/sad-keanu.png "Table 5: Relative advantages of humans and Agents") | [![](assets/images/grinning-smith.png)](assets/images/grinning-smith.png "Table 5: Relative advantages of humans and Agents") |
+| **Creative thinking** | [![](assets/images/The-Matrix-Neo-Flying.png)](assets/images/The-Matrix-Neo-Flying.png "Table 9: Relative advantages of humans and Agents") | [![](assets/images/agent-smith-no-its-not-fair.jpg)](assets/images/agent-smith-no-its-not-fair.jpg "Table 9: Relative advantages of humans and Agents") |
+| **Algorithmic thinking** | [![](assets/images/sad-keanu.png)](assets/images/sad-keanu.png "Table 9: Relative advantages of humans and Agents") | [![](assets/images/grinning-smith.png)](assets/images/grinning-smith.png "Table 9: Relative advantages of humans and Agents") |
 
-Table 5: Relative advantages of humans and Agents
+Table 9: Relative advantages of humans and Agents
 
 This pattern mirrors the evolution of programming itself. Just as almost no one writes machine code anymore because higher-level languages and compilers handle those details, most developers will increasingly spend less time writing low-level code. Instead, you’ll describe what the system needs to do as clearly as possible, and AI agents will handle many of the computational and coding details.
 
@@ -491,7 +562,7 @@ World models aim to give AI systems:
 
 As these technologies mature, AI agents may become better at tasks requiring contextual understanding and creative problem-solving. This makes it even more important to develop strong supervision and validation skills now, so you can effectively work with increasingly capable AI systems.
 
-# 12 How to Work with Coding Agents
+# 13 How to Work with Coding Agents
 
 Coding agents can be accessed through several interfaces, each with different trade-offs for task size, feedback speed, and collaboration style.
 
@@ -585,7 +656,7 @@ For more details and community discussion about this limitation, see:
 
 For detailed instructions, see [GitHub Copilot coding agent documentation](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent).
 
-# 13 Useful Prompt Formats
+# 14 Useful Prompt Formats
 
 When working with coding agents, using clear and specific prompts helps achieve better results. Here are some useful prompt formats that you can use when requesting assistance from coding agents:
 
@@ -640,7 +711,7 @@ When working with coding agents, using clear and specific prompts helps achieve 
 - **Set boundaries**: Specify what should or shouldn’t change
 - **Request validation**: Ask the agent to test or verify its changes when appropriate
 
-# 14 Addressing Failing GitHub Actions Workflows
+# 15 Addressing Failing GitHub Actions Workflows
 
 When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix the issues. However, it’s important to use the right prompts depending on whether the problem is in your code or in the workflow configuration itself.
 
@@ -686,9 +757,9 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 > 3.  **Check** that no new secret access or command execution has been added
 > 4.  **Test** in a safe environment if possible
 >
-> See [Section 16](#sec-ai-best-practices) for more details on workflow file security.
+> See [Section 17](#sec-ai-best-practices) for more details on workflow file security.
 
-**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 36](#sec-ai-when-to-use) for more guidance.
+**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 37](#sec-ai-when-to-use) for more guidance.
 
 #### Scenario 3: Uncertain Which Scenario Applies
 
@@ -718,11 +789,11 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 #### Additional Resources
 
 - See the [UCD-SERG Lab Manual’s continuous integration chapter](https://ucd-serg.github.io/lab-manual/continuous-integration.html) for setting up GitHub Actions workflows
-- See [Section 16](#sec-ai-best-practices) and [Section 15](#sec-ai-benefits-hazards) for security considerations with workflow files
-- See [Section 36](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
+- See [Section 17](#sec-ai-best-practices) and [Section 16](#sec-ai-benefits-hazards) for security considerations with workflow files
+- See [Section 37](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
 - See the [GitHub Actions documentation](https://docs.github.com/en/actions) for workflow syntax and troubleshooting
 
-# 15 Benefits and Hazards
+# 16 Benefits and Hazards
 
 Coding agents are powerful programs that can work autonomously. They create pull requests that propose changes to the code in our repositories, potentially including their own configuration files and our automated workflows. They can work powerfully on our behalf, but they require careful oversight and control to ensure they serve our interests and that we understand the consequences of their actions.
 
@@ -773,7 +844,7 @@ However, coding agents also come with significant hazards:
 
 [Agents](https://en.wikipedia.org/wiki/Agent_(The_Matrix))
 
-# 16 Best Practices for Safe and Successful Use
+# 17 Best Practices for Safe and Successful Use
 
 To work with coding agents safely and successfully:
 
@@ -811,7 +882,7 @@ When using coding agents, work interactively with the AI suggestions: review, mo
 
 Remember: AI tools are assistants, not replacements for your expertise and judgment. The quality and correctness of your work remains your responsibility.
 
-# 17 Firewall and Network Configuration
+# 18 Firewall and Network Configuration
 
 Coding agents require specific network access to function properly. If a coding agent is running behind a corporate firewall or on a restricted network, you may need to configure allowlists to enable coding agent functionality.
 
@@ -910,7 +981,7 @@ For data science and R-focused repositories, we recommend adding the following U
 >
 > These sites do not host user-generated content or allow arbitrary code execution, making them appropriate for inclusion in your allowlist.
 
-# 18 Running Coding Agents Offline
+# 19 Running Coding Agents Offline
 
 Some environments restrict or prohibit internet access—high-performance computing (HPC) clusters, hospital networks, or air-gapped research servers may block connections to cloud AI providers. Running a local AI model lets you use coding assistance in these settings without sending code to external servers, which also addresses data-privacy concerns when working with sensitive or confidential data.
 
@@ -1361,11 +1432,11 @@ aider --yes --message "Fix the off-by-one error in mean()." stats.py
 
 Check the block itself first, as above. A test that passes because the proxy was never applied tells you nothing, and looks exactly like success.
 
-# 19 Connecting OpenCode to Local Models
+# 20 Connecting OpenCode to Local Models
 
 [OpenCode](https://opencode.ai) is an open-source coding agent that runs in your terminal, reads your project, edits files, and runs commands. It supports local models through OpenAI-compatible providers.
 
-This section assumes Ollama is already installed and that you have pulled a code-focused model — see [Section 18](#sec-ai-offline) for both, including the Linux and Windows install paths.
+This section assumes Ollama is already installed and that you have pulled a code-focused model — see [Section 19](#sec-ai-offline) for both, including the Linux and Windows install paths.
 
 Verify the server is running:
 
@@ -1400,9 +1471,9 @@ Restart OpenCode and run `/models` to see your local models listed alongside any
 
 A lightweight hand-written provider block in your project’s `opencode.json` still works if you prefer explicit control over model names and context limits, but the plugin removes the need to keep that list in sync with `ollama pull`.
 
-# 20 Connecting OpenCode to OpenRouter
+# 21 Connecting OpenCode to OpenRouter
 
-[OpenRouter](https://openrouter.ai) is a gateway that exposes hundreds of hosted models — Claude, GPT, Gemini, DeepSeek, Qwen, Kimi, Llama, and more — behind a single API key and billing account. OpenCode treats it as a built-in provider, so its catalog appears in the `/models` picker alongside local models ([Section 19](#sec-ai-opencode-ollama)). The catalog changes frequently; model IDs below were verified against it in August 2026.
+[OpenRouter](https://openrouter.ai) is a gateway that exposes hundreds of hosted models — Claude, GPT, Gemini, DeepSeek, Qwen, Kimi, Llama, and more — behind a single API key and billing account. OpenCode treats it as a built-in provider, so its catalog appears in the `/models` picker alongside local models ([Section 20](#sec-ai-opencode-ollama)). The catalog changes frequently; model IDs below were verified against it in August 2026.
 
 **Connect an API key:**
 
@@ -1447,7 +1518,7 @@ Models are addressed as `openrouter/<vendor>/<model>`, for example `openrouter/d
 
 Config loads at startup, so restart OpenCode after editing it.
 
-# 21 Running Claude Code with Non-Anthropic Models
+# 22 Running Claude Code with Non-Anthropic Models
 
 Claude Code is built around the Anthropic Messages API, and its documentation describes how to point the harness at any endpoint that speaks that format (measured 2026-09-01). That mechanism is what makes it possible to run Claude Code against models Anthropic does not make, and the same documentation says plainly that doing so is unsupported. This section summarizes:
 
@@ -1482,7 +1553,7 @@ The variables that matter, from the [connection guide](https://code.claude.com/d
 - `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1` makes Claude Code query the gateway’s `/v1/models` endpoint at startup and add the results to the `/model` picker.
 - `ANTHROPIC_CUSTOM_MODEL_OPTION` (with optional `_NAME` and `_DESCRIPTION`) adds a single custom row to the picker; Claude Code skips validation for that ID, so any string the endpoint accepts works.
 - `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1` stops Claude Code from sending pre-release request fields and beta headers. The connection guide lists it as the fix for `400` errors naming `context_management` or `Extra inputs are not permitted`, which is what a non-Anthropic upstream returns when it rejects Claude-specific fields.
-- `CLAUDE_CODE_MAX_CONTEXT_TOKENS` declares the context window for a model ID Claude Code does not recognize; [Section 18](#sec-ai-offline) shows it in use for a local model.
+- `CLAUDE_CODE_MAX_CONTEXT_TOKENS` declares the context window for a model ID Claude Code does not recognize; [Section 19](#sec-ai-offline) shows it in use for a local model.
 
 Claude Code reads these at startup, either from the shell or from the `env` block of `~/.claude/settings.json`.
 
@@ -1491,10 +1562,10 @@ Claude Code reads these at startup, either from the shell or from the `env` bloc
 The forum reports collected in the tracking issue fall into a few shapes, from fewest moving parts to most:
 
 - **A model vendor’s Anthropic-compatible endpoint.** Several labs, including [Z.ai](https://z.ai/) (GLM), [Moonshot](https://www.kimi.com/) (Kimi), and [MiniMax](https://www.minimax.io/), publish endpoints that speak the Messages format directly, so the whole setup is `ANTHROPIC_BASE_URL` plus the vendor’s key. It is the route those reports describe most often, and the one bundled with the vendors’ “coding plan” subscriptions.
-- **A hosted aggregator.** [OpenRouter](https://openrouter.ai/) exposes an Anthropic-format endpoint, so Claude Code can talk to it with no local proxy; [Section 20](#sec-ai-opencode-openrouter) covers the same aggregator from the OpenCode side.
-- **A self-hosted gateway.** [LiteLLM](https://docs.litellm.ai) and [Kong](https://konghq.com/) are the examples that Anthropic’s own environment-variable reference names for gateway model discovery. LiteLLM translates Messages-format requests to many providers and adds virtual keys, fallbacks, and cost tracking; [Section 18](#sec-ai-offline) shows a LiteLLM configuration for local models.
+- **A hosted aggregator.** [OpenRouter](https://openrouter.ai/) exposes an Anthropic-format endpoint, so Claude Code can talk to it with no local proxy; [Section 21](#sec-ai-opencode-openrouter) covers the same aggregator from the OpenCode side.
+- **A self-hosted gateway.** [LiteLLM](https://docs.litellm.ai) and [Kong](https://konghq.com/) are the examples that Anthropic’s own environment-variable reference names for gateway model discovery. LiteLLM translates Messages-format requests to many providers and adds virtual keys, fallbacks, and cost tracking; [Section 19](#sec-ai-offline) shows a LiteLLM configuration for local models.
 - **A community router.** [Claude Code Router](https://github.com/musistudio/claude-code-router) intercepts each request and routes it by type (background, thinking, long-context, default) to a different provider or model. It has the most features of the five, and the tracking issue quotes its own issue tracker describing it as unstable and hard to configure.
-- **A local model server.** [vLLM](https://docs.vllm.ai/) and [Ollama](https://ollama.com/) both serve the Messages API directly, so Claude Code can point at either with no proxy; [Section 18](#sec-ai-offline) covers the mechanics, and [Section 22](#sec-ai-small-local-models) covers which local models can sustain an autonomous loop.
+- **A local model server.** [vLLM](https://docs.vllm.ai/) and [Ollama](https://ollama.com/) both serve the Messages API directly, so Claude Code can point at either with no proxy; [Section 19](#sec-ai-offline) covers the mechanics, and [Section 23](#sec-ai-small-local-models) covers which local models can sustain an autonomous loop.
 
 Treat any self-hosted gateway or community router as infrastructure: pin its version, and keep the official `claude` launcher as a fallback. The tracking issue records a 2026 incident in which malicious LiteLLM releases were briefly published to PyPI, which is the concrete reason for pinning.
 
@@ -1521,13 +1592,13 @@ The policy history in the tracking issue concerns the other direction, using a C
 
 | Goal | Suggested route |
 |----|----|
-| Model flexibility is the priority | A model-agnostic harness ([OpenCode](https://opencode.ai), [Aider](https://aider.chat/), [Cline](https://github.com/cline/cline)), which is built for it; see [Section 19](#sec-ai-opencode-ollama) and [Section 20](#sec-ai-opencode-openrouter) |
+| Model flexibility is the priority | A model-agnostic harness ([OpenCode](https://opencode.ai), [Aider](https://aider.chat/), [Cline](https://github.com/cline/cline)), which is built for it; see [Section 20](#sec-ai-opencode-ollama) and [Section 21](#sec-ai-opencode-openrouter) |
 | Claude Code’s skills and plugins with one cheaper model | The vendor’s Anthropic-compatible endpoint with your own key |
 | Several models with team governance | A self-hosted gateway such as LiteLLM, or an enterprise gateway product, pinned as infrastructure |
 | Per-request-type cost routing | Claude Code Router, pinned as infrastructure |
 | Claude models at subscription prices | The official Claude Code CLI signed in with the subscription, which remains fully supported |
 
-Table 6: Choosing a route for running Claude Code with other models
+Table 10: Choosing a route for running Claude Code with other models
 
 Whichever route you pick:
 
@@ -1535,9 +1606,9 @@ Whichever route you pick:
 - Assume prompt caching is off until the gateway proves otherwise.
 - Measure cost per completed task on your own work rather than comparing token prices; if the alternative is not cheaper on that measure, or tool-call failures disrupt sessions, go back to a supported configuration.
 
-# 22 Small, Local Models for Autonomous Agentic Coding
+# 23 Small, Local Models for Autonomous Agentic Coding
 
-[Section 18](#sec-ai-offline) covers the mechanics of running a model on your own hardware: installing Ollama, wiring up an editor, and driving `aider` against a local endpoint. This section is about a narrower and harder question sitting on top of that setup: which local model to pick, and how to let it work **autonomously** — making a sequence of edits, commits, and tool calls with no human approving each step — without the loop quietly going wrong.
+[Section 19](#sec-ai-offline) covers the mechanics of running a model on your own hardware: installing Ollama, wiring up an editor, and driving `aider` against a local endpoint. This section is about a narrower and harder question sitting on top of that setup: which local model to pick, and how to let it work **autonomously** — making a sequence of edits, commits, and tool calls with no human approving each step — without the loop quietly going wrong.
 
 > **WARNING:**
 >
@@ -1568,7 +1639,7 @@ Prefer a model explicitly trained for **tool calling and agentic use** over a ge
 
 Qwen3-Coder’s 30B-A3B tag is a mixture-of-experts model: 30B total parameters, but only about 3.3B active per token. VRAM at rest is set by the total, not the active count — every expert has to stay resident in memory even though only a fraction fires on any given token — which is why the tag still needs roughly 19 GB at 4-bit quantization, in line with its 30B total rather than its 3.3B active count. What the small active count buys is speed: inference runs closer to a 3–4B model’s pace despite the larger memory footprint. Codestral’s license is worth reading before you rely on it: Mistral’s Non-Production License permits local evaluation but not production or commercial deployment — fine for trying it out, not fine for a lab pipeline that runs unattended.
 
-As a practical floor, treat the 24–32B tier at 4-bit quantization as the smallest size that holds up across a multi-step autonomous loop without frequent tool-call errors. Below that, a model is still useful as an assistant you supervise turn by turn ([Section 18](#sec-ai-offline) covers exactly that setup), but it is not yet a safe choice to leave unattended.
+As a practical floor, treat the 24–32B tier at 4-bit quantization as the smallest size that holds up across a multi-step autonomous loop without frequent tool-call errors. Below that, a model is still useful as an assistant you supervise turn by turn ([Section 19](#sec-ai-offline) covers exactly that setup), but it is not yet a safe choice to leave unattended.
 
 > **IMPORTANT:**
 >
@@ -1668,13 +1739,13 @@ This ensures:
 
 #### Routed architectures: a planner and an executor
 
-[Section 18](#sec-ai-offline) already shows the mechanics of splitting a task between two local models with `aider --architect`: a larger model plans the change, and a smaller one applies the edits. The same split has a name in the research literature and a stronger motivating argument than “it’s faster”: Belcak and NVIDIA’s small-language-model research group argue that most of what an agent does in a loop is “a small number of specialized tasks repetitively and with little variation” — reading a diff, running a test, formatting a commit message — and that a small model is “sufficiently powerful, inherently more suitable, and necessarily more economical” for that work ([Belcak et al. 2025](#ref-slm_agentic_ai)). A large model earns its cost only on the steps that genuinely need broad, general reasoning: deciding *what* to change and why.
+[Section 19](#sec-ai-offline) already shows the mechanics of splitting a task between two local models with `aider --architect`: a larger model plans the change, and a smaller one applies the edits. The same split has a name in the research literature and a stronger motivating argument than “it’s faster”: Belcak and NVIDIA’s small-language-model research group argue that most of what an agent does in a loop is “a small number of specialized tasks repetitively and with little variation” — reading a diff, running a test, formatting a commit message — and that a small model is “sufficiently powerful, inherently more suitable, and necessarily more economical” for that work ([Belcak et al. 2025](#ref-slm_agentic_ai)). A large model earns its cost only on the steps that genuinely need broad, general reasoning: deciding *what* to change and why.
 
 Two shapes of this pattern are worth knowing:
 
 - **All-local**: a single strong local model (30–32B) does both planning and execution, which is simplest to set up and is the right default for a laptop or workstation with one GPU.
 - **Local planner, local executor**: a 30–32B planner drafts each step and a 7–8B executor applies it, trading some plan quality for throughput — worthwhile mainly on hardware that cannot comfortably hold two copies of a 32B model at once.
-- **Cloud planner, local executor**: a frontier cloud model plans and a local model executes, which keeps the bulk of file contents on your own machine while still using strong reasoning for the decisions that matter most. This is a hybrid rather than a fully local setup — see the LiteLLM fallback pattern in [Section 18](#sec-ai-offline) for one way to wire a cloud-with-local-fallback endpoint, which composes with this split.
+- **Cloud planner, local executor**: a frontier cloud model plans and a local model executes, which keeps the bulk of file contents on your own machine while still using strong reasoning for the decisions that matter most. This is a hybrid rather than a fully local setup — see the LiteLLM fallback pattern in [Section 19](#sec-ai-offline) for one way to wire a cloud-with-local-fallback endpoint, which composes with this split.
 
 None of these routing choices substitutes for the guardrails below. A well-chosen planner still hands off to an executor that can make a per-step mistake, and the loop still needs a way to catch that.
 
@@ -1732,7 +1803,7 @@ This page explains the reasoning; it does not implement a launcher or a CI gate.
   - non-standard-characters
   - bibliography DOIs
 
-# 23 Configuring GitHub Copilot Settings
+# 24 Configuring GitHub Copilot Settings
 
 GitHub Copilot offers numerous configuration options that control how the AI assistant integrates into your development workflow. This section explains the key settings visible in your GitHub account preferences and provides guidance on which options to enable based on your use case.
 
@@ -1891,7 +1962,7 @@ These settings control where and how Copilot integrates into your development en
 - *What it does*: Delegate tasks to Copilot coding agent in repositories where it is enabled
 - *Pros*: Autonomous multi-file edits, can execute complex refactoring, runs tests and fixes issues
 - *Cons*: Requires careful oversight, can make unwanted changes if instructions unclear
-- *Recommendation*: **Enable** (see [Section 16](#sec-ai-best-practices) for safe usage guidelines)
+- *Recommendation*: **Enable** (see [Section 17](#sec-ai-best-practices) for safe usage guidelines)
 
 **Copilot Memory (Preview):**
 
@@ -1962,9 +2033,9 @@ For lab members, we recommend the following configuration:
 - Editor preview features (only if comfortable with potential instability)
 - Automatic Copilot code review (wait until familiar with review quality)
 
-Following these guidelines will help establish an effective Copilot configuration. The key is to enable features that add value to your workflow while maintaining awareness that AI assistance requires validation (see [Section 16](#sec-ai-best-practices)).
+Following these guidelines will help establish an effective Copilot configuration. The key is to enable features that add value to your workflow while maintaining awareness that AI assistance requires validation (see [Section 17](#sec-ai-best-practices)).
 
-# 24 Connecting VS Code to a Custom Model Endpoint (BYOK)
+# 25 Connecting VS Code to a Custom Model Endpoint (BYOK)
 
 VS Code’s built-in Chat usually talks to GitHub’s hosted models. It can also route requests to a model provider of your own; GitHub calls this “bring your own key” (BYOK). The lab uses BYOK to reach Databricks model serving endpoints, which expose an OpenAI-compatible API, through the community extension [`oai-compatible-copilot`](https://marketplace.visualstudio.com/items?itemName=johnny-zhao.oai-compatible-copilot).
 
@@ -2029,7 +2100,7 @@ The extension advertises input capacity as `context_length` minus `max_tokens`. 
 
 The underlying model’s maximum output is not always a good value for `max_tokens`. [Databricks reserves the requested output allowance before admitting a request](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/limits). Under the standard pay-per-token quota, Claude, GPT-5, and Gemini models generally have a 20,000 output-token-per-minute limit. A 64,000-token request can therefore receive an immediate 429 response even when the underlying model supports that output length.
 
-Use the quota-aware lab defaults in [Table 7](#tbl-databricks-oaicopilot-defaults). The context column is the operational value to put in `settings.json`, not the model’s maximum capability.
+Use the quota-aware lab defaults in [Table 11](#tbl-databricks-oaicopilot-defaults). The context column is the operational value to put in `settings.json`, not the model’s maximum capability.
 
 | Model group | Workspace ITPM / OTPM | OAICopilot context | Output cap | Delay |
 |----|---:|---:|---:|---:|
@@ -2042,7 +2113,7 @@ Use the quota-aware lab defaults in [Table 7](#tbl-databricks-oaicopilot-defaul
 | Llama 4 Maverick | 1,000,000 / 100,000 | 128,000 | 8,192 | 0 ms |
 | Llama 3.3/3.1 and Gemma 3 | 1,000,000 / 100,000 | 128,000 | 8,192 | 0 ms |
 
-Table 7: Lab defaults for Databricks-hosted models
+Table 11: Lab defaults for Databricks-hosted models
 
 Use `openai-responses` for any endpoint that the current catalog marks as requiring the Responses API, and `openai` for the rest. Checked 2026-08-26, the catalog gives that instruction for GPT-5.5 Pro, GPT-5.5, and GPT-5.3 Codex. Read the catalog rather than the list, since an endpoint can change API mode without any model being added. Add the `delay` value to each affected model entry. The extension applies this model-specific pause between requests; models without it fall back to the global `oaicopilot.delay` value. Every context and output cap in the table is a working default, not the underlying model’s maximum capability. Workspaces with higher provisioned or priority limits can raise these after checking their actual quota.
 
@@ -2056,7 +2127,7 @@ A workspace admits `ITPM` input tokens per minute. The extension advertises `con
 
 The Claude row is tuned to sit just under that ceiling. A 15,000 ms delay allows four requests per minute, and each request carries the 48,000-token input budget derived above, so a busy client draws about 192,000 against a 200,000 ITPM tier. That is roughly 96 percent of the allowance, which is why the 64,000 value looks conservative and is not.
 
-This is what makes a larger window expensive. Raising `context_length` while leaving the delay alone multiplies straight through the inequality above. [Table 8](#tbl-databricks-itpm-pacing) gives the largest input budget each tier sustains at a given pace.
+This is what makes a larger window expensive. Raising `context_length` while leaving the delay alone multiplies straight through the inequality above. [Table 12](#tbl-databricks-itpm-pacing) gives the largest input budget each tier sustains at a given pace.
 
 | Workspace ITPM | 15 s (4/min) | 30 s (2/min) | 60 s (1/min) |
 |----------------|-------------:|-------------:|-------------:|
@@ -2064,7 +2135,7 @@ This is what makes a larger window expensive. Raising `context_length` while lea
 | 1,000,000      |      250,000 |      500,000 |    1,000,000 |
 | 2,000,000      |      500,000 |    1,000,000 |    2,000,000 |
 
-Table 8: Largest sustainable input budget by tier and pacing
+Table 12: Largest sustainable input budget by tier and pacing
 
 A model’s own maximum window is a separate quantity from either column, and it is usually far larger. Registering it directly is the common mistake. Advertising a 1,000,000-token window on a 200,000 ITPM tier offers a single prompt of 984,000 input tokens, which is 4.9 times the entire per-minute allowance, so two full prompts would need about 295 seconds between them. The window is a real capability of the model and it is not available at that quota.
 
@@ -2213,9 +2284,9 @@ Error: No lowest priority node found (path: ...)
   ... [ConversationHistorySummarizer] summarization failed
 ```
 
-This one comes from Copilot Chat’s prompt renderer, not from Databricks. The renderer drops prompt elements in priority order until the prompt fits the input budget the extension advertises, which is `context_length` minus `max_tokens`, or 48,000 tokens at the Claude defaults in [Table 7](#tbl-databricks-oaicopilot-defaults). The error is what it raises when it has nothing left to drop and the prompt is still over budget. A prompt pruned that far need not still contain your own message, which fits a model that replies it cannot see a request.
+This one comes from Copilot Chat’s prompt renderer, not from Databricks. The renderer drops prompt elements in priority order until the prompt fits the input budget the extension advertises, which is `context_length` minus `max_tokens`, or 48,000 tokens at the Claude defaults in [Table 11](#tbl-databricks-oaicopilot-defaults). The error is what it raises when it has nothing left to drop and the prompt is still over budget. A prompt pruned that far need not still contain your own message, which fits a model that replies it cannot see a request.
 
-Agent mode reaches this sooner than ordinary chat, because tool definitions and instruction files consume the budget before any conversation does. Raise the model’s `context_length` and leave `max_tokens` alone: that widens the input allowance without reserving more output tokens per minute. Reducing the number of active tools and instruction files works too. Weigh both against [Table 7](#tbl-databricks-oaicopilot-defaults), whose context values are chosen to keep one client inside an ITPM tier, so buying prompt headroom this way costs more 429s. Raising the window without lengthening the delay breaks the pairing those two columns encode, and on a 200,000 ITPM tier the headroom is not there to buy. Switching to a higher-tier family is the move that gets both, as [Table 8](#tbl-databricks-itpm-pacing) sets out.
+Agent mode reaches this sooner than ordinary chat, because tool definitions and instruction files consume the budget before any conversation does. Raise the model’s `context_length` and leave `max_tokens` alone: that widens the input allowance without reserving more output tokens per minute. Reducing the number of active tools and instruction files works too. Weigh both against [Table 11](#tbl-databricks-oaicopilot-defaults), whose context values are chosen to keep one client inside an ITPM tier, so buying prompt headroom this way costs more 429s. Raising the window without lengthening the delay breaks the pairing those two columns encode, and on a 200,000 ITPM tier the headroom is not there to buy. Switching to a higher-tier family is the move that gets both, as [Table 12](#tbl-databricks-itpm-pacing) sets out.
 
 **7. `[object Object]` in the reply text**
 
@@ -2227,7 +2298,7 @@ This is a display bug in the extension rather than a configuration error, so no 
 >
 > Copilot’s own hosted quota still applies to some background chores even when the main chat model is BYOK. A log line reading `quotaExceeded | gpt-4o-mini-2024-07-18 | [title]` is conversation-title generation failing against GitHub’s models, and it says nothing about whether your provider is working. In the 2026-08-20 session above, `chat.byokUtilityModelDefault` was already set to `"mainAgent"` and the title request still went to `gpt-4o-mini`, so that setting did not cover conversation titles in this version.
 
-# 25 Configuring the Agent Environment
+# 26 Configuring the Agent Environment
 
 The `.github/workflows/copilot-setup-steps.yml` file allows you to customize the development environment in which the GitHub Copilot coding agent operates. This file preinstalls tools and dependencies so that Copilot can build, test, and lint your code more reliably.
 
@@ -2375,7 +2446,7 @@ Note: When using self-hosted runners, you must disable Copilot’s integrated fi
 
 For complete details, see [Customizing the development environment for GitHub Copilot coding agent](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment).
 
-# 26 Agent Skills
+# 27 Agent Skills
 
 [Agent Skills](https://agentskills.io/home) are a lightweight, open standard for extending AI agent capabilities with specialized knowledge and workflows. The [specification](https://agentskills.io/specification) defines a portable, tool-agnostic format that any compatible agent can load.
 
@@ -2417,7 +2488,7 @@ Skills package procedural knowledge and team-specific context into portable, ver
 
 For the complete specification and more details, see [agentskills.io](https://agentskills.io/home).
 
-A skill is one of several ways to customize an agent, and not always the right one. [Section 28](#sec-ai-customization) compares it against:
+A skill is one of several ways to customize an agent, and not always the right one. [Section 29](#sec-ai-customization) compares it against:
 
 - instruction files
 - subagents
@@ -2428,7 +2499,7 @@ That section also explains why Claude Code’s custom slash commands are now ski
 
 The [Morrison-Lab/ai-config](https://github.com/Morrison-Lab/ai-config) repository contains an example of personal Claude Code configuration, including user-level skills, hooks, and subagents, synced across machines via Git.
 
-# 27 Useful plugins
+# 28 Useful plugins
 
 This site’s Quarto sources already use [Semantic Line Breaks](https://sembr.org/) (SemBr): a line break after each substantial unit of thought, so the source is easier to edit while the rendered HTML still reads as ordinary paragraphs.
 
@@ -2455,11 +2526,11 @@ The agent reads the touched code first and is lazy about the solution, never abo
 
 [Contextify](https://contextify.sh/) keeps your Claude Code and Codex history forever in a private, searchable timeline. Claude Code deletes history after 30 days; Contextify watches both tools, summarizes each message (on-device via Apple Intelligence on macOS 26, or Lite Mode on macOS 15), and lets you search every conversation you ever had. It runs local-first with no account required, and optionally syncs across devices via Cloud Sync or a self-hosted instance you operate. The ambient timeline lets you follow sessions in real time or skim what happened while you were away.
 
-The lab’s portable agent config lives in [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config). It is a plugin-or-symlink install of skills, hooks, and memories — not a third marketplace next to SemBr. How that config actually reaches a machine, and how a doubled plugin install fails, is [Section 29](#sec-ai-config-install). [Section 28](#sec-ai-customization) is the worked example of what the corpus contains.
+The lab’s portable agent config lives in [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config). It is a plugin-or-symlink install of skills, hooks, and memories — not a third marketplace next to SemBr. How that config actually reaches a machine, and how a doubled plugin install fails, is [Section 30](#sec-ai-config-install). [Section 29](#sec-ai-customization) is the worked example of what the corpus contains.
 
-# 28 Customizing an Agent
+# 29 Customizing an Agent
 
-[Section 26](#sec-ai-agent-skills) describes one way to extend an agent. It is not the only one, and a lab that knows only that one tends to write every customization as a skill, including the ones that should have been something else.
+[Section 27](#sec-ai-agent-skills) describes one way to extend an agent. It is not the only one, and a lab that knows only that one tends to write every customization as a skill, including the ones that should have been something else.
 
 This section maps the whole surface. The mechanisms differ less in what you can write in them — most are Markdown with a [YAML front matter](https://jekyllrb.com/docs/front-matter/) header, as [Section 6](#sec-ai-harness-construction) describes — than in **when they fire and who decides**.
 
@@ -2557,7 +2628,7 @@ Rules are written as `Tool(specifier)` — for example `Bash(npm run test *)`, `
 
 Everything above changes what the agent *knows or must do*. An [MCP](https://modelcontextprotocol.io/) server changes what it *can reach*: typed tools, data resources, and reusable templates exposed over a standard protocol. The specification is explicit that it “does not dictate how AI applications use LLMs or manage the provided context.”
 
-So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. [Section 43](#sec-ai-mcp-server-setup) covers configuration and its failure modes.
+So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. [Section 44](#sec-ai-mcp-server-setup) covers configuration and its failure modes.
 
 #### Choosing
 
@@ -2600,9 +2671,9 @@ That distribution is itself the argument. Nearly everything is a skill, because 
 
 This repository is a smaller example of the same idea: it carries a `.github/copilot-instructions.md` for conventions that apply everywhere, plus path-scoped files under `.github/instructions/` whose `applyTo` globs attach them only when you edit a matching file.
 
-# 29 How the Config Reaches a Machine
+# 30 How the Config Reaches a Machine
 
-[Section 28](#sec-ai-customization) describes *which* mechanism a customization should use. This section is about the step after that decision: how a config like a shared instruction repository actually reaches a machine, and how a broken install fails.
+[Section 29](#sec-ai-customization) describes *which* mechanism a customization should use. This section is about the step after that decision: how a config like a shared instruction repository actually reaches a machine, and how a broken install fails.
 
 Two agents can load the identical instruction corpus and still behave differently, because behavior depends not only on what the config says but on how it is installed where the agent runs. An install problem is quiet by construction — nothing errors, the work still gets done, and a capability simply goes missing with no message that it existed.
 
@@ -2640,7 +2711,7 @@ A broken install rarely announces itself; you read it backward from a symptom.
 
 The common thread is that the install layer is a real surface, distinct from the content of the config, with its own failure modes and its own checks. When an agent behaves as though a rule or skill you wrote does not exist, suspect the install before you suspect the rule.
 
-# 30 Claude Code Cloud Environments
+# 31 Claude Code Cloud Environments
 
 [Claude Code](https://www.anthropic.com/claude-code) is a CLI coding agent that can also run tasks on Anthropic-managed cloud infrastructure— either from the web at [claude.ai/code](https://claude.ai/code) (“Claude Code on the web”), or from the terminal by adding the `--remote` flag to move a session into the cloud.
 
@@ -2665,7 +2736,7 @@ The `/remote-env` slash command sets **which configured environment is the defau
 
 For details, see the [Claude Code on the web documentation](https://code.claude.com/docs/en/claude-code-on-the-web) and the [slash command reference](https://code.claude.com/docs/en/commands).
 
-# 31 Using a ChatGPT Account for Codex Pull-Request Reviews
+# 32 Using a ChatGPT Account for Codex Pull-Request Reviews
 
 OpenAI Codex can act as a reviewer on GitHub pull requests. The native integration uses the Codex service connected to a ChatGPT workspace and posts a standard GitHub review through the Codex connector bot. It does not require you to build a separate GitHub Action.
 
@@ -2752,7 +2823,7 @@ Codex review is an additional signal; it does not replace:
 
 For current setup details, see OpenAI’s [GitHub code-review documentation](https://learn.chatgpt.com/docs/third-party/github).
 
-# 32 Where Pull-Request Review Lives in Claude Code Action
+# 33 Where Pull-Request Review Lives in Claude Code Action
 
 A common question about [anthropics/claude-code-action](https://github.com/anthropics/claude-code-action) is where its pull-request review lives. The answer is surprising: **there is no dedicated review action.** The repository publishes one general-purpose top-level action, and “review” is a *prompt* you pass it, not a separate artifact.
 
@@ -2808,7 +2879,7 @@ This distinction explains a common debugging dead end: “`@claude` answered my 
 
 This is the Claude-side counterpart to [using a ChatGPT account for Codex pull-request reviews](#sec-ai-codex-github-review). Codex ships a hosted native reviewer configured through the ChatGPT workspace, with no workflow file. Claude Code’s reviewer is the opposite trade: you own a workflow file and supply API credentials, but the prompt, tools, model, and triggering events are all visible and editable in your repository.
 
-# 33 Gemini Review Action for GitHub Pull Requests
+# 34 Gemini Review Action for GitHub Pull Requests
 
 [`derailed-dash/gemini-review-action`](https://github.com/derailed-dash/gemini-review-action) is an open-source GitHub Action that provides automated code reviews on pull requests and automated triage on issues using Google’s Gemini models (measured 2026-08-31; repository at `v1.6.6`).
 
@@ -2859,7 +2930,7 @@ jobs:
 
 Like [Claude Code Action](#sec-ai-claude-code-action-review), `derailed-dash/gemini-review-action` gives the repository owner full visibility over workflow triggers, authentication methods, and review prompts. In contrast to hosted review offerings that require platform-level permissions across an entire organization, this GitHub Action operates per-repository with credentials scoped to GitHub Actions secrets or Google Cloud IAM roles.
 
-# 34 Gemini Code Assist for Repository Code Review
+# 35 Gemini Code Assist for Repository Code Review
 
 Google Cloud provides a native code-review capability through [Gemini Code Assist](https://docs.cloud.google.com/gemini/docs/code-review/review-repo-code) (measured 2026-08-31; documentation in Enterprise preview). Unlike GitHub Actions that run inside individual repository workflows, Gemini Code Assist operates as a managed service connected at the organization or repository level.
 
@@ -2890,7 +2961,7 @@ Gemini Code Assist enforces several deliberate boundaries on review scope:
 | **Interactive mode** | Built-in `/gemini` comment tags | Configurable via `@claude` or Action triggers |
 | **Credential location** | Google Cloud IAM & Developer Connect token | GitHub Secrets or Workload Identity Federation |
 
-# 35 How a Session Learns a PR Changed
+# 36 How a Session Learns a PR Changed
 
 A coding-agent session that is watching a pull request does not poll it. Something wakes the session when the pull request changes, and in Claude Code that “something” is one of **two separate channels**.
 
@@ -2913,7 +2984,7 @@ Two caveats are worth knowing before relying on it.
 
 **A successful subscribe does not guarantee delivery.** If a PR Steward agent already holds the watch on that pull request, the call still succeeds — but this session receives nothing. The tool result says so in as many words, so read the result rather than the exit status. Taking over the watch requires opting the steward out first, by removing its watching label on the pull request.
 
-**The tool does not exist on a locally-run GitHub MCP server.** Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. [Section 43](#sec-ai-mcp-server-setup) covers the local analogues to reach for instead.
+**The tool does not exist on a locally-run GitHub MCP server.** Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. [Section 44](#sec-ai-mcp-server-setup) covers the local analogues to reach for instead.
 
 **Webhook delivery is also not exhaustive**, which is the failure mode most likely to be mistaken for “nothing has happened”. CI *successes*, new pushes, and merge-conflict transitions can arrive late or not at all. A session that treats silence as “still green” will sit indefinitely on a pull request that has gone stale or conflicted, so a subscription is a supplement to periodically re-reading the pull request’s real state, not a replacement for it.
 
@@ -2929,7 +3000,7 @@ Three properties of that panel surprise people:
 - **No agent-side tool can reach it.** It is client-UI state, not something an agent’s configuration surface touches, so asking an agent to enable it cannot work. If the checkbox changes, a human changed it.
 - **One of the two has a shortcut, and the other does not.** Running `/autofix-pr` from the command line on a pull request’s branch spawns a web session with **Auto-fix CI & address comments** already on. There is no equivalent shortcut for **Auto-merge when ready**.
 
-See [Section 30](#sec-ai-claude-cloud-env) for the web-session context these run in.
+See [Section 31](#sec-ai-claude-cloud-env) for the web-session context these run in.
 
 #### The instruction template is boilerplate
 
@@ -2976,13 +3047,13 @@ So treat a footer as a strong hint and a missing footer as near-conclusive, and 
 >
 > The delivery mechanics and the wording of the instruction template above were established by observation during agent sessions in mid-2026, not from a published specification. Claude Code on the web is a research-preview feature, so treat the specifics as liable to change and re-check them against current behavior before depending on any one detail.
 
-# 36 When to use a coding agent
+# 37 When to use a coding agent
 
 Coding agent sessions are currently[^1] considered “premium requests”, which are limited resources; see <https://github.com/features/copilot/plans> for details. So, use coding agents sparingly. Use them for complex changes that would be difficult or time-consuming for you to complete by hand. Coding agents also take time to get configured for work, every time you make a request. See <https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment#preinstalling-tools-or-dependencies-in-copilots-environment> for ways to reduce that startup time, but it will never be 0. If you can complete the task faster than the coding agent can, you should probably do it yourself. For example, when you have errors in the spell-check or lint workflows, you can often fix them faster than Copilot can. Similarly, when reviewing Copilot’s PRs, you can often make direct changes to the branch faster than you could write clear review comments and get Copilot to address them.
 
 Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.
 
-# 37 Editing with `.docx` files
+# 38 Editing with `.docx` files
 
 GitHub Copilot coding agents can read Microsoft Word (`.docx`) files, including tracked changes and comments. This enables a hybrid editing workflow where:
 
@@ -3017,7 +3088,7 @@ When opening DOCX files generated by Quarto (including this site), Microsoft Wor
 
 This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.
 
-# 38 Copilot Instructions for this Repository
+# 39 Copilot Instructions for this Repository
 
 A `.github/copilot-instructions.md` file contains repository-specific instructions and guidelines for GitHub Copilot coding agents. This file helps ensure that AI-generated contributions follow the project’s formatting standards, coding conventions, and documentation practices.
 
@@ -3034,7 +3105,7 @@ By having these instructions in `.github/copilot-instructions.md`, you ensure th
 
 See this repository’s own [`.github/copilot-instructions.md`](https://github.com/Morrison-Lab/wai/blob/main/.github/copilot-instructions.md) for a working example.
 
-# 39 Using Copilot Review Before Human Review
+# 40 Using Copilot Review Before Human Review
 
 Before requesting review from other humans, **always have Copilot review your pull request first**—even if Copilot created the PR itself. AI review provides fast, thorough feedback that helps catch issues before involving human reviewers, saving everyone time and improving code quality.
 
@@ -3077,7 +3148,7 @@ Even if you’re highly experienced, treating Copilot review as a required pre-r
 
 When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.
 
-# 40 Reviewing a Copilot PR You Didn’t Create
+# 41 Reviewing a Copilot PR You Didn’t Create
 
 When reviewing a pull request where someone else prompted Copilot to make changes, follow these guidelines to avoid confusion and ensure smooth collaboration:
 
@@ -3150,7 +3221,7 @@ To transfer the PR manager role:
 
 This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.
 
-# 41 Agent Sessions and Handoff in Visual Studio Code
+# 42 Agent Sessions and Handoff in Visual Studio Code
 
 In Visual Studio Code, interactions with AI coding assistants are structured around [Agent Sessions and Handoff](https://code.visualstudio.com/docs/agents/concepts/sessions) (measured 2026-08-31). Understanding how sessions organize work and transfer state across tools is essential for managing multi-step agent workflows.
 
@@ -3179,7 +3250,7 @@ Session handoff transfers context and intent from an active session to a special
 - **Plan to implementation**: Hand off a high-level architectural plan or task specification directly to an implementation session to generate code.
 - **Continue in the cloud**: Hand off a local session to run in a cloud-hosted agent environment (such as background tasks leading to pull requests), freeing local editor resources while the agent executes in the background.
 
-# 42 Installing Claude Code on Windows
+# 43 Installing Claude Code on Windows
 
 [Claude Code](https://www.anthropic.com/claude-code) is Anthropic’s command-line coding agent. Installing it on Windows works well, but a few platform-specific pitfalls can cost you hours if you don’t know about them. These notes capture a setup that works, and the gotchas to watch for.
 
@@ -3279,7 +3350,7 @@ claude --version      # prints the installed version number
 
 If you get a version number, you’re ready to run `claude` in your project directory. If you get `command not found`, re-check the two `PATH` issues above: the directory must be on `PATH`, and you must `rehash` (or open a fresh window) after changing it.
 
-# 43 Setting up MCP servers
+# 44 Setting up MCP servers
 
 The [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) is how a harness gains typed access to external systems. Configuring a server is usually a one-line command. Diagnosing one that *silently* isn’t working is the part worth writing down, because the common failure mode produces no error at all — only a quiet absence of tools you assumed were there.
 
@@ -3437,7 +3508,7 @@ The gap it closes is the copy-paste loop: without it, using something you discus
 
 It connects through the standard [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) as a remote server at `https://mcp.granola.ai/mcp`. For Claude or ChatGPT, enable it from the app’s connector/app settings and authenticate; for Cursor, Claude Code, or any other MCP client that supports a manual URL, register that URL directly (see [the announcement](https://www.granola.ai/blog/granola-mcp) for per-client steps). On an Enterprise plan it is an early-access beta, off by default until an admin enables it.
 
-# 44 Google Antigravity Python SDK
+# 45 Google Antigravity Python SDK
 
 The [`google-antigravity/antigravity-sdk-python`](https://github.com/google-antigravity/antigravity-sdk-python) repository provides the official Python SDK for building and automating agents on the Google Antigravity agent runtime (measured 2026-08-31; distributed via PyPI as `google-antigravity`).
 
@@ -3466,7 +3537,7 @@ Developers can customize agent behavior and enforce safety policies:
 | **Tool definitions** | In-process Python callables & MCP | JSON manifests, plugins, and CLI scripts |
 | **Runtime engine** | Embedded native binary | Managed local service |
 
-# 45 Unbounded Context with Magic Context
+# 46 Unbounded Context with Magic Context
 
 [`cortexkit/magic-context`](https://github.com/cortexkit/magic-context) is an open-source self-managing memory engine designed to provide unbounded context for AI coding agents (measured 2026-08-31). It operates as a background memory subsystem—often described as a “hippocampus for coding agents”—that extracts, consolidates, and retrieves long-term repository state without pausing the active coding turn.
 
@@ -3486,7 +3557,7 @@ A key challenge with dynamic prompt injection is preserving prompt caching effic
 - **Deferred background extraction**: Memory analysis and summarization tasks are deferred to idle windows or subagent threads, preventing token churn and latency spikes during high-tempo coding loops.
 - **Cross-session persistence**: Extracted knowledge persists in lightweight local stores across IDE restarts, enabling coding agents to resume work with full institutional memory of past decisions.
 
-# 46 Spec-Driven Development with Conductor
+# 47 Spec-Driven Development with Conductor
 
 [`gemini-cli-extensions/conductor`](https://github.com/gemini-cli-extensions/conductor) is an open-source plugin for AI coding agents (including Google Antigravity and Claude Code) that implements **Spec-Driven Development** (measured 2026-08-31). Rather than relying on conversational chat history that degrades over extended sessions, Conductor anchors agent behavior in structured, version-controlled Markdown artifacts stored directly in the repository, providing persistent context across multi-session workflows.
 
@@ -3508,7 +3579,7 @@ Conductor structures development into four distinct, sequential phases:
 | **Verification loop** | Manual spot-checking | Milestone-level automated tests and `/conductor:conductor-review` |
 | **Handoff & resumption** | Requires re-prompting or context replay | Any agent resumes from the checked-in track state |
 
-# 47 Anatomy of Agent Plugins
+# 48 Anatomy of Agent Plugins
 
 In modern AI coding assistants (such as Google Antigravity, Gemini CLI, and Claude Code), **plugins** serve as the top-level packaging and distribution layer for agent capabilities (measured 2026-09-01). While individual skills or Model Context Protocol (MCP) servers extend specific tasks, a plugin aggregates multiple extensibility primitives into a unified, version-controlled bundle.
 
@@ -3540,7 +3611,7 @@ Effective plugin architectures mitigate this through several strategies:
 - **On-demand skill activation**: Agents search skill catalogs dynamically when relevant keywords appear, rather than loading the entire skill directory into the initial system prompt.
 - **Prefix caching preservation**: Static plugin definitions are placed at the root of prompt structures so provider-level prompt caching remains undisturbed during multi-turn sessions.
 
-# 48 Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent
+# 49 Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent
 
 [`code-yeongyu/oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent) (originally published as **Oh My OpenCode** or `omo`, with community forks such as [`opensoft/oh-my-opencode`](https://github.com/opensoft/oh-my-opencode)) is an open-source multi-agent orchestration framework and plugin for AI coding agent harnesses (including OpenCode and OpenAI Codex CLI) with over 65,000 GitHub stars (measured 2026-09-01). Inspired by modular terminal configuration frameworks (such as [Oh My Zsh](https://ohmyz.sh/)), it expands single-agent coding into a specialized multi-agent system with automated model routing and background task execution.
 
@@ -3575,7 +3646,7 @@ A central capability of the framework is decoupling agent roles from a single mo
 | **Execution monitoring** | Standard terminal output | Interactive `tmux`-backed session management |
 | **Extensibility** | Individual plugins and MCPs | Curated bundle of tools, agents, and MCP integrations |
 
-# 49 Managing Gemini API Spend and Cost Optimization
+# 50 Managing Gemini API Spend and Cost Optimization
 
 This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.
 
