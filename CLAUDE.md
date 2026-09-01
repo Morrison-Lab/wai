@@ -4,7 +4,7 @@ Project guidance for Claude Code (CLI, IDE, and the GitHub Action). The same con
 
 ## Project context
 
-`wai` (Working with AI) is a UCD-SERG lab [Quarto](https://quarto.org/) website collecting the lab's notes on working responsibly and effectively with AI coding assistants --- policies, coding agents, and the pull-request workflow. It was migrated out of the [UCD-SERG Lab Manual](https://ucd-serg.github.io/lab-manual/)'s "Working with AI" chapter, and is built from the [`qwt` (Quarto Website Template)](https://github.com/Morrison-Lab/qwt). Published at <https://d-morrison.github.io/wai/>.
+`wai` (Working with AI) is a UCD-SERG lab [Quarto](https://quarto.org/) website collecting the lab's notes on working responsibly and effectively with AI coding assistants --- policies, coding agents, and the pull-request workflow. It was migrated out of the [UCD-SERG Lab Manual](https://ucd-serg.github.io/lab-manual/)'s "Working with AI" chapter, and is built from the [`qwt` (Quarto Website Template)](https://github.com/Morrison-Lab/qwt). Published at <https://Morrison-Lab.github.io/wai/>.
 
 Authoritative style guide: [UCD-SERG Lab Manual](https://ucd-serg.github.io/lab-manual/) (source: <https://github.com/UCD-SERG/lab-manual>).
 
