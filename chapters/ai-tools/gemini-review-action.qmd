@@ -1,0 +1,83 @@
+[`derailed-dash/gemini-review-action`](https://github.com/derailed-dash/gemini-review-action)
+is an open-source GitHub Action
+that provides automated code reviews on pull requests
+and automated triage on issues
+using Google's Gemini models
+(measured 2026-08-31; repository at `v1.6.6`).
+
+#### Key capabilities
+
+The action operates as a composite GitHub Action
+designed to run directly in CI pipelines.
+Notable features include:
+
+- **Model selection and defaults**:
+  Defaults to `gemini-3.7-flash`,
+  configurable via the `gemini_model` input.
+- **Dual authentication modes**:
+  Supports standard API key authentication
+  via the `gemini_api_key` input,
+  as well as keyless Google Cloud Workload Identity Federation (WIF)
+  by running `google-github-actions/auth` beforehand
+  and setting `GOOGLE_GENAI_USE_VERTEXAI`, `GOOGLE_CLOUD_PROJECT`,
+  and `GOOGLE_CLOUD_LOCATION` environment variables.
+- **Hybrid codebase context enrichment**:
+  Beyond analyzing git diffs,
+  the action indexes repository context
+  (structure, declarations, and key files)
+  to assess pull requests against surrounding architecture.
+- **Structured output and GitHub suggestions**:
+  Generates line-level review comments
+  formatted as GitHub suggestion blocks
+  so contributors can apply suggested fixes directly in the GitHub UI.
+- **Dynamic skill loading**:
+  Can load domain-specific or project-specific instructions
+  from `.agents/skills/` or custom directories,
+  aligning reviews with existing repository skills.
+- **Cost telemetry and context caching**:
+  Emits token usage reports and estimated costs per run,
+  leveraging Gemini's prompt and context caching
+  to reduce API spend on repetitive large-context reviews.
+
+#### Basic workflow configuration
+
+To add Gemini code review to a repository,
+create `.github/workflows/gemini-review.yml`:
+
+```yaml
+name: Gemini Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Gemini Code Review
+        uses: derailed-dash/gemini-review-action@v1
+        with:
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          gemini_model: gemini-3.7-flash
+```
+
+#### Comparison with native review integrations
+
+Like [Claude Code Action](#sec-ai-claude-code-action-review),
+`derailed-dash/gemini-review-action` gives the repository owner full visibility
+over workflow triggers, authentication methods, and review prompts.
+In contrast to hosted review offerings
+that require platform-level permissions across an entire organization,
+this GitHub Action operates per-repository
+with credentials scoped to GitHub Actions secrets or Google Cloud IAM roles.

@@ -133,6 +133,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/claude-code-action-review.qmd >}}
 
+# Gemini Review Action for GitHub Pull Requests {#sec-ai-gemini-review-action}
+
+{{< include ai-tools/gemini-review-action.qmd >}}
+
 # How a Session Learns a PR Changed {#sec-ai-pr-activity-notifications}
 
 {{< include ai-tools/pr-activity-notifications.qmd >}}
