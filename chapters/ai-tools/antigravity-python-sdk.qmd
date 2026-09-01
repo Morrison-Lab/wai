@@ -15,8 +15,8 @@ The SDK embeds the compiled Antigravity runtime engine directly into Python appl
   The underlying runtime drives multi-turn reasoning, streaming model responses,
   subagent spawning, and tool dispatch without requiring hand-rolled state machines.
 - **Binary distribution**:
-  The Python package packages the native runtime binary,
-  ensuring consistent agent execution across macOS and Linux environments.
+  The Python package distributes pre-compiled native runtime binaries via wheels,
+  ensuring consistent agent execution across Windows, macOS, and Linux environments.
 
 #### Extensibility and policy enforcement
 
