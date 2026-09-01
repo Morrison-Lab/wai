@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-08-29 23:12:14 (PDT)
+Last modified: 2026-08-31 17:05:38 (PDT)
 
 [Make](https://www.make.com/en) (formerly Integromat) is a visual, no-code automation platform that connects more than 3,000 pre-built apps on a canvas of scenarios. You drag modules onto a canvas, connect them with lines, and add routers, filters, and loops for branching logic that a simple trigger-action tool cannot express. Each action in a scenario consumes a credit (usually one per operation), and plans scale by monthly credit allowance, which is why the platform is often described as the value play against Zapier: more complex workflows per dollar, with a steeper learning curve.
 

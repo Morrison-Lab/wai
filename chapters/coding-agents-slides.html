@@ -329,7 +329,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-08-29 23:12:14 (PDT)</p>
+  <p class="date">Last modified: 2026-08-31 17:05:38 (PDT)</p>
 </section><section class="slide level2"><p>We recommend working with <strong><a href="https://github.com/features/copilot/agents">AI coding agents</a></strong> to <a href="https://en.wikipedia.org/wiki/AI-assisted_software_development">help you code</a>.</p>
 </section><section><section id="sec-ai-language-model" class="title-slide slide level1 center" data-number="1"><h1>
 <span class="header-section-number">1</span> What Is a Language Model?</h1>
@@ -968,7 +968,7 @@ Table&nbsp;2: Relative advantages of humans and Agents
 </div>
 </div>
 </div>
-<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;32</a> for more guidance.</p>
+<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;33</a> for more guidance.</p>
 <h4 id="scenario-3-uncertain-which-scenario-applies">Scenario 3: Uncertain Which Scenario Applies</h4>
 <p><strong>When to use:</strong> You’re not sure whether the failure is due to code issues or workflow configuration problems.</p>
 <p><strong>Recommended approach:</strong></p>
@@ -1001,7 +1001,7 @@ Table&nbsp;2: Relative advantages of humans and Agents
 <ul>
 <li>See the <a href="https://ucd-serg.github.io/lab-manual/continuous-integration.html">UCD-SERG Lab Manual’s continuous integration chapter</a> for setting up GitHub Actions workflows</li>
 <li>See <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;15</a> and <a href="#/sec-ai-benefits-hazards" class="quarto-xref">Section&nbsp;14</a> for security considerations with workflow files</li>
-<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;32</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
+<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;33</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
 <li>See the <a href="https://docs.github.com/en/actions">GitHub Actions documentation</a> for workflow syntax and troubleshooting</li>
 </ul></section></section><section><section id="sec-ai-benefits-hazards" class="title-slide slide level1 center" data-number="14"><h1>
 <span class="header-section-number">14</span> Benefits and Hazards</h1>
@@ -3073,7 +3073,7 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Rules are written as <code>Tool(specifier)</code> — for example <code>Bash(npm run test *)</code>, <code>Read(./.env)</code>, or <code>Skill(commit)</code> — and sorted into <code>allow</code>, <code>ask</code>, and <code>deny</code>. Because a project’s rules merge with yours rather than replacing them, a repository can tighten what you allow, and cannot quietly loosen it.</p>
 <h4 id="mcp-servers-are-a-different-axis-entirely">MCP Servers Are a Different Axis Entirely</h4>
 <p>Everything above changes what the agent <em>knows or must do</em>. An <a href="https://modelcontextprotocol.io/">MCP</a> server changes what it <em>can reach</em>: typed tools, data resources, and reusable templates exposed over a standard protocol. The specification is explicit that it “does not dictate how AI applications use LLMs or manage the provided context.”</p>
-<p>So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;38</a> covers configuration and its failure modes.</p>
+<p>So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;39</a> covers configuration and its failure modes.</p>
 <h4 id="choosing">Choosing</h4>
 <table class="caption-top">
 <colgroup>
@@ -3402,8 +3402,57 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This distinction explains a common debugging dead end: “<code>@claude</code> answered my comment, so why did nobody review the pull request?” Mention-triggered activity never runs the reviewer; only the <code>pull_request</code>-triggered workflow does.</p>
 <h4 id="relation-to-codex-native-review">Relation to Codex native review</h4>
 <p>This is the Claude-side counterpart to <a href="#/sec-ai-codex-github-review">using a ChatGPT account for Codex pull-request reviews</a>. Codex ships a hosted native reviewer configured through the ChatGPT workspace, with no workflow file. Claude Code’s reviewer is the opposite trade: you own a workflow file and supply API credentials, but the prompt, tools, model, and triggering events are all visible and editable in your repository.</p>
-</section></section><section><section id="sec-ai-pr-activity-notifications" class="title-slide slide level1 center" data-number="31"><h1>
-<span class="header-section-number">31</span> How a Session Learns a PR Changed</h1>
+</section></section><section><section id="sec-ai-gemini-review-action" class="title-slide slide level1 center" data-number="31"><h1>
+<span class="header-section-number">31</span> Gemini Review Action for GitHub Pull Requests</h1>
+
+</section><section class="slide level2"><p><a href="https://github.com/derailed-dash/gemini-review-action"><code>derailed-dash/gemini-review-action</code></a> is an open-source GitHub Action that provides automated code reviews on pull requests and automated triage on issues using Google’s Gemini models (measured 2026-08-31; repository at <code>v1.6.6</code>).</p>
+<h4 id="key-capabilities">Key capabilities</h4>
+<p>The action operates as a composite GitHub Action designed to run directly in CI pipelines. Notable features include:</p>
+<ul>
+<li>
+<strong>Model selection and defaults</strong>: Defaults to <code>gemini-3.7-flash</code>, configurable via the <code>gemini_model</code> input.</li>
+<li>
+<strong>Dual authentication modes</strong>: Supports standard API key authentication via the <code>gemini_api_key</code> input, as well as keyless Google Cloud Workload Identity Federation (WIF) by running <code>google-github-actions/auth</code> beforehand and setting <code>GOOGLE_GENAI_USE_VERTEXAI</code>, <code>GOOGLE_CLOUD_PROJECT</code>, and <code>GOOGLE_CLOUD_LOCATION</code> environment variables.</li>
+<li>
+<strong>Hybrid codebase context enrichment</strong>: Beyond analyzing git diffs, the action indexes repository context (structure, declarations, and key files) to assess pull requests against surrounding architecture.</li>
+<li>
+<strong>Structured output and GitHub suggestions</strong>: Generates line-level review comments formatted as GitHub suggestion blocks so contributors can apply suggested fixes directly in the GitHub UI.</li>
+<li>
+<strong>Dynamic skill loading</strong>: Can load domain-specific or project-specific instructions from <code>.agents/skills/</code> or custom directories, aligning reviews with existing repository skills.</li>
+<li>
+<strong>Cost telemetry and context caching</strong>: Emits token usage reports and estimated costs per run, leveraging Gemini’s prompt and context caching to reduce API spend on repetitive large-context reviews.</li>
+</ul>
+<h4 id="basic-workflow-configuration">Basic workflow configuration</h4>
+<p>To add Gemini code review to a repository, create <code>.github/workflows/gemini-review.yml</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb62-1"><a aria-label="1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> Gemini Code Review</span></span>
+<span id="cb62-2"><a aria-label="2"></a></span>
+<span id="cb62-3"><a aria-label="3"></a><span class="fu">on</span><span class="kw">:</span></span>
+<span id="cb62-4"><a aria-label="4"></a><span class="at">  </span><span class="fu">pull_request</span><span class="kw">:</span></span>
+<span id="cb62-5"><a aria-label="5"></a><span class="at">    </span><span class="fu">types</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">opened</span><span class="kw">,</span><span class="at"> synchronize</span><span class="kw">,</span><span class="at"> reopened</span><span class="kw">]</span></span>
+<span id="cb62-6"><a aria-label="6"></a></span>
+<span id="cb62-7"><a aria-label="7"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb62-8"><a aria-label="8"></a><span class="at">  </span><span class="fu">review</span><span class="kw">:</span></span>
+<span id="cb62-9"><a aria-label="9"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
+<span id="cb62-10"><a aria-label="10"></a><span class="at">    </span><span class="fu">permissions</span><span class="kw">:</span></span>
+<span id="cb62-11"><a aria-label="11"></a><span class="at">      </span><span class="fu">contents</span><span class="kw">:</span><span class="at"> read</span></span>
+<span id="cb62-12"><a aria-label="12"></a><span class="at">      </span><span class="fu">pull-requests</span><span class="kw">:</span><span class="at"> write</span></span>
+<span id="cb62-13"><a aria-label="13"></a><span class="at">      </span><span class="fu">issues</span><span class="kw">:</span><span class="at"> write</span></span>
+<span id="cb62-14"><a aria-label="14"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb62-15"><a aria-label="15"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Checkout repository</span></span>
+<span id="cb62-16"><a aria-label="16"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span>
+<span id="cb62-17"><a aria-label="17"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb62-18"><a aria-label="18"></a><span class="at">          </span><span class="fu">fetch-depth</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
+<span id="cb62-19"><a aria-label="19"></a></span>
+<span id="cb62-20"><a aria-label="20"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Run Gemini Code Review</span></span>
+<span id="cb62-21"><a aria-label="21"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> derailed-dash/gemini-review-action@v1</span></span>
+<span id="cb62-22"><a aria-label="22"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb62-23"><a aria-label="23"></a><span class="at">          </span><span class="fu">gemini_api_key</span><span class="kw">:</span><span class="at"> ${{ secrets.GEMINI_API_KEY }}</span></span>
+<span id="cb62-24"><a aria-label="24"></a><span class="at">          </span><span class="fu">github_token</span><span class="kw">:</span><span class="at"> ${{ secrets.GITHUB_TOKEN }}</span></span>
+<span id="cb62-25"><a aria-label="25"></a><span class="at">          </span><span class="fu">gemini_model</span><span class="kw">:</span><span class="at"> gemini-3.7-flash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<h4 id="comparison-with-native-review-integrations">Comparison with native review integrations</h4>
+<p>Like <a href="#/sec-ai-claude-code-action-review">Claude Code Action</a>, <code>derailed-dash/gemini-review-action</code> gives the repository owner full visibility over workflow triggers, authentication methods, and review prompts. In contrast to hosted review offerings that require platform-level permissions across an entire organization, this GitHub Action operates per-repository with credentials scoped to GitHub Actions secrets or Google Cloud IAM roles.</p>
+</section></section><section><section id="sec-ai-pr-activity-notifications" class="title-slide slide level1 center" data-number="32"><h1>
+<span class="header-section-number">32</span> How a Session Learns a PR Changed</h1>
 
 </section><section class="slide level2"><p>A coding-agent session that is watching a pull request does not poll it. Something wakes the session when the pull request changes, and in Claude Code that “something” is one of <strong>two separate channels</strong>.</p>
 <p>The distinction matters for a practical reason: <strong>the agent can turn one of them on and off, and cannot touch the other.</strong> So “stop watching this PR” is a request an agent can satisfy for one channel and can only decline for the other.</p>
@@ -3446,7 +3495,7 @@ while the selected main agent model is BYOK.</code></pre>
 <p><code>subscribe_pr_activity</code> and <code>unsubscribe_pr_activity</code> are ordinary tool calls, taking an owner, a repository, and a pull-request number. Subscribing delivers that pull request’s activity into the conversation as <code>&lt;github-webhook-activity&gt;</code> messages until the session unsubscribes, or the pull request merges or closes.</p>
 <p>Two caveats are worth knowing before relying on it.</p>
 <p><strong>A successful subscribe does not guarantee delivery.</strong> If a PR Steward agent already holds the watch on that pull request, the call still succeeds — but this session receives nothing. The tool result says so in as many words, so read the result rather than the exit status. Taking over the watch requires opting the steward out first, by removing its watching label on the pull request.</p>
-<p><strong>The tool does not exist on a locally-run GitHub MCP server.</strong> Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;38</a> covers the local analogues to reach for instead.</p>
+<p><strong>The tool does not exist on a locally-run GitHub MCP server.</strong> Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;39</a> covers the local analogues to reach for instead.</p>
 <p><strong>Webhook delivery is also not exhaustive</strong>, which is the failure mode most likely to be mistaken for “nothing has happened”. CI <em>successes</em>, new pushes, and merge-conflict transitions can arrive late or not at all. A session that treats silence as “still green” will sit indefinitely on a pull request that has gone stale or conflicted, so a subscription is a supplement to periodically re-reading the pull request’s real state, not a replacement for it.</p>
 <h4 id="the-channel-only-a-human-controls">The channel only a human controls</h4>
 <p>Claude Code on the web shows a per-pull-request <strong>CI monitoring</strong> panel in the session sidebar, with two checkboxes: <strong>Auto-fix CI &amp; address comments</strong> and <strong>Auto-merge when ready</strong>.</p>
@@ -3517,13 +3566,13 @@ while the selected main agent model is BYOK.</code></pre>
 </div>
 </div>
 </div>
-</section></section><section><section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="32"><h1>
-<span class="header-section-number">32</span> When to use a coding agent</h1>
+</section></section><section><section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="33"><h1>
+<span class="header-section-number">33</span> When to use a coding agent</h1>
 
 </section><section class="slide level2 scrollable"><p>Coding agent sessions are currently<sup>1</sup> considered “premium requests”, which are limited resources; see <a href="https://github.com/features/copilot/plans" class="uri">https://github.com/features/copilot/plans</a> for details. So, use coding agents sparingly. Use them for complex changes that would be difficult or time-consuming for you to complete by hand. Coding agents also take time to get configured for work, every time you make a request. See <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment#preinstalling-tools-or-dependencies-in-copilots-environment" class="uri">https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment#preinstalling-tools-or-dependencies-in-copilots-environment</a> for ways to reduce that startup time, but it will never be 0. If you can complete the task faster than the coding agent can, you should probably do it yourself. For example, when you have errors in the spell-check or lint workflows, you can often fix them faster than Copilot can. Similarly, when reviewing Copilot’s PRs, you can often make direct changes to the branch faster than you could write clear review comments and get Copilot to address them.</p>
 <p>Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.</p>
-<aside><ol class="aside-footnotes"><li id="fn1"><p>2026-01-10</p></li></ol></aside></section></section><section><section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="33"><h1>
-<span class="header-section-number">33</span> Editing with <code>.docx</code> files</h1>
+<aside><ol class="aside-footnotes"><li id="fn1"><p>2026-01-10</p></li></ol></aside></section></section><section><section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="34"><h1>
+<span class="header-section-number">34</span> Editing with <code>.docx</code> files</h1>
 
 </section><section class="slide level2 scrollable"><p>GitHub Copilot coding agents can read Microsoft Word (<code>.docx</code>) files, including tracked changes and comments. This enables a hybrid editing workflow where:</p>
 <ol type="1">
@@ -3554,8 +3603,8 @@ while the selected main agent model is BYOK.</code></pre>
 <li>Share this saved version with collaborators</li>
 </ol>
 <p>This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.</p>
-</section></section><section><section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="34"><h1>
-<span class="header-section-number">34</span> Copilot Instructions for this Repository</h1>
+</section></section><section><section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="35"><h1>
+<span class="header-section-number">35</span> Copilot Instructions for this Repository</h1>
 
 </section><section class="slide level2"><p>A <code>.github/copilot-instructions.md</code> file contains repository-specific instructions and guidelines for GitHub Copilot coding agents. This file helps ensure that AI-generated contributions follow the project’s formatting standards, coding conventions, and documentation practices.</p>
 <p>For a Quarto-based repository like this one, the copilot instructions file typically specifies:</p>
@@ -3569,8 +3618,8 @@ while the selected main agent model is BYOK.</code></pre>
 </ul>
 <p>By having these instructions in <code>.github/copilot-instructions.md</code>, you ensure that coding agents produce consistent, high-quality contributions that align with the project’s established practices. This reduces the review burden and helps maintain consistency across all contributions, whether made by humans or AI assistants.</p>
 <p>See this repository’s own <a href="https://github.com/d-morrison/wai/blob/main/.github/copilot-instructions.md"><code>.github/copilot-instructions.md</code></a> for a working example.</p>
-</section></section><section><section id="using-copilot-review-before-human-review" class="title-slide slide level1 center" data-number="35"><h1>
-<span class="header-section-number">35</span> Using Copilot Review Before Human Review</h1>
+</section></section><section><section id="using-copilot-review-before-human-review" class="title-slide slide level1 center" data-number="36"><h1>
+<span class="header-section-number">36</span> Using Copilot Review Before Human Review</h1>
 
 </section><section class="slide level2 scrollable"><p>Before requesting review from other humans, <strong>always have Copilot review your pull request first</strong>—even if Copilot created the PR itself. AI review provides fast, thorough feedback that helps catch issues before involving human reviewers, saving everyone time and improving code quality.</p>
 <p><strong>Why review with Copilot first:</strong></p>
@@ -3619,8 +3668,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Even if you’re highly experienced, treating Copilot review as a required pre-review step helps maintain code quality and makes the best use of everyone’s time. The few minutes spent on Copilot review often save hours of back-and-forth with human reviewers.</p>
 <p><strong>For human reviewers:</strong></p>
 <p>When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.</p>
-</section></section><section><section id="reviewing-a-copilot-pr-you-didnt-create" class="title-slide slide level1 center" data-number="36"><h1>
-<span class="header-section-number">36</span> Reviewing a Copilot PR You Didn’t Create</h1>
+</section></section><section><section id="reviewing-a-copilot-pr-you-didnt-create" class="title-slide slide level1 center" data-number="37"><h1>
+<span class="header-section-number">37</span> Reviewing a Copilot PR You Didn’t Create</h1>
 
 </section><section class="slide level2 scrollable"><p>When reviewing a pull request where someone else prompted Copilot to make changes, follow these guidelines to avoid confusion and ensure smooth collaboration:</p>
 <p><strong>Understanding PR roles:</strong></p>
@@ -3719,8 +3768,8 @@ while the selected main agent model is BYOK.</code></pre>
 <li>The team should update the PR’s “Assignees” field and comments or description to reflect the current PR manager</li>
 </ol>
 <p>This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.</p>
-</section></section><section><section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="37"><h1>
-<span class="header-section-number">37</span> Installing Claude Code on Windows</h1>
+</section></section><section><section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="38"><h1>
+<span class="header-section-number">38</span> Installing Claude Code on Windows</h1>
 
 </section><section class="slide level2 scrollable"><p><a href="https://www.anthropic.com/claude-code">Claude Code</a> is Anthropic’s command-line coding agent. Installing it on Windows works well, but a few platform-specific pitfalls can cost you hours if you don’t know about them. These notes capture a setup that works, and the gotchas to watch for.</p>
 <div class="callout callout-note callout-titled callout-style-default">
@@ -3752,12 +3801,12 @@ while the selected main agent model is BYOK.</code></pre>
 <ol type="1">
 <li>
 <p><strong>Native installer</strong> (recommended):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb62-1"><a aria-label="1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb63-1"><a aria-label="1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This installs the binary to <code>~/.local/bin</code>. If your organization’s policy requires it, download and inspect the script before running it rather than piping it straight to <code>bash</code>.</p>
 </li>
 <li>
 <p><strong>npm</strong> (requires <a href="https://nodejs.org/">Node.js</a>):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb63-1"><a aria-label="1"></a><span class="ex">npm</span> install <span class="at">-g</span> @anthropic-ai/claude-code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb64-1"><a aria-label="1"></a><span class="ex">npm</span> install <span class="at">-g</span> @anthropic-ai/claude-code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 </ol>
 <div class="callout callout-important callout-titled callout-style-default">
@@ -3778,11 +3827,11 @@ while the selected main agent model is BYOK.</code></pre>
 </h4>
 <p>The native binary lives in <code>~/.local/bin</code>. The installer adds this directory to <code>PATH</code> for ordinary shells, but on Windows two things commonly break that.</p>
 <p><strong>MSYS2 does not inherit the Windows <code>PATH</code> by default.</strong> It starts in a “minimal” path mode, so tools installed elsewhere on Windows are invisible to it. Add the binary’s directory explicitly in your <code>~/.zshrc</code> (or <code>~/.bashrc</code>). Because MSYS2’s <code>$HOME</code> is <code>/home/&lt;you&gt;</code> (its own home, not the Windows profile where the installer puts the binary), point <code>PATH</code> at the absolute Windows path:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb64-1"><a aria-label="1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"/c/Users/&lt;you&gt;/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># MSYS2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb65"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb65-1"><a aria-label="1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"/c/Users/&lt;you&gt;/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># MSYS2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>In <strong>Git Bash</strong>, <code>$HOME</code> already is <code>/c/Users/&lt;you&gt;</code> (your Windows user profile), so the shorthand works there:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb65"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb65-1"><a aria-label="1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"</span><span class="va">$HOME</span><span class="st">/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># Git Bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb66"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb66-1"><a aria-label="1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"</span><span class="va">$HOME</span><span class="st">/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># Git Bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Rehash after changing <code>PATH</code>.</strong> <code>zsh</code> and <code>bash</code> cache the locations of executables. If you add a directory to <code>PATH</code> in your shell config, the shell may still report <code>command not found</code> <em>even though the directory is on <code>PATH</code></em>, because its command table is stale. Force a rebuild in the same shell right after editing <code>PATH</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb66"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb66-1"><a aria-label="1"></a><span class="ex">rehash</span>        <span class="co"># zsh; use 'hash -r' in bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb67"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb67-1"><a aria-label="1"></a><span class="ex">rehash</span>        <span class="co"># zsh; use 'hash -r' in bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This bites hardest with <a href="https://ohmyz.sh/">oh-my-zsh</a>, which builds zsh’s command table <em>before</em> your custom <code>PATH</code> line runs, so opening a fresh window may not clear the stale <code>command not found</code> on its own until you <code>rehash</code> (or move the <code>PATH</code> line before oh-my-zsh initializes).</p>
 <h4 id="do-not-edit-dotfiles-with-powershell-redirection">Do not edit dotfiles with PowerShell redirection</h4>
 <div class="callout callout-warning callout-titled callout-style-default">
@@ -3804,14 +3853,14 @@ while the selected main agent model is BYOK.</code></pre>
 <p>If you also use the <a href="https://cli.github.com/">GitHub CLI</a> (<code>gh</code>) to push code or open pull requests, <code>gh auth login</code> may fail with:</p>
 <pre><code>could not prompt: … running in MinTTY without pseudo terminal support</code></pre>
 <p>Git Bash and MSYS2 both default to the MinTTY terminal, which can’t host the interactive prompt. Wrap the command with <code>winpty</code>, or run it from PowerShell / Windows Terminal instead:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb69"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb69-1"><a aria-label="1"></a><span class="ex">winpty</span> gh auth login</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb70"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb70-1"><a aria-label="1"></a><span class="ex">winpty</span> gh auth login</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>winpty</code> ships with Git Bash, but in MSYS2 it’s a separate package — install it first with <code>pacman -S winpty</code> if you get <code>command not found</code>.</p>
 <h4 id="verify-the-install">Verify the install</h4>
 <p>Open a <strong>new</strong> terminal window (so it picks up your updated config) and run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb70"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb70-1"><a aria-label="1"></a><span class="ex">claude</span> <span class="at">--version</span>      <span class="co"># prints the installed version number</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb71"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb71-1"><a aria-label="1"></a><span class="ex">claude</span> <span class="at">--version</span>      <span class="co"># prints the installed version number</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If you get a version number, you’re ready to run <code>claude</code> in your project directory. If you get <code>command not found</code>, re-check the two <code>PATH</code> issues above: the directory must be on <code>PATH</code>, and you must <code>rehash</code> (or open a fresh window) after changing it.</p>
-</section></section><section><section id="sec-ai-mcp-server-setup" class="title-slide slide level1 center" data-number="38"><h1>
-<span class="header-section-number">38</span> Setting up MCP servers</h1>
+</section></section><section><section id="sec-ai-mcp-server-setup" class="title-slide slide level1 center" data-number="39"><h1>
+<span class="header-section-number">39</span> Setting up MCP servers</h1>
 
 </section><section class="slide level2"><p>The <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> (MCP) is how a harness gains typed access to external systems. Configuring a server is usually a one-line command. Diagnosing one that <em>silently</em> isn’t working is the part worth writing down, because the common failure mode produces no error at all — only a quiet absence of tools you assumed were there.</p>
 <div class="callout callout-note callout-titled callout-style-default">
@@ -3830,7 +3879,7 @@ while the selected main agent model is BYOK.</code></pre>
 <h4 id="installed-is-not-registered">Installed is not registered</h4>
 <p>A server binary sitting on disk is not available to your agent. The harness knows only what its configuration declares, so installing <a href="https://github.com/github/github-mcp-server"><code>github-mcp-server</code></a> and <em>registering</em> it are two separate acts. Skipping the second is easy to miss, because the first one felt like the hard part.</p>
 <p>The check is one command:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb71"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb71-1"><a aria-label="1"></a><span class="ex">claude</span> mcp list</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb72"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb72-1"><a aria-label="1"></a><span class="ex">claude</span> mcp list</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <h4 id="a-broken-server-can-occupy-the-name-your-working-one-wanted">A broken server can occupy the name your working one wanted</h4>
 <p>This is the failure worth knowing about, and it is nastier than a missing entry, because <code>claude mcp list</code> shows you something that looks right.</p>
 <p>Plugin marketplaces can register servers of their own. An official GitHub plugin may install a <strong>remote</strong> server under exactly the name you meant to give your <strong>local</strong> one. The listing then reports a <code>github</code> server that is not your setup at all, and the local binary you installed goes unregistered and unnoticed.</p>
@@ -3841,7 +3890,7 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <h4 id="and-401-mean-different-things">400 and 401 mean different things</h4>
 <p>The status code is the whole diagnosis here, and it is easy to skim past.</p>
 <p>The configuration a plugin ships may hardcode a credential placeholder:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb73"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb73-1"><a aria-label="1"></a><span class="fu">{</span><span class="dt">"headers"</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">"Authorization"</span><span class="fu">:</span> <span class="st">"Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}"</span><span class="fu">}}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb74"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb74-1"><a aria-label="1"></a><span class="fu">{</span><span class="dt">"headers"</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">"Authorization"</span><span class="fu">:</span> <span class="st">"Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}"</span><span class="fu">}}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If that variable has no value when the harness starts, the header goes out as a bare <code>Bearer</code> with nothing after it. That is <strong>malformed</strong>, not <strong>unauthorized</strong>:</p>
 <ul>
 <li>
@@ -3852,42 +3901,42 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <p>Chasing a 400 as though it were a 401 sends you to the token-minting page for a problem that lives in a config file.</p>
 <h4 id="install-the-binary-the-platforms-own-way">Install the binary the platform’s own way</h4>
 <p>These notes started from a Linux install, where the binary lands under <code>$HOME/.local/bin</code>. On macOS the same server is a Homebrew formula, and getting it is one command:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb74"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb74-1"><a aria-label="1"></a><span class="ex">brew</span> install github-mcp-server</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb75"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb75-1"><a aria-label="1"></a><span class="ex">brew</span> install github-mcp-server</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>That installs to <code>/opt/homebrew/bin</code> on Apple silicon (<code>/usr/local/bin</code> under Intel Homebrew), so no manual download is needed.</p>
 <p>The official install guide leads with a Docker recipe instead, and it has a catch worth knowing before you follow it: <code>docker</code> being on <code>PATH</code> does not mean the daemon is running. With Docker Desktop stopped, the server fails to connect to the Docker API, and that failure surfaces at <em>server start</em>, not at registration — so <code>claude mcp add</code> succeeds, and the break only shows up later, as a silent absence of tools. That is one more reason to prefer the binary path above.</p>
 <p>Because the binary’s location differs by platform and by installer, a launch wrapper should resolve it from <code>PATH</code> rather than hardcode it, with an override for the case where it isn’t on one.</p>
 <h4 id="supply-credentials-without-storing-a-token">Supply credentials without storing a token</h4>
 <p>The obvious registration bakes a token straight into harness config:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb75"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb75-1"><a aria-label="1"></a><span class="ex">claude</span> mcp add github <span class="at">-e</span> GITHUB_PERSONAL_ACCESS_TOKEN=<span class="op">&lt;</span>pat<span class="op">&gt;</span> -- <span class="op">&lt;</span>server<span class="op">&gt;</span> stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb76"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb76-1"><a aria-label="1"></a><span class="ex">claude</span> mcp add github <span class="at">-e</span> GITHUB_PERSONAL_ACCESS_TOKEN=<span class="op">&lt;</span>pat<span class="op">&gt;</span> -- <span class="op">&lt;</span>server<span class="op">&gt;</span> stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>That writes a live credential to a config file in plain text, and pins you to one token that will eventually expire.</p>
 <p>A launch wrapper avoids both. It reads the credential at start time from a tool that already holds one, so nothing is stored and the server follows whatever account you are currently logged in as:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb76"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb76-1"><a aria-label="1"></a><span class="co">#!/bin/sh</span></span>
-<span id="cb76-2"><a aria-label="2"></a><span class="bu">set</span> <span class="at">-eu</span></span>
-<span id="cb76-3"><a aria-label="3"></a></span>
-<span id="cb76-4"><a aria-label="4"></a><span class="va">SERVER</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_MCP_SERVER_BIN</span><span class="op">:-</span><span class="va">$(</span><span class="bu">command</span> <span class="at">-v</span> github-mcp-server <span class="kw">||</span> <span class="fu">true</span><span class="va">)}</span><span class="st">"</span></span>
-<span id="cb76-5"><a aria-label="5"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$SERVER</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
-<span id="cb76-6"><a aria-label="6"></a>  <span class="bu">echo</span> <span class="st">"github-mcp-server not on PATH; install it or set GITHUB_MCP_SERVER_BIN"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
-<span id="cb76-7"><a aria-label="7"></a>  <span class="bu">exit</span> 1</span>
-<span id="cb76-8"><a aria-label="8"></a><span class="cf">fi</span></span>
-<span id="cb76-9"><a aria-label="9"></a></span>
-<span id="cb76-10"><a aria-label="10"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_TOOLSETS</span><span class="op">:-</span>default,actions<span class="va">}</span><span class="st">"</span></span>
-<span id="cb76-11"><a aria-label="11"></a><span class="bu">export</span> <span class="va">GITHUB_TOOLSETS</span></span>
-<span id="cb76-12"><a aria-label="12"></a></span>
-<span id="cb76-13"><a aria-label="13"></a><span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="op">=</span><span class="st">"</span><span class="va">$(</span><span class="ex">gh</span> auth token<span class="va">)</span><span class="st">"</span></span>
-<span id="cb76-14"><a aria-label="14"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
-<span id="cb76-15"><a aria-label="15"></a>  <span class="bu">echo</span> <span class="st">"empty token; run 'gh auth login'"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
-<span id="cb76-16"><a aria-label="16"></a>  <span class="bu">exit</span> 1</span>
-<span id="cb76-17"><a aria-label="17"></a><span class="cf">fi</span></span>
-<span id="cb76-18"><a aria-label="18"></a><span class="bu">export</span> <span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span></span>
-<span id="cb76-19"><a aria-label="19"></a></span>
-<span id="cb76-20"><a aria-label="20"></a><span class="bu">exec</span> <span class="st">"</span><span class="va">$SERVER</span><span class="st">"</span> stdio <span class="st">"</span><span class="va">$@</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb77"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb77-1"><a aria-label="1"></a><span class="co">#!/bin/sh</span></span>
+<span id="cb77-2"><a aria-label="2"></a><span class="bu">set</span> <span class="at">-eu</span></span>
+<span id="cb77-3"><a aria-label="3"></a></span>
+<span id="cb77-4"><a aria-label="4"></a><span class="va">SERVER</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_MCP_SERVER_BIN</span><span class="op">:-</span><span class="va">$(</span><span class="bu">command</span> <span class="at">-v</span> github-mcp-server <span class="kw">||</span> <span class="fu">true</span><span class="va">)}</span><span class="st">"</span></span>
+<span id="cb77-5"><a aria-label="5"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$SERVER</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb77-6"><a aria-label="6"></a>  <span class="bu">echo</span> <span class="st">"github-mcp-server not on PATH; install it or set GITHUB_MCP_SERVER_BIN"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb77-7"><a aria-label="7"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb77-8"><a aria-label="8"></a><span class="cf">fi</span></span>
+<span id="cb77-9"><a aria-label="9"></a></span>
+<span id="cb77-10"><a aria-label="10"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_TOOLSETS</span><span class="op">:-</span>default,actions<span class="va">}</span><span class="st">"</span></span>
+<span id="cb77-11"><a aria-label="11"></a><span class="bu">export</span> <span class="va">GITHUB_TOOLSETS</span></span>
+<span id="cb77-12"><a aria-label="12"></a></span>
+<span id="cb77-13"><a aria-label="13"></a><span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="op">=</span><span class="st">"</span><span class="va">$(</span><span class="ex">gh</span> auth token<span class="va">)</span><span class="st">"</span></span>
+<span id="cb77-14"><a aria-label="14"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb77-15"><a aria-label="15"></a>  <span class="bu">echo</span> <span class="st">"empty token; run 'gh auth login'"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb77-16"><a aria-label="16"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb77-17"><a aria-label="17"></a><span class="cf">fi</span></span>
+<span id="cb77-18"><a aria-label="18"></a><span class="bu">export</span> <span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span></span>
+<span id="cb77-19"><a aria-label="19"></a></span>
+<span id="cb77-20"><a aria-label="20"></a><span class="bu">exec</span> <span class="st">"</span><span class="va">$SERVER</span><span class="st">"</span> stdio <span class="st">"</span><span class="va">$@</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Register the wrapper rather than the binary:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb77"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb77-1"><a aria-label="1"></a><span class="ex">claude</span> mcp add <span class="at">--scope</span> user github <span class="at">--</span> ~/.local/bin/github-mcp-server-stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb78"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb78-1"><a aria-label="1"></a><span class="ex">claude</span> mcp add <span class="at">--scope</span> user github <span class="at">--</span> ~/.local/bin/github-mcp-server-stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Note the explicit failure when the token comes back empty. A wrapper that silently exports an empty string reproduces the bare-<code>Bearer</code> bug you just finished diagnosing.</p>
 <h4 id="toolsets-are-opt-in-and-the-default-may-omit-what-you-need">Toolsets are opt-in, and the default may omit what you need</h4>
 <p>A server does not necessarily expose everything it can do. GitHub’s server exposes a default group, and that default carries <strong>no continuous-integration access at all</strong> — no workflow runs, no job logs, no re-run trigger. As of this writing (server v1.7.0) the actions toolset’s four tools are <code>actions_get</code>, <code>actions_list</code>, <code>actions_run_trigger</code>, and <code>get_job_logs</code> — the exact names have moved around across releases, so treat this list as a snapshot rather than a promise.</p>
 <p>If your workflow involves driving pull requests to a clean state, that omission matters, because reading check status is most of the job. Request the extra group explicitly:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb78"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb78-1"><a aria-label="1"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span>default,actions</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb79"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb79-1"><a aria-label="1"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span>default,actions</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Note that the selection <strong>replaces</strong> the default rather than extending it, which is why the value above names <code>default</code> explicitly. Writing <code>actions</code> alone would silently trade away every default tool for the four you asked for — a net <em>loss</em> that looks like a successful configuration change.</p>
 <p>So compare the tool list before and after, and confirm the count went up rather than sideways. On the same v1.7.0 server, the default group carries 44 tools, and <code>default,actions,discussions,dependabot,labels,notifications</code> carries 63 — the count moving the right direction, as the check above expects.</p>
 <h4 id="subscribe_pr_activity-isnt-a-local-server-tool">
@@ -3915,8 +3964,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <p><a href="https://www.granola.ai/blog/granola-mcp">Granola MCP</a> is the other side of that same pattern: it is not a code-host server but a meeting-context server. Granola is an AI notepad for back-to-back meetings; its MCP exposes your meeting notes to any MCP client.</p>
 <p>The gap it closes is the copy-paste loop: without it, using something you discussed in a meeting while working in Claude, ChatGPT, or Cursor means finding the note, copying the relevant bit, and pasting it in. With the MCP connected, that context rides with you. Use it to turn a standup into Linear tickets, scaffold a feature from what was agreed, or draft a follow-up from what was actually said.</p>
 <p>It connects through the standard <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> (MCP) as a remote server at <code>https://mcp.granola.ai/mcp</code>. For Claude or ChatGPT, enable it from the app’s connector/app settings and authenticate; for Cursor, Claude Code, or any other MCP client that supports a manual URL, register that URL directly (see <a href="https://www.granola.ai/blog/granola-mcp">the announcement</a> for per-client steps). On an Enterprise plan it is an early-access beta, off by default until an admin enables it.</p>
-</section></section><section><section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="39"><h1>
-<span class="header-section-number">39</span> Managing Gemini API Spend and Cost Optimization</h1>
+</section></section><section><section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="40"><h1>
+<span class="header-section-number">40</span> Managing Gemini API Spend and Cost Optimization</h1>
 
 </section><section class="slide level2 scrollable"><p>This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.</p>
 <h4 id="identifying-paused-projects-project-numbers-vs.-friendly-names">Identifying Paused Projects (Project Numbers vs.&nbsp;Friendly Names)</h4>
