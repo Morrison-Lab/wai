@@ -229,6 +229,15 @@ class HTMLDiffer:
         # Track which old elements have been matched to avoid reuse
         used_old_indices = set()
         
+        # Index old elements by exact text. Most elements of a changed page are
+        # unchanged, and an unchanged element is settled by one dictionary
+        # lookup instead of a SequenceMatcher pass over every old element,
+        # which made this step O(old x new) with each ratio() itself
+        # quadratic in text length (#180).
+        old_indices_by_text = {}
+        for idx, (old_text, _) in enumerate(old_elem_list):
+            old_indices_by_text.setdefault(old_text, []).append(idx)
+        
         # Process each new element and check if it changed
         highlighted_new_html = new_html
         changes_made = 0
@@ -238,15 +247,37 @@ class HTMLDiffer:
             if not new_text:
                 continue
             
-            # Try to find a matching old element
+            # An identical old element means nothing to highlight. As before,
+            # an exact match does not consume the old element.
+            if any(idx not in used_old_indices
+                   for idx in old_indices_by_text.get(new_text, [])):
+                continue
+            
+            # Try to find a matching old element. SequenceMatcher's
+            # real_quick_ratio() and quick_ratio() are cheap upper bounds on
+            # ratio(), so a candidate is rejected before the expensive
+            # comparison when it cannot beat the current best, or when it
+            # cannot reach the minimum threshold. A ratio equal to the
+            # threshold still matters (the element is then left untouched
+            # rather than marked new), so that bound is strict.
             best_match_idx = None
             best_ratio = 0.0
+            matcher = difflib.SequenceMatcher(None, '', new_text)
+            
+            def cannot_matter(upper_bound):
+                return (upper_bound <= best_ratio
+                        or upper_bound < SIMILARITY_THRESHOLD_MIN)
             
             for idx, (old_text, old_elem) in enumerate(old_elem_list):
                 if idx in used_old_indices:
                     continue  # Already matched this element
-                    
-                ratio = difflib.SequenceMatcher(None, old_text, new_text).ratio()
+                
+                matcher.set_seq1(old_text)
+                if cannot_matter(matcher.real_quick_ratio()):
+                    continue
+                if cannot_matter(matcher.quick_ratio()):
+                    continue
+                ratio = matcher.ratio()
                 if ratio > best_ratio:
                     best_ratio = ratio
                     best_match_idx = idx
@@ -311,8 +342,12 @@ class HTMLDiffer:
         old_content = self.normalize_html(self.extract_main_content(old_html))
         new_content = self.normalize_html(self.extract_main_content(new_html))
         
-        # Calculate similarity ratio
-        similarity = difflib.SequenceMatcher(None, old_content, new_content).ratio()
+        # Calculate similarity ratio over words rather than characters. A
+        # character-level SequenceMatcher over a whole page took minutes on
+        # the largest chapter; over words it takes seconds (#180).
+        old_words = old_content.split()
+        new_words = new_content.split()
+        similarity = difflib.SequenceMatcher(None, old_words, new_words).ratio()
         
         # If content is nearly identical, no need to highlight
         if similarity > 0.95:
