@@ -229,6 +229,15 @@ class HTMLDiffer:
         # Track which old elements have been matched to avoid reuse
         used_old_indices = set()
         
+        # Index old elements by exact text. Most elements of a changed page are
+        # unchanged, and an unchanged element is settled by one dictionary
+        # lookup instead of a SequenceMatcher pass over every old element,
+        # which made this step O(old x new) with each ratio() itself
+        # quadratic in text length (#180).
+        old_indices_by_text = {}
+        for idx, (old_text, _) in enumerate(old_elem_list):
+            old_indices_by_text.setdefault(old_text, []).append(idx)
+        
         # Process each new element and check if it changed
         highlighted_new_html = new_html
         changes_made = 0
@@ -238,15 +247,32 @@ class HTMLDiffer:
             if not new_text:
                 continue
             
-            # Try to find a matching old element
+            # An identical old element means nothing to highlight. As before,
+            # an exact match does not consume the old element.
+            if any(idx not in used_old_indices
+                   for idx in old_indices_by_text.get(new_text, [])):
+                continue
+            
+            # Try to find a matching old element. Only a ratio above the
+            # minimum threshold affects the outcome, and SequenceMatcher's
+            # real_quick_ratio() and quick_ratio() are cheap upper bounds on
+            # ratio(), so a candidate that cannot beat the current best is
+            # rejected before the expensive comparison runs.
             best_match_idx = None
             best_ratio = 0.0
+            matcher = difflib.SequenceMatcher(None, '', new_text)
             
             for idx, (old_text, old_elem) in enumerate(old_elem_list):
                 if idx in used_old_indices:
                     continue  # Already matched this element
-                    
-                ratio = difflib.SequenceMatcher(None, old_text, new_text).ratio()
+                
+                floor = max(best_ratio, SIMILARITY_THRESHOLD_MIN)
+                matcher.set_seq1(old_text)
+                if matcher.real_quick_ratio() <= floor:
+                    continue
+                if matcher.quick_ratio() <= floor:
+                    continue
+                ratio = matcher.ratio()
                 if ratio > best_ratio:
                     best_ratio = ratio
                     best_match_idx = idx
