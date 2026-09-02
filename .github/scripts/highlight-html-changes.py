@@ -253,24 +253,29 @@ class HTMLDiffer:
                    for idx in old_indices_by_text.get(new_text, [])):
                 continue
             
-            # Try to find a matching old element. Only a ratio above the
-            # minimum threshold affects the outcome, and SequenceMatcher's
+            # Try to find a matching old element. SequenceMatcher's
             # real_quick_ratio() and quick_ratio() are cheap upper bounds on
-            # ratio(), so a candidate that cannot beat the current best is
-            # rejected before the expensive comparison runs.
+            # ratio(), so a candidate is rejected before the expensive
+            # comparison when it cannot beat the current best, or when it
+            # cannot reach the minimum threshold. A ratio equal to the
+            # threshold still matters (the element is then left untouched
+            # rather than marked new), so that bound is strict.
             best_match_idx = None
             best_ratio = 0.0
             matcher = difflib.SequenceMatcher(None, '', new_text)
+            
+            def cannot_matter(upper_bound):
+                return (upper_bound <= best_ratio
+                        or upper_bound < SIMILARITY_THRESHOLD_MIN)
             
             for idx, (old_text, old_elem) in enumerate(old_elem_list):
                 if idx in used_old_indices:
                     continue  # Already matched this element
                 
-                floor = max(best_ratio, SIMILARITY_THRESHOLD_MIN)
                 matcher.set_seq1(old_text)
-                if matcher.real_quick_ratio() <= floor:
+                if cannot_matter(matcher.real_quick_ratio()):
                     continue
-                if matcher.quick_ratio() <= floor:
+                if cannot_matter(matcher.quick_ratio()):
                     continue
                 ratio = matcher.ratio()
                 if ratio > best_ratio:
