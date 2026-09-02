@@ -1,1 +1,1 @@
-Sitemap: https://d-morrison.github.io/wai/sitemap.xml
+Sitemap: https://Morrison-Lab.github.io/wai/sitemap.xml
