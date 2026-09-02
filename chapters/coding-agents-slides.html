@@ -329,7 +329,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-09-01 18:37:54 (PDT)</p>
+  <p class="date">Last modified: 2026-09-01 18:43:33 (PDT)</p>
 </section><section class="slide level2"><p>We recommend working with <strong><a href="https://github.com/features/copilot/agents">AI coding agents</a></strong> to <a href="https://en.wikipedia.org/wiki/AI-assisted_software_development">help you code</a>.</p>
 </section><section><section id="sec-ai-language-model" class="title-slide slide level1 center" data-number="1"><h1>
 <span class="header-section-number">1</span> What Is a Language Model?</h1>
@@ -1392,7 +1392,7 @@ Table&nbsp;9: Relative advantages of humans and Agents
 <ul>
 <li>“fix the syntax error in the GitHub Actions workflow file at line X”</li>
 <li>“update the workflow to use the latest version of action Y”</li>
-<li>“correct the job configuration in .github/workflows/check-standard.yaml”</li>
+<li>“correct the job configuration in <code>.github/workflows/check-standard.yaml</code>”</li>
 </ul>
 <p><strong>Important considerations:</strong></p>
 <div class="callout callout-warning callout-titled callout-style-default">
@@ -2160,7 +2160,7 @@ Table&nbsp;9: Relative advantages of humans and Agents
 <p><strong>Alternative: multi-backend local provider</strong></p>
 </div>
 <div class="callout-content">
-<p>If you also run LM Studio, llama.cpp, or vLLM alongside Ollama, the <a href="https://www.npmjs.com/package/opencode-local-provider"><code>opencode-local-provider</code></a> plugin auto-detects all of them under a single <code>local</code> provider and probes each at runtime for loaded models. Install it with <code>opencode plugin --global opencode-local-provider</code>.</p>
+<p>If you also run LM Studio, <code>llama.cpp</code>, or vLLM alongside Ollama, the <a href="https://www.npmjs.com/package/opencode-local-provider"><code>opencode-local-provider</code></a> plugin auto-detects all of them under a single <code>local</code> provider and probes each at runtime for loaded models. Install it with <code>opencode plugin --global opencode-local-provider</code>.</p>
 </div>
 </div>
 </div>
@@ -3977,7 +3977,7 @@ while the selected main agent model is BYOK.</code></pre>
 </section></section><section><section id="sec-ai-claude-code-action-review" class="title-slide slide level1 center" data-number="34"><h1>
 <span class="header-section-number">34</span> Where Pull-Request Review Lives in Claude Code Action</h1>
 
-</section><section class="slide level2"><p>A common question about <a href="https://github.com/anthropics/claude-code-action">anthropics/claude-code-action</a> is where its pull-request review lives. The answer is surprising: <strong>there is no dedicated review action.</strong> The repository publishes one general-purpose top-level action, and “review” is a <em>prompt</em> you pass it, not a separate artifact.</p>
+</section><section class="slide level2"><p>A common question about <a href="https://github.com/anthropics/claude-code-action"><code>anthropics/claude-code-action</code></a> is where its pull-request review lives. The answer is surprising: <strong>there is no dedicated review action.</strong> The repository publishes one general-purpose top-level action, and “review” is a <em>prompt</em> you pass it, not a separate artifact.</p>
 <p>All claims below were surveyed against that repository at <code>main</code> (measured 2026-08-25; paths can move).</p>
 <h4 id="one-action-many-behaviors">One action, many behaviors</h4>
 <p>The published action is <a href="https://github.com/anthropics/claude-code-action/blob/main/action.yml"><code>action.yml</code></a>. It is a single composite action whose one external step installs Bun, and its description reads: “Flexible GitHub automation platform with Claude. Auto-detects mode based on event type: PR reviews, <code>@claude</code> mentions, or custom automation.”</p>

@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 18:37:54 (PDT)
+Last modified: 2026-09-01 18:43:33 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -744,7 +744,7 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 
 - “fix the syntax error in the GitHub Actions workflow file at line X”
 - “update the workflow to use the latest version of action Y”
-- “correct the job configuration in .github/workflows/check-standard.yaml”
+- “correct the job configuration in `.github/workflows/check-standard.yaml`”
 
 **Important considerations:**
 
@@ -1469,7 +1469,7 @@ Restart OpenCode and run `/models` to see your local models listed alongside any
 
 > **NOTE:**
 >
-> If you also run LM Studio, llama.cpp, or vLLM alongside Ollama, the [`opencode-local-provider`](https://www.npmjs.com/package/opencode-local-provider) plugin auto-detects all of them under a single `local` provider and probes each at runtime for loaded models. Install it with `opencode plugin --global opencode-local-provider`.
+> If you also run LM Studio, `llama.cpp`, or vLLM alongside Ollama, the [`opencode-local-provider`](https://www.npmjs.com/package/opencode-local-provider) plugin auto-detects all of them under a single `local` provider and probes each at runtime for loaded models. Install it with `opencode plugin --global opencode-local-provider`.
 
 A lightweight hand-written provider block in your project’s `opencode.json` still works if you prefer explicit control over model names and context limits, but the plugin removes the need to keep that list in sync with `ollama pull`.
 
@@ -2882,7 +2882,7 @@ For current setup details, see OpenAI’s [GitHub code-review documentation](htt
 
 # 34 Where Pull-Request Review Lives in Claude Code Action
 
-A common question about [anthropics/claude-code-action](https://github.com/anthropics/claude-code-action) is where its pull-request review lives. The answer is surprising: **there is no dedicated review action.** The repository publishes one general-purpose top-level action, and “review” is a *prompt* you pass it, not a separate artifact.
+A common question about [`anthropics/claude-code-action`](https://github.com/anthropics/claude-code-action) is where its pull-request review lives. The answer is surprising: **there is no dedicated review action.** The repository publishes one general-purpose top-level action, and “review” is a *prompt* you pass it, not a separate artifact.
 
 All claims below were surveyed against that repository at `main` (measured 2026-08-25; paths can move).
 
