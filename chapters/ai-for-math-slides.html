@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-html/tabby.min.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.10.18">
 
-  <title>Working with AI</title>
+  <title>Working with AI – AI for Math and Statistics</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="site_libs/revealjs/dist/reset.css">
-  <link rel="stylesheet" href="site_libs/revealjs/dist/reveal.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -33,97 +33,12 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
-    /* CSS for syntax highlighting */
-    html { -webkit-text-size-adjust: 100%; }
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    .sourceCode { overflow: visible; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        color: #aaaaaa;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-    div.sourceCode
-      { color: #003b4f; background-color: #f1f3f5; }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span { color: #003b4f; } /* Normal */
-    code span.al { color: #ad0000; } /* Alert */
-    code span.an { color: #5e5e5e; } /* Annotation */
-    code span.at { color: #657422; } /* Attribute */
-    code span.bn { color: #ad0000; } /* BaseN */
-    code span.bu { } /* BuiltIn */
-    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
-    code span.ch { color: #20794d; } /* Char */
-    code span.cn { color: #8f5902; } /* Constant */
-    code span.co { color: #5e5e5e; } /* Comment */
-    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
-    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
-    code span.dt { color: #ad0000; } /* DataType */
-    code span.dv { color: #ad0000; } /* DecVal */
-    code span.er { color: #ad0000; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #ad0000; } /* Float */
-    code span.fu { color: #4758ab; } /* Function */
-    code span.im { color: #00769e; } /* Import */
-    code span.in { color: #5e5e5e; } /* Information */
-    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
-    code span.op { color: #5e5e5e; } /* Operator */
-    code span.ot { color: #003b4f; } /* Other */
-    code span.pp { color: #ad0000; } /* Preprocessor */
-    code span.sc { color: #5e5e5e; } /* SpecialChar */
-    code span.ss { color: #20794d; } /* SpecialString */
-    code span.st { color: #20794d; } /* String */
-    code span.va { color: #111111; } /* Variable */
-    code span.vs { color: #20794d; } /* VerbatimString */
-    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
-    /* CSS for citations */
-    div.csl-bib-body { }
-    div.csl-entry {
-      clear: both;
-    }
-    .hanging-indent div.csl-entry {
-      margin-left:2em;
-      text-indent:-2em;
-    }
-    div.csl-left-margin {
-      min-width:2em;
-      float:left;
-    }
-    div.csl-right-inline {
-      margin-left:2em;
-      padding-left:1em;
-    }
-    div.csl-indent {
-      margin-left: 2em;
-    }  </style>
-  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-8ad4261df090a1f6df0398ca91f93312.css">
-  <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
-  <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
-  <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
-  <link href="site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-8ad4261df090a1f6df0398ca91f93312.css">
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
     .reveal div.sourceCode {
       margin: 0;
@@ -322,7 +237,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Working with AI</h1>
+  <h1 class="title">AI for Math and Statistics</h1>
 
 <div class="quarto-title-authors">
 </div>
@@ -331,77 +246,70 @@
 </section>
 <section class="slide level2">
 
-<p>This site collects the UCD-SERG lab’s notes on working responsibly and effectively with AI coding assistants: what they are, how to use them, and the policies lab members follow when using them. It was migrated out of the <a href="https://ucd-serg.github.io/lab-manual/">UCD-SERG Lab Manual</a>’s “Working with AI” chapter, which had grown large enough to deserve a dedicated site. For the lab’s broader coding, reproducibility, and collaboration conventions, see the lab manual itself.</p>
+<p>This chapter collects notes on language models applied to mathematical reasoning, which is the part of an AI assistant’s work a statistics lab leans on most when a derivation, a proof step, or a numerical check is at stake.</p>
 <div class="callout callout-warning callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Technology in Rapid Evolution</strong></p>
+<p><strong>A fast-moving snapshot</strong></p>
 </div>
 <div class="callout-content">
-<p>As of early 2026, AI coding assistant technology is changing extremely rapidly, and we are just beginning to figure out how to use these tools effectively ourselves. All information on this site should be taken with extra caution, as best practices and capabilities continue to evolve.</p>
+<p>The resources reviewed here change weekly. Entry counts, model names, and benchmark results quoted below were true when the section was written (the date is stated in each section) and will drift. Re-check the source before acting on any of them.</p>
 </div>
 </div>
 </div>
 </section>
-<section id="chapters" class="slide level2" data-number="1">
-<h2><span class="header-section-number">1</span> Chapters</h2>
+<section>
+<section id="sec-math-awesome-list" class="title-slide slide level1 center" data-number="1">
+<h1><span class="header-section-number">1</span> A Reading List: Awesome-Math-LLM</h1>
+
+</section>
+<section class="slide level2">
+
+<p><a href="https://github.com/doublelei/Awesome-Math-LLM"><code>doublelei/Awesome-Math-LLM</code></a> is an MIT-licensed, community-curated list of resources on large language models for mathematics: surveys, techniques, models, benchmarks, and tools. The notes below reflect its README as read on 2026-09-01, when it carried about 310 entries, most of them papers on arXiv with a code or model link where one exists.</p>
+</section>
+<section id="what-it-covers" class="slide level2" data-number="1.1">
+<h2><span class="header-section-number">1.1</span> What it covers</h2>
+</section>
+<section class="slide level2">
+
+<p>The list is organized into seven content sections:</p>
+<ul>
+<li><strong>Surveys and overviews</strong>, led by the March 2025 survey on mathematical reasoning and optimization with LLMs (<a href="https://arxiv.org/abs/2503.17726">arXiv:2503.17726</a>), which the list names as its own key source</li>
+<li><strong>Mathematical tasks</strong>, from number representation and arithmetic through word problems, competition math, and formal theorem proving</li>
+<li><strong>Reasoning techniques</strong>: chain-of-thought and prompting, search and planning, reinforcement learning and reward modeling, self-improvement, tool use, and integration with symbolic solvers</li>
+<li><strong>Multimodal mathematical reasoning</strong>, for problems that include figures or diagrams</li>
+<li><strong>Models</strong>, split into math-specialized models (for example <code>DeepSeekMath</code>, <code>Qwen2.5-Math</code>, <code>Llemma</code>, and Minerva), reasoning-focused models (<code>rStar-Math</code>, DeepSeek R1, OpenAI o1, and <code>QwQ-32B</code>), and the leading general models each vendor reports on math benchmarks</li>
+<li><strong>Datasets and benchmarks</strong>, grouped by level: grade-school word problems (<code>GSM8K</code>, <code>SVAMP</code>), competition and university level (<code>MATH</code>, <code>AIME</code>, <code>MMLU-Pro</code>, <code>GPQA</code>), theorem proving (<code>miniF2F</code>, <code>ProofNet</code>), multimodal, and the training and synthetic sets</li>
+<li><strong>Tools and libraries</strong>, which pairs LLM tooling (<code>OpenCompass</code> for evaluation, LoRA for fine-tuning) with the interactive theorem-proving assistants Lean, Isabelle, and <code>Coq</code></li>
+</ul>
+<p>Most entries carry a paper title, links, and a month-and-year date; the tool entries and the related-lists entries carry a name and a link only.</p>
+</section>
+<section id="what-to-read-with-care" class="slide level2" data-number="1.2">
+<h2><span class="header-section-number">1.2</span> What to read with care</h2>
 </section>
 <section class="slide level2">
 
 <ul>
-<li><a href="./chapters/ai-use-policies.html"><strong>Policies for Using AI</strong></a>: responsibility for validation, disclosure, attribution, and using AI for journal articles</li>
-<li><a href="./chapters/coding-agents.html"><strong>Coding Agents</strong></a>: what language models, coding agents, and harnesses are; how to work with them; benefits, hazards, and best practices; and configuring your environment</li>
-<li><a href="./chapters/agent-orchestration.html"><strong>Orchestrating Teams of Agents</strong></a>: when running several agents at once is worth the cost, what we already use for it, and how three outside orchestrators (Agent Teams, Inflexa, TORQCLAW) compare</li>
-<li><a href="./chapters/grok-bot-and-alternatives.html"><strong>Grok Bot and Alternatives</strong></a>: persistent teammates with their own computer (Grok Bot, Rakazo, OpenClaw, Claude Cowork, ChatGPT Work) and how they differ from our coding-agent stack</li>
-<li><a href="./chapters/data-dict.html"><strong>Data Dictionaries for Humans and Agents</strong></a>: <code>data-dict.yaml</code> for making dataset context accessible to both humans and AI agents (see <a href="https://data-dict.tidyverse.org/">data-dict.tidyverse.org</a>)</li>
-<li><a href="./chapters/benchbook.html"><strong>Benchbook: A Personal Wiki Under Contract</strong></a>: a plain-markdown, git-versioned wiki that an AI agent maintains under a written contract (see <a href="https://github.com/Ulef1005/benchbook">benchbook</a>)</li>
-<li><a href="./chapters/make.html"><strong>Make: Visual Automation and AI Agents</strong></a>: visual, no-code canvas for 3,000+ apps, scenarios, and AI agents with Make Grid and MCP (see <a href="https://www.make.com/en">make.com</a>)</li>
-<li><a href="./chapters/pr-workflow-with-agents.html"><strong>Pull-Request Workflow with Agents</strong></a>: filing issues, claiming work, and driving a pull request to a clean, mergeable state</li>
+<li>The “Recent Highlights” block at the top carries the maintainer’s own note that its dates “appear to be futuristic”, so treat a date there as unreliable until checked against the paper.</li>
+<li>Several entries appear under more than one section (<code>AlphaGeometry</code> under both geometry and competition math, for instance), which is deliberate cross-listing rather than an error, and the entry counts above include those repeats.</li>
+<li>The list records what exists rather than what works: it makes no recommendations and ranks nothing, so the benchmark section is the place to start when a claim about a model’s mathematical ability needs a source.</li>
 </ul>
-<p>The notes are available in multiple formats:</p>
+</section>
+<section id="useful-to-us-as-a-map-not-a-recommendation" class="slide level2" data-number="1.3">
+<h2><span class="header-section-number">1.3</span> Useful to us? As a map, not a recommendation</h2>
+</section>
+<section class="slide level2">
+
+<p>For a statistics lab the list is most useful in three ways:</p>
 <ul>
-<li><strong>HTML Website</strong>: Navigate using the navbar for easy access to all pages</li>
-<li><strong>RevealJS Slides</strong>: Each chapter can generate a presentation format with <code>-slides.html</code> suffix</li>
-<li><strong>PDF Handouts</strong>: Each chapter can generate a PDF handout with <code>-handout.pdf</code> suffix</li>
-<li><strong>DOCX Documents</strong>: Each chapter can generate a Microsoft Word document with <code>.docx</code> extension</li>
+<li><strong>Choosing a model for a derivation-heavy task.</strong> The reasoning-focused and math-specialized model sections name the models whose math benchmark results are published, and the benchmark section names the tests those results come from, so a claim such as “model X is strong at math” can be tied to a number.</li>
+<li><strong>Understanding why an assistant gets a calculation wrong.</strong> The fundamental-calculation section collects the papers on how models split and represent numbers that explain arithmetic failures, and the tool-use section collects the approaches (calling a calculator, running code, consulting a solver) that fix them, which is the pattern this lab already follows by having an agent run R rather than reason about numbers in prose.</li>
+<li><strong>Formal verification as a direction to watch.</strong> The theorem-proving entries and the Lean, Isabelle, and <code>Coq</code> tools describe machine-checked proofs, which is the standard a statistical derivation could eventually be held to.</li>
 </ul>
-</section>
-<section id="about-this-website" class="slide level2" data-number="2">
-<h2><span class="header-section-number">2</span> About this website</h2>
-</section>
-<section class="slide level2">
-
-<p>This website is built with <a href="https://quarto.org/">Quarto</a>, an open-source scientific and technical publishing system, from the <a href="https://github.com/Morrison-Lab/qwt">UCD-SERG <code>qwt</code> (Quarto Website Template)</a>.</p>
-</section>
-<section id="building-the-website" class="slide level2" data-number="3">
-<h2><span class="header-section-number">3</span> Building the website</h2>
-</section>
-<section class="slide level2">
-
-<p>To render the website locally:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a aria-label="1"></a><span class="ex">quarto</span> render</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>To preview the website with live reload:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a aria-label="1"></a><span class="ex">quarto</span> preview</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The rendered output will be in the <code>_site/</code> directory, which is published to GitHub Pages.</p>
-</section>
-<section id="license" class="slide level2" data-number="4">
-<h2><span class="header-section-number">4</span> License</h2>
-</section>
-<section class="slide level2">
-
-<p>See <a href="https://github.com/Morrison-Lab/wai/blob/main/LICENSE"><code>LICENSE</code></a>.</p>
-</section>
-<section id="references" class="slide level2 unnumbered">
-<h2>References</h2>
-</section>
-<section class="slide level2 smaller scrollable" id="references">
-
-<div id="refs" role="list">
-
-</div>
+<p>Its limits for us are that statistics appears only through general math benchmarks, none of the entries evaluate applied statistical reasoning specifically, and the list stops at collection: comparing the models it names is work for the reader.</p>
 
 
 <script>
@@ -594,7 +502,7 @@ window.addEventListener("load", alignEquationAnchorsWithDefault);
 })();
 </script>
 
-</section>
+</section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
@@ -603,19 +511,19 @@ window.addEventListener("load", alignEquationAnchorsWithDefault);
 </div></div>
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
-  <script src="site_libs/revealjs/dist/reveal.js"></script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
   <!-- reveal.js plugins -->
-  <script src="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
-  <script src="site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
-  <script src="site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
-  <script src="site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
-  <script src="site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
-  <script src="site_libs/revealjs/plugin/notes/notes.js"></script>
-  <script src="site_libs/revealjs/plugin/search/search.js"></script>
-  <script src="site_libs/revealjs/plugin/zoom/zoom.js"></script>
-  <script src="site_libs/revealjs/plugin/math/math.js"></script>
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
   <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
 
   <script>

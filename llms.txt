@@ -8,6 +8,7 @@
 - [Make: Visual Automation and AI Agents](https://Morrison-Lab.github.io/wai/chapters/make.llms.md)
 - [Data Dictionaries for Humans and Agents](https://Morrison-Lab.github.io/wai/chapters/data-dict.llms.md)
 - [Benchbook: A Personal Wiki Under Contract](https://Morrison-Lab.github.io/wai/chapters/benchbook.llms.md)
+- [AI for Math and Statistics](https://Morrison-Lab.github.io/wai/chapters/ai-for-math.llms.md)
 - [Orchestrating Teams of Agents](https://Morrison-Lab.github.io/wai/chapters/agent-orchestration.llms.md)
 - [Policies for Using AI](https://Morrison-Lab.github.io/wai/chapters/ai-use-policies.llms.md)
 - [Coding Agents](https://Morrison-Lab.github.io/wai/chapters/coding-agents.llms.md)
