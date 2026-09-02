@@ -217,6 +217,9 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/gemini-spend-management.qmd >}}
 
+# AI for Mathematics and Statistics {#sec-ai-math-and-statistics}
+
+{{< include ai-tools/ai-math-and-statistics.qmd >}}
 
 # References {.unnumbered}
 
