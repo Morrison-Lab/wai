@@ -1,0 +1,75 @@
+[posit-dev/skills](https://github.com/posit-dev/skills)
+is the collection of [Agent Skills](https://agentskills.io/home) published by Posit
+(see @sec-ai-agent-skills for what a skill is)
+for R, Python, Quarto, and Shiny work.
+It is MIT-licensed,
+and its skills load in Claude Code, Claude.ai, or through the Claude API,
+or in any other skills-compatible agent.
+The notes below reflect the repository's README as read on 2026-09-01.
+
+#### What it contains
+
+The skills are grouped into eight categories,
+each of which can be installed on its own:
+
+- **posit-dev**: general developer skills, including an adversarial `critical-code-reviewer`,
+  `describe-design` for architecture documentation with Mermaid diagrams,
+  and `review-testing` for auditing test code after a change
+- **github**: pull-request workflows,
+  such as `pr-create`, which opens a PR and then watches CI and debugs failures until it passes,
+  and `pr-threads-address` / `pr-threads-resolve` for review threads
+- **open-source**: `create-release-checklist` and `release-post`
+  for R and Python package releases
+- **r-lib**: `testing-r-packages` (`testthat` 3), `cli`, `cran-extrachecks`, `lifecycle`,
+  `r-package-development`, `mirai` (asynchronous and parallel R), and `alt-text`
+- **`ggsql`**: writing queries in `ggsql`, a grammar of graphics for SQL
+- **shiny**: `brand-yml`, `shiny-bslib`, and `shiny-bslib-theming`
+- **quarto**: `brand-yml`, `authoring` (including migration from R Markdown and `bookdown`), and `alt-text`
+- **connect**: `deploy-to-connect` for Posit Connect
+
+Each skill carries an `author`, `version`, and `license` in its `SKILL.md` frontmatter,
+so a copied skill stays attributable.
+
+#### How to install it
+
+The README documents four routes:
+
+- the cross-agent `skills` CLI (`npx skills add posit-dev/skills --list`, `--all`, or `--skill <name>`),
+  which targets Claude Code, Codex, Cursor, Cline, and others
+- Claude Code's plugin marketplace (`/plugin marketplace add posit-dev/skills`),
+  then `/plugin install <category>@posit-dev-skills` per category
+- copying skill folders into the agent's skills directory by hand
+- uploading a skill to Claude.ai, or loading it through the Skills API
+
+Once installed, the agent activates a skill from its description
+rather than on an explicit command,
+which is the progressive-disclosure model @sec-ai-agent-skills describes.
+
+#### Useful to us? Yes, and largely already adopted
+
+The R and Quarto skills match this lab's daily work,
+and nine of them are already copied into
+[Morrison-Lab/ai-config](https://github.com/Morrison-Lab/ai-config),
+adapted for that repository's conventions
+with the upstream MIT license text kept alongside them:
+
+- `brand-yml`
+- `cli`
+- `cran-extrachecks`
+- `create-release-checklist`
+- `lifecycle`
+- `quarto-authoring`
+- `r-package-development`
+- `release-post`
+- `testing-r-packages`
+
+Copying the skills in rather than installing the marketplace plugin
+lets them follow the lab's own review and hook conventions,
+at the cost of tracking upstream changes by hand.
+The categories not yet adopted are the ones with the least overlap with lab work:
+Shiny app development, `ggsql`, and Posit Connect deployment.
+The `github` skills overlap with the lab's own
+[pull-request workflow](pr-workflow-with-agents.qmd)
+and with the review setup in @sec-ai-claude-code-action-review,
+so they are worth reading for ideas rather than installing beside it.
+The contribution guidance in the repository recommends Anthropic's `skill-creator` skill for authoring new skills.

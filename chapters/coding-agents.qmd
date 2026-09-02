@@ -121,6 +121,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/agent-skills.qmd >}}
 
+# Posit's Skill Collection {#sec-ai-posit-skills}
+
+{{< include ai-tools/posit-skills.qmd >}}
+
 # Useful plugins {#sec-ai-useful-plugins}
 
 {{< include ai-tools/useful-plugins.qmd >}}
