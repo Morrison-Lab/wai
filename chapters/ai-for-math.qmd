@@ -15,6 +15,16 @@ reasoning, which is the part of an AI assistant's work a statistics lab
 leans on most when a derivation, a proof step, or a numerical check is at
 stake.
 
+::: {.callout-warning}
+## A fast-moving snapshot
+
+The resources reviewed here change weekly.
+Entry counts, model names, and benchmark results quoted below
+were true when the section was written (the date is stated in each section)
+and will drift.
+Re-check the source before acting on any of them.
+:::
+
 # A Reading List: Awesome-Math-LLM {#sec-math-awesome-list}
 
 [`doublelei/Awesome-Math-LLM`](https://github.com/doublelei/Awesome-Math-LLM)
@@ -50,7 +60,8 @@ The list is organized into seven content sections:
   (`OpenCompass` for evaluation, LoRA for fine-tuning)
   with the interactive theorem-proving assistants Lean, Isabelle, and `Coq`
 
-Each entry carries the paper title, links, and a month-and-year date.
+Most entries carry a paper title, links, and a month-and-year date;
+the tool entries and the related-lists entries carry a name and a link only.
 
 ## What to read with care
 
