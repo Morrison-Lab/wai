@@ -337,8 +337,12 @@ class HTMLDiffer:
         old_content = self.normalize_html(self.extract_main_content(old_html))
         new_content = self.normalize_html(self.extract_main_content(new_html))
         
-        # Calculate similarity ratio
-        similarity = difflib.SequenceMatcher(None, old_content, new_content).ratio()
+        # Calculate similarity ratio over words rather than characters. A
+        # character-level SequenceMatcher over a whole page took minutes on
+        # the largest chapter; over words it takes seconds (#180).
+        old_words = old_content.split()
+        new_words = new_content.split()
+        similarity = difflib.SequenceMatcher(None, old_words, new_words).ratio()
         
         # If content is nearly identical, no need to highlight
         if similarity > 0.95:
