@@ -8,12 +8,14 @@
 # check cannot see: index.qmd, appendix-*.qmd, chapters/**/*.qmd, and the
 # shared/**/*.md fragments those chapters include.
 #
-# `{{< include ... >}}` lines are dropped before checking: hunspell splits
+# `{{< include ... >}}` lines are blanked before checking: hunspell splits
 # the include path on hyphens, so every kebab-case filename segment would
 # otherwise be reported as a misspelling of the prose. Bold markers are
 # dropped too, so an initial-letter emphasis such as **A**ddress is checked
 # as the word it renders as rather than as its two halves, and so is LaTeX
 # math ($...$ and $$...$$), whose commands hunspell would read as words.
+# Every removal keeps the file's line breaks, so a reported line number
+# still points at the source line.
 #
 # Exit status is 1 when any word is misspelled, else 0.
 
@@ -36,16 +38,27 @@ if (length(duplicated_names) > 0) {
   )
 }
 
+# Remove every match of `pattern` from `text`, keeping the line breaks the
+# match contained so later line numbers do not shift.
+blank_matches <- function(text, pattern) {
+  matches <- gregexpr(pattern, text, perl = TRUE)
+  regmatches(text, matches) <- lapply(
+    regmatches(text, matches), gsub, pattern = "[^\n]", replacement = ""
+  )
+  text
+}
+
 staging <- file.path(tempdir(), "spellcheck-chapters")
 shortcode <- "^[[:space:]]*\\{\\{<.*>\\}\\}[[:space:]]*$"
 staged <- vapply(files, function(f) {
   out <- file.path(staging, f)
   dir.create(dirname(out), recursive = TRUE, showWarnings = FALSE)
   lines <- readLines(f, warn = FALSE)
-  lines <- gsub("**", "", lines[!grepl(shortcode, lines)], fixed = TRUE)
+  lines[grepl(shortcode, lines)] <- ""
+  lines <- gsub("**", "", lines, fixed = TRUE)
   text <- paste(lines, collapse = "\n")
-  text <- gsub("(?s)\\$\\$.*?\\$\\$", "", text, perl = TRUE)
-  text <- gsub("\\$[^$\n]+\\$", "", text, perl = TRUE)
+  text <- blank_matches(text, "(?s)\\$\\$.*?\\$\\$")
+  text <- blank_matches(text, "\\$[^$\n]+\\$")
   writeLines(text, out)
   out
 }, character(1))
