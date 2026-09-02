@@ -242,11 +242,11 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-09-01 19:33:09 (PDT)</p>
+  <p class="date">Last modified: 2026-09-01 20:05:55 (PDT)</p>
 </section>
 <section class="slide level2">
 
-<p>This chapter collects notes on language models applied to mathematical reasoning, which is the part of an AI assistant’s work a statistics lab leans on most when a derivation, a proof step, or a numerical check is at stake.</p>
+<p>This chapter collects notes on language models applied to mathematical and statistical reasoning, which is the part of an AI assistant’s work a statistics lab leans on most when a derivation, a proof step, or a numerical check is at stake.</p>
 <div class="callout callout-warning callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -256,60 +256,129 @@
 <p><strong>A fast-moving snapshot</strong></p>
 </div>
 <div class="callout-content">
-<p>The resources reviewed here change weekly. Entry counts, model names, and benchmark results quoted below were true when the section was written (the date is stated in each section) and will drift. Re-check the source before acting on any of them.</p>
+<p>The resources and benchmark suites reviewed here evolve quickly. Entry counts, cataloged models, and benchmark references quoted below reflect the ecosystem as surveyed on 2026-09-01 and will drift. Re-check primary sources before relying on specific entries.</p>
 </div>
 </div>
 </div>
 </section>
 <section>
-<section id="sec-math-awesome-list" class="title-slide slide level1 center" data-number="1">
-<h1><span class="header-section-number">1</span> A Reading List: Awesome-Math-LLM</h1>
+<section id="sec-ai-math-reasoning" class="title-slide slide level1 center" data-number="1">
+<h1><span class="header-section-number">1</span> Search-Time Compute and Verified Reasoning</h1>
 
 </section>
 <section class="slide level2">
 
-<p><a href="https://github.com/doublelei/Awesome-Math-LLM"><code>doublelei/Awesome-Math-LLM</code></a> is an MIT-licensed, community-curated list of resources on large language models for mathematics: surveys, techniques, models, benchmarks, and tools. The notes below reflect its README as read on 2026-09-01, when it carried about 310 entries, most of them papers on arXiv with a code or model link where one exists.</p>
-</section>
-<section id="what-it-covers" class="slide level2" data-number="1.1">
-<h2><span class="header-section-number">1.1</span> What it covers</h2>
-</section>
-<section class="slide level2">
-
-<p>The list is organized into seven content sections:</p>
+<p>The landscape of AI for mathematics and statistics has evolved rapidly from token prediction to test-time search and verified reasoning. Modern reasoning models combine deep chain-of-thought generation with symbolic computing tools, formal theorem provers, and search algorithms to solve complex analytical and statistical problems.</p>
+<p>Traditional large language models often struggle with multi-step arithmetic, algebraic manipulation, and rigorous proof construction because standard autoregressive decoding lacks backtracking and error correction.</p>
+<p>Recent research demonstrates that test-time compute scaling dramatically enhances mathematical problem-solving:</p>
 <ul>
-<li><strong>Surveys and overviews</strong>, led by the March 2025 survey on mathematical reasoning and optimization with LLMs (<a href="https://arxiv.org/abs/2503.17726">arXiv:2503.17726</a>), which the list names as its own key source</li>
-<li><strong>Mathematical tasks</strong>, from number representation and arithmetic through word problems, competition math, and formal theorem proving</li>
-<li><strong>Reasoning techniques</strong>: chain-of-thought and prompting, search and planning, reinforcement learning and reward modeling, self-improvement, tool use, and integration with symbolic solvers</li>
-<li><strong>Multimodal mathematical reasoning</strong>, for problems that include figures or diagrams</li>
-<li><strong>Models</strong>, split into math-specialized models (for example <code>DeepSeekMath</code>, <code>Qwen2.5-Math</code>, <code>Llemma</code>, and Minerva), reasoning-focused models (<code>rStar-Math</code>, DeepSeek R1, OpenAI o1, and <code>QwQ-32B</code>), and the leading general models each vendor reports on math benchmarks</li>
-<li><strong>Datasets and benchmarks</strong>, grouped by level: grade-school word problems (<code>GSM8K</code>, <code>SVAMP</code>), competition and university level (<code>MATH</code>, <code>AIME</code>, <code>MMLU-Pro</code>, <code>GPQA</code>), theorem proving (<code>miniF2F</code>, <code>ProofNet</code>), multimodal, and the training and synthetic sets</li>
-<li><strong>Tools and libraries</strong>, which pairs LLM tooling (<code>OpenCompass</code> for evaluation, LoRA for fine-tuning) with the interactive theorem-proving assistants Lean, Isabelle, and <code>Coq</code></li>
+<li><strong>MCTS and Step-Level Verification</strong>: Architectures like <strong><a href="https://arxiv.org/abs/2501.04519">rStar-Math</a></strong> (Microsoft Research, 2025) apply Monte Carlo Tree Search (MCTS) with step-level Process Reward Models (PRMs). By generating multiple candidate trajectories, evaluating each step with a reward model, and exploring alternative branches upon encountering dead ends, small language models (SLMs such as <code>Qwen2.5-Math-7B</code>) can achieve accuracy on competition benchmarks that previously required models with hundreds of billions of parameters.</li>
+<li><strong>Code-Augmented Symbolic Execution</strong>: Rather than performing mental arithmetic or symbolic integration directly in natural language tokens, effective mathematical agents generate executable Python (using libraries such as <a href="https://www.sympy.org/">SymPy</a>, <code>NumPy</code>, or <code>SciPy</code>) or R code. The execution output acts as an exact ground-truth oracle, eliminating arithmetic calculation mistakes and confirming intermediate algebraic steps.</li>
 </ul>
-<p>Most entries carry a paper title, links, and a month-and-year date; the tool entries and the related-lists entries carry a name and a link only.</p>
+</section></section>
+<section>
+<section id="sec-ai-math-benchmarks" class="title-slide slide level1 center" data-number="2">
+<h1><span class="header-section-number">2</span> Benchmark Taxonomy and Model Evaluation</h1>
+
 </section>
-<section id="what-to-read-with-care" class="slide level2" data-number="1.2">
-<h2><span class="header-section-number">1.2</span> What to read with care</h2>
+<section class="slide level2">
+
+<p>The mathematical AI ecosystem utilizes a tiered benchmark hierarchy to assess reasoning capability across varying levels of abstraction:</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Benchmark Tier</th>
+<th>Target Competencies</th>
+<th>Key Benchmarks</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Grade School &amp; High School</strong></td>
+<td>Arithmetic, multi-step word problems, basic algebra</td>
+<td><code>GSM8K</code>, <code>SVAMP</code>, <code>MATH-500</code></td>
+</tr>
+<tr class="even">
+<td><strong>Competition &amp; University</strong></td>
+<td>Non-routine problem solving, combinatorics, number theory</td>
+<td><code>AMC 10/12</code>, <code>AIME</code>, <code>OlympiadBench</code>, <code>Putnam</code>, <code>MMLU-Pro</code>, <code>GPQA</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Formal Theorem Proving</strong></td>
+<td>Syntactically verifiable proofs in formal proof assistants</td>
+<td><a href="https://lean-lang.org/">Lean 4</a>, Isabelle, Coq, <code>MiniF2F</code>, <code>ProofNet</code></td>
+</tr>
+</tbody>
+</table>
+<p>Frontier reasoning models achieve high scores on competition-level examinations by spending adaptive reasoning compute before generating final answers:</p>
+<ul>
+<li><strong>Proprietary Frontier</strong>: OpenAI o1/o3-mini, Claude 3.7 Sonnet, and Claude Sonnet 4.5 (with extended thinking).</li>
+<li><strong>Open-Weight Reasoning</strong>: DeepSeek-R1 and <code>QwQ-32B</code>.</li>
+<li><strong>Specialized Mathematical Weights</strong>: <code>Qwen2.5-Math-72B</code> and <code>NuminaMath</code>.</li>
+</ul>
+</section></section>
+<section>
+<section id="sec-math-awesome-list" class="title-slide slide level1 center" data-number="3">
+<h1><span class="header-section-number">3</span> Curated Reading List: Awesome-Math-LLM</h1>
+
+</section>
+<section class="slide level2">
+
+<p><a href="https://github.com/doublelei/Awesome-Math-LLM"><code>doublelei/Awesome-Math-LLM</code></a> is an MIT-licensed, community-curated directory of resources on large language models for mathematics: surveys, techniques, models, benchmarks, and tools. The notes below reflect its catalog as surveyed on 2026-09-01, when it carried over 310 papers and code repositories.</p>
+</section>
+<section id="what-it-covers" class="slide level2" data-number="3.1">
+<h2><span class="header-section-number">3.1</span> What it covers</h2>
+</section>
+<section class="slide level2">
+
+<p>The repository is organized into seven core areas:</p>
+<ul>
+<li><strong>Surveys and overviews</strong>, led by the March 2025 survey on mathematical reasoning and optimization with LLMs (<a href="https://arxiv.org/abs/2503.17726">arXiv:2503.17726</a>), which the list names as its key foundational survey.</li>
+<li><strong>Mathematical tasks</strong>, from number representation and arithmetic through word problems, competition math, and formal theorem proving.</li>
+<li><strong>Reasoning techniques</strong>: chain-of-thought prompting, search and planning (MCTS), reinforcement learning and process reward modeling (PRMs), self-improvement, tool use, and symbolic solver integration.</li>
+<li><strong>Multimodal mathematical reasoning</strong>, covering visual geometry and chart interpretation.</li>
+<li><strong>Specialized models</strong>: domain-specialized weights (<code>DeepSeekMath</code>, <code>Qwen2.5-Math</code>, <code>Llemma</code>, Minerva) and general reasoning architectures (<code>rStar-Math</code>, DeepSeek-R1, OpenAI o1, <code>QwQ-32B</code>).</li>
+<li><strong>Datasets and benchmarks</strong>, spanning elementary arithmetic (<code>GSM8K</code>), competition problem sets (<code>MATH</code>, <code>AIME</code>), and formal verification corpora (<code>MiniF2F</code>, <code>ProofNet</code>).</li>
+<li><strong>Interactive Provers and Tooling</strong>: pairing evaluation frameworks (<code>OpenCompass</code>) with formal proof assistants (<a href="https://lean-lang.org/">Lean 4</a>, Isabelle, Coq).</li>
+</ul>
+</section>
+<section id="what-to-read-with-care" class="slide level2" data-number="3.2">
+<h2><span class="header-section-number">3.2</span> What to read with care</h2>
 </section>
 <section class="slide level2">
 
 <ul>
-<li>The “Recent Highlights” block at the top carries the maintainer’s own note that its dates “appear to be futuristic”, so treat a date there as unreliable until checked against the paper.</li>
-<li>Several entries appear under more than one section (<code>AlphaGeometry</code> under both geometry and competition math, for instance), which is deliberate cross-listing rather than an error, and the entry counts above include those repeats.</li>
-<li>The list records what exists rather than what works: it makes no recommendations and ranks nothing, so the benchmark section is the place to start when a claim about a model’s mathematical ability needs a source.</li>
+<li>The “Recent Highlights” block at the top carries the maintainer’s own note that its dates “appear to be futuristic”, so treat a date there as unreliable until checked against the primary paper.</li>
+<li>Several entries appear under more than one section (<code>AlphaGeometry</code> under both geometry and competition math, for instance), which is deliberate cross-listing rather than an error.</li>
+<li>The list records what exists rather than ranking what works: it makes no qualitative recommendations, so the benchmark section is the place to start when evaluating model accuracy.</li>
 </ul>
 </section>
-<section id="useful-to-us-as-a-map-not-a-recommendation" class="slide level2" data-number="1.3">
-<h2><span class="header-section-number">1.3</span> Useful to us? As a map, not a recommendation</h2>
+<section id="reading-guidance-for-research-labs" class="slide level2" data-number="3.3">
+<h2><span class="header-section-number">3.3</span> Reading Guidance for Research Labs</h2>
 </section>
-<section class="slide level2">
+<section class="slide level2 scrollable">
 
-<p>For a statistics lab the list is most useful in three ways:</p>
-<ul>
-<li><strong>Choosing a model for a derivation-heavy task.</strong> The reasoning-focused and math-specialized model sections name the models whose math benchmark results are published, and the benchmark section names the tests those results come from, so a claim such as “model X is strong at math” can be tied to a number.</li>
-<li><strong>Understanding why an assistant gets a calculation wrong.</strong> The fundamental-calculation section collects the papers on how models split and represent numbers that explain arithmetic failures, and the tool-use section collects the approaches (calling a calculator, running code, consulting a solver) that fix them, which is the pattern this lab already follows by having an agent run R rather than reason about numbers in prose.</li>
-<li><strong>Formal verification as a direction to watch.</strong> The theorem-proving entries and the Lean, Isabelle, and <code>Coq</code> tools describe machine-checked proofs, which is the standard a statistical derivation could eventually be held to.</li>
-</ul>
-<p>Its limits for us are that statistics appears only through general math benchmarks, none of the entries evaluate applied statistical reasoning specifically, and the list stops at collection: comparing the models it names is work for the reader.</p>
+<p>For a computational and statistical laboratory, the repository serves as an architectural index:</p>
+<ol type="1">
+<li><strong>Model Selection for Analytical Derivations</strong>: The reasoning and math-specialized model categories allow matching tasks to models with verified benchmark performance on similar algebraic complexity.</li>
+<li><strong>Diagnosing Arithmetic Failures</strong>: The number-representation literature explains why pure autoregressive decoding fails on tokenized digits, motivating execution-backed tool patterns (such as executing R or Python subprocesses).</li>
+<li><strong>Formal Verification Horizons</strong>: The interactive theorem proving resources indicate the direction towards mechanically verified mathematical proofs in statistical theory.</li>
+</ol>
+</section></section>
+<section>
+<section id="sec-ai-math-guidance" class="title-slide slide level1 center" data-number="4">
+<h1><span class="header-section-number">4</span> Practical Guidance for Mathematics and Statistics</h1>
+
+</section>
+<section class="slide level2 scrollable">
+
+<p>When using AI agents for mathematical derivation and statistical analysis:</p>
+<ol type="1">
+<li><strong>Require Code Execution for Verification</strong>: Always prompt agents to formulate algebraic steps in symbolic engines (<a href="https://www.sympy.org/">SymPy</a>, Maxima) or verify numerical results through simulation in R or Python.</li>
+<li><strong>Beware of Hallucinated Lemmas</strong>: Language models can assert non-existent mathematical theorems or cite fabricated lemmas with high confidence. Require agents to write out complete, self-contained proofs without appealing to unverified named theorems.</li>
+<li><strong>Use Monte Carlo Simulation for Statistical Validation</strong>: For complex estimators or unfamiliar statistical distributions, instruct the agent to implement a Monte Carlo simulation verifying empirical bias, variance, and asymptotic normality against theoretical claims.</li>
+<li><strong>Formal Verification in Research</strong>: For foundational mathematics and critical proof pipelines, consider formalizing results in interactive theorem provers such as <a href="https://lean-lang.org/">Lean 4</a>, where proofs are mechanically verified by an axiomatic kernel.</li>
+</ol>
 
 
 <script>
