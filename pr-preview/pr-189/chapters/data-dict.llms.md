@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 17:57:31 (PDT)
+Last modified: 2026-09-01 18:06:12 (PDT)
 
 `data-dict.yaml` is a lightweight, human- and agent-readable data dictionary that records a collection of related tables: their contents, constraints, connections, and the specialized vocabulary needed to understand them. It is described at [data-dict.tidyverse.org](https://data-dict.tidyverse.org/) and developed openly by Posit as a companion to a self-contained CLI, `data-dict`.
 
