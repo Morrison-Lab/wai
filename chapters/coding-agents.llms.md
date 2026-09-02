@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 20:53:17 (PDT)
+Last modified: 2026-09-01 23:07:25 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -2560,7 +2560,7 @@ The skills are grouped into eight categories, each of which can be installed on 
 - **posit-dev**: general developer skills, including an adversarial `critical-code-reviewer`, `describe-design` for architecture documentation with Mermaid diagrams, and `review-testing` for auditing test code after a change
 - **github**: pull-request workflows, such as `pr-create`, which opens a PR and then watches CI and debugs failures until it passes, and `pr-threads-address` / `pr-threads-resolve` for review threads
 - **open-source**: `create-release-checklist` and `release-post` for R and Python package releases
-- **r-lib**: `testing-r-packages` (`testthat` 3), `cli`, `cran-extrachecks`, `lifecycle`, `r-package-development`, `mirai` (asynchronous and parallel R), and `alt-text`
+- **r-lib**: `testing-r-packages` (`testthat` 3+), `cli`, `cran-extrachecks`, `lifecycle`, `r-package-development`, `mirai` (asynchronous and parallel R), and `alt-text`
 - **`ggsql`**: writing queries in `ggsql`, a grammar of graphics for SQL
 - **shiny**: `brand-yml`, `shiny-bslib`, and `shiny-bslib-theming`
 - **quarto**: `brand-yml`, `authoring` (including migration from R Markdown and `bookdown`), and `alt-text`
@@ -3320,7 +3320,7 @@ This workflow ensures the PR manager maintains control over the development proc
 
 # 44 Agent Sessions and Handoff in Visual Studio Code
 
-In Visual Studio Code, interactions with AI coding assistants are structured around [Agent Sessions and Handoff](https://code.visualstudio.com/docs/agents/concepts/sessions) (measured 2026-08-31). Understanding how sessions organize work and transfer state across tools is essential for managing multi-step agent workflows.
+In Visual Studio Code, interactions with AI coding assistants are structured around [Agent Sessions and Handoff](https://code.visualstudio.com/docs/agents/concepts/sessions?referrer=in-product) (measured 2026-08-31). Understanding how sessions organize work and transfer state across tools is essential for managing multi-step agent workflows.
 
 #### Anatomy of an agent session
 
