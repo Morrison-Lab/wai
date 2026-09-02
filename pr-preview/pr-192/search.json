@@ -84,27 +84,6 @@
     "text": "We recommend working with AI coding agents to help you code."
   },
   {
-    "objectID": "chapters/coding-agents.html#sec-ai-math-slms",
-    "href": "chapters/coding-agents.html#sec-ai-math-slms",
-    "title": "Coding Agents",
-    "section": "\n51.1 Search-Time Compute and Small Language Models",
-    "text": "51.1 Search-Time Compute and Small Language Models\nTraditional large language models often struggle with multi-step arithmetic, algebraic manipulation, and rigorous proof construction because standard autoregressive decoding lacks backtracking and error correction.\nRecent research demonstrates that test-time compute scaling dramatically enhances mathematical problem-solving:\n\n\nMCTS and Step-Level Verification: Architectures like rStar-Math (Microsoft Research, 2025) apply Monte Carlo Tree Search (MCTS) with step-level Process Reward Models (PRMs). By generating multiple candidate trajectories, evaluating each step with a reward model, and exploring alternative branches upon encountering dead ends, small language models (SLMs such as Qwen2.5-Math-7B) can achieve accuracy on benchmarks like MATH-500 and OlympiadBench that previously required models with hundreds of billions of parameters.\n\nCode-Augmented Symbolic Execution: Rather than performing mental arithmetic or symbolic integration directly in natural language tokens, effective mathematical agents generate executable Python (using libraries such as SymPy, NumPy, or SciPy) or R code. The execution output acts as an exact ground-truth oracle, eliminating arithmetic calculation mistakes and confirming intermediate algebraic steps."
-  },
-  {
-    "objectID": "chapters/coding-agents.html#sec-ai-math-benchmarks",
-    "href": "chapters/coding-agents.html#sec-ai-math-benchmarks",
-    "title": "Coding Agents",
-    "section": "\n51.2 Benchmark Hierarchy and Model Evaluation",
-    "text": "51.2 Benchmark Hierarchy and Model Evaluation\nThe mathematical AI ecosystem utilizes a tiered benchmark hierarchy to assess reasoning capability across varying levels of abstraction:\n\n\n\n\n\n\n\nBenchmark Tier\nTarget Competencies\nKey Benchmarks\n\n\n\nGrade School & High School\nArithmetic, multi-step word problems, basic algebra\nGSM8K, SVAMP, MATH-500\n\n\nCompetition & Olympiad\nNon-routine problem solving, combinatorics, number theory\nAMC 10/12, AIME, OlympiadBench, Putnam\n\n\nFormal Theorem Proving\nSyntactically verifiable proofs in formal proof assistants\nLean 4, Isabelle, Coq, MiniF2F\n\n\n\nFrontier reasoning models (including OpenAI o1/o3-mini, Claude 3.7 Sonnet with extended thinking, DeepSeek-R1, and specialized open weights like Qwen2.5-Math, QwQ, and NuminaMath) achieve high scores on competition-level examinations by spending adaptive reasoning compute before generating final answers."
-  },
-  {
-    "objectID": "chapters/coding-agents.html#practical-guidance-for-mathematics-and-statistics",
-    "href": "chapters/coding-agents.html#practical-guidance-for-mathematics-and-statistics",
-    "title": "Coding Agents",
-    "section": "\n51.3 Practical Guidance for Mathematics and Statistics",
-    "text": "51.3 Practical Guidance for Mathematics and Statistics\nWhen using AI agents for mathematical derivation and statistical analysis:\n\n\nRequire Code Execution for Verification: Always prompt agents to formulate algebraic steps in symbolic engines (SymPy, Maxima) or verify numerical results through simulation in R or Python.\n\nBeware of Hallucinated Lemmas: Language models can assert non-existent mathematical theorems or cite fabricated lemmas with high confidence. Require agents to write out complete, self-contained proofs without appealing to unverified named theorems.\n\nUse Monte Carlo Simulation for Statistical Validation: For complex estimators or unfamiliar statistical distributions, instruct the agent to implement a Monte Carlo simulation verifying empirical bias, variance, and asymptotic normality against theoretical claims.\n\nFormal Verification in Research: For foundational mathematics and critical proof pipelines, consider formalizing results in interactive theorem provers such as Lean 4, where proofs are mechanically verified by an axiomatic kernel."
-  },
-  {
     "objectID": "chapters/coding-agents.html#footnotes",
     "href": "chapters/coding-agents.html#footnotes",
     "title": "Coding Agents",

@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 18:19:06 (PDT)
+Last modified: 2026-09-01 18:23:16 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3706,35 +3706,35 @@ To maximize the efficiency of your API spend across local CLI sessions, subagent
 
 The landscape of AI for mathematics and statistics has evolved rapidly from token prediction to test-time search and verified reasoning. Modern reasoning models combine deep chain-of-thought generation with symbolic computing tools, formal theorem provers, and search algorithms to solve complex analytical and statistical problems.
 
-## 51.1 Search-Time Compute and Small Language Models
+#### Search-Time Compute and Small Language Models
 
 Traditional large language models often struggle with multi-step arithmetic, algebraic manipulation, and rigorous proof construction because standard autoregressive decoding lacks backtracking and error correction.
 
 Recent research demonstrates that test-time compute scaling dramatically enhances mathematical problem-solving:
 
-- **MCTS and Step-Level Verification**: Architectures like **rStar-Math** (Microsoft Research, 2025) apply Monte Carlo Tree Search (MCTS) with step-level Process Reward Models (PRMs). By generating multiple candidate trajectories, evaluating each step with a reward model, and exploring alternative branches upon encountering dead ends, small language models (SLMs such as Qwen2.5-Math-7B) can achieve accuracy on benchmarks like MATH-500 and OlympiadBench that previously required models with hundreds of billions of parameters.
-- **Code-Augmented Symbolic Execution**: Rather than performing mental arithmetic or symbolic integration directly in natural language tokens, effective mathematical agents generate executable Python (using libraries such as `SymPy`, `NumPy`, or `SciPy`) or R code. The execution output acts as an exact ground-truth oracle, eliminating arithmetic calculation mistakes and confirming intermediate algebraic steps.
+- **MCTS and Step-Level Verification**: Architectures like **[rStar-Math](https://arxiv.org/abs/2501.04519)** (Microsoft Research, 2025) apply Monte Carlo Tree Search (MCTS) with step-level Process Reward Models (PRMs). By generating multiple candidate trajectories, evaluating each step with a reward model, and exploring alternative branches upon encountering dead ends, small language models (SLMs such as Qwen2.5-Math-7B) can achieve accuracy on benchmarks like MATH-500 and OlympiadBench that previously required models with hundreds of billions of parameters.
+- **Code-Augmented Symbolic Execution**: Rather than performing mental arithmetic or symbolic integration directly in natural language tokens, effective mathematical agents generate executable Python (using libraries such as [SymPy](https://www.sympy.org/), `NumPy`, or `SciPy`) or R code. The execution output acts as an exact ground-truth oracle, eliminating arithmetic calculation mistakes and confirming intermediate algebraic steps.
 
-## 51.2 Benchmark Hierarchy and Model Evaluation
+#### Benchmark Hierarchy and Model Evaluation
 
-The mathematical AI ecosystem utilizes a tiered benchmark hierarchy to assess reasoning capability across varying levels of abstraction:
+The mathematical AI ecosystem utilizes a tiered benchmark hierarchy to assess reasoning capability across varying levels of abstraction (cataloged in directories like [Awesome-Math-LLM](https://github.com/doublelei/Awesome-Math-LLM) and evaluated by [BenchLM](https://benchlm.ai/blog/posts/best-llm-math)):
 
 | Benchmark Tier | Target Competencies | Key Benchmarks |
 |----|----|----|
 | **Grade School & High School** | Arithmetic, multi-step word problems, basic algebra | GSM8K, SVAMP, MATH-500 |
 | **Competition & Olympiad** | Non-routine problem solving, combinatorics, number theory | AMC 10/12, AIME, OlympiadBench, Putnam |
-| **Formal Theorem Proving** | Syntactically verifiable proofs in formal proof assistants | Lean 4, Isabelle, Coq, MiniF2F |
+| **Formal Theorem Proving** | Syntactically verifiable proofs in formal proof assistants | [Lean 4](https://lean-lang.org/), Isabelle, Coq, MiniF2F |
 
 Frontier reasoning models (including OpenAI o1/o3-mini, Claude 3.7 Sonnet with extended thinking, DeepSeek-R1, and specialized open weights like Qwen2.5-Math, QwQ, and NuminaMath) achieve high scores on competition-level examinations by spending adaptive reasoning compute before generating final answers.
 
-## 51.3 Practical Guidance for Mathematics and Statistics
+#### Practical Guidance for Mathematics and Statistics
 
 When using AI agents for mathematical derivation and statistical analysis:
 
-1.  **Require Code Execution for Verification**: Always prompt agents to formulate algebraic steps in symbolic engines (`SymPy`, `Maxima`) or verify numerical results through simulation in R or Python.
+1.  **Require Code Execution for Verification**: Always prompt agents to formulate algebraic steps in symbolic engines ([SymPy](https://www.sympy.org/), Maxima) or verify numerical results through simulation in R or Python.
 2.  **Beware of Hallucinated Lemmas**: Language models can assert non-existent mathematical theorems or cite fabricated lemmas with high confidence. Require agents to write out complete, self-contained proofs without appealing to unverified named theorems.
 3.  **Use Monte Carlo Simulation for Statistical Validation**: For complex estimators or unfamiliar statistical distributions, instruct the agent to implement a Monte Carlo simulation verifying empirical bias, variance, and asymptotic normality against theoretical claims.
-4.  **Formal Verification in Research**: For foundational mathematics and critical proof pipelines, consider formalizing results in interactive theorem provers such as Lean 4, where proofs are mechanically verified by an axiomatic kernel.
+4.  **Formal Verification in Research**: For foundational mathematics and critical proof pipelines, consider formalizing results in interactive theorem provers such as [Lean 4](https://lean-lang.org/), where proofs are mechanically verified by an axiomatic kernel.
 
 # References
 
