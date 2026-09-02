@@ -20,7 +20,7 @@ project:
 
 website:
   title: "Working with AI"
-  site-url: https://d-morrison.github.io/wai/
+  site-url: https://Morrison-Lab.github.io/wai/
   description: "UCD-SERG lab notes on working with AI coding assistants: policies, coding agents, and PR workflow"
   # https://quarto.org/docs/websites/website-llms.html — use `llms-txt:`, not `llms:` (schema error)
   llms-txt: true

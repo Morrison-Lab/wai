@@ -10,7 +10,7 @@
 UCD-SERG lab notes on working responsibly and effectively with AI coding
 assistants: what they are, how to use them, and the policies lab members
 follow. The notes are published as a [Quarto](https://quarto.org/)
-website at <https://d-morrison.github.io/wai/>.
+website at <https://Morrison-Lab.github.io/wai/>.
 
 The content was migrated out of the "Working with AI" chapter of the
 [UCD-SERG Lab Manual](https://ucd-serg.github.io/lab-manual/), which had
@@ -42,7 +42,7 @@ Supporting material lives under `chapters/ai-tools/`.
 ## Reading the notes
 
 The rendered site is the easiest way to read the notes:
-<https://d-morrison.github.io/wai/>. Each page is also available as
+<https://Morrison-Lab.github.io/wai/>. Each page is also available as
 RevealJS slides (`-slides.html`), a PDF handout (`-handout.pdf`), and a
 Word document (`.docx`).
 

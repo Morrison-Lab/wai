@@ -22,7 +22,7 @@ timeout = 20
 # Exclude URLs that CI can't or shouldn't check
 exclude = [
   # This site's own Pages URL — only live after a deploy, so it 404s on PRs
-  "https://d-morrison.github.io/wai/.*",
+  "https://Morrison-Lab\\.github\\.io/wai/.*",
   "http://localhost.*",
   "https://localhost.*",
   "http://127.0.0.1.*",
