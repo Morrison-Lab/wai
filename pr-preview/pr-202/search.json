@@ -88,7 +88,7 @@
     "href": "chapters/ai-for-math.html#reading-guidance-for-research-labs",
     "title": "AI for Math and Statistics",
     "section": "3.3 Reading Guidance for Research Labs",
-    "text": "3.3 Reading Guidance for Research Labs\nFor a computational and statistics laboratory, the repository serves as an architectural index:\n\nModel Selection for Analytical Derivations: The reasoning and math-specialized model categories allow matching tasks to models with verified benchmark performance on similar algebraic complexity.\nDiagnosing Arithmetic Failures: The number-representation literature explains why pure autoregressive decoding fails on tokenized digits, motivating execution-backed tool patterns (such as executing R or Python subprocesses).\nFormal Verification Horizons: The interactive theorem proving resources indicate the direction towards mechanically verified mathematical proofs in statistical theory."
+    "text": "3.3 Reading Guidance for Research Labs\nFor a computational and statistical laboratory, the repository serves as an architectural index:\n\nModel Selection for Analytical Derivations: The reasoning and math-specialized model categories allow matching tasks to models with verified benchmark performance on similar algebraic complexity.\nDiagnosing Arithmetic Failures: The number-representation literature explains why pure autoregressive decoding fails on tokenized digits, motivating execution-backed tool patterns (such as executing R or Python subprocesses).\nFormal Verification Horizons: The interactive theorem proving resources indicate the direction towards mechanically verified mathematical proofs in statistical theory."
   },
   {
     "objectID": "chapters/agent-orchestration.html",

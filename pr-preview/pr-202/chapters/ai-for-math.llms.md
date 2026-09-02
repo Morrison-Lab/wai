@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 19:50:25 (PDT)
+Last modified: 2026-09-01 19:57:53 (PDT)
 
 This chapter collects notes on language models applied to mathematical and statistical reasoning, which is the part of an AI assistant’s work a statistics lab leans on most when a derivation, a proof step, or a numerical check is at stake.
 
@@ -33,7 +33,11 @@ The mathematical AI ecosystem utilizes a tiered benchmark hierarchy to assess re
 | **Competition & University** | Non-routine problem solving, combinatorics, number theory | `AMC 10/12`, `AIME`, `OlympiadBench`, `Putnam`, `MMLU-Pro`, `GPQA` |
 | **Formal Theorem Proving** | Syntactically verifiable proofs in formal proof assistants | [Lean 4](https://lean-lang.org/), Isabelle, Coq, `MiniF2F`, `ProofNet` |
 
-Frontier reasoning models (including OpenAI o1/o3-mini, Claude 3.7 Sonnet or Claude Sonnet 4.5 with extended thinking, DeepSeek-R1, and specialized open weights like `Qwen2.5-Math`, `QwQ`, and `NuminaMath`) achieve high scores on competition-level examinations by spending adaptive reasoning compute before generating final answers.
+Frontier reasoning models achieve high scores on competition-level examinations by spending adaptive reasoning compute before generating final answers:
+
+- **Proprietary Frontier**: OpenAI o1/o3-mini, Claude 3.7 Sonnet, and Claude Sonnet 4.5 (with extended thinking).
+- **Open-Weight Reasoning**: DeepSeek-R1 and `QwQ-32B`.
+- **Specialized Mathematical Weights**: `Qwen2.5-Math-72B` and `NuminaMath`.
 
 # 3 Curated Reading List: Awesome-Math-LLM
 
@@ -59,7 +63,7 @@ The repository is organized into seven core areas:
 
 ## 3.3 Reading Guidance for Research Labs
 
-For a computational and statistics laboratory, the repository serves as an architectural index:
+For a computational and statistical laboratory, the repository serves as an architectural index:
 
 1.  **Model Selection for Analytical Derivations**: The reasoning and math-specialized model categories allow matching tasks to models with verified benchmark performance on similar algebraic complexity.
 2.  **Diagnosing Arithmetic Failures**: The number-representation literature explains why pure autoregressive decoding fails on tokenized digits, motivating execution-backed tool patterns (such as executing R or Python subprocesses).
