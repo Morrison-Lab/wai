@@ -43,6 +43,8 @@ website:
             href: chapters/coding-agents.qmd
           - text: "Orchestrating Teams of Agents"
             href: chapters/agent-orchestration.qmd
+          - text: "AI for Math and Statistics"
+            href: chapters/ai-for-math.qmd
           - text: "Grok Bot and Alternatives"
             href: chapters/grok-bot-and-alternatives.qmd
           - text: "Data Dictionaries for Humans and Agents"
