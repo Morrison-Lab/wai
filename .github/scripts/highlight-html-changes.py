@@ -247,10 +247,10 @@ class HTMLDiffer:
             if not new_text:
                 continue
             
-            # An identical old element means nothing to highlight. As before,
-            # an exact match does not consume the old element.
-            if any(idx not in used_old_indices
-                   for idx in old_indices_by_text.get(new_text, [])):
+            # An identical old element means nothing to highlight. An exact
+            # match anywhere in the old page counts as unchanged regardless of
+            # whether that old element was matched by an earlier element (#194).
+            if new_text in old_indices_by_text:
                 continue
             
             # Try to find a matching old element. SequenceMatcher's
