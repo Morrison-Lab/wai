@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 20:38:34 (PDT)
+Last modified: 2026-09-01 20:44:21 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3800,7 +3800,7 @@ The 2026 AI ecosystem has expanded beyond reactive chat windows and command-line
 - **Local Sandboxed Execution**: Cowork runs in a sandboxed virtual environment on the host machine, reading, modifying, and creating local files (spreadsheets, markdown manuscripts, datasets) without requiring manual file uploads or cloud synchronizations.
 - **Desktop Application and Browser Interaction**: Beyond static file manipulation, Cowork interfaces with local applications and browser sessions (via Claude in Chrome) to execute multi-application workflows.
 - **Persistent Project Context**: Cowork organizes workspaces into persistent Projects that retain custom instructions, reference documentation, and project memory across sessions.
-- **Best Use Cases**: Knowledge work with heavy local file management, local data hygiene, and multi-document manuscript preparation where code and data must remain on local hardware.
+- **Best Use Cases**: Knowledge work with heavy local file management, local data hygiene, and multi-document manuscript preparation where code and data are managed directly on the workstation.
 
 #### Gemini Spark
 
@@ -3833,7 +3833,7 @@ Similar collaborative workspace paradigms have emerged across other frontier eco
 
 When selecting a collaborative workspace agent for academic and computational research:
 
-1.  **Prioritize Data Confidentiality**: For private research datasets and unpublished manuscripts with confidentiality constraints, desktop-native environments (such as Claude Cowork or local coding agents) ensure that raw data does not sync to third-party cloud storage without oversight.
+1.  **Evaluate Data Confidentiality and Cloud Transmission**: For private research datasets and unpublished manuscripts with confidentiality constraints, desktop-native environments operate on local files under user supervision, though any integration that calls cloud APIs or browser extensions still transmits prompt context to provider infrastructure.
 2.  **Use Cloud Agents for Asynchronous Administration**: For non-sensitive scheduling, lab meeting summaries, and routine administrative reminders, always-on cloud agents (like Gemini Spark) reduce cognitive overhead by automating background tasks.
 3.  **Keep Code and Statistical Analyses in Version Control**: While workspace agents are effective for document drafting, statistical pipelines and computational scripts should remain in dedicated git-managed repositories with automated CI validation and code review.
 
