@@ -1,0 +1,69 @@
+The coding agent ecosystem encompasses a spectrum of architectures ranging
+from proprietary cloud-managed assistants to fully autonomous, open-weight
+local harnesses (measured 2026-09-01; see @sec-ai-coding-agent-platforms for platform overviews).
+Choosing an agent architecture requires evaluating autonomy, privacy,
+tool integration, and hardware constraints.
+
+#### Autonomous Open-Weight Agents: Hermes Agent {#sec-ai-hermes-agent}
+
+**[Hermes Agent](https://hermes-agent.nousresearch.com/)** (developed by Nous Research)
+is an autonomous agent harness built around the Hermes series of open-weight models
+(such as Hermes 3).
+Unlike simple completion models, Hermes Agent specializes in structured function calling,
+multi-step tool execution, and reflective task planning.
+Key capabilities include:
+
+- **Structured Tool Calling**:
+  Native support for JSON schema function calling, enabling reliable invocation
+  of compilers, test runners, and file system manipulators.
+- **Multi-Turn Reasoning & Reflection**:
+  Iterative planning loops that inspect tool execution outputs, handle runtime errors,
+  and backtrack when encountering obstacles.
+- **Deployment Flexibility**:
+  Can execute against self-hosted open-weight model instances (via vLLM, Ollama,
+  or TensorRT-LLM) as well as hosted API endpoints.
+
+#### Local Coding Agents with Ollama {#sec-ai-ollama-agents}
+
+For air-gapped environments, strict data privacy requirements, or zero-marginal-cost
+development, developers pair local model runners like **[Ollama](https://ollama.com/)**
+with dedicated agent harnesses (detailed setup and hardware sizing are covered in
+@sec-ai-offline):
+
+- **Terminal Orchestrators**:
+  Harnesses like **[Aider](https://aider.chat/)** and **[OpenHands](https://github.com/All-Hands-AI/OpenHands)**
+  (formerly OpenDevin) connect directly to Ollama endpoints running open-weight
+  coding models (such as `Qwen2.5-Coder`, `DeepSeek-Coder-V2`, or `Llama 3.3`),
+  managing git commits, multi-file edits, and automated test-and-repair loops.
+- **Editor Integrations**:
+  Extensions such as **[Continue](https://www.continue.dev/)** and **[CodeCompanion](https://github.com/olimorris/codecompanion.nvim)**
+  embed local Ollama models directly into VS Code, JetBrains IDEs, and Neovim,
+  providing inline autocompletion and interactive chat without transmitting code to cloud APIs.
+
+#### Comparative Taxonomy of Coding Agent Architectures
+
+The following table compares the primary paradigms across the coding agent landscape:
+
+| Dimension | Cloud Frontier Agents (Antigravity, Claude Code) | Autonomous Open-Weight (Hermes Agent, OpenHands) | Local Editor Assistants (Continue + Ollama) |
+|---|---|---|---|
+| **Primary Deployment** | Cloud-hosted frontier API | Self-hosted or local server | Local workstation (Ollama or `llama.cpp`) |
+| **Autonomy Level** | Semi-autonomous to fully autonomous | High multi-turn autonomy | Interactive / inline assistance |
+| **Privacy & Air-Gap** | Cloud-dependent (enterprise VPC optional) | Fully air-gapped | 100% offline & local |
+| **Tool Integration** | MCP, terminal, browser, subagents | Bash execution, custom APIs | LSP, editor buffer manipulation |
+| **Compute Requirements** | Minimal client hardware (network only) | High local GPU/VRAM (16GB-64GB+) | Moderate to high GPU/VRAM |
+| **Reasoning Capacity** | Frontier reasoning & large context | Strong domain code reasoning | Bounded single-file reasoning |
+
+#### Trade-offs: Cloud Frontier vs. Local Open-Weight
+
+When deciding between cloud frontier agents and local open-weight deployments:
+
+1. **Complex Multi-File Refactoring**:
+   Cloud frontier models (such as Claude Sonnet 4.5 or Gemini 3 Pro) currently
+   maintain higher coherence across large, 50+ file refactors and architectural redesigns.
+2. **Confidentiality and Compliance**:
+   For proprietary codebases with strict regulatory constraints (HIPAA, defense,
+   or sensitive enterprise IP), local agents powered by Ollama and Hermes Agent
+   ensure that source code never leaves on-premises hardware (see @sec-ai-offline).
+3. **Cost Predictability**:
+   Local open-weight harnesses incur fixed hardware capital expense but zero marginal token costs,
+   making them attractive for high-volume automated test-and-repair loops.
