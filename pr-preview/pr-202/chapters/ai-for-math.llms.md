@@ -4,13 +4,13 @@ Code
 
 Published
 
-Last modified: 2026-09-01 19:57:53 (PDT)
+Last modified: 2026-09-01 20:03:48 (PDT)
 
 This chapter collects notes on language models applied to mathematical and statistical reasoning, which is the part of an AI assistant’s work a statistics lab leans on most when a derivation, a proof step, or a numerical check is at stake.
 
 > **WARNING:**
 >
-> The resources and benchmark scores reviewed here change quickly. Entry counts, model rankings, and benchmark results quoted below were measured on 2026-09-01 and will drift. Re-check primary sources before relying on specific numbers.
+> The resources and benchmark suites reviewed here evolve quickly. Entry counts, cataloged models, and benchmark references quoted below reflect the ecosystem as surveyed on 2026-09-01 and will drift. Re-check primary sources before relying on specific entries.
 
 # 1 Search-Time Compute and Verified Reasoning
 
