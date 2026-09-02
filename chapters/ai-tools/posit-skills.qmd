@@ -32,12 +32,13 @@ so a copied skill stays attributable.
 
 #### How to install it
 
-The README documents four routes:
+The README documents these routes:
 
 - the cross-agent `skills` CLI (`npx skills add posit-dev/skills --list`, `--all`, or `--skill <name>`),
   which targets Claude Code, Codex, Cursor, Cline, and others
-- Claude Code's plugin marketplace (`/plugin marketplace add posit-dev/skills`),
-  then `/plugin install <category>@posit-dev-skills` per category
+- in Claude Code, adding the repository as a plugin marketplace
+  (`/plugin marketplace add posit-dev/skills`) and then choosing categories in the plugin UI
+- in Claude Code, installing a category directly (`/plugin install <category>@posit-dev-skills`)
 - copying skill folders into the agent's skills directory by hand
 - uploading a skill to Claude.ai, or loading it through the Skills API
 
