@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 18:48:29 (PDT)
+Last modified: 2026-09-01 18:54:25 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -110,9 +110,9 @@ The following table compares the primary paradigms across the coding agent lands
 
 | Dimension | Cloud Frontier Agents (Antigravity, Claude Code) | Autonomous Open-Weight (Hermes Agent, OpenHands) | Local Editor Assistants (Continue + Ollama) |
 |----|----|----|----|
-| **Primary Deployment** | Cloud-hosted frontier API | Self-hosted or local server | Local workstation (Ollama/llama.cpp) |
+| **Primary Deployment** | Cloud-hosted frontier API | Self-hosted or local server | Local workstation (Ollama or `llama.cpp`) |
 | **Autonomy Level** | Semi-autonomous to fully autonomous | High multi-turn autonomy | Interactive / inline assistance |
-| **Privacy & Air-Gap** | Cloud-dependent (enterprise VPC optional) | Fully air-gappable | 100% offline & local |
+| **Privacy & Air-Gap** | Cloud-dependent (enterprise VPC optional) | Fully air-gapped | 100% offline & local |
 | **Tool Integration** | MCP, terminal, browser, subagents | Bash execution, custom APIs | LSP, editor buffer manipulation |
 | **Compute Requirements** | Minimal client hardware (network only) | High local GPU/VRAM (16GB-64GB+) | Moderate to high GPU/VRAM |
 | **Reasoning Capacity** | Frontier reasoning & large context | Strong domain code reasoning | Bounded single-file reasoning |
@@ -2549,7 +2549,7 @@ That section also explains why Claude Code’s custom slash commands are now ski
 
 The [Morrison-Lab/ai-config](https://github.com/Morrison-Lab/ai-config) repository contains an example of personal Claude Code configuration, including user-level skills, hooks, and subagents, synced across machines via Git.
 
-# 29 Posit’s Skill Collection
+# 29 Posit Skill Collection
 
 [posit-dev/skills](https://github.com/posit-dev/skills) is the collection of [Agent Skills](https://agentskills.io/home) published by Posit (see [Section 28](#sec-ai-agent-skills) for what a skill is) for R, Python, Quarto, and Shiny work. It is MIT-licensed, and its skills load in Claude Code, Claude.ai, or through the Claude API, or in any other skills-compatible agent. The notes below reflect the repository’s README as read on 2026-09-01.
 
@@ -3808,9 +3808,9 @@ The mathematical AI ecosystem utilizes a tiered benchmark hierarchy to assess re
 
 | Benchmark Tier | Target Competencies | Key Benchmarks |
 |----|----|----|
-| **Grade School & High School** | Arithmetic, multi-step word problems, basic algebra | GSM8K, SVAMP, MATH-500 |
+| **Grade School & High School** | Arithmetic, multi-step word problems, basic algebra | `GSM8K`, SVAMP, MATH-500 |
 | **Competition & Olympiad** | Non-routine problem solving, combinatorics, number theory | AMC 10/12, AIME, OlympiadBench, Putnam |
-| **Formal Theorem Proving** | Syntactically verifiable proofs in formal proof assistants | [Lean 4](https://lean-lang.org/), Isabelle, Coq, MiniF2F |
+| **Formal Theorem Proving** | Syntactically verifiable proofs in formal proof assistants | [Lean 4](https://lean-lang.org/), Isabelle, Coq, `MiniF2F` |
 
 Frontier reasoning models (including OpenAI o1/o3-mini, Claude 3.7 Sonnet with extended thinking, DeepSeek-R1, and specialized open weights like Qwen2.5-Math, QwQ, and NuminaMath) achieve high scores on competition-level examinations by spending adaptive reasoning compute before generating final answers.
 
