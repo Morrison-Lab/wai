@@ -83,6 +83,17 @@ class HighlightChangedElementsTest(unittest.TestCase):
         self.assertEqual(changes, 2)
         self.assertEqual(html.count("preview-element-added"), 1)
 
+    def test_identical_element_not_marked_added_after_fuzzy_match(self):
+        # Even if an old element was consumed by a preceding fuzzy match,
+        # an identical subsequent new element remains unchanged (#194).
+        old = page("<p>The quick brown fox jumps over the lazy dog.</p>")
+        new = page("<p>The quick brown fox leaps over the lazy dog.</p>",
+                   "<p>The quick brown fox jumps over the lazy dog.</p>")
+        html, changes = highlight(old, new)
+        self.assertEqual(changes, 1)
+        self.assertNotIn("preview-element-added", html)
+        self.assertIn('<mark class="preview-text-', html)
+
 
 class FindChangedSectionsTest(unittest.TestCase):
     def test_nearly_identical_page_takes_the_shortcut(self):
