@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 20:44:21 (PDT)
+Last modified: 2026-09-01 20:51:07 (PDT)
 
 The practices below apply whether you are driving an agent’s work or doing the work yourself. They keep parallel sessions from colliding and keep a pull request moving toward a clean, mergeable state.
 

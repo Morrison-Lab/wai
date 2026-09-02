@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 20:44:21 (PDT)
+Last modified: 2026-09-01 20:51:07 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3795,10 +3795,10 @@ The 2026 AI ecosystem has expanded beyond reactive chat windows and command-line
 
 #### Claude Cowork
 
-**Claude Cowork** (Anthropic) is a desktop-native agent architecture designed to collaborate directly within local folders and desktop application environments:
+[Claude Cowork](https://claude.com/docs/cowork/overview) ([Anthropic 2026](#ref-claude_cowork)) (also discussed in **?@sec-claude-cowork**) is Anthropic’s desktop-native agent architecture designed to collaborate directly within local folders and desktop application environments:
 
 - **Local Sandboxed Execution**: Cowork runs in a sandboxed virtual environment on the host machine, reading, modifying, and creating local files (spreadsheets, markdown manuscripts, datasets) without requiring manual file uploads or cloud synchronizations.
-- **Desktop Application and Browser Interaction**: Beyond static file manipulation, Cowork interfaces with local applications and browser sessions (via Claude in Chrome) to execute multi-application workflows.
+- **Desktop Application and Browser Interaction**: Beyond static file manipulation, Cowork interfaces with local applications and browser sessions (via [Claude in Chrome](https://claude.com/claude-in-chrome)) to execute multi-application workflows.
 - **Persistent Project Context**: Cowork organizes workspaces into persistent Projects that retain custom instructions, reference documentation, and project memory across sessions.
 - **Best Use Cases**: Knowledge work with heavy local file management, local data hygiene, and multi-document manuscript preparation where code and data are managed directly on the workstation.
 
@@ -3815,17 +3815,17 @@ The 2026 AI ecosystem has expanded beyond reactive chat windows and command-line
 
 Similar collaborative workspace paradigms have emerged across other frontier ecosystems:
 
-- **OpenAI Canvas and ChatGPT Workspaces**: Provides side-by-side document and code editing with inline line-level revisions, interactive targeted edits, and multi-file artifact tracking.
-- **Cursor and Google Antigravity Agent Workspaces**: Developer-centric workspace agents providing multi-agent delegation, worktree isolation, and structured planning workflows (such as Conductor extension spec-driven development).
+- **ChatGPT Work and OpenAI Canvas**: [ChatGPT Work](https://learn.chatgpt.com/docs/get-started-with-work) ([OpenAI 2026](#ref-chatgpt_work)) (see **?@sec-chatgpt-work**) and Canvas provide side-by-side document and code editing with inline line-level revisions, interactive targeted edits, and multi-file artifact tracking.
+- **Cursor and Google Antigravity Agent Workspaces**: Developer-centric workspace agents providing multi-agent delegation, worktree isolation, and structured planning workflows (such as Conductor extension spec-driven development, [Section 49](#sec-ai-conductor-extension)).
 - **Notion AI and Microsoft Copilot Studio**: Enterprise knowledge graph agents designed for querying organizational wikis and automating business process workflows.
 
 #### Comparative Taxonomy of Workspace Agents
 
-| Dimension | Claude Cowork | Gemini Spark | OpenAI Canvas | Developer Workspace Agents (Antigravity / Cursor) |
+| Dimension | Claude Cowork | Gemini Spark | OpenAI Canvas / ChatGPT Work | Developer Workspace Agents (Antigravity / Cursor) |
 |----|----|----|----|----|
 | **Primary Architecture** | Desktop-native (sandboxed) | Cloud-native (always-on) | Cloud web interactive | Desktop IDE / CLI workspace |
 | **Execution Lifetime** | Active session / local machine | 24/7 continuous cloud | Interactive turn-by-turn | Session-scoped multi-agent |
-| **Data Locality** | Local filesystem / desktop | Google Workspace cloud | OpenAI cloud sandbox | Local repository worktrees |
+| **Data Locality** | Local files (cloud sessions on some plans) | Google Workspace cloud | OpenAI cloud sandbox | Local repository worktrees |
 | **Primary Domain** | File and document workflows | Cloud suite coordination | Document and text drafting | Codebase refactoring and review |
 | **Key Strength** | Local file privacy and tool use | Autonomous background monitoring | Real-time targeted line edits | Deterministic builds, tests, git workflows |
 
@@ -3840,6 +3840,8 @@ When selecting a collaborative workspace agent for academic and computational re
 # References
 
 *2001: A Space Odyssey*. 1968. Film. <https://en.wikipedia.org/wiki/2001:_A_Space_Odyssey_(film)>.
+
+Anthropic. 2026. *Claude Cowork Overview*. Documentation. <https://claude.com/docs/cowork/overview>.
 
 Asimov, Isaac. 1950. *I, Robot*. Novel; Gnome Press. <https://search.library.ucdavis.edu/permalink/01UCD_INST/9fle3i/alma990000226350403126>.
 
@@ -3860,6 +3862,8 @@ Herbert, Frank. 1965. *Dune*. Novel; Chilton Books. <https://en.wikipedia.org/wi
 Hu, Edward J., Yelong Shen, Phillip Wallis, et al. 2021. *LoRA: Low-Rank Adaptation of Large Language Models*. arXiv preprint. <https://arxiv.org/abs/2106.09685>.
 
 LeCun, Yann. 2022. *A Path Towards Autonomous Machine Intelligence*. Meta AI Research; New York University; Technical Report. <https://openreview.net/forum?id=BZ5a1r-kVsf>.
+
+OpenAI. 2026. *Get Started with ChatGPT Work*. Documentation. <https://learn.chatgpt.com/docs/get-started-with-work>.
 
 *Terminator 3: Rise of the Machines*. 2003. Film. <https://en.wikipedia.org/wiki/Terminator_3:_Rise_of_the_Machines>.
 
