@@ -14,7 +14,7 @@
 # dropped too, so an initial-letter emphasis such as **A**ddress is checked
 # as the word it renders as rather than as its two halves.
 #
-# Exit status is the number of misspelled words, matching the action.
+# Exit status is 1 when any word is misspelled, else 0.
 
 files <- c(
   "index.qmd",
@@ -58,4 +58,4 @@ if (n > 0) {
     "or add real terms to inst/WORDLIST.\n"
   )
 }
-quit(save = "no", status = n)
+quit(save = "no", status = as.integer(n > 0))
