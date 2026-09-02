@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 18:54:25 (PDT)
+Last modified: 2026-09-01 19:25:48 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -87,7 +87,7 @@ A separate category — named, persistent teammates with their own browser-and-s
 
 # 4 Catalog and Comparison of Coding Agents
 
-The coding agent ecosystem encompasses a spectrum of architectures ranging from proprietary cloud-managed assistants to fully autonomous, open-weight local harnesses (measured 2026-09-01). Choosing an agent architecture requires evaluating autonomy, privacy, tool integration, and hardware constraints.
+The coding agent ecosystem encompasses a spectrum of architectures ranging from proprietary cloud-managed assistants to fully autonomous, open-weight local harnesses (measured 2026-09-01; see [Section 3](#sec-ai-coding-agent-platforms) for platform overviews). Choosing an agent architecture requires evaluating autonomy, privacy, tool integration, and hardware constraints.
 
 #### Autonomous Open-Weight Agents: Hermes Agent
 
@@ -99,9 +99,9 @@ The coding agent ecosystem encompasses a spectrum of architectures ranging from 
 
 #### Local Coding Agents with Ollama
 
-For air-gapped environments, strict data privacy requirements, or zero-marginal-cost development, developers pair local model runners like **[Ollama](https://ollama.com/)** with dedicated agent harnesses:
+For air-gapped environments, strict data privacy requirements, or zero-marginal-cost development, developers pair local model runners like **[Ollama](https://ollama.com/)** with dedicated agent harnesses (detailed setup and hardware sizing are covered in [Section 20](#sec-ai-offline)):
 
-- **Terminal Orchestrators**: Tools like **[Aider](https://aider.chat/)** and **[OpenHands](https://github.com/All-Hands-AI/OpenHands)** (formerly OpenDevin) connect directly to Ollama endpoints running open-weight coding models (such as `Qwen2.5-Coder`, `DeepSeek-Coder-V2`, or `Llama 3.3`). They automatically manage git commits, apply multi-file edits, and execute test suites.
+- **Terminal Orchestrators**: Harnesses like **[Aider](https://aider.chat/)** and **[OpenHands](https://github.com/All-Hands-AI/OpenHands)** (formerly OpenDevin) connect directly to Ollama endpoints running open-weight coding models (such as `Qwen2.5-Coder`, `DeepSeek-Coder-V2`, or `Llama 3.3`), managing git commits, multi-file edits, and automated test-and-repair loops.
 - **Editor Integrations**: Extensions such as **[Continue](https://www.continue.dev/)** and **[CodeCompanion](https://github.com/olimorris/codecompanion.nvim)** embed local Ollama models directly into VS Code, JetBrains IDEs, and Neovim, providing inline autocompletion and interactive chat without transmitting code to cloud APIs.
 
 #### Comparative Taxonomy of Coding Agent Architectures
@@ -121,8 +121,8 @@ The following table compares the primary paradigms across the coding agent lands
 
 When deciding between cloud frontier agents and local open-weight deployments:
 
-1.  **Complex Multi-File Refactoring**: Cloud frontier models (such as Claude 3.7 Sonnet or Gemini 2.5 Pro) currently maintain higher coherence across large, 50+ file refactors and architectural redesigns.
-2.  **Confidentiality and Compliance**: For proprietary codebases with strict regulatory constraints (HIPAA, defense, or sensitive enterprise IP), local agents powered by Ollama and Hermes Agent ensure that source code never leaves on-premise hardware.
+1.  **Complex Multi-File Refactoring**: Cloud frontier models (such as Claude Sonnet 4.5 or Gemini 3 Pro) currently maintain higher coherence across large, 50+ file refactors and architectural redesigns.
+2.  **Confidentiality and Compliance**: For proprietary codebases with strict regulatory constraints (HIPAA, defense, or sensitive enterprise IP), local agents powered by Ollama and Hermes Agent ensure that source code never leaves on-premises hardware (see [Section 20](#sec-ai-offline)).
 3.  **Cost Predictability**: Local open-weight harnesses incur fixed hardware capital expense but zero marginal token costs, making them attractive for high-volume automated test-and-repair loops.
 
 # 5 What are AI harnesses?
@@ -2549,7 +2549,7 @@ That section also explains why Claude Code’s custom slash commands are now ski
 
 The [Morrison-Lab/ai-config](https://github.com/Morrison-Lab/ai-config) repository contains an example of personal Claude Code configuration, including user-level skills, hooks, and subagents, synced across machines via Git.
 
-# 29 Posit Skill Collection
+# 29 The Posit Skill Collection
 
 [posit-dev/skills](https://github.com/posit-dev/skills) is the collection of [Agent Skills](https://agentskills.io/home) published by Posit (see [Section 28](#sec-ai-agent-skills) for what a skill is) for R, Python, Quarto, and Shiny work. It is MIT-licensed, and its skills load in Claude Code, Claude.ai, or through the Claude API, or in any other skills-compatible agent. The notes below reflect the repository’s README as read on 2026-09-01.
 
