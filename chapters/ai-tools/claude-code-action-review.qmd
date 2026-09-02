@@ -1,5 +1,5 @@
 A common question about
-[anthropics/claude-code-action](https://github.com/anthropics/claude-code-action)
+[`anthropics/claude-code-action`](https://github.com/anthropics/claude-code-action)
 is where its pull-request review lives.
 The answer is surprising:
 **there is no dedicated review action.**

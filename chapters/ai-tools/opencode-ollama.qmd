@@ -45,7 +45,7 @@ so newly pulled models appear on the next restart with no config edits.
 ::: {.callout-note}
 #### Alternative: multi-backend local provider
 
-If you also run LM Studio, llama.cpp, or vLLM alongside Ollama,
+If you also run LM Studio, `llama.cpp`, or vLLM alongside Ollama,
 the [`opencode-local-provider`](https://www.npmjs.com/package/opencode-local-provider) plugin
 auto-detects all of them under a single `local` provider
 and probes each at runtime for loaded models.

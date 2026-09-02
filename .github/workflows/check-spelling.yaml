@@ -23,3 +23,9 @@ jobs:
 
       - name: Run Spelling Check test
         uses: insightsengineering/r-spellcheck-action@v3.0.3
+
+      # spell_check_package() above reads only the package files (README,
+      # DESCRIPTION, man/, vignettes/), so the site's chapters need their own
+      # pass (#177).
+      - name: Spell-check chapter prose
+        run: Rscript .github/scripts/spellcheck-chapters.R
