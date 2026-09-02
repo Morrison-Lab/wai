@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 18:43:33 (PDT)
+Last modified: 2026-09-01 18:57:36 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -2509,7 +2509,7 @@ That section also explains why Claude Code’s custom slash commands are now ski
 
 The [Morrison-Lab/ai-config](https://github.com/Morrison-Lab/ai-config) repository contains an example of personal Claude Code configuration, including user-level skills, hooks, and subagents, synced across machines via Git.
 
-# 28 Posit’s Skill Collection
+# 28 The Posit Skill Collection
 
 [posit-dev/skills](https://github.com/posit-dev/skills) is the collection of [Agent Skills](https://agentskills.io/home) published by Posit (see [Section 27](#sec-ai-agent-skills) for what a skill is) for R, Python, Quarto, and Shiny work. It is MIT-licensed, and its skills load in Claude Code, Claude.ai, or through the Claude API, or in any other skills-compatible agent. The notes below reflect the repository’s README as read on 2026-09-01.
 
@@ -3768,9 +3768,9 @@ The mathematical AI ecosystem utilizes a tiered benchmark hierarchy to assess re
 
 | Benchmark Tier | Target Competencies | Key Benchmarks |
 |----|----|----|
-| **Grade School & High School** | Arithmetic, multi-step word problems, basic algebra | GSM8K, SVAMP, MATH-500 |
+| **Grade School & High School** | Arithmetic, multi-step word problems, basic algebra | `GSM8K`, SVAMP, MATH-500 |
 | **Competition & Olympiad** | Non-routine problem solving, combinatorics, number theory | AMC 10/12, AIME, OlympiadBench, Putnam |
-| **Formal Theorem Proving** | Syntactically verifiable proofs in formal proof assistants | [Lean 4](https://lean-lang.org/), Isabelle, Coq, MiniF2F |
+| **Formal Theorem Proving** | Syntactically verifiable proofs in formal proof assistants | [Lean 4](https://lean-lang.org/), Isabelle, Coq, `MiniF2F` |
 
 Frontier reasoning models (including OpenAI o1/o3-mini, Claude 3.7 Sonnet with extended thinking, DeepSeek-R1, and specialized open weights like Qwen2.5-Math, QwQ, and NuminaMath) achieve high scores on competition-level examinations by spending adaptive reasoning compute before generating final answers.
 
