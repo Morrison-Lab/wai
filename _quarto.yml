@@ -25,6 +25,8 @@ filters:
 
 format:
   pdf:
+    number-sections: true
+    number-depth: 3
     filters:
       - sun123zxy/callouty-theorem
       - coatless-quarto/custom-callout
