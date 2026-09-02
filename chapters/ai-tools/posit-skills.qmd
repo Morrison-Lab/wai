@@ -66,10 +66,17 @@ with the upstream MIT license text kept alongside them:
 Copying the skills in rather than installing the marketplace plugin
 lets them follow the lab's own review and hook conventions,
 at the cost of tracking upstream changes by hand.
-The categories not yet adopted are the ones with the least overlap with lab work:
+Four categories are not adopted.
+Three of them have the least overlap with lab work:
 Shiny app development, `ggsql`, and Posit Connect deployment.
-The `github` skills overlap with the lab's own
+The fourth, `posit-dev`, overlaps with practices the lab already has:
+its `critical-code-reviewer` parallels the adversarial self-review subagent
+that the lab's agent configuration dispatches before every push,
+and `new-work` / `working-on` keep a per-task tracking document
+where the lab uses the issue tracker and a session notebook.
+The `github` skills likewise overlap with the lab's own
 [pull-request workflow](pr-workflow-with-agents.qmd)
 and with the review setup in @sec-ai-claude-code-action-review,
-so they are worth reading for ideas rather than installing beside it.
+so both categories are worth reading for ideas
+rather than installing alongside that tooling.
 The contribution guidance in the repository recommends Anthropic's `skill-creator` skill for authoring new skills.
