@@ -221,6 +221,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/gemini-spend-management.qmd >}}
 
+# Collaborative AI Workspaces: Claude Cowork and Gemini Spark {#sec-ai-collaborative-workspaces}
+
+{{< include ai-tools/collaborative-workspaces.qmd >}}
+
 # References {.unnumbered}
 
 ::: {#refs}
