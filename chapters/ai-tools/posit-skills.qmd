@@ -20,7 +20,7 @@ each of which can be installed on its own:
   and `pr-threads-address` / `pr-threads-resolve` for review threads
 - **open-source**: `create-release-checklist` and `release-post`
   for R and Python package releases
-- **r-lib**: `testing-r-packages` (`testthat` 3), `cli`, `cran-extrachecks`, `lifecycle`,
+- **r-lib**: `testing-r-packages` (`testthat` 3+), `cli`, `cran-extrachecks`, `lifecycle`,
   `r-package-development`, `mirai` (asynchronous and parallel R), and `alt-text`
 - **`ggsql`**: writing queries in `ggsql`, a grammar of graphics for SQL
 - **shiny**: `brand-yml`, `shiny-bslib`, and `shiny-bslib-theming`

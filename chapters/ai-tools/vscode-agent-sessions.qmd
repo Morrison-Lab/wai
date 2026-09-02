@@ -1,5 +1,5 @@
 In Visual Studio Code, interactions with AI coding assistants are structured around
-[Agent Sessions and Handoff](https://code.visualstudio.com/docs/agents/concepts/sessions)
+[Agent Sessions and Handoff](https://code.visualstudio.com/docs/agents/concepts/sessions?referrer=in-product)
 (measured 2026-08-31).
 Understanding how sessions organize work and transfer state across tools
 is essential for managing multi-step agent workflows.
