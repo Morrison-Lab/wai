@@ -329,7 +329,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-09-01 19:08:16 (PDT)</p>
+  <p class="date">Last modified: 2026-09-01 19:33:09 (PDT)</p>
 </section><section class="slide level2"><p>We recommend working with <strong><a href="https://github.com/features/copilot/agents">AI coding agents</a></strong> to <a href="https://en.wikipedia.org/wiki/AI-assisted_software_development">help you code</a>.</p>
 </section><section><section id="sec-ai-language-model" class="title-slide slide level1 center" data-number="1"><h1>
 <span class="header-section-number">1</span> What Is a Language Model?</h1>
@@ -444,8 +444,93 @@
 </ul>
 <p>Platform capabilities and commercial terms change quickly. Confirm current details in the linked official documentation before adopting one.</p>
 <p>A separate category — named, persistent teammates with their own browser-and-shell computer, rather than a repository checkout — is reviewed in <a href="../chapters/grok-bot-and-alternatives.html#sec-grok-bot-category">Grok Bot and Alternatives</a>. Those products do not replace the platforms above.</p>
-</section></section><section><section id="sec-ai-harnesses" class="title-slide slide level1 center" data-number="4"><h1>
-<span class="header-section-number">4</span> What are AI harnesses?</h1>
+</section></section><section><section id="sec-ai-catalog-coding-agents" class="title-slide slide level1 center" data-number="4"><h1>
+<span class="header-section-number">4</span> Catalog and Comparison of Coding Agents</h1>
+
+</section><section class="slide level2 scrollable"><p>The coding agent ecosystem encompasses a spectrum of architectures ranging from proprietary cloud-managed assistants to fully autonomous, open-weight local harnesses (measured 2026-09-01; see <a href="#/sec-ai-coding-agent-platforms" class="quarto-xref">Section&nbsp;3</a> for platform overviews). Choosing an agent architecture requires evaluating autonomy, privacy, tool integration, and hardware constraints.</p>
+<h4 id="sec-ai-hermes-agent">Autonomous Open-Weight Agents: Hermes Agent</h4>
+<p><strong><a href="https://hermes-agent.nousresearch.com/">Hermes Agent</a></strong> (developed by Nous Research) is an autonomous agent harness built around the Hermes series of open-weight models (such as Hermes 3). Unlike simple completion models, Hermes Agent specializes in structured function calling, multi-step tool execution, and reflective task planning. Key capabilities include:</p>
+<ul>
+<li>
+<strong>Structured Tool Calling</strong>: Native support for JSON schema function calling, enabling reliable invocation of compilers, test runners, and file system manipulators.</li>
+<li>
+<strong>Multi-Turn Reasoning &amp; Reflection</strong>: Iterative planning loops that inspect tool execution outputs, handle runtime errors, and backtrack when encountering obstacles.</li>
+<li>
+<strong>Deployment Flexibility</strong>: Can execute against self-hosted open-weight model instances (via vLLM, Ollama, or TensorRT-LLM) as well as hosted API endpoints.</li>
+</ul>
+<h4 id="sec-ai-ollama-agents">Local Coding Agents with Ollama</h4>
+<p>For air-gapped environments, strict data privacy requirements, or zero-marginal-cost development, developers pair local model runners like <strong><a href="https://ollama.com/">Ollama</a></strong> with dedicated agent harnesses (detailed setup and hardware sizing are covered in <a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;20</a>):</p>
+<ul>
+<li>
+<strong>Terminal Orchestrators</strong>: Harnesses like <strong><a href="https://aider.chat/">Aider</a></strong> and <strong><a href="https://github.com/All-Hands-AI/OpenHands">OpenHands</a></strong> (formerly OpenDevin) connect directly to Ollama endpoints running open-weight coding models (such as <code>Qwen2.5-Coder</code>, <code>DeepSeek-Coder-V2</code>, or <code>Llama 3.3</code>), managing git commits, multi-file edits, and automated test-and-repair loops.</li>
+<li>
+<strong>Editor Integrations</strong>: Extensions such as <strong><a href="https://www.continue.dev/">Continue</a></strong> and <strong><a href="https://github.com/olimorris/codecompanion.nvim">CodeCompanion</a></strong> embed local Ollama models directly into VS Code, JetBrains IDEs, and Neovim, providing inline autocompletion and interactive chat without transmitting code to cloud APIs.</li>
+</ul>
+<h4 id="comparative-taxonomy-of-coding-agent-architectures">Comparative Taxonomy of Coding Agent Architectures</h4>
+<p>The following table compares the primary paradigms across the coding agent landscape:</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead><tr class="header">
+<th>Dimension</th>
+<th>Cloud Frontier Agents (Antigravity, Claude Code)</th>
+<th>Autonomous Open-Weight (Hermes Agent, OpenHands)</th>
+<th>Local Editor Assistants (Continue + Ollama)</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><strong>Primary Deployment</strong></td>
+<td>Cloud-hosted frontier API</td>
+<td>Self-hosted or local server</td>
+<td>Local workstation (Ollama or <code>llama.cpp</code>)</td>
+</tr>
+<tr class="even">
+<td><strong>Autonomy Level</strong></td>
+<td>Semi-autonomous to fully autonomous</td>
+<td>High multi-turn autonomy</td>
+<td>Interactive / inline assistance</td>
+</tr>
+<tr class="odd">
+<td><strong>Privacy &amp; Air-Gap</strong></td>
+<td>Cloud-dependent (enterprise VPC optional)</td>
+<td>Fully air-gapped</td>
+<td>100% offline &amp; local</td>
+</tr>
+<tr class="even">
+<td><strong>Tool Integration</strong></td>
+<td>MCP, terminal, browser, subagents</td>
+<td>Bash execution, custom APIs</td>
+<td>LSP, editor buffer manipulation</td>
+</tr>
+<tr class="odd">
+<td><strong>Compute Requirements</strong></td>
+<td>Minimal client hardware (network only)</td>
+<td>High local GPU/VRAM (16GB-64GB+)</td>
+<td>Moderate to high GPU/VRAM</td>
+</tr>
+<tr class="even">
+<td><strong>Reasoning Capacity</strong></td>
+<td>Frontier reasoning &amp; large context</td>
+<td>Strong domain code reasoning</td>
+<td>Bounded single-file reasoning</td>
+</tr>
+</tbody>
+</table>
+<h4 id="trade-offs-cloud-frontier-vs.-local-open-weight">Trade-offs: Cloud Frontier vs.&nbsp;Local Open-Weight</h4>
+<p>When deciding between cloud frontier agents and local open-weight deployments:</p>
+<ol type="1">
+<li>
+<strong>Complex Multi-File Refactoring</strong>: Cloud frontier models (such as Claude Sonnet 4.5 or Gemini 3 Pro) currently maintain higher coherence across large, 50+ file refactors and architectural redesigns.</li>
+<li>
+<strong>Confidentiality and Compliance</strong>: For proprietary codebases with strict regulatory constraints (HIPAA, defense, or sensitive enterprise IP), local agents powered by Ollama and Hermes Agent ensure that source code never leaves on-premises hardware (see <a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;20</a>).</li>
+<li>
+<strong>Cost Predictability</strong>: Local open-weight harnesses incur fixed hardware capital expense but zero marginal token costs, making them attractive for high-volume automated test-and-repair loops.</li>
+</ol></section></section><section><section id="sec-ai-harnesses" class="title-slide slide level1 center" data-number="5"><h1>
+<span class="header-section-number">5</span> What are AI harnesses?</h1>
 
 </section><section class="slide level2"><p>An <strong>AI harness</strong> is the scaffolding built around a language model that turns it into an agent able to do real work. The model itself only predicts text; the harness is what lets it read files, run commands, call external tools and APIs, and carry state across turns and sessions.</p>
 <h4 id="layers-of-a-harness">Layers of a Harness</h4>
@@ -454,7 +539,7 @@
 <li>
 <strong>Core loop</strong>: the <a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview">tool-calling loop</a>, permission and sandboxing model, and context management that keep the agent grounded in your repository.</li>
 <li>
-<strong>Skills</strong>: reusable, named procedures that encode a workflow so it runs the same way every time, instead of being re-improvised in each conversation. See <a href="#/sec-ai-agent-skills" class="quarto-xref">Section&nbsp;27</a>.</li>
+<strong>Skills</strong>: reusable, named procedures that encode a workflow so it runs the same way every time, instead of being re-improvised in each conversation. See <a href="#/sec-ai-agent-skills" class="quarto-xref">Section&nbsp;28</a>.</li>
 <li>
 <strong>Subagents</strong>: a way to spin up a worker with a fresh context window for a self-contained piece of research or work, keeping the main conversation’s context focused.</li>
 <li>
@@ -476,10 +561,10 @@
 <strong>Feed learnings back into the harness.</strong> When a review round or a mistake teaches something generalizable, record it as a memory or skill update rather than letting it evaporate at the end of the session.</li>
 <li>
 <strong>Treat external or untrusted content as data, not instructions.</strong> PR comments, fetched web pages, and other tool output can contain text that looks like a command; a harness that acts on it uncritically is vulnerable to <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/">prompt injection</a>.</li>
-</ul></section></section><section><section id="sec-ai-agent-implementation" class="title-slide slide level1 center" data-number="5"><h1>
-<span class="header-section-number">5</span> How Agents Are Structured and Implemented</h1>
+</ul></section></section><section><section id="sec-ai-agent-implementation" class="title-slide slide level1 center" data-number="6"><h1>
+<span class="header-section-number">6</span> How Agents Are Structured and Implemented</h1>
 
-</section><section class="slide level2 scrollable"><p>An <strong>agent</strong> is not part of the harness itself. It is a configuration — a goal, a role, a bounded toolset, and a stopping condition — executed on top of the harness’s core loop (see <a href="#/sec-ai-harnesses" class="quarto-xref">Section&nbsp;4</a>). A single harness can host many different agents at once: a main conversation, and any number of subagents it spawns.</p>
+</section><section class="slide level2 scrollable"><p>An <strong>agent</strong> is not part of the harness itself. It is a configuration — a goal, a role, a bounded toolset, and a stopping condition — executed on top of the harness’s core loop (see <a href="#/sec-ai-harnesses" class="quarto-xref">Section&nbsp;5</a>). A single harness can host many different agents at once: a main conversation, and any number of subagents it spawns.</p>
 <h4 id="the-shape-of-an-agent">The Shape of an Agent</h4>
 <p>Structurally, an agent is a small record plus a fresh execution of the harness’s loop:</p>
 <ul>
@@ -513,8 +598,8 @@
 <strong>Isolation versus continuation</strong>: a subagent gets no inherited context (isolation); a resumed agent keeps its own accumulated history and continues it (continuation). Both use the same loop machinery, differing only in history-management policy.</li>
 <li>
 <strong>Free-form versus structured output</strong>: by default an agent returns prose. Given a schema, it is forced to call a structured-output tool instead, turning it into a typed function from the caller’s point of view — input in, validated object out — even though internally it is still a multi-turn loop.</li>
-</ul></section></section><section><section id="sec-ai-harness-construction" class="title-slide slide level1 center" data-number="6"><h1>
-<span class="header-section-number">6</span> How Harnesses and Agents Are Built</h1>
+</ul></section></section><section><section id="sec-ai-harness-construction" class="title-slide slide level1 center" data-number="7"><h1>
+<span class="header-section-number">7</span> How Harnesses and Agents Are Built</h1>
 
 </section><section class="slide level2"><p>The layers described above are not all built the same way. Some are ordinary software; others are just text files the harness reads at runtime.</p>
 <h4 id="the-execution-engine-is-ordinary-software">The Execution Engine Is Ordinary Software</h4>
@@ -537,8 +622,8 @@
 <p>Multi-agent orchestration cannot be expressed declaratively, because it needs genuine control flow — loops, conditionals, parallel fan-out with a concurrency limit. So orchestration scripts are literal source files, executed by the harness, not parsed as prompt text the way an agent definition is.</p>
 <h4 id="memory-is-just-prose">Memory Is Just Prose</h4>
 <p>Files like this manual, or a repository’s <code>CLAUDE.md</code>/<a href="https://agents.md/"><code>AGENTS.md</code></a>, carry no front matter and no schema. They are concatenated into the system prompt as plain text, and the harness trusts the model to read and follow that prose, the same way it follows any other instruction in its context.</p>
-</section></section><section><section id="sec-ai-agent-program-kind" class="title-slide slide level1 center" data-number="7"><h1>
-<span class="header-section-number">7</span> What Kind of Program Is an Agent?</h1>
+</section></section><section><section id="sec-ai-agent-program-kind" class="title-slide slide level1 center" data-number="8"><h1>
+<span class="header-section-number">8</span> What Kind of Program Is an Agent?</h1>
 
 </section><section class="slide level2"><p>An agent is not a standalone program that does the reasoning itself. It is an <strong><a href="https://en.wikipedia.org/wiki/Orchestration_(computing)">orchestration</a></strong> program: something closer in shape to a chat client or a build tool than to a compiler or a web server.</p>
 <h4 id="it-is-io-bound-not-compute-bound">It Is I/O-Bound, Not Compute-Bound</h4>
@@ -571,7 +656,7 @@
 <li>
 <strong><a href="https://github.com/OpenHands/OpenHands">OpenHands</a></strong> (formerly OpenDevin) — a general-purpose open-source agent platform.</li>
 </ul>
-<p>Their orchestration code runs to thousands of lines, because that is where the real engineering lives: retries, streaming, permission checks, and state management. A single <em>agent definition</em> running on top of that engine, by contrast, is typically tens of lines (see <a href="#/sec-ai-harness-construction" class="quarto-xref">Section&nbsp;6</a>).</p>
+<p>Their orchestration code runs to thousands of lines, because that is where the real engineering lives: retries, streaming, permission checks, and state management. A single <em>agent definition</em> running on top of that engine, by contrast, is typically tens of lines (see <a href="#/sec-ai-harness-construction" class="quarto-xref">Section&nbsp;7</a>).</p>
 <h4 id="where-it-runs">Where It Runs</h4>
 <ul>
 <li>
@@ -582,14 +667,14 @@
 <strong>The model call itself</strong>: not part of the agent’s environment at all. It is a network request to inference infrastructure the agent has no visibility into, beyond the request and response.</li>
 </ul>
 <p>So an agent’s lifetime is scoped to a single task, not persistent: it starts when given a goal, runs for as long as its loop keeps producing tool calls, and ends the moment a stopping condition fires.</p>
-</section></section><section><section id="sec-ai-harness-agent-relationship" class="title-slide slide level1 center" data-number="8"><h1>
-<span class="header-section-number">8</span> How Does a Harness Relate to an Agent?</h1>
+</section></section><section><section id="sec-ai-harness-agent-relationship" class="title-slide slide level1 center" data-number="9"><h1>
+<span class="header-section-number">9</span> How Does a Harness Relate to an Agent?</h1>
 
 </section><section class="slide level2"><p>The relationship between a harness and an agent is closer to an <strong><a href="https://en.wikipedia.org/wiki/Interpreter_(computing)">interpreter</a></strong> running a program than to two peers calling each other.</p>
 <h4 id="does-the-harness-call-the-agent-or-the-agent-call-the-harness">Does the Harness Call the Agent, or the Agent Call the Harness?</h4>
-<p><strong>Harness to agent: not a call, an instantiation.</strong> The harness does not “call” an agent as a subroutine it invokes and waits on. An agent has no code of its own outside the harness’s loop (see <a href="#/sec-ai-agent-program-kind" class="quarto-xref">Section&nbsp;7</a>) — its whole behavior <em>is</em> that loop, running with the agent’s configuration (instructions, tool allowlist, model) loaded in. The harness instantiates and runs an agent, start to termination; it is not a function call with a return address.</p>
+<p><strong>Harness to agent: not a call, an instantiation.</strong> The harness does not “call” an agent as a subroutine it invokes and waits on. An agent has no code of its own outside the harness’s loop (see <a href="#/sec-ai-agent-program-kind" class="quarto-xref">Section&nbsp;8</a>) — its whole behavior <em>is</em> that loop, running with the agent’s configuration (instructions, tool allowlist, model) loaded in. The harness instantiates and runs an agent, start to termination; it is not a function call with a return address.</p>
 <p><strong>Agent to harness: yes, a real call, via tool calls.</strong> While an agent’s loop is running, the model produces a <a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview">tool-call request</a>, and the harness’s dispatcher looks up and executes the matching handler — read a file, run a command, call an API. So the concrete direction of calling is <strong>agent calls harness</strong>, through tool dispatch, not the reverse.</p>
-<p><strong>Agent to agent: routed through the harness.</strong> When a parent agent spawns a subagent, it does not call that subagent directly. It issues a tool call that the harness’s dispatcher handles by spinning up a fresh instance of its own loop (see <a href="#/sec-ai-agent-implementation" class="quarto-xref">Section&nbsp;5</a>), running it to completion with the subagent’s configuration, and handing the result back to the parent as a tool result. Even “agent calls agent” bottoms out as: parent calls harness, harness instantiates and runs a new agent, harness returns that agent’s output to the parent.</p>
+<p><strong>Agent to agent: routed through the harness.</strong> When a parent agent spawns a subagent, it does not call that subagent directly. It issues a tool call that the harness’s dispatcher handles by spinning up a fresh instance of its own loop (see <a href="#/sec-ai-agent-implementation" class="quarto-xref">Section&nbsp;6</a>), running it to completion with the subagent’s configuration, and handing the result back to the parent as a tool result. Even “agent calls agent” bottoms out as: parent calls harness, harness instantiates and runs a new agent, harness returns that agent’s output to the parent.</p>
 <h4 id="sketching-the-harnesss-own-loop">Sketching the Harness’s Own Loop</h4>
 <p>The <a href="#/sec-ai-agent-program-kind">agent loop</a> sketched earlier is really just the innermost piece. The harness wraps a bootstrap step and a permission/dispatch layer around it:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a aria-label="1"></a><span class="kw">def</span> run_harness():</span>
@@ -624,15 +709,15 @@
 <span id="cb3-30"><a aria-label="30"></a></span>
 <span id="cb3-31"><a aria-label="31"></a>            history.append(result)</span>
 <span id="cb3-32"><a aria-label="32"></a>    <span class="cf">return</span> history[<span class="op">-</span><span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><code>run_agent</code> is identical in shape to the loop in <a href="#/sec-ai-agent-program-kind" class="quarto-xref">Section&nbsp;7</a>. <code>run_harness</code> and the permission check are the parts that only exist at the harness level, not inside any individual agent. That recursive call — <code>run_agent</code> calling itself for a subagent — is the concrete mechanism behind “agent calls agent, routed through the harness,” described in the previous subsection.</p>
+<p><code>run_agent</code> is identical in shape to the loop in <a href="#/sec-ai-agent-program-kind" class="quarto-xref">Section&nbsp;8</a>. <code>run_harness</code> and the permission check are the parts that only exist at the harness level, not inside any individual agent. That recursive call — <code>run_agent</code> calling itself for a subagent — is the concrete mechanism behind “agent calls agent, routed through the harness,” described in the previous subsection.</p>
 <h4 id="what-do-you-launch-when-you-type-claude">What Do You Launch When You Type <code>claude</code>?</h4>
 <p>Typing <code>claude</code> at a shell starts the harness process: it initializes the engine — the permission system, the tool registry, MCP client connections, and memory loaded from <code>CLAUDE.md</code>/<code>AGENTS.md</code> files. But the harness does not sit idle waiting for a program to be supplied separately. It immediately instantiates the <strong>default agent</strong> — the “main session” — to handle the interactive conversation: full tool access, a system prompt assembled from the loaded config, no restricted allowlist. That default agent is simply the harness’s baseline configuration for its own loop, not a second thing launched afterward.</p>
 <p>There is no observable moment of “harness running, no agent yet.” The closest analogy is typing <code>python</code> at a shell: it launches the interpreter <em>and</em> drops you straight into a <a href="https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop">REPL</a> evaluating your input, rather than leaving the interpreter idle with nothing loaded. The difference is that the harness’s default “program” is built in (the main-session agent’s configuration), rather than something you must supply. A custom subagent or a <code>.claude/agents/*.md</code> definition, by contrast, <em>is</em> a separate agent, instantiated on demand, mid-session, when the already-running main agent issues a tool call for it.</p>
 <p>So typing <code>claude</code> launches the harness, and that act inherently instantiates the default agent that handles the session: <strong>harness</strong> names the engine and process; <strong>agent</strong> names the particular loop instance and configuration currently running inside it. At startup, those two come into existence together.</p>
-</section></section><section><section id="sec-ai-harness-landscape" class="title-slide slide level1 center" data-number="9"><h1>
-<span class="header-section-number">9</span> The Harness Landscape in 2026</h1>
+</section></section><section><section id="sec-ai-harness-landscape" class="title-slide slide level1 center" data-number="10"><h1>
+<span class="header-section-number">10</span> The Harness Landscape in 2026</h1>
 
-</section><section class="slide level2"><p><a href="#/sec-ai-harnesses" class="quarto-xref">Section&nbsp;4</a> explains what a harness is, and <a href="#/sec-ai-coding-agent-platforms" class="quarto-xref">Section&nbsp;3</a> lists common platforms as a starting point. This section is the wider map: which harnesses exist as of August 2026, how they group, and how to choose among them.</p>
+</section><section class="slide level2"><p><a href="#/sec-ai-harnesses" class="quarto-xref">Section&nbsp;5</a> explains what a harness is, and <a href="#/sec-ai-coding-agent-platforms" class="quarto-xref">Section&nbsp;3</a> lists common platforms as a starting point. This section is the wider map: which harnesses exist as of August 2026, how they group, and how to choose among them.</p>
 <div class="callout callout-warning callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -647,7 +732,7 @@
 </div>
 </div>
 <h4 id="the-organizing-idea-agent-model-harness">The organizing idea: agent = model + harness</h4>
-<p>The consensus across the comparisons surveyed is that the frontier models have converged on the standard coding benchmarks, so the harness layers that <a href="#/sec-ai-harnesses" class="quarto-xref">Section&nbsp;4</a> describes now do most of the differentiating. The commonly cited puzzle is that the same Claude model performs noticeably better inside Claude Code than inside a model-agnostic harness, and the answer offered is repeatedly the same word: the harness.</p>
+<p>The consensus across the comparisons surveyed is that the frontier models have converged on the standard coding benchmarks, so the harness layers that <a href="#/sec-ai-harnesses" class="quarto-xref">Section&nbsp;5</a> describes now do most of the differentiating. The commonly cited puzzle is that the same Claude model performs noticeably better inside Claude Code than inside a model-agnostic harness, and the answer offered is repeatedly the same word: the harness.</p>
 <p>Two consequences follow for reading the rest of this section:</p>
 <ul>
 <li>
@@ -797,9 +882,9 @@ Table&nbsp;2: Editor-integrated coding harnesses
 <li>Replit Agent</li>
 <li>Tabnine</li>
 </ul>
-<p>For raw capability the proprietary leaders still edge ahead, but the open options are competitive and win outright on cost, privacy, auditability, and model freedom. The 2026 signature of open-source use is bring-your-own-key, with two friction points worth knowing. Anthropic restricted third-party harnesses’ use of flat-rate Claude subscriptions in April 2026, which pushed some of those users onto extra-usage or per-token billing (<a href="#/sec-ai-claude-code-other-models" class="quarto-xref">Section&nbsp;22</a> covers the same rule from the Claude Code side), and OpenCode lost Claude Pro and Max login access after a dispute with Anthropic.</p>
+<p>For raw capability the proprietary leaders still edge ahead, but the open options are competitive and win outright on cost, privacy, auditability, and model freedom. The 2026 signature of open-source use is bring-your-own-key, with two friction points worth knowing. Anthropic restricted third-party harnesses’ use of flat-rate Claude subscriptions in April 2026, which pushed some of those users onto extra-usage or per-token billing (<a href="#/sec-ai-claude-code-other-models" class="quarto-xref">Section&nbsp;23</a> covers the same rule from the Claude Code side), and OpenCode lost Claude Pro and Max login access after a dispute with Anthropic.</p>
 <h4 id="local-model-coding">Local-model coding</h4>
-<p>Local coding has matured to the point where the strongest open-weight models compete on the standard benchmarks. The community favorites for consumer hardware are the Qwen, Devstral, Gemma, and DeepSeek families, and the typical stack pairs OpenCode or Aider with a local OpenAI-compatible endpoint. <a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;19</a> and <a href="#/sec-ai-small-local-models" class="quarto-xref">Section&nbsp;23</a> cover the mechanics and the model choice.</p>
+<p>Local coding has matured to the point where the strongest open-weight models compete on the standard benchmarks. The community favorites for consumer hardware are the Qwen, Devstral, Gemma, and DeepSeek families, and the typical stack pairs OpenCode or Aider with a local OpenAI-compatible endpoint. <a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;20</a> and <a href="#/sec-ai-small-local-models" class="quarto-xref">Section&nbsp;24</a> cover the mechanics and the model choice.</p>
 <h4 id="beyond-coding-general-agent-frameworks">Beyond coding: general agent frameworks</h4>
 <p>The general agent-framework layer settled into three tiers:</p>
 <ul>
@@ -857,8 +942,8 @@ Table&nbsp;3: Matching a harness to the job
 </figure>
 </div>
 <p>Then pilot two of them on a repository you actually ship. Token or usage-limit pain points toward Codex or an open bring-your-own-key harness; a need for audit trails points toward Cline or LangGraph; a need for private inference points toward OpenCode or Aider with a local model.</p>
-</section></section><section><section id="sec-ai-guidance-sources" class="title-slide slide level1 center" data-number="10"><h1>
-<span class="header-section-number">10</span> Where Current Practice Is Discussed: Reddit Communities</h1>
+</section></section><section><section id="sec-ai-guidance-sources" class="title-slide slide level1 center" data-number="11"><h1>
+<span class="header-section-number">11</span> Where Current Practice Is Discussed: Reddit Communities</h1>
 
 </section><section class="slide level2"><p>The practice of working with AI agents changes faster than any static page (these notes included) can track. Much of the current guidance circulates as forum discussion: tool comparisons, configuration recipes, failure reports, and launch announcements. This section catalogs the Reddit communities where that discussion concentrates, grouped by what they are for, so you know where to look when a page here has gone stale. This section covers Reddit only: vendor documentation, project issue trackers, and the papers behind a technique are cited where the chapters use them, and the forum layer had no index here until this section.</p>
 <div class="callout callout-warning callout-titled callout-style-default">
@@ -1080,8 +1165,8 @@ Table&nbsp;7: General AI communities
 <strong>For research and trend-spotting</strong>, follow r/LocalLLaMA, r/MachineLearning, and r/singularity, filtering the last for hype.</li>
 <li>
 <strong>Treat a community as a lead, not a source.</strong> A forum thread is where a technique surfaces first; verify it against the tool’s documentation before you rely on it, in the spirit of <a href="../chapters/pr-workflow-with-agents.html#sec-invalidate-ai-review">reviewing AI-generated work</a>.</li>
-</ul></section></section><section><section id="ai-agents-and-the-technological-singularity" class="title-slide slide level1 center" data-number="11"><h1>
-<span class="header-section-number">11</span> AI Agents and the Technological Singularity</h1>
+</ul></section></section><section><section id="ai-agents-and-the-technological-singularity" class="title-slide slide level1 center" data-number="12"><h1>
+<span class="header-section-number">12</span> AI Agents and the Technological Singularity</h1>
 
 </section><section class="slide level2"><p>The emergence of sophisticated <a href="https://en.wikipedia.org/wiki/Intelligent_agent">AI agents</a> has prompted discussions about whether we are witnessing or approaching a <a href="https://en.wikipedia.org/wiki/Technological_singularity">technological singularity</a>. Understanding this concept helps contextualize the rapid evolution of AI tools and our responsibility in using them.</p>
 <h4 id="what-is-the-technological-singularity">What is the technological singularity?</h4>
@@ -1107,8 +1192,8 @@ Table&nbsp;7: General AI communities
 <p>The value of AI coding agents lies in their ability to accelerate human productivity and learning, not in replacing human judgment or expertise. They are sophisticated tools that augment human capabilities while remaining under human control and oversight.</p>
 <h4 id="further-reading">Further reading</h4>
 <p>For thoughtful perspectives on AI consciousness and intelligence, see Douglas Hofstadter’s reflections in <a href="https://www.nytimes.com/2023/07/13/opinion/ai-chatgpt-consciousness-hofstadter.html">“I Thought I Was in an AI Apocalypse. Then I Started Looking Closer.”</a></p>
-</section></section><section><section id="relative-advantages-of-ai-and-humans" class="title-slide slide level1 center" data-number="12"><h1>
-<span class="header-section-number">12</span> Relative Advantages of AI and Humans</h1>
+</section></section><section><section id="relative-advantages-of-ai-and-humans" class="title-slide slide level1 center" data-number="13"><h1>
+<span class="header-section-number">13</span> Relative Advantages of AI and Humans</h1>
 
 </section><section class="slide level2"><p>AI coding agents and human coders have complementary strengths. Understanding these differences helps you decide when to delegate work to agents and when to handle tasks yourself.</p>
 <h4 id="comparative-strengths-humans-vs.-ai-agents">Comparative Strengths: Humans vs.&nbsp;AI Agents</h4>
@@ -1227,8 +1312,8 @@ Table&nbsp;9: Relative advantages of humans and Agents
 <strong>Better handling of ambiguity</strong>: Using world knowledge to interpret unclear requirements</li>
 </ul>
 <p>As these technologies mature, AI agents may become better at tasks requiring contextual understanding and creative problem-solving. This makes it even more important to develop strong supervision and validation skills now, so you can effectively work with increasingly capable AI systems.</p>
-</section></section><section><section id="how-to-work-with-coding-agents" class="title-slide slide level1 center" data-number="13"><h1>
-<span class="header-section-number">13</span> How to Work with Coding Agents</h1>
+</section></section><section><section id="how-to-work-with-coding-agents" class="title-slide slide level1 center" data-number="14"><h1>
+<span class="header-section-number">14</span> How to Work with Coding Agents</h1>
 
 </section><section class="slide level2 scrollable"><p>Coding agents can be accessed through several interfaces, each with different trade-offs for task size, feedback speed, and collaboration style.</p>
 <h4 id="ways-to-interact-with-coding-agents">Ways to interact with coding agents</h4>
@@ -1312,8 +1397,8 @@ Table&nbsp;9: Relative advantages of humans and Agents
 <a href="https://github.com/orgs/community/discussions/183966">GitHub Community Discussion #183966</a>: Product feedback on this topic</li>
 </ul>
 <p>For detailed instructions, see <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent">GitHub Copilot coding agent documentation</a>.</p>
-</section></section><section><section id="useful-prompt-formats" class="title-slide slide level1 center" data-number="14"><h1>
-<span class="header-section-number">14</span> Useful Prompt Formats</h1>
+</section></section><section><section id="useful-prompt-formats" class="title-slide slide level1 center" data-number="15"><h1>
+<span class="header-section-number">15</span> Useful Prompt Formats</h1>
 
 </section><section class="slide level2"><p>When working with coding agents, using clear and specific prompts helps achieve better results. Here are some useful prompt formats that you can use when requesting assistance from coding agents:</p>
 <h4 id="common-task-patterns">Common Task Patterns</h4>
@@ -1369,8 +1454,8 @@ Table&nbsp;9: Relative advantages of humans and Agents
 <strong>Set boundaries</strong>: Specify what should or shouldn’t change</li>
 <li>
 <strong>Request validation</strong>: Ask the agent to test or verify its changes when appropriate</li>
-</ul></section></section><section><section id="sec-ai-addressing-failing-workflows" class="title-slide slide level1 center" data-number="15"><h1>
-<span class="header-section-number">15</span> Addressing Failing GitHub Actions Workflows</h1>
+</ul></section></section><section><section id="sec-ai-addressing-failing-workflows" class="title-slide slide level1 center" data-number="16"><h1>
+<span class="header-section-number">16</span> Addressing Failing GitHub Actions Workflows</h1>
 
 </section><section class="slide level2 scrollable"><p>When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix the issues. However, it’s important to use the right prompts depending on whether the problem is in your code or in the workflow configuration itself.</p>
 <h4 id="scenario-1-code-issues-found-by-workflows-most-common">Scenario 1: Code Issues Found by Workflows (Most Common)</h4>
@@ -1416,11 +1501,11 @@ Table&nbsp;9: Relative advantages of humans and Agents
 <li>
 <strong>Test</strong> in a safe environment if possible</li>
 </ol>
-<p>See <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;17</a> for more details on workflow file security.</p>
+<p>See <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;18</a> for more details on workflow file security.</p>
 </div>
 </div>
 </div>
-<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;38</a> for more guidance.</p>
+<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;39</a> for more guidance.</p>
 <h4 id="scenario-3-uncertain-which-scenario-applies">Scenario 3: Uncertain Which Scenario Applies</h4>
 <p><strong>When to use:</strong> You’re not sure whether the failure is due to code issues or workflow configuration problems.</p>
 <p><strong>Recommended approach:</strong></p>
@@ -1452,11 +1537,11 @@ Table&nbsp;9: Relative advantages of humans and Agents
 <h4 id="additional-resources">Additional Resources</h4>
 <ul>
 <li>See the <a href="https://ucd-serg.github.io/lab-manual/continuous-integration.html">UCD-SERG Lab Manual’s continuous integration chapter</a> for setting up GitHub Actions workflows</li>
-<li>See <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;17</a> and <a href="#/sec-ai-benefits-hazards" class="quarto-xref">Section&nbsp;16</a> for security considerations with workflow files</li>
-<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;38</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
+<li>See <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;18</a> and <a href="#/sec-ai-benefits-hazards" class="quarto-xref">Section&nbsp;17</a> for security considerations with workflow files</li>
+<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;39</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
 <li>See the <a href="https://docs.github.com/en/actions">GitHub Actions documentation</a> for workflow syntax and troubleshooting</li>
-</ul></section></section><section><section id="sec-ai-benefits-hazards" class="title-slide slide level1 center" data-number="16"><h1>
-<span class="header-section-number">16</span> Benefits and Hazards</h1>
+</ul></section></section><section><section id="sec-ai-benefits-hazards" class="title-slide slide level1 center" data-number="17"><h1>
+<span class="header-section-number">17</span> Benefits and Hazards</h1>
 
 </section><section class="slide level2"><p>Coding agents are powerful programs that can work autonomously. They create pull requests that propose changes to the code in our repositories, potentially including their own configuration files and our automated workflows. They can work powerfully on our behalf, but they require careful oversight and control to ensure they serve our interests and that we understand the consequences of their actions.</p>
 <p>Coding agents offer several advantages:</p>
@@ -1504,8 +1589,8 @@ Table&nbsp;9: Relative advantages of humans and Agents
 <figure><figcaption><a href="https://en.wikipedia.org/wiki/Agent_(The_Matrix)">Agents</a></figcaption><p><a href="assets/images/matrix-agents.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Agents"><img data-src="assets/images/matrix-agents.png" alt="Three agents in suits and sunglasses from the Matrix films"></a></p>
 </figure>
 </div>
-</section></section><section><section id="sec-ai-best-practices" class="title-slide slide level1 center" data-number="17"><h1>
-<span class="header-section-number">17</span> Best Practices for Safe and Successful Use</h1>
+</section></section><section><section id="sec-ai-best-practices" class="title-slide slide level1 center" data-number="18"><h1>
+<span class="header-section-number">18</span> Best Practices for Safe and Successful Use</h1>
 
 </section><section class="slide level2 scrollable"><p>To work with coding agents safely and successfully:</p>
 <ol type="1">
@@ -1552,8 +1637,8 @@ Table&nbsp;9: Relative advantages of humans and Agents
 </div>
 <p>When using coding agents, work interactively with the AI suggestions: review, modify, and test them rather than accepting them wholesale. This interactive approach helps ensure code quality and deepens your understanding of the code.</p>
 <p>Remember: AI tools are assistants, not replacements for your expertise and judgment. The quality and correctness of your work remains your responsibility.</p>
-</section></section><section><section id="firewall-and-network-configuration" class="title-slide slide level1 center" data-number="18"><h1>
-<span class="header-section-number">18</span> Firewall and Network Configuration</h1>
+</section></section><section><section id="firewall-and-network-configuration" class="title-slide slide level1 center" data-number="19"><h1>
+<span class="header-section-number">19</span> Firewall and Network Configuration</h1>
 
 </section><section class="slide level2"><p>Coding agents require specific network access to function properly. If a coding agent is running behind a corporate firewall or on a restricted network, you may need to configure allowlists to enable coding agent functionality.</p>
 <h4 id="built-in-agent-firewall">Built-in Agent Firewall</h4>
@@ -1688,8 +1773,8 @@ Table&nbsp;9: Relative advantages of humans and Agents
 </div>
 </div>
 </div>
-</section></section><section><section id="sec-ai-offline" class="title-slide slide level1 center" data-number="19"><h1>
-<span class="header-section-number">19</span> Running Coding Agents Offline</h1>
+</section></section><section><section id="sec-ai-offline" class="title-slide slide level1 center" data-number="20"><h1>
+<span class="header-section-number">20</span> Running Coding Agents Offline</h1>
 
 </section><section class="slide level2 scrollable"><p>Some environments restrict or prohibit internet access—high-performance computing (HPC) clusters, hospital networks, or air-gapped research servers may block connections to cloud AI providers. Running a local AI model lets you use coding assistance in these settings without sending code to external servers, which also addresses data-privacy concerns when working with sensitive or confidential data.</p>
 <div class="callout callout-note callout-titled callout-style-default">
@@ -2134,11 +2219,11 @@ Table&nbsp;9: Relative advantages of humans and Agents
 <span id="cb34-7"><a aria-label="7"></a></span>
 <span id="cb34-8"><a aria-label="8"></a><span class="ex">aider</span> <span class="at">--yes</span> <span class="at">--message</span> <span class="st">"Fix the off-by-one error in mean()."</span> stats.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Check the block itself first, as above. A test that passes because the proxy was never applied tells you nothing, and looks exactly like success.</p>
-</section></section><section><section id="sec-ai-opencode-ollama" class="title-slide slide level1 center" data-number="20"><h1>
-<span class="header-section-number">20</span> Connecting OpenCode to Local Models</h1>
+</section></section><section><section id="sec-ai-opencode-ollama" class="title-slide slide level1 center" data-number="21"><h1>
+<span class="header-section-number">21</span> Connecting OpenCode to Local Models</h1>
 
 </section><section class="slide level2"><p><a href="https://opencode.ai">OpenCode</a> is an open-source coding agent that runs in your terminal, reads your project, edits files, and runs commands. It supports local models through OpenAI-compatible providers.</p>
-<p>This section assumes Ollama is already installed and that you have pulled a code-focused model — see <a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;19</a> for both, including the Linux and Windows install paths.</p>
+<p>This section assumes Ollama is already installed and that you have pulled a code-focused model — see <a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;20</a> for both, including the Linux and Windows install paths.</p>
 <p>Verify the server is running:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a aria-label="1"></a><span class="ex">curl</span> <span class="at">-s</span> http://localhost:11434/api/version</span>
 <span id="cb35-2"><a aria-label="2"></a><span class="co"># {"version":"0.1.x"}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2165,10 +2250,10 @@ Table&nbsp;9: Relative advantages of humans and Agents
 </div>
 </div>
 <p>A lightweight hand-written provider block in your project’s <code>opencode.json</code> still works if you prefer explicit control over model names and context limits, but the plugin removes the need to keep that list in sync with <code>ollama pull</code>.</p>
-</section></section><section><section id="sec-ai-opencode-openrouter" class="title-slide slide level1 center" data-number="21"><h1>
-<span class="header-section-number">21</span> Connecting OpenCode to OpenRouter</h1>
+</section></section><section><section id="sec-ai-opencode-openrouter" class="title-slide slide level1 center" data-number="22"><h1>
+<span class="header-section-number">22</span> Connecting OpenCode to OpenRouter</h1>
 
-</section><section class="slide level2 scrollable"><p><a href="https://openrouter.ai">OpenRouter</a> is a gateway that exposes hundreds of hosted models — Claude, GPT, Gemini, DeepSeek, Qwen, Kimi, Llama, and more — behind a single API key and billing account. OpenCode treats it as a built-in provider, so its catalog appears in the <code>/models</code> picker alongside local models (<a href="#/sec-ai-opencode-ollama" class="quarto-xref">Section&nbsp;20</a>). The catalog changes frequently; model IDs below were verified against it in August 2026.</p>
+</section><section class="slide level2 scrollable"><p><a href="https://openrouter.ai">OpenRouter</a> is a gateway that exposes hundreds of hosted models — Claude, GPT, Gemini, DeepSeek, Qwen, Kimi, Llama, and more — behind a single API key and billing account. OpenCode treats it as a built-in provider, so its catalog appears in the <code>/models</code> picker alongside local models (<a href="#/sec-ai-opencode-ollama" class="quarto-xref">Section&nbsp;21</a>). The catalog changes frequently; model IDs below were verified against it in August 2026.</p>
 <p><strong>Connect an API key:</strong></p>
 <ol type="1">
 <li>Create a key at <a href="https://openrouter.ai/settings/keys" class="uri">https://openrouter.ai/settings/keys</a> and add credits at <a href="https://openrouter.ai/credits" class="uri">https://openrouter.ai/credits</a>. Some models carry a <code>:free</code> ID suffix and cost nothing, at the price of tight rate limits.</li>
@@ -2202,8 +2287,8 @@ Table&nbsp;9: Relative advantages of humans and Agents
 <li><p>entries under <code>provider.openrouter.models</code> add models that are not preloaded, or pin routing: OpenRouter load-balances across upstream hosts by default, and <code>order</code> restricts requests to named providers (<a href="https://openrouter.ai/docs/guides/routing/provider-selection">provider-selection docs</a>)</p></li>
 </ul>
 <p>Config loads at startup, so restart OpenCode after editing it.</p>
-</section></section><section><section id="sec-ai-claude-code-other-models" class="title-slide slide level1 center" data-number="22"><h1>
-<span class="header-section-number">22</span> Running Claude Code with Non-Anthropic Models</h1>
+</section></section><section><section id="sec-ai-claude-code-other-models" class="title-slide slide level1 center" data-number="23"><h1>
+<span class="header-section-number">23</span> Running Claude Code with Non-Anthropic Models</h1>
 
 </section><section class="slide level2"><p>Claude Code is built around the Anthropic Messages API, and its documentation describes how to point the harness at any endpoint that speaks that format (measured 2026-09-01). That mechanism is what makes it possible to run Claude Code against models Anthropic does not make, and the same documentation says plainly that doing so is unsupported. This section summarizes:</p>
 <ul>
@@ -2253,7 +2338,7 @@ Table&nbsp;9: Relative advantages of humans and Agents
 <li>
 <code>CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1</code> stops Claude Code from sending pre-release request fields and beta headers. The connection guide lists it as the fix for <code>400</code> errors naming <code>context_management</code> or <code>Extra inputs are not permitted</code>, which is what a non-Anthropic upstream returns when it rejects Claude-specific fields.</li>
 <li>
-<code>CLAUDE_CODE_MAX_CONTEXT_TOKENS</code> declares the context window for a model ID Claude Code does not recognize; <a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;19</a> shows it in use for a local model.</li>
+<code>CLAUDE_CODE_MAX_CONTEXT_TOKENS</code> declares the context window for a model ID Claude Code does not recognize; <a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;20</a> shows it in use for a local model.</li>
 </ul>
 <p>Claude Code reads these at startup, either from the shell or from the <code>env</code> block of <code>~/.claude/settings.json</code>.</p>
 <h4 id="the-routes-people-use">The routes people use</h4>
@@ -2262,13 +2347,13 @@ Table&nbsp;9: Relative advantages of humans and Agents
 <li>
 <strong>A model vendor’s Anthropic-compatible endpoint.</strong> Several labs, including <a href="https://z.ai/">Z.ai</a> (GLM), <a href="https://www.kimi.com/">Moonshot</a> (Kimi), and <a href="https://www.minimax.io/">MiniMax</a>, publish endpoints that speak the Messages format directly, so the whole setup is <code>ANTHROPIC_BASE_URL</code> plus the vendor’s key. It is the route those reports describe most often, and the one bundled with the vendors’ “coding plan” subscriptions.</li>
 <li>
-<strong>A hosted aggregator.</strong> <a href="https://openrouter.ai/">OpenRouter</a> exposes an Anthropic-format endpoint, so Claude Code can talk to it with no local proxy; <a href="#/sec-ai-opencode-openrouter" class="quarto-xref">Section&nbsp;21</a> covers the same aggregator from the OpenCode side.</li>
+<strong>A hosted aggregator.</strong> <a href="https://openrouter.ai/">OpenRouter</a> exposes an Anthropic-format endpoint, so Claude Code can talk to it with no local proxy; <a href="#/sec-ai-opencode-openrouter" class="quarto-xref">Section&nbsp;22</a> covers the same aggregator from the OpenCode side.</li>
 <li>
-<strong>A self-hosted gateway.</strong> <a href="https://docs.litellm.ai">LiteLLM</a> and <a href="https://konghq.com/">Kong</a> are the examples that Anthropic’s own environment-variable reference names for gateway model discovery. LiteLLM translates Messages-format requests to many providers and adds virtual keys, fallbacks, and cost tracking; <a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;19</a> shows a LiteLLM configuration for local models.</li>
+<strong>A self-hosted gateway.</strong> <a href="https://docs.litellm.ai">LiteLLM</a> and <a href="https://konghq.com/">Kong</a> are the examples that Anthropic’s own environment-variable reference names for gateway model discovery. LiteLLM translates Messages-format requests to many providers and adds virtual keys, fallbacks, and cost tracking; <a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;20</a> shows a LiteLLM configuration for local models.</li>
 <li>
 <strong>A community router.</strong> <a href="https://github.com/musistudio/claude-code-router">Claude Code Router</a> intercepts each request and routes it by type (background, thinking, long-context, default) to a different provider or model. It has the most features of the five, and the tracking issue quotes its own issue tracker describing it as unstable and hard to configure.</li>
 <li>
-<strong>A local model server.</strong> <a href="https://docs.vllm.ai/">vLLM</a> and <a href="https://ollama.com/">Ollama</a> both serve the Messages API directly, so Claude Code can point at either with no proxy; <a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;19</a> covers the mechanics, and <a href="#/sec-ai-small-local-models" class="quarto-xref">Section&nbsp;23</a> covers which local models can sustain an autonomous loop.</li>
+<strong>A local model server.</strong> <a href="https://docs.vllm.ai/">vLLM</a> and <a href="https://ollama.com/">Ollama</a> both serve the Messages API directly, so Claude Code can point at either with no proxy; <a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;20</a> covers the mechanics, and <a href="#/sec-ai-small-local-models" class="quarto-xref">Section&nbsp;24</a> covers which local models can sustain an autonomous loop.</li>
 </ul>
 <p>Treat any self-hosted gateway or community router as infrastructure: pin its version, and keep the official <code>claude</code> launcher as a fallback. The tracking issue records a 2026 incident in which malicious LiteLLM releases were briefly published to PyPI, which is the concrete reason for pinning.</p>
 <h4 id="what-degrades">What degrades</h4>
@@ -2302,7 +2387,7 @@ Table&nbsp;10: Choosing a route for running Claude Code with other models
 <tbody>
 <tr class="odd">
 <td>Model flexibility is the priority</td>
-<td>A model-agnostic harness (<a href="https://opencode.ai">OpenCode</a>, <a href="https://aider.chat/">Aider</a>, <a href="https://github.com/cline/cline">Cline</a>), which is built for it; see <a href="#/sec-ai-opencode-ollama" class="quarto-xref">Section&nbsp;20</a> and <a href="#/sec-ai-opencode-openrouter" class="quarto-xref">Section&nbsp;21</a>
+<td>A model-agnostic harness (<a href="https://opencode.ai">OpenCode</a>, <a href="https://aider.chat/">Aider</a>, <a href="https://github.com/cline/cline">Cline</a>), which is built for it; see <a href="#/sec-ai-opencode-ollama" class="quarto-xref">Section&nbsp;21</a> and <a href="#/sec-ai-opencode-openrouter" class="quarto-xref">Section&nbsp;22</a>
 </td>
 </tr>
 <tr class="even">
@@ -2331,10 +2416,10 @@ Table&nbsp;10: Choosing a route for running Claude Code with other models
 <li>Authenticate non-Claude traffic with your own API key or provider credential rather than a subscription login.</li>
 <li>Assume prompt caching is off until the gateway proves otherwise.</li>
 <li>Measure cost per completed task on your own work rather than comparing token prices; if the alternative is not cheaper on that measure, or tool-call failures disrupt sessions, go back to a supported configuration.</li>
-</ul></section></section><section><section id="sec-ai-small-local-models" class="title-slide slide level1 center" data-number="23"><h1>
-<span class="header-section-number">23</span> Small, Local Models for Autonomous Agentic Coding</h1>
+</ul></section></section><section><section id="sec-ai-small-local-models" class="title-slide slide level1 center" data-number="24"><h1>
+<span class="header-section-number">24</span> Small, Local Models for Autonomous Agentic Coding</h1>
 
-</section><section class="slide level2 scrollable"><p><a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;19</a> covers the mechanics of running a model on your own hardware: installing Ollama, wiring up an editor, and driving <code>aider</code> against a local endpoint. This section is about a narrower and harder question sitting on top of that setup: which local model to pick, and how to let it work <strong>autonomously</strong> — making a sequence of edits, commits, and tool calls with no human approving each step — without the loop quietly going wrong.</p>
+</section><section class="slide level2 scrollable"><p><a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;20</a> covers the mechanics of running a model on your own hardware: installing Ollama, wiring up an editor, and driving <code>aider</code> against a local endpoint. This section is about a narrower and harder question sitting on top of that setup: which local model to pick, and how to let it work <strong>autonomously</strong> — making a sequence of edits, commits, and tool calls with no human approving each step — without the loop quietly going wrong.</p>
 <div class="callout callout-warning callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -2425,7 +2510,7 @@ Table&nbsp;10: Choosing a route for running Claude Code with other models
 </tbody>
 </table>
 <p>Qwen3-Coder’s 30B-A3B tag is a mixture-of-experts model: 30B total parameters, but only about 3.3B active per token. VRAM at rest is set by the total, not the active count — every expert has to stay resident in memory even though only a fraction fires on any given token — which is why the tag still needs roughly 19 GB at 4-bit quantization, in line with its 30B total rather than its 3.3B active count. What the small active count buys is speed: inference runs closer to a 3–4B model’s pace despite the larger memory footprint. Codestral’s license is worth reading before you rely on it: Mistral’s Non-Production License permits local evaluation but not production or commercial deployment — fine for trying it out, not fine for a lab pipeline that runs unattended.</p>
-<p>As a practical floor, treat the 24–32B tier at 4-bit quantization as the smallest size that holds up across a multi-step autonomous loop without frequent tool-call errors. Below that, a model is still useful as an assistant you supervise turn by turn (<a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;19</a> covers exactly that setup), but it is not yet a safe choice to leave unattended.</p>
+<p>As a practical floor, treat the 24–32B tier at 4-bit quantization as the smallest size that holds up across a multi-step autonomous loop without frequent tool-call errors. Below that, a model is still useful as an assistant you supervise turn by turn (<a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;20</a> covers exactly that setup), but it is not yet a safe choice to leave unattended.</p>
 <div class="callout callout-important callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -2564,7 +2649,7 @@ Table&nbsp;10: Choosing a route for running Claude Code with other models
 <strong>Direct system persona</strong>: Suppresses conversational preamble (<em>“Sure, I’d be happy to help with that…”</em>) in favor of immediate tool invocation.</li>
 </ul>
 <h4 id="routed-architectures-a-planner-and-an-executor">Routed architectures: a planner and an executor</h4>
-<p><a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;19</a> already shows the mechanics of splitting a task between two local models with <code>aider --architect</code>: a larger model plans the change, and a smaller one applies the edits. The same split has a name in the research literature and a stronger motivating argument than “it’s faster”: Belcak and NVIDIA’s small-language-model research group argue that most of what an agent does in a loop is “a small number of specialized tasks repetitively and with little variation” — reading a diff, running a test, formatting a commit message — and that a small model is “sufficiently powerful, inherently more suitable, and necessarily more economical” for that work <span class="citation" data-cites="slm_agentic_ai">(<a href="#/references" role="doc-biblioref" onclick="">Belcak et al. 2025</a>)</span>. A large model earns its cost only on the steps that genuinely need broad, general reasoning: deciding <em>what</em> to change and why.</p>
+<p><a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;20</a> already shows the mechanics of splitting a task between two local models with <code>aider --architect</code>: a larger model plans the change, and a smaller one applies the edits. The same split has a name in the research literature and a stronger motivating argument than “it’s faster”: Belcak and NVIDIA’s small-language-model research group argue that most of what an agent does in a loop is “a small number of specialized tasks repetitively and with little variation” — reading a diff, running a test, formatting a commit message — and that a small model is “sufficiently powerful, inherently more suitable, and necessarily more economical” for that work <span class="citation" data-cites="slm_agentic_ai">(<a href="#/references" role="doc-biblioref" onclick="">Belcak et al. 2025</a>)</span>. A large model earns its cost only on the steps that genuinely need broad, general reasoning: deciding <em>what</em> to change and why.</p>
 <p>Two shapes of this pattern are worth knowing:</p>
 <ul>
 <li>
@@ -2572,7 +2657,7 @@ Table&nbsp;10: Choosing a route for running Claude Code with other models
 <li>
 <strong>Local planner, local executor</strong>: a 30–32B planner drafts each step and a 7–8B executor applies it, trading some plan quality for throughput — worthwhile mainly on hardware that cannot comfortably hold two copies of a 32B model at once.</li>
 <li>
-<strong>Cloud planner, local executor</strong>: a frontier cloud model plans and a local model executes, which keeps the bulk of file contents on your own machine while still using strong reasoning for the decisions that matter most. This is a hybrid rather than a fully local setup — see the LiteLLM fallback pattern in <a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;19</a> for one way to wire a cloud-with-local-fallback endpoint, which composes with this split.</li>
+<strong>Cloud planner, local executor</strong>: a frontier cloud model plans and a local model executes, which keeps the bulk of file contents on your own machine while still using strong reasoning for the decisions that matter most. This is a hybrid rather than a fully local setup — see the LiteLLM fallback pattern in <a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;20</a> for one way to wire a cloud-with-local-fallback endpoint, which composes with this split.</li>
 </ul>
 <p>The same split is the main cost lever in a public field report from a non-programmer (<a href="https://www.reddit.com/r/ClaudeCode/comments/1vvhrfq/">“Vibe coded this game in four months”</a>, r/ClaudeCode, 2026-08-22; summarized in <a href="https://github.com/Morrison-Lab/wai/issues/98">issue #98</a>), who built a browser racing game over four months with coding agents. The report names three levers:</p>
 <ul>
@@ -2673,8 +2758,8 @@ Table&nbsp;10: Choosing a route for running Claude Code with other models
 <li>bibliography DOIs</li>
 </ul>
 </li>
-</ul></section></section><section><section id="sec-ai-copilot-settings" class="title-slide slide level1 center" data-number="24"><h1>
-<span class="header-section-number">24</span> Configuring GitHub Copilot Settings</h1>
+</ul></section></section><section><section id="sec-ai-copilot-settings" class="title-slide slide level1 center" data-number="25"><h1>
+<span class="header-section-number">25</span> Configuring GitHub Copilot Settings</h1>
 
 </section><section class="slide level2 scrollable"><p>GitHub Copilot offers numerous configuration options that control how the AI assistant integrates into your development workflow. This section explains the key settings visible in your GitHub account preferences and provides guidance on which options to enable based on your use case.</p>
 <h4 id="model-selection-options">Model Selection Options</h4>
@@ -2936,7 +3021,7 @@ Table&nbsp;10: Choosing a route for running Claude Code with other models
 <li>
 <em>Cons</em>: Requires careful oversight, can make unwanted changes if instructions unclear</li>
 <li>
-<em>Recommendation</em>: <strong>Enable</strong> (see <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;17</a> for safe usage guidelines)</li>
+<em>Recommendation</em>: <strong>Enable</strong> (see <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;18</a> for safe usage guidelines)</li>
 </ul>
 <p><strong>Copilot Memory (Preview):</strong></p>
 <ul>
@@ -3029,9 +3114,9 @@ Table&nbsp;10: Choosing a route for running Claude Code with other models
 <li>Editor preview features (only if comfortable with potential instability)</li>
 <li>Automatic Copilot code review (wait until familiar with review quality)</li>
 </ul>
-<p>Following these guidelines will help establish an effective Copilot configuration. The key is to enable features that add value to your workflow while maintaining awareness that AI assistance requires validation (see <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;17</a>).</p>
-</section></section><section><section id="sec-ai-byok-vscode" class="title-slide slide level1 center" data-number="25"><h1>
-<span class="header-section-number">25</span> Connecting VS Code to a Custom Model Endpoint (BYOK)</h1>
+<p>Following these guidelines will help establish an effective Copilot configuration. The key is to enable features that add value to your workflow while maintaining awareness that AI assistance requires validation (see <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;18</a>).</p>
+</section></section><section><section id="sec-ai-byok-vscode" class="title-slide slide level1 center" data-number="26"><h1>
+<span class="header-section-number">26</span> Connecting VS Code to a Custom Model Endpoint (BYOK)</h1>
 
 </section><section class="slide level2 scrollable"><p>VS Code’s built-in Chat usually talks to GitHub’s hosted models. It can also route requests to a model provider of your own; GitHub calls this “bring your own key” (BYOK). The lab uses BYOK to reach Databricks model serving endpoints, which expose an OpenAI-compatible API, through the community extension <a href="https://marketplace.visualstudio.com/items?itemName=johnny-zhao.oai-compatible-copilot"><code>oai-compatible-copilot</code></a>.</p>
 <p>This section describes the wiring, four errors that report themselves in the chat panel, and three more that do not.</p>
@@ -3372,8 +3457,8 @@ while the selected main agent model is BYOK.</code></pre>
 </div>
 </div>
 </div>
-</section></section><section><section id="configuring-the-agent-environment" class="title-slide slide level1 center" data-number="26"><h1>
-<span class="header-section-number">26</span> Configuring the Agent Environment</h1>
+</section></section><section><section id="configuring-the-agent-environment" class="title-slide slide level1 center" data-number="27"><h1>
+<span class="header-section-number">27</span> Configuring the Agent Environment</h1>
 
 </section><section class="slide level2 scrollable"><p>The <code>.github/workflows/copilot-setup-steps.yml</code> file allows you to customize the development environment in which the GitHub Copilot coding agent operates. This file preinstalls tools and dependencies so that Copilot can build, test, and lint your code more reliably.</p>
 <h4 id="why-configure-the-environment">Why Configure the Environment?</h4>
@@ -3482,8 +3567,8 @@ while the selected main agent model is BYOK.</code></pre>
 <span id="cb57-3"><a aria-label="3"></a><span class="at">    </span><span class="fu">lfs</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <h4 id="further-reading-1">Further Reading</h4>
 <p>For complete details, see <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment">Customizing the development environment for GitHub Copilot coding agent</a>.</p>
-</section></section><section><section id="sec-ai-agent-skills" class="title-slide slide level1 center" data-number="27"><h1>
-<span class="header-section-number">27</span> Agent Skills</h1>
+</section></section><section><section id="sec-ai-agent-skills" class="title-slide slide level1 center" data-number="28"><h1>
+<span class="header-section-number">28</span> Agent Skills</h1>
 
 </section><section class="slide level2 scrollable"><p><a href="https://agentskills.io/home">Agent Skills</a> are a lightweight, open standard for extending AI agent capabilities with specialized knowledge and workflows. The <a href="https://agentskills.io/specification">specification</a> defines a portable, tool-agnostic format that any compatible agent can load.</p>
 <h4 id="what-is-a-skill">What is a Skill?</h4>
@@ -3521,7 +3606,7 @@ while the selected main agent model is BYOK.</code></pre>
 </ul>
 <h4 id="further-reading-2">Further Reading</h4>
 <p>For the complete specification and more details, see <a href="https://agentskills.io/home">agentskills.io</a>.</p>
-<p>A skill is one of several ways to customize an agent, and not always the right one. <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;30</a> compares it against:</p>
+<p>A skill is one of several ways to customize an agent, and not always the right one. <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;31</a> compares it against:</p>
 <ul>
 <li>instruction files</li>
 <li>subagents</li>
@@ -3530,10 +3615,10 @@ while the selected main agent model is BYOK.</code></pre>
 </ul>
 <p>That section also explains why Claude Code’s custom slash commands are now skills themselves.</p>
 <p>The <a href="https://github.com/Morrison-Lab/ai-config">Morrison-Lab/ai-config</a> repository contains an example of personal Claude Code configuration, including user-level skills, hooks, and subagents, synced across machines via Git.</p>
-</section></section><section><section id="sec-ai-posit-skills" class="title-slide slide level1 center" data-number="28"><h1>
-<span class="header-section-number">28</span> The Posit Skill Collection</h1>
+</section></section><section><section id="sec-ai-posit-skills" class="title-slide slide level1 center" data-number="29"><h1>
+<span class="header-section-number">29</span> The Posit Skill Collection</h1>
 
-</section><section class="slide level2"><p><a href="https://github.com/posit-dev/skills">posit-dev/skills</a> is the collection of <a href="https://agentskills.io/home">Agent Skills</a> published by Posit (see <a href="#/sec-ai-agent-skills" class="quarto-xref">Section&nbsp;27</a> for what a skill is) for R, Python, Quarto, and Shiny work. It is MIT-licensed, and its skills load in Claude Code, Claude.ai, or through the Claude API, or in any other skills-compatible agent. The notes below reflect the repository’s README as read on 2026-09-01.</p>
+</section><section class="slide level2"><p><a href="https://github.com/posit-dev/skills">posit-dev/skills</a> is the collection of <a href="https://agentskills.io/home">Agent Skills</a> published by Posit (see <a href="#/sec-ai-agent-skills" class="quarto-xref">Section&nbsp;28</a> for what a skill is) for R, Python, Quarto, and Shiny work. It is MIT-licensed, and its skills load in Claude Code, Claude.ai, or through the Claude API, or in any other skills-compatible agent. The notes below reflect the repository’s README as read on 2026-09-01.</p>
 <h4 id="what-it-contains">What it contains</h4>
 <p>The skills are grouped into eight categories, each of which can be installed on its own:</p>
 <ul>
@@ -3567,7 +3652,7 @@ while the selected main agent model is BYOK.</code></pre>
 <li>copying skill folders into the agent’s skills directory by hand</li>
 <li>uploading a skill to Claude.ai, or loading it through the Skills API</li>
 </ul>
-<p>Once installed, the agent activates a skill from its description rather than on an explicit command, which is the progressive-disclosure model <a href="#/sec-ai-agent-skills" class="quarto-xref">Section&nbsp;27</a> describes.</p>
+<p>Once installed, the agent activates a skill from its description rather than on an explicit command, which is the progressive-disclosure model <a href="#/sec-ai-agent-skills" class="quarto-xref">Section&nbsp;28</a> describes.</p>
 <h4 id="useful-to-us-yes-and-largely-already-adopted">Useful to us? Yes, and largely already adopted</h4>
 <p>The R and Quarto skills match this lab’s daily work, and nine of them are already copied into <a href="https://github.com/Morrison-Lab/ai-config">Morrison-Lab/ai-config</a>, adapted for that repository’s conventions with the upstream MIT license text kept alongside them:</p>
 <ul>
@@ -3581,9 +3666,9 @@ while the selected main agent model is BYOK.</code></pre>
 <li><code>release-post</code></li>
 <li><code>testing-r-packages</code></li>
 </ul>
-<p>Copying the skills in rather than installing the marketplace plugin lets them follow the lab’s own review and hook conventions, at the cost of tracking upstream changes by hand. Four categories are not adopted. Three of them have the least overlap with lab work: Shiny app development, <code>ggsql</code>, and Posit Connect deployment. The fourth, <code>posit-dev</code>, overlaps with practices the lab already has: its <code>critical-code-reviewer</code> parallels the adversarial self-review subagent that the lab’s agent configuration dispatches before every push, and <code>new-work</code> / <code>working-on</code> keep a per-task tracking document where the lab uses the issue tracker and a session notebook. The <code>github</code> skills likewise overlap with the lab’s own <a href="../chapters/pr-workflow-with-agents.html">pull-request workflow</a> and with the review setup in <a href="#/sec-ai-claude-code-action-review" class="quarto-xref">Section&nbsp;34</a>, so both categories are worth reading for ideas rather than installing alongside that tooling. The contribution guidance in the repository recommends Anthropic’s <code>skill-creator</code> skill for authoring new skills.</p>
-</section></section><section><section id="sec-ai-useful-plugins" class="title-slide slide level1 center" data-number="29"><h1>
-<span class="header-section-number">29</span> Useful plugins</h1>
+<p>Copying the skills in rather than installing the marketplace plugin lets them follow the lab’s own review and hook conventions, at the cost of tracking upstream changes by hand. Four categories are not adopted. Three of them have the least overlap with lab work: Shiny app development, <code>ggsql</code>, and Posit Connect deployment. The fourth, <code>posit-dev</code>, overlaps with practices the lab already has: its <code>critical-code-reviewer</code> parallels the adversarial self-review subagent that the lab’s agent configuration dispatches before every push, and <code>new-work</code> / <code>working-on</code> keep a per-task tracking document where the lab uses the issue tracker and a session notebook. The <code>github</code> skills likewise overlap with the lab’s own <a href="../chapters/pr-workflow-with-agents.html">pull-request workflow</a> and with the review setup in <a href="#/sec-ai-claude-code-action-review" class="quarto-xref">Section&nbsp;35</a>, so both categories are worth reading for ideas rather than installing alongside that tooling. The contribution guidance in the repository recommends Anthropic’s <code>skill-creator</code> skill for authoring new skills.</p>
+</section></section><section><section id="sec-ai-useful-plugins" class="title-slide slide level1 center" data-number="30"><h1>
+<span class="header-section-number">30</span> Useful plugins</h1>
 
 </section><section class="slide level2 scrollable"><p>This site’s Quarto sources already use <a href="https://sembr.org/">Semantic Line Breaks</a> (SemBr): a line break after each substantial unit of thought, so the source is easier to edit while the rendered HTML still reads as ordinary paragraphs.</p>
 <p><a href="https://github.com/sembr/skills">sembr/skills</a> packages that convention as Agent Skills for any skills-compatible tool. Install it one of these ways:</p>
@@ -3611,12 +3696,12 @@ while the selected main agent model is BYOK.</code></pre>
 </ol>
 <p>The agent reads the touched code first and is lazy about the solution, never about reading, and never cuts validation, error handling, security, or accessibility. Measured on twelve real Claude Code tasks in a FastAPI + React repo (Haiku 4.5, n=4), it averages about 54 percent less code (up to 94 percent where the agent would otherwise overbuild, for example a date picker) with about 20 percent lower cost and 27 percent faster, while staying fully safe. It installs as a plugin or skill for more than twenty agents (Claude Code, Codex, Copilot, Cursor, OpenCode, Gemini, and others) and works from a checkout via <code>AGENTS.md</code> where a plugin is not needed.</p>
 <p><a href="https://contextify.sh/">Contextify</a> keeps your Claude Code and Codex history forever in a private, searchable timeline. Claude Code deletes history after 30 days; Contextify watches both tools, summarizes each message (on-device via Apple Intelligence on macOS 26, or Lite Mode on macOS 15), and lets you search every conversation you ever had. It runs local-first with no account required, and optionally syncs across devices via Cloud Sync or a self-hosted instance you operate. The ambient timeline lets you follow sessions in real time or skim what happened while you were away.</p>
-<p>The lab’s portable agent config lives in <a href="https://github.com/Morrison-Lab/ai-config"><code>Morrison-Lab/ai-config</code></a>. It is a plugin-or-symlink install of skills, hooks, and memories — not a third marketplace next to SemBr. How that config actually reaches a machine, and how a doubled plugin install fails, is <a href="#/sec-ai-config-install" class="quarto-xref">Section&nbsp;31</a>. <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;30</a> is the worked example of what the corpus contains.</p>
-</section></section><section><section id="sec-ai-customization" class="title-slide slide level1 center" data-number="30"><h1>
-<span class="header-section-number">30</span> Customizing an Agent</h1>
+<p>The lab’s portable agent config lives in <a href="https://github.com/Morrison-Lab/ai-config"><code>Morrison-Lab/ai-config</code></a>. It is a plugin-or-symlink install of skills, hooks, and memories — not a third marketplace next to SemBr. How that config actually reaches a machine, and how a doubled plugin install fails, is <a href="#/sec-ai-config-install" class="quarto-xref">Section&nbsp;32</a>. <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;31</a> is the worked example of what the corpus contains.</p>
+</section></section><section><section id="sec-ai-customization" class="title-slide slide level1 center" data-number="31"><h1>
+<span class="header-section-number">31</span> Customizing an Agent</h1>
 
-</section><section class="slide level2"><p><a href="#/sec-ai-agent-skills" class="quarto-xref">Section&nbsp;27</a> describes one way to extend an agent. It is not the only one, and a lab that knows only that one tends to write every customization as a skill, including the ones that should have been something else.</p>
-<p>This section maps the whole surface. The mechanisms differ less in what you can write in them — most are Markdown with a <a href="https://jekyllrb.com/docs/front-matter/">YAML front matter</a> header, as <a href="#/sec-ai-harness-construction" class="quarto-xref">Section&nbsp;6</a> describes — than in <strong>when they fire and who decides</strong>.</p>
+</section><section class="slide level2"><p><a href="#/sec-ai-agent-skills" class="quarto-xref">Section&nbsp;28</a> describes one way to extend an agent. It is not the only one, and a lab that knows only that one tends to write every customization as a skill, including the ones that should have been something else.</p>
+<p>This section maps the whole surface. The mechanisms differ less in what you can write in them — most are Markdown with a <a href="https://jekyllrb.com/docs/front-matter/">YAML front matter</a> header, as <a href="#/sec-ai-harness-construction" class="quarto-xref">Section&nbsp;7</a> describes — than in <strong>when they fire and who decides</strong>.</p>
 <h4 id="the-question-that-picks-the-mechanism">The Question That Picks the Mechanism</h4>
 <p>Ask two things about the behavior you want:</p>
 <ul>
@@ -3631,7 +3716,7 @@ while the selected main agent model is BYOK.</code></pre>
 </blockquote>
 <p>A rule you cannot afford to have ignored does not belong in a <code>CLAUDE.md</code>.</p>
 <h4 id="instruction-files-always-on-context">Instruction Files: Always-On Context</h4>
-<p><code>CLAUDE.md</code> and <a href="https://agents.md/"><code>AGENTS.md</code></a> are prose the harness loads at the start of a session, with no front matter and no schema (<a href="#/sec-ai-harness-construction" class="quarto-xref">Section&nbsp;6</a>).</p>
+<p><code>CLAUDE.md</code> and <a href="https://agents.md/"><code>AGENTS.md</code></a> are prose the harness loads at the start of a session, with no front matter and no schema (<a href="#/sec-ai-harness-construction" class="quarto-xref">Section&nbsp;7</a>).</p>
 <p>Three properties matter when you write one:</p>
 <ul>
 <li>
@@ -3690,7 +3775,7 @@ while the selected main agent model is BYOK.</code></pre>
 <p>The portable core is small and worth knowing exactly. The <a href="https://agentskills.io/specification">Agent Skills specification</a> requires precisely two front matter fields — <code>name</code> and <code>description</code> — and says of the body that there are no format restrictions. Everything past that is a vendor extension: Claude Code’s own docs describe invocation control, subagent execution, and dynamic context injection as extensions to the standard. Portability is therefore real but shallow: the folder and its metadata travel, and how much of the <em>behavior</em> travels depends on how alike two agents happen to be.</p>
 <p>One concrete sign that the format genuinely crosses vendors: GitHub Copilot <a href="https://docs.github.com/en/copilot/concepts/agents/about-agent-skills">looks for skills</a> in <code>.github/skills</code>, <code>.agents/skills</code>, and <code>.claude/skills</code> — a competitor’s directory name.</p>
 <h4 id="subagents-delegating-to-a-fresh-context">Subagents: Delegating to a Fresh Context</h4>
-<p><a href="#/sec-ai-agent-implementation" class="quarto-xref">Section&nbsp;5</a> and <a href="#/sec-ai-harness-agent-relationship" class="quarto-xref">Section&nbsp;8</a> cover what a subagent <em>is</em> and how the harness runs one. The authoring question is narrower: a subagent is a single Markdown file with front matter in <code>.claude/agents/</code> (project) or <code>~/.claude/agents/</code> (personal), whose body becomes that agent’s entire system prompt.</p>
+<p><a href="#/sec-ai-agent-implementation" class="quarto-xref">Section&nbsp;6</a> and <a href="#/sec-ai-harness-agent-relationship" class="quarto-xref">Section&nbsp;9</a> cover what a subagent <em>is</em> and how the harness runs one. The authoring question is narrower: a subagent is a single Markdown file with front matter in <code>.claude/agents/</code> (project) or <code>~/.claude/agents/</code> (personal), whose body becomes that agent’s entire system prompt.</p>
 <p>Two details are easy to get wrong.</p>
 <p><strong>Precedence runs the opposite way from skills.</strong> For subagents, a project definition <a href="https://code.claude.com/docs/en/sub-agents">outranks</a> a personal one. For skills, personal <a href="https://code.claude.com/docs/en/skills">outranks</a> project. If you keep a personal copy of something the repository also defines, which one wins depends on which mechanism you chose.</p>
 <p><strong>An @-mention picks the worker, not the words.</strong> Naming a subagent guarantees which one runs. It does not hand that subagent your sentence:</p>
@@ -3713,7 +3798,7 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Rules are written as <code>Tool(specifier)</code> — for example <code>Bash(npm run test *)</code>, <code>Read(./.env)</code>, or <code>Skill(commit)</code> — and sorted into <code>allow</code>, <code>ask</code>, and <code>deny</code>. Because a project’s rules merge with yours rather than replacing them, a repository can tighten what you allow, and cannot quietly loosen it.</p>
 <h4 id="mcp-servers-are-a-different-axis-entirely">MCP Servers Are a Different Axis Entirely</h4>
 <p>Everything above changes what the agent <em>knows or must do</em>. An <a href="https://modelcontextprotocol.io/">MCP</a> server changes what it <em>can reach</em>: typed tools, data resources, and reusable templates exposed over a standard protocol. The specification is explicit that it “does not dictate how AI applications use LLMs or manage the provided context.”</p>
-<p>So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;45</a> covers configuration and its failure modes.</p>
+<p>So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;46</a> covers configuration and its failure modes.</p>
 <h4 id="choosing-1">Choosing</h4>
 <table class="caption-top">
 <colgroup>
@@ -3779,12 +3864,12 @@ while the selected main agent model is BYOK.</code></pre>
 <tr class="odd">
 <td>Agent Skills (<code>SKILL.md</code>)</td>
 <td>yes, in format</td>
-<td>open standard with a published specification, adopted across Claude Code, Codex, Copilot, Cursor, and Google Antigravity (and legacy Gemini CLI; see <a href="#/sec-ai-harness-landscape" class="quarto-xref">Section&nbsp;9</a> on Gemini CLI’s sunset and folding into Antigravity CLI)</td>
+<td>open standard with a published specification, adopted across Claude Code, Codex, Copilot, Cursor, and Google Antigravity (and legacy Gemini CLI; see <a href="#/sec-ai-harness-landscape" class="quarto-xref">Section&nbsp;10</a> on Gemini CLI’s sunset and folding into Antigravity CLI)</td>
 </tr>
 <tr class="even">
 <td><code>AGENTS.md</code></td>
 <td>yes, as an open specification</td>
-<td>standardizes filename, location, and precedence across Codex, Google Antigravity (and legacy Gemini CLI; see <a href="#/sec-ai-harness-landscape" class="quarto-xref">Section&nbsp;9</a>), Cursor, Aider, and Copilot (Claude Code reads <code>CLAUDE.md</code> by default, or imports <code>@AGENTS.md</code>)</td>
+<td>standardizes filename, location, and precedence across Codex, Google Antigravity (and legacy Gemini CLI; see <a href="#/sec-ai-harness-landscape" class="quarto-xref">Section&nbsp;10</a>), Cursor, Aider, and Copilot (Claude Code reads <code>CLAUDE.md</code> by default, or imports <code>@AGENTS.md</code>)</td>
 </tr>
 <tr class="odd">
 <td>MCP servers</td>
@@ -3796,7 +3881,7 @@ while the selected main agent model is BYOK.</code></pre>
 <code>CLAUDE.md</code> / <code>GEMINI.md</code>
 </td>
 <td>by courtesy</td>
-<td>vendor instruction files read by default in their respective environments (Claude Code and Google Antigravity; see <a href="#/sec-ai-harness-landscape" class="quarto-xref">Section&nbsp;9</a> on the legacy Gemini CLI product folding into Antigravity CLI), and supported by courtesy in GitHub Copilot</td>
+<td>vendor instruction files read by default in their respective environments (Claude Code and Google Antigravity; see <a href="#/sec-ai-harness-landscape" class="quarto-xref">Section&nbsp;10</a> on the legacy Gemini CLI product folding into Antigravity CLI), and supported by courtesy in GitHub Copilot</td>
 </tr>
 <tr class="odd">
 <td>Cursor Rules (<code>.cursor/rules/*.mdc</code>)</td>
@@ -3839,10 +3924,10 @@ while the selected main agent model is BYOK.</code></pre>
 </ul>
 <p>That distribution is itself the argument. Nearly everything is a skill, because a skill is the mechanism the model can reach for unprompted. The hooks are few and specific, because each one exists to make a rule that was being forgotten impossible to forget.</p>
 <p>This repository is a smaller example of the same idea: it carries a <code>.github/copilot-instructions.md</code> for conventions that apply everywhere, plus path-scoped files under <code>.github/instructions/</code> whose <code>applyTo</code> globs attach them only when you edit a matching file.</p>
-</section></section><section><section id="sec-ai-config-install" class="title-slide slide level1 center" data-number="31"><h1>
-<span class="header-section-number">31</span> How the Config Reaches a Machine</h1>
+</section></section><section><section id="sec-ai-config-install" class="title-slide slide level1 center" data-number="32"><h1>
+<span class="header-section-number">32</span> How the Config Reaches a Machine</h1>
 
-</section><section class="slide level2"><p><a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;30</a> describes <em>which</em> mechanism a customization should use. This section is about the step after that decision: how a config like a shared instruction repository actually reaches a machine, and how a broken install fails.</p>
+</section><section class="slide level2"><p><a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;31</a> describes <em>which</em> mechanism a customization should use. This section is about the step after that decision: how a config like a shared instruction repository actually reaches a machine, and how a broken install fails.</p>
 <p>Two agents can load the identical instruction corpus and still behave differently, because behavior depends not only on what the config says but on how it is installed where the agent runs. An install problem is quiet by construction — nothing errors, the work still gets done, and a capability simply goes missing with no message that it existed.</p>
 <h4 id="two-ways-the-same-config-reaches-a-machine">Two Ways the Same Config Reaches a Machine</h4>
 <p>A repository of skills, hooks, and instruction files can be delivered two ways, and they are alternatives rather than layers.</p>
@@ -3876,8 +3961,8 @@ while the selected main agent model is BYOK.</code></pre>
 <strong>A check run against the wrong checkout cries wolf.</strong> A verification that compares the installed copies against a stale or unintended checkout can report every entry as misdirected. That is a false alarm from a check aimed at the wrong target, not a fleet of real problems; re-run it against the checkout the install is actually anchored to before acting.</li>
 </ul>
 <p>The common thread is that the install layer is a real surface, distinct from the content of the config, with its own failure modes and its own checks. When an agent behaves as though a rule or skill you wrote does not exist, suspect the install before you suspect the rule.</p>
-</section></section><section><section id="sec-ai-claude-cloud-env" class="title-slide slide level1 center" data-number="32"><h1>
-<span class="header-section-number">32</span> Claude Code Cloud Environments</h1>
+</section></section><section><section id="sec-ai-claude-cloud-env" class="title-slide slide level1 center" data-number="33"><h1>
+<span class="header-section-number">33</span> Claude Code Cloud Environments</h1>
 
 </section><section class="slide level2"><p><a href="https://www.anthropic.com/claude-code">Claude Code</a> is a CLI coding agent that can also run tasks on Anthropic-managed cloud infrastructure— either from the web at <a href="https://claude.ai/code">claude.ai/code</a> (“Claude Code on the web”), or from the terminal by adding the <code>--remote</code> flag to move a session into the cloud.</p>
 <p>Each cloud run executes inside a configured <strong>environment</strong>. An environment bundles three things:</p>
@@ -3911,8 +3996,8 @@ while the selected main agent model is BYOK.</code></pre>
 </div>
 </div>
 <p>For details, see the <a href="https://code.claude.com/docs/en/claude-code-on-the-web">Claude Code on the web documentation</a> and the <a href="https://code.claude.com/docs/en/commands">slash command reference</a>.</p>
-</section></section><section><section id="sec-ai-codex-github-review" class="title-slide slide level1 center" data-number="33"><h1>
-<span class="header-section-number">33</span> Using a ChatGPT Account for Codex Pull-Request Reviews</h1>
+</section></section><section><section id="sec-ai-codex-github-review" class="title-slide slide level1 center" data-number="34"><h1>
+<span class="header-section-number">34</span> Using a ChatGPT Account for Codex Pull-Request Reviews</h1>
 
 </section><section class="slide level2"><p>OpenAI Codex can act as a reviewer on GitHub pull requests. The native integration uses the Codex service connected to a ChatGPT workspace and posts a standard GitHub review through the Codex connector bot. It does not require you to build a separate GitHub Action.</p>
 <h4 id="prerequisites">Prerequisites</h4>
@@ -3974,8 +4059,8 @@ while the selected main agent model is BYOK.</code></pre>
 <li>required human approval</li>
 </ul>
 <p>For current setup details, see OpenAI’s <a href="https://learn.chatgpt.com/docs/third-party/github">GitHub code-review documentation</a>.</p>
-</section></section><section><section id="sec-ai-claude-code-action-review" class="title-slide slide level1 center" data-number="34"><h1>
-<span class="header-section-number">34</span> Where Pull-Request Review Lives in Claude Code Action</h1>
+</section></section><section><section id="sec-ai-claude-code-action-review" class="title-slide slide level1 center" data-number="35"><h1>
+<span class="header-section-number">35</span> Where Pull-Request Review Lives in Claude Code Action</h1>
 
 </section><section class="slide level2"><p>A common question about <a href="https://github.com/anthropics/claude-code-action"><code>anthropics/claude-code-action</code></a> is where its pull-request review lives. The answer is surprising: <strong>there is no dedicated review action.</strong> The repository publishes one general-purpose top-level action, and “review” is a <em>prompt</em> you pass it, not a separate artifact.</p>
 <p>All claims below were surveyed against that repository at <code>main</code> (measured 2026-08-25; paths can move).</p>
@@ -4042,8 +4127,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This distinction explains a common debugging dead end: “<code>@claude</code> answered my comment, so why did nobody review the pull request?” Mention-triggered activity never runs the reviewer; only the <code>pull_request</code>-triggered workflow does.</p>
 <h4 id="relation-to-codex-native-review">Relation to Codex native review</h4>
 <p>This is the Claude-side counterpart to <a href="#/sec-ai-codex-github-review">using a ChatGPT account for Codex pull-request reviews</a>. Codex ships a hosted native reviewer configured through the ChatGPT workspace, with no workflow file. Claude Code’s reviewer is the opposite trade: you own a workflow file and supply API credentials, but the prompt, tools, model, and triggering events are all visible and editable in your repository.</p>
-</section></section><section><section id="sec-ai-gemini-review-action" class="title-slide slide level1 center" data-number="35"><h1>
-<span class="header-section-number">35</span> Gemini Review Action for GitHub Pull Requests</h1>
+</section></section><section><section id="sec-ai-gemini-review-action" class="title-slide slide level1 center" data-number="36"><h1>
+<span class="header-section-number">36</span> Gemini Review Action for GitHub Pull Requests</h1>
 
 </section><section class="slide level2"><p><a href="https://github.com/derailed-dash/gemini-review-action"><code>derailed-dash/gemini-review-action</code></a> is an open-source GitHub Action that provides automated code reviews on pull requests and automated triage on issues using Google’s Gemini models (measured 2026-08-31; repository at <code>v1.6.6</code>).</p>
 <h4 id="key-capabilities">Key capabilities</h4>
@@ -4091,8 +4176,8 @@ while the selected main agent model is BYOK.</code></pre>
 <span id="cb62-25"><a aria-label="25"></a><span class="at">          </span><span class="fu">gemini_model</span><span class="kw">:</span><span class="at"> gemini-3.7-flash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <h4 id="comparison-with-native-review-integrations">Comparison with native review integrations</h4>
 <p>Like <a href="#/sec-ai-claude-code-action-review">Claude Code Action</a>, <code>derailed-dash/gemini-review-action</code> gives the repository owner full visibility over workflow triggers, authentication methods, and review prompts. In contrast to hosted review offerings that require platform-level permissions across an entire organization, this GitHub Action operates per-repository with credentials scoped to GitHub Actions secrets or Google Cloud IAM roles.</p>
-</section></section><section><section id="sec-ai-gemini-code-assist-review" class="title-slide slide level1 center" data-number="36"><h1>
-<span class="header-section-number">36</span> Gemini Code Assist for Repository Code Review</h1>
+</section></section><section><section id="sec-ai-gemini-code-assist-review" class="title-slide slide level1 center" data-number="37"><h1>
+<span class="header-section-number">37</span> Gemini Code Assist for Repository Code Review</h1>
 
 </section><section class="slide level2"><p>Google Cloud provides a native code-review capability through <a href="https://docs.cloud.google.com/gemini/docs/code-review/review-repo-code">Gemini Code Assist</a> (measured 2026-08-31; documentation in Enterprise preview). Unlike GitHub Actions that run inside individual repository workflows, Gemini Code Assist operates as a managed service connected at the organization or repository level.</p>
 <h4 id="architecture-and-setup">Architecture and setup</h4>
@@ -4154,8 +4239,8 @@ while the selected main agent model is BYOK.</code></pre>
 <td>GitHub Secrets or Workload Identity Federation</td>
 </tr>
 </tbody>
-</table></section></section><section><section id="sec-ai-pr-activity-notifications" class="title-slide slide level1 center" data-number="37"><h1>
-<span class="header-section-number">37</span> How a Session Learns a PR Changed</h1>
+</table></section></section><section><section id="sec-ai-pr-activity-notifications" class="title-slide slide level1 center" data-number="38"><h1>
+<span class="header-section-number">38</span> How a Session Learns a PR Changed</h1>
 
 </section><section class="slide level2"><p>A coding-agent session that is watching a pull request does not poll it. Something wakes the session when the pull request changes, and in Claude Code that “something” is one of <strong>two separate channels</strong>.</p>
 <p>The distinction matters for a practical reason: <strong>the agent can turn one of them on and off, and cannot touch the other.</strong> So “stop watching this PR” is a request an agent can satisfy for one channel and can only decline for the other.</p>
@@ -4198,7 +4283,7 @@ while the selected main agent model is BYOK.</code></pre>
 <p><code>subscribe_pr_activity</code> and <code>unsubscribe_pr_activity</code> are ordinary tool calls, taking an owner, a repository, and a pull-request number. Subscribing delivers that pull request’s activity into the conversation as <code>&lt;github-webhook-activity&gt;</code> messages until the session unsubscribes, or the pull request merges or closes.</p>
 <p>Two caveats are worth knowing before relying on it.</p>
 <p><strong>A successful subscribe does not guarantee delivery.</strong> If a PR Steward agent already holds the watch on that pull request, the call still succeeds — but this session receives nothing. The tool result says so in as many words, so read the result rather than the exit status. Taking over the watch requires opting the steward out first, by removing its watching label on the pull request.</p>
-<p><strong>The tool does not exist on a locally-run GitHub MCP server.</strong> Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;45</a> covers the local analogues to reach for instead.</p>
+<p><strong>The tool does not exist on a locally-run GitHub MCP server.</strong> Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;46</a> covers the local analogues to reach for instead.</p>
 <p><strong>Webhook delivery is also not exhaustive</strong>, which is the failure mode most likely to be mistaken for “nothing has happened”. CI <em>successes</em>, new pushes, and merge-conflict transitions can arrive late or not at all. A session that treats silence as “still green” will sit indefinitely on a pull request that has gone stale or conflicted, so a subscription is a supplement to periodically re-reading the pull request’s real state, not a replacement for it.</p>
 <h4 id="the-channel-only-a-human-controls">The channel only a human controls</h4>
 <p>Claude Code on the web shows a per-pull-request <strong>CI monitoring</strong> panel in the session sidebar, with two checkboxes: <strong>Auto-fix CI &amp; address comments</strong> and <strong>Auto-merge when ready</strong>.</p>
@@ -4212,7 +4297,7 @@ while the selected main agent model is BYOK.</code></pre>
 <li>
 <strong>One of the two has a shortcut, and the other does not.</strong> Running <code>/autofix-pr</code> from the command line on a pull request’s branch spawns a web session with <strong>Auto-fix CI &amp; address comments</strong> already on. There is no equivalent shortcut for <strong>Auto-merge when ready</strong>.</li>
 </ul>
-<p>See <a href="#/sec-ai-claude-cloud-env" class="quarto-xref">Section&nbsp;32</a> for the web-session context these run in.</p>
+<p>See <a href="#/sec-ai-claude-cloud-env" class="quarto-xref">Section&nbsp;33</a> for the web-session context these run in.</p>
 <h4 id="the-instruction-template-is-boilerplate">The instruction template is boilerplate</h4>
 <p>Each <code>&lt;ci-monitor-event&gt;</code> quotes the triggering comment verbatim and then appends a <strong>fixed instruction template</strong>:</p>
 <ul>
@@ -4269,13 +4354,13 @@ while the selected main agent model is BYOK.</code></pre>
 </div>
 </div>
 </div>
-</section></section><section><section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="38"><h1>
-<span class="header-section-number">38</span> When to use a coding agent</h1>
+</section></section><section><section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="39"><h1>
+<span class="header-section-number">39</span> When to use a coding agent</h1>
 
 </section><section class="slide level2 scrollable"><p>Coding agent sessions are currently<sup>1</sup> considered “premium requests”, which are limited resources; see <a href="https://github.com/features/copilot/plans" class="uri">https://github.com/features/copilot/plans</a> for details. So, use coding agents sparingly. Use them for complex changes that would be difficult or time-consuming for you to complete by hand. Coding agents also take time to get configured for work, every time you make a request. See <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment#preinstalling-tools-or-dependencies-in-copilots-environment" class="uri">https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment#preinstalling-tools-or-dependencies-in-copilots-environment</a> for ways to reduce that startup time, but it will never be 0. If you can complete the task faster than the coding agent can, you should probably do it yourself. For example, when you have errors in the spell-check or lint workflows, you can often fix them faster than Copilot can. Similarly, when reviewing Copilot’s PRs, you can often make direct changes to the branch faster than you could write clear review comments and get Copilot to address them.</p>
 <p>Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.</p>
-<aside><ol class="aside-footnotes"><li id="fn1"><p>2026-01-10</p></li></ol></aside></section></section><section><section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="39"><h1>
-<span class="header-section-number">39</span> Editing with <code>.docx</code> files</h1>
+<aside><ol class="aside-footnotes"><li id="fn1"><p>2026-01-10</p></li></ol></aside></section></section><section><section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="40"><h1>
+<span class="header-section-number">40</span> Editing with <code>.docx</code> files</h1>
 
 </section><section class="slide level2 scrollable"><p>GitHub Copilot coding agents can read Microsoft Word (<code>.docx</code>) files, including tracked changes and comments. This enables a hybrid editing workflow where:</p>
 <ol type="1">
@@ -4306,8 +4391,8 @@ while the selected main agent model is BYOK.</code></pre>
 <li>Share this saved version with collaborators</li>
 </ol>
 <p>This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.</p>
-</section></section><section><section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="40"><h1>
-<span class="header-section-number">40</span> Copilot Instructions for this Repository</h1>
+</section></section><section><section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="41"><h1>
+<span class="header-section-number">41</span> Copilot Instructions for this Repository</h1>
 
 </section><section class="slide level2"><p>A <code>.github/copilot-instructions.md</code> file contains repository-specific instructions and guidelines for GitHub Copilot coding agents. This file helps ensure that AI-generated contributions follow the project’s formatting standards, coding conventions, and documentation practices.</p>
 <p>For a Quarto-based repository like this one, the copilot instructions file typically specifies:</p>
@@ -4321,8 +4406,8 @@ while the selected main agent model is BYOK.</code></pre>
 </ul>
 <p>By having these instructions in <code>.github/copilot-instructions.md</code>, you ensure that coding agents produce consistent, high-quality contributions that align with the project’s established practices. This reduces the review burden and helps maintain consistency across all contributions, whether made by humans or AI assistants.</p>
 <p>See this repository’s own <a href="https://github.com/Morrison-Lab/wai/blob/main/.github/copilot-instructions.md"><code>.github/copilot-instructions.md</code></a> for a working example.</p>
-</section></section><section><section id="using-copilot-review-before-human-review" class="title-slide slide level1 center" data-number="41"><h1>
-<span class="header-section-number">41</span> Using Copilot Review Before Human Review</h1>
+</section></section><section><section id="using-copilot-review-before-human-review" class="title-slide slide level1 center" data-number="42"><h1>
+<span class="header-section-number">42</span> Using Copilot Review Before Human Review</h1>
 
 </section><section class="slide level2 scrollable"><p>Before requesting review from other humans, <strong>always have Copilot review your pull request first</strong>—even if Copilot created the PR itself. AI review provides fast, thorough feedback that helps catch issues before involving human reviewers, saving everyone time and improving code quality.</p>
 <p><strong>Why review with Copilot first:</strong></p>
@@ -4371,8 +4456,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Even if you’re highly experienced, treating Copilot review as a required pre-review step helps maintain code quality and makes the best use of everyone’s time. The few minutes spent on Copilot review often save hours of back-and-forth with human reviewers.</p>
 <p><strong>For human reviewers:</strong></p>
 <p>When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.</p>
-</section></section><section><section id="reviewing-a-copilot-pr-you-didnt-create" class="title-slide slide level1 center" data-number="42"><h1>
-<span class="header-section-number">42</span> Reviewing a Copilot PR You Didn’t Create</h1>
+</section></section><section><section id="reviewing-a-copilot-pr-you-didnt-create" class="title-slide slide level1 center" data-number="43"><h1>
+<span class="header-section-number">43</span> Reviewing a Copilot PR You Didn’t Create</h1>
 
 </section><section class="slide level2 scrollable"><p>When reviewing a pull request where someone else prompted Copilot to make changes, follow these guidelines to avoid confusion and ensure smooth collaboration:</p>
 <p><strong>Understanding PR roles:</strong></p>
@@ -4471,8 +4556,8 @@ while the selected main agent model is BYOK.</code></pre>
 <li>The team should update the PR’s “Assignees” field and comments or description to reflect the current PR manager</li>
 </ol>
 <p>This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.</p>
-</section></section><section><section id="sec-ai-vscode-agent-sessions" class="title-slide slide level1 center" data-number="43"><h1>
-<span class="header-section-number">43</span> Agent Sessions and Handoff in Visual Studio Code</h1>
+</section></section><section><section id="sec-ai-vscode-agent-sessions" class="title-slide slide level1 center" data-number="44"><h1>
+<span class="header-section-number">44</span> Agent Sessions and Handoff in Visual Studio Code</h1>
 
 </section><section class="slide level2"><p>In Visual Studio Code, interactions with AI coding assistants are structured around <a href="https://code.visualstudio.com/docs/agents/concepts/sessions">Agent Sessions and Handoff</a> (measured 2026-08-31). Understanding how sessions organize work and transfer state across tools is essential for managing multi-step agent workflows.</p>
 <h4 id="anatomy-of-an-agent-session">Anatomy of an agent session</h4>
@@ -4506,8 +4591,8 @@ while the selected main agent model is BYOK.</code></pre>
 <strong>Plan to implementation</strong>: Hand off a high-level architectural plan or task specification directly to an implementation session to generate code.</li>
 <li>
 <strong>Continue in the cloud</strong>: Hand off a local session to run in a cloud-hosted agent environment (such as background tasks leading to pull requests), freeing local editor resources while the agent executes in the background.</li>
-</ul></section></section><section><section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="44"><h1>
-<span class="header-section-number">44</span> Installing Claude Code on Windows</h1>
+</ul></section></section><section><section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="45"><h1>
+<span class="header-section-number">45</span> Installing Claude Code on Windows</h1>
 
 </section><section class="slide level2 scrollable"><p><a href="https://www.anthropic.com/claude-code">Claude Code</a> is Anthropic’s command-line coding agent. Installing it on Windows works well, but a few platform-specific pitfalls can cost you hours if you don’t know about them. These notes capture a setup that works, and the gotchas to watch for.</p>
 <div class="callout callout-note callout-titled callout-style-default">
@@ -4597,8 +4682,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Open a <strong>new</strong> terminal window (so it picks up your updated config) and run:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb71"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb71-1"><a aria-label="1"></a><span class="ex">claude</span> <span class="at">--version</span>      <span class="co"># prints the installed version number</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If you get a version number, you’re ready to run <code>claude</code> in your project directory. If you get <code>command not found</code>, re-check the two <code>PATH</code> issues above: the directory must be on <code>PATH</code>, and you must <code>rehash</code> (or open a fresh window) after changing it.</p>
-</section></section><section><section id="sec-ai-mcp-server-setup" class="title-slide slide level1 center" data-number="45"><h1>
-<span class="header-section-number">45</span> Setting up MCP servers</h1>
+</section></section><section><section id="sec-ai-mcp-server-setup" class="title-slide slide level1 center" data-number="46"><h1>
+<span class="header-section-number">46</span> Setting up MCP servers</h1>
 
 </section><section class="slide level2"><p>The <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> (MCP) is how a harness gains typed access to external systems. Configuring a server is usually a one-line command. Diagnosing one that <em>silently</em> isn’t working is the part worth writing down, because the common failure mode produces no error at all — only a quiet absence of tools you assumed were there.</p>
 <div class="callout callout-note callout-titled callout-style-default">
@@ -4702,8 +4787,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <p><a href="https://www.granola.ai/blog/granola-mcp">Granola MCP</a> is the other side of that same pattern: it is not a code-host server but a meeting-context server. Granola is an AI notepad for back-to-back meetings; its MCP exposes your meeting notes to any MCP client.</p>
 <p>The gap it closes is the copy-paste loop: without it, using something you discussed in a meeting while working in Claude, ChatGPT, or Cursor means finding the note, copying the relevant bit, and pasting it in. With the MCP connected, that context rides with you. Use it to turn a standup into Linear tickets, scaffold a feature from what was agreed, or draft a follow-up from what was actually said.</p>
 <p>It connects through the standard <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> (MCP) as a remote server at <code>https://mcp.granola.ai/mcp</code>. For Claude or ChatGPT, enable it from the app’s connector/app settings and authenticate; for Cursor, Claude Code, or any other MCP client that supports a manual URL, register that URL directly (see <a href="https://www.granola.ai/blog/granola-mcp">the announcement</a> for per-client steps). On an Enterprise plan it is an early-access beta, off by default until an admin enables it.</p>
-</section></section><section><section id="sec-ai-antigravity-python-sdk" class="title-slide slide level1 center" data-number="46"><h1>
-<span class="header-section-number">46</span> Google Antigravity Python SDK</h1>
+</section></section><section><section id="sec-ai-antigravity-python-sdk" class="title-slide slide level1 center" data-number="47"><h1>
+<span class="header-section-number">47</span> Google Antigravity Python SDK</h1>
 
 </section><section class="slide level2"><p>The <a href="https://github.com/google-antigravity/antigravity-sdk-python"><code>google-antigravity/antigravity-sdk-python</code></a> repository provides the official Python SDK for building and automating agents on the Google Antigravity agent runtime (measured 2026-08-31; distributed via PyPI as <code>google-antigravity</code>).</p>
 <h4 id="architecture-and-runtime-model">Architecture and runtime model</h4>
@@ -4760,8 +4845,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <td>Managed local service</td>
 </tr>
 </tbody>
-</table></section></section><section><section id="sec-ai-magic-context" class="title-slide slide level1 center" data-number="47"><h1>
-<span class="header-section-number">47</span> Unbounded Context with Magic Context</h1>
+</table></section></section><section><section id="sec-ai-magic-context" class="title-slide slide level1 center" data-number="48"><h1>
+<span class="header-section-number">48</span> Unbounded Context with Magic Context</h1>
 
 </section><section class="slide level2"><p><a href="https://github.com/cortexkit/magic-context"><code>cortexkit/magic-context</code></a> is an open-source self-managing memory engine designed to provide unbounded context for AI coding agents (measured 2026-08-31). It operates as a background memory subsystem—often described as a “hippocampus for coding agents”—that extracts, consolidates, and retrieves long-term repository state without pausing the active coding turn.</p>
 <h4 id="core-architecture-and-agent-roles">Core architecture and agent roles</h4>
@@ -4783,8 +4868,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <strong>Deferred background extraction</strong>: Memory analysis and summarization tasks are deferred to idle windows or subagent threads, preventing token churn and latency spikes during high-tempo coding loops.</li>
 <li>
 <strong>Cross-session persistence</strong>: Extracted knowledge persists in lightweight local stores across IDE restarts, enabling coding agents to resume work with full institutional memory of past decisions.</li>
-</ul></section></section><section><section id="sec-ai-conductor-extension" class="title-slide slide level1 center" data-number="48"><h1>
-<span class="header-section-number">48</span> Spec-Driven Development with Conductor</h1>
+</ul></section></section><section><section id="sec-ai-conductor-extension" class="title-slide slide level1 center" data-number="49"><h1>
+<span class="header-section-number">49</span> Spec-Driven Development with Conductor</h1>
 
 </section><section class="slide level2"><p><a href="https://github.com/gemini-cli-extensions/conductor"><code>gemini-cli-extensions/conductor</code></a> is an open-source plugin for AI coding agents (including Google Antigravity and Claude Code) that implements <strong>Spec-Driven Development</strong> (measured 2026-08-31). Rather than relying on conversational chat history that degrades over extended sessions, Conductor anchors agent behavior in structured, version-controlled Markdown artifacts stored directly in the repository, providing persistent context across multi-session workflows.</p>
 <h4 id="core-workflow-phases">Core workflow phases</h4>
@@ -4834,10 +4919,10 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <td>Any agent resumes from the checked-in track state</td>
 </tr>
 </tbody>
-</table></section></section><section><section id="sec-ai-plugins-deep-dive" class="title-slide slide level1 center" data-number="49"><h1>
-<span class="header-section-number">49</span> Anatomy of Agent Plugins</h1>
+</table></section></section><section><section id="sec-ai-plugins-deep-dive" class="title-slide slide level1 center" data-number="50"><h1>
+<span class="header-section-number">50</span> Anatomy of Agent Plugins</h1>
 
-</section><section class="slide level2"><p>In modern AI coding assistants (such as Google Antigravity and Claude Code; see <a href="#/sec-ai-harness-landscape" class="quarto-xref">Section&nbsp;9</a> on the sunset of legacy Gemini CLI and its folding into Antigravity CLI), <strong>plugins</strong> serve as the top-level packaging and distribution layer for agent capabilities (measured 2026-09-01). While individual skills or Model Context Protocol (MCP) servers extend specific tasks, a plugin aggregates multiple extensibility primitives into a unified, version-controlled bundle.</p>
+</section><section class="slide level2"><p>In modern AI coding assistants (such as Google Antigravity and Claude Code; see <a href="#/sec-ai-harness-landscape" class="quarto-xref">Section&nbsp;10</a> on the sunset of legacy Gemini CLI and its folding into Antigravity CLI), <strong>plugins</strong> serve as the top-level packaging and distribution layer for agent capabilities (measured 2026-09-01). While individual skills or Model Context Protocol (MCP) servers extend specific tasks, a plugin aggregates multiple extensibility primitives into a unified, version-controlled bundle.</p>
 <h4 id="anatomy-of-a-plugin-bundle">Anatomy of a plugin bundle</h4>
 <p>A plugin manifest (such as <code>plugin.json</code> or <code>.claude-plugin/plugin.json</code>) orchestrates four distinct architectural components:</p>
 <ul>
@@ -4901,8 +4986,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <strong>On-demand skill activation</strong>: Agents search skill catalogs dynamically when relevant keywords appear, rather than loading the entire skill directory into the initial system prompt.</li>
 <li>
 <strong>Prefix caching preservation</strong>: Static plugin definitions are placed at the root of prompt structures so provider-level prompt caching remains undisturbed during multi-turn sessions.</li>
-</ul></section></section><section><section id="sec-ai-oh-my-opencode" class="title-slide slide level1 center" data-number="50"><h1>
-<span class="header-section-number">50</span> Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent</h1>
+</ul></section></section><section><section id="sec-ai-oh-my-opencode" class="title-slide slide level1 center" data-number="51"><h1>
+<span class="header-section-number">51</span> Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent</h1>
 
 </section><section class="slide level2"><p><a href="https://github.com/code-yeongyu/oh-my-openagent"><code>code-yeongyu/oh-my-openagent</code></a> (originally published as <strong>Oh My OpenCode</strong> or <code>omo</code>, with community forks such as <a href="https://github.com/opensoft/oh-my-opencode"><code>opensoft/oh-my-opencode</code></a>) is an open-source multi-agent orchestration framework and plugin for AI coding agent harnesses (including OpenCode and OpenAI Codex CLI) with over 65,000 GitHub stars (measured 2026-09-01). Inspired by modular terminal configuration frameworks (such as <a href="https://ohmyz.sh/">Oh My Zsh</a>), it expands single-agent coding into a specialized multi-agent system with automated model routing and background task execution.</p>
 <h4 id="hub-and-spoke-agent-architecture">Hub-and-spoke agent architecture</h4>
@@ -4971,8 +5056,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <td>Curated bundle of tools, agents, and MCP integrations</td>
 </tr>
 </tbody>
-</table></section></section><section><section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="51"><h1>
-<span class="header-section-number">51</span> Managing Gemini API Spend and Cost Optimization</h1>
+</table></section></section><section><section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="52"><h1>
+<span class="header-section-number">52</span> Managing Gemini API Spend and Cost Optimization</h1>
 
 </section><section class="slide level2 scrollable"><p>This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.</p>
 <h4 id="identifying-paused-projects-project-numbers-vs.-friendly-names">Identifying Paused Projects (Project Numbers vs.&nbsp;Friendly Names)</h4>
@@ -5013,8 +5098,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <strong>Use the Batch API for Non-Realtime Tasks</strong>: For offline batch processing, evaluation suites, or background doc updates, submit requests via the Gemini Batch API to receive a 50% discount on input and output tokens.</li>
 <li>
 <strong>GitHub UI Diff Collapsing</strong>: Mark dependency lockfiles (<code>*.lock</code>, <code>package-lock.json</code>, <code>yarn.lock</code>, <code>renv.lock</code>) and generated build artifacts as <code>linguist-generated=true</code> in <code>.gitattributes</code> to collapse them in GitHub’s web diff view and exclude them from repository language statistics.</li>
-</ul></section></section><section><section id="sec-ai-math-and-statistics" class="title-slide slide level1 center" data-number="52"><h1>
-<span class="header-section-number">52</span> AI for Mathematics and Statistics</h1>
+</ul></section></section><section><section id="sec-ai-math-and-statistics" class="title-slide slide level1 center" data-number="53"><h1>
+<span class="header-section-number">53</span> AI for Mathematics and Statistics</h1>
 
 </section><section class="slide level2 scrollable"><p>The landscape of AI for mathematics and statistics has evolved rapidly from token prediction to test-time search and verified reasoning. Modern reasoning models combine deep chain-of-thought generation with symbolic computing tools, formal theorem provers, and search algorithms to solve complex analytical and statistical problems.</p>
 <h4 id="sec-ai-math-slms">Search-Time Compute and Small Language Models</h4>
