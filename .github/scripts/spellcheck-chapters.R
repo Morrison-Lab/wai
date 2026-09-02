@@ -12,7 +12,8 @@
 # the include path on hyphens, so every kebab-case filename segment would
 # otherwise be reported as a misspelling of the prose. Bold markers are
 # dropped too, so an initial-letter emphasis such as **A**ddress is checked
-# as the word it renders as rather than as its two halves.
+# as the word it renders as rather than as its two halves, and so is LaTeX
+# math ($...$ and $$...$$), whose commands hunspell would read as words.
 #
 # Exit status is 1 when any word is misspelled, else 0.
 
@@ -42,7 +43,10 @@ staged <- vapply(files, function(f) {
   dir.create(dirname(out), recursive = TRUE, showWarnings = FALSE)
   lines <- readLines(f, warn = FALSE)
   lines <- gsub("**", "", lines[!grepl(shortcode, lines)], fixed = TRUE)
-  writeLines(lines, out)
+  text <- paste(lines, collapse = "\n")
+  text <- gsub("(?s)\\$\\$.*?\\$\\$", "", text, perl = TRUE)
+  text <- gsub("\\$[^$\n]+\\$", "", text, perl = TRUE)
+  writeLines(text, out)
   out
 }, character(1))
 
