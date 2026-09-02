@@ -5,11 +5,14 @@
 # spelling::spell_check_package(), which reads the package files
 # (README, DESCRIPTION, man/, vignettes/) and never reaches chapters/
 # (Morrison-Lab/wai#177). This script covers the pages the package
-# check cannot see: index.qmd, appendix-*.qmd, and chapters/**/*.qmd.
+# check cannot see: index.qmd, appendix-*.qmd, chapters/**/*.qmd, and the
+# shared/**/*.md fragments those chapters include.
 #
 # `{{< include ... >}}` lines are dropped before checking: hunspell splits
 # the include path on hyphens, so every kebab-case filename segment would
-# otherwise be reported as a misspelling of the prose.
+# otherwise be reported as a misspelling of the prose. Bold markers are
+# dropped too, so an initial-letter emphasis such as **A**ddress is checked
+# as the word it renders as rather than as its two halves.
 #
 # Exit status is the number of misspelled words, matching the action.
 
@@ -18,8 +21,19 @@ files <- c(
   list.files(".", pattern = "^appendix.*[.]qmd$"),
   list.files(
     "chapters", pattern = "[.]qmd$", recursive = TRUE, full.names = TRUE
-  )
+  ),
+  list.files("shared", pattern = "[.]md$", recursive = TRUE, full.names = TRUE)
 )
+
+# spelling reports each hit as basename:line, so two files sharing a
+# basename would be indistinguishable in the report.
+duplicated_names <- unique(basename(files)[duplicated(basename(files))])
+if (length(duplicated_names) > 0) {
+  stop(
+    "Duplicate file names would make the report ambiguous: ",
+    paste(duplicated_names, collapse = ", ")
+  )
+}
 
 staging <- file.path(tempdir(), "spellcheck-chapters")
 shortcode <- "^[[:space:]]*\\{\\{<.*>\\}\\}[[:space:]]*$"
@@ -27,15 +41,13 @@ staged <- vapply(files, function(f) {
   out <- file.path(staging, f)
   dir.create(dirname(out), recursive = TRUE, showWarnings = FALSE)
   lines <- readLines(f, warn = FALSE)
-  writeLines(lines[!grepl(shortcode, lines)], out)
+  lines <- gsub("**", "", lines[!grepl(shortcode, lines)], fixed = TRUE)
+  writeLines(lines, out)
   out
 }, character(1))
 
 wordlist <- readLines("inst/WORDLIST", warn = FALSE)
 result <- spelling::spell_check_files(staged, ignore = wordlist)
-result$found <- lapply(
-  result$found, sub, pattern = paste0("^", staging, "/"), replacement = ""
-)
 print(result)
 
 n <- nrow(result)

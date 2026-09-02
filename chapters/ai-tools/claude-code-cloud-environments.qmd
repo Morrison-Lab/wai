@@ -1,7 +1,7 @@
 [Claude Code](https://www.anthropic.com/claude-code)
 is a CLI coding agent
 that can also run tasks on Anthropic-managed cloud infrastructure---
-either from the web at [`claude.ai/code`](https://claude.ai/code)
+either from the web at [claude.ai/code](https://claude.ai/code)
 ("Claude Code on the web"),
 or from the terminal by adding the `--remote` flag
 to move a session into the cloud.
@@ -36,7 +36,7 @@ for `--remote` runs:
 
 `/remote-env` only *selects* the default;
 to add, edit, or archive the environments themselves,
-use the web interface at [`claude.ai/code`](https://claude.ai/code).
+use the web interface at [claude.ai/code](https://claude.ai/code).
 Because `/remote-env` opens an interactive panel,
 run it from an interactive `claude` terminal session.
 

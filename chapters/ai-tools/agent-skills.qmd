@@ -67,6 +67,6 @@ and not always the right one.
 That section also explains why Claude Code's custom slash commands are now
 skills themselves.
 
-The [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config) repository
+The [Morrison-Lab/ai-config](https://github.com/Morrison-Lab/ai-config) repository
 contains an example of personal Claude Code configuration,
 including user-level skills, hooks, and subagents, synced across machines via Git.
