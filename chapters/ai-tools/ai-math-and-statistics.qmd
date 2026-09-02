@@ -35,9 +35,9 @@ reasoning capability across varying levels of abstraction (cataloged in director
 
 | Benchmark Tier | Target Competencies | Key Benchmarks |
 |---|---|---|
-| **Grade School & High School** | Arithmetic, multi-step word problems, basic algebra | GSM8K, SVAMP, MATH-500 |
+| **Grade School & High School** | Arithmetic, multi-step word problems, basic algebra | `GSM8K`, SVAMP, MATH-500 |
 | **Competition & Olympiad** | Non-routine problem solving, combinatorics, number theory | AMC 10/12, AIME, OlympiadBench, Putnam |
-| **Formal Theorem Proving** | Syntactically verifiable proofs in formal proof assistants | [Lean 4](https://lean-lang.org/), Isabelle, Coq, MiniF2F |
+| **Formal Theorem Proving** | Syntactically verifiable proofs in formal proof assistants | [Lean 4](https://lean-lang.org/), Isabelle, Coq, `MiniF2F` |
 
 Frontier reasoning models (including OpenAI o1/o3-mini, Claude 3.7 Sonnet with
 extended thinking, DeepSeek-R1, and specialized open weights like Qwen2.5-Math,
