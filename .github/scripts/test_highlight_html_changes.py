@@ -8,7 +8,9 @@ The fixtures pin the behaviour the #180 optimization must preserve: an
 unchanged element is left alone, a changed one is highlighted inline, an
 unmatched one is marked as added, an element whose best match sits exactly
 on the minimum similarity threshold is left alone, and a duplicated old
-element serves every identical new one.
+element serves every identical new one. A second class pins
+find_changed_sections's word-level similarity: the 0.95 shortcut, the diff
+lines below it, and the missing-old-page case.
 """
 
 import importlib.util
@@ -17,6 +19,8 @@ import unittest
 
 SCRIPT = pathlib.Path(__file__).with_name("highlight-html-changes.py")
 spec = importlib.util.spec_from_file_location("highlight_html_changes", SCRIPT)
+if spec is None or spec.loader is None:
+    raise ImportError(f"cannot load the script under test from {SCRIPT}")
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
@@ -78,6 +82,29 @@ class HighlightChangedElementsTest(unittest.TestCase):
         html, changes = highlight(old, new)
         self.assertEqual(changes, 2)
         self.assertEqual(html.count("preview-element-added"), 1)
+
+
+class FindChangedSectionsTest(unittest.TestCase):
+    def test_nearly_identical_page_takes_the_shortcut(self):
+        words = " ".join(f"word{i}" for i in range(200))
+        old = page(f"<p>{words}</p>")
+        new = page(f"<p>{words.replace('word7 ', 'word7 extra ')}</p>")
+        differ = module.HTMLDiffer(".", None)
+        diff_lines, similarity = differ.find_changed_sections(old, new)
+        self.assertIsNone(diff_lines)
+        self.assertGreater(similarity, 0.95)
+
+    def test_rewritten_page_reports_diff_lines(self):
+        old = page("<p>" + " ".join(f"alpha{i}" for i in range(50)) + "</p>")
+        new = page("<p>" + " ".join(f"beta{i}" for i in range(50)) + "</p>")
+        differ = module.HTMLDiffer(".", None)
+        diff_lines, similarity = differ.find_changed_sections(old, new)
+        self.assertIsNotNone(diff_lines)
+        self.assertLess(similarity, 0.95)
+
+    def test_missing_old_page_reports_nothing(self):
+        differ = module.HTMLDiffer(".", None)
+        self.assertEqual(differ.find_changed_sections("", page("<p>x</p>")), (None, 0))
 
 
 if __name__ == "__main__":
