@@ -4,13 +4,13 @@ Code
 
 Published
 
-Last modified: 2026-09-01 19:43:54 (PDT)
+Last modified: 2026-09-01 19:50:25 (PDT)
 
 This chapter collects notes on language models applied to mathematical and statistical reasoning, which is the part of an AI assistant’s work a statistics lab leans on most when a derivation, a proof step, or a numerical check is at stake.
 
 > **WARNING:**
 >
-> The resources and benchmark scores reviewed here change quickly. Entry counts, model rankings, and benchmark results quoted below were measured in 2026-09 and will drift. Re-check primary sources before relying on specific numbers.
+> The resources and benchmark scores reviewed here change quickly. Entry counts, model rankings, and benchmark results quoted below were measured on 2026-09-01 and will drift. Re-check primary sources before relying on specific numbers.
 
 # 1 Search-Time Compute and Verified Reasoning
 
@@ -33,11 +33,11 @@ The mathematical AI ecosystem utilizes a tiered benchmark hierarchy to assess re
 | **Competition & University** | Non-routine problem solving, combinatorics, number theory | `AMC 10/12`, `AIME`, `OlympiadBench`, `Putnam`, `MMLU-Pro`, `GPQA` |
 | **Formal Theorem Proving** | Syntactically verifiable proofs in formal proof assistants | [Lean 4](https://lean-lang.org/), Isabelle, Coq, `MiniF2F`, `ProofNet` |
 
-Frontier reasoning models (including OpenAI o1/o3-mini, Claude 3.7 Sonnet / Sonnet 4.5 with extended thinking, DeepSeek-R1, and specialized open weights like `Qwen2.5-Math`, `QwQ`, and `NuminaMath`) achieve high scores on competition-level examinations by spending adaptive reasoning compute before generating final answers.
+Frontier reasoning models (including OpenAI o1/o3-mini, Claude 3.7 Sonnet or Claude Sonnet 4.5 with extended thinking, DeepSeek-R1, and specialized open weights like `Qwen2.5-Math`, `QwQ`, and `NuminaMath`) achieve high scores on competition-level examinations by spending adaptive reasoning compute before generating final answers.
 
 # 3 Curated Reading List: Awesome-Math-LLM
 
-[`doublelei/Awesome-Math-LLM`](https://github.com/doublelei/Awesome-Math-LLM) is an MIT-licensed, community-curated directory of resources on large language models for mathematics: surveys, techniques, models, benchmarks, and tools. The notes below reflect its catalog as surveyed in 2026-09-01, when it carried over 310 papers and code repositories.
+[`doublelei/Awesome-Math-LLM`](https://github.com/doublelei/Awesome-Math-LLM) is an MIT-licensed, community-curated directory of resources on large language models for mathematics: surveys, techniques, models, benchmarks, and tools. The notes below reflect its catalog as surveyed on 2026-09-01, when it carried over 310 papers and code repositories.
 
 ## 3.1 What it covers
 
@@ -51,7 +51,13 @@ The repository is organized into seven core areas:
 - **Datasets and benchmarks**, spanning elementary arithmetic (`GSM8K`), competition problem sets (`MATH`, `AIME`), and formal verification corpora (`MiniF2F`, `ProofNet`).
 - **Interactive Provers and Tooling**: pairing evaluation frameworks (`OpenCompass`) with formal proof assistants ([Lean 4](https://lean-lang.org/), Isabelle, Coq).
 
-## 3.2 Reading Guidance for Research Labs
+## 3.2 What to read with care
+
+- The “Recent Highlights” block at the top carries the maintainer’s own note that its dates “appear to be futuristic”, so treat a date there as unreliable until checked against the primary paper.
+- Several entries appear under more than one section (`AlphaGeometry` under both geometry and competition math, for instance), which is deliberate cross-listing rather than an error.
+- The list records what exists rather than ranking what works: it makes no qualitative recommendations, so the benchmark section is the place to start when evaluating model accuracy.
+
+## 3.3 Reading Guidance for Research Labs
 
 For a computational and statistics laboratory, the repository serves as an architectural index:
 
