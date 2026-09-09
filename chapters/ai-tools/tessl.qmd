@@ -1,0 +1,163 @@
+[Tessl](https://tessl.io/) is a commercial platform for managing
+[Agent Skills](https://agentskills.io/home)
+(see @sec-ai-agent-skills for what a skill is)
+the way `npm` or `pip` manage code dependencies:
+a searchable registry of skills and plugins,
+a `tessl` command-line tool that installs them into a project,
+and a hosted service that scores each skill for quality and security
+and measures whether it changes what an agent produces
+[@tessl_docs_overview].
+The notes below reflect the Tessl website and documentation
+as read on 2026-09-09.
+
+#### What it is
+
+Tessl's home page describes it as an "Agent Enablement Platform"
+and pitches it at enterprise teams
+whose developers have accumulated many skills with no inventory,
+no version control, and no security review [@tessl_home].
+The documentation lists six components [@tessl_docs_overview]:
+
+- a **registry and package manager**
+  for discovering, installing, versioning, and rolling back skills and plugins
+- **governance**: security scanning powered by Snyk,
+  role-based access control,
+  install and publish policies, and an audit trail
+- **evals**, which run an agent on a task with and without a skill
+  and compare the results
+- **observability** of where skills activate across agent sessions
+- an **inventory** that scans a GitHub organization
+  and maps every `SKILL.md` across every repository
+- the **Tessl Agent**, a conversational agent for driving the platform
+  (in open beta)
+
+The registry page counts more than 3,000 searchable skills,
+including Anthropic's own `docx` and `frontend-design` skills
+and skills published by OpenAI, Google, GitHub, and HashiCorp,
+each shown with a quality score,
+an "agent success vs baseline" multiplier from the evals,
+and a security-scan result (measured 2026-09-09) [@tessl_registry].
+
+The pages fetched for this review do not describe spec-driven development:
+apart from one blog article linked from the home page,
+the current site is about managing skills,
+not about generating code from specifications.
+
+#### Relation to the Agent Skills standard
+
+Tessl does not define its own skill format.
+A Tessl skill is the same `SKILL.md` folder the Agent Skills specification defines,
+and Tessl's conformance review checks a published skill
+against that specification [@tessl_docs_faqs].
+What Tessl adds is a lifecycle around the standard:
+a manifest (`tessl.json`) that records which skills a project depends on,
+versioned publishing with `--bump patch|minor|major`,
+and `tessl outdated` and `tessl update` for keeping dependencies current
+[@tessl_docs_package_manager].
+
+Tessl distinguishes two kinds of context [@tessl_docs_core_concepts]:
+
+- **rules**, which apply to every task
+  (the role instruction files play in @sec-ai-customization)
+- **skills**, which load only when the task matches their description
+
+A **plugin** bundles skills and rules together,
+and can also carry MCP servers and hooks,
+so it is roughly the same unit as a Claude Code plugin.
+
+The registry and the Posit skill collection in @sec-ai-posit-skills
+are two different distribution routes for the same kind of artifact.
+Posit publishes its skills as a Git repository
+that the `skills` CLI or Claude Code's plugin marketplace installs from;
+Tessl installs from a GitHub repository URL as well as from its own registry
+(the documentation's example is `tessl install https://github.com/anthropics/skills`),
+and either way writes the skill into the agent's skills directory.
+
+#### Installing and using it
+
+The CLI installs natively (`curl -fsSL https://get.tessl.io | sh`),
+through Homebrew, or on Windows through `winget install tessl.tessl`;
+the `npm` package is deprecated [@tessl_docs_installation].
+It needs Node.js 22.17 or later,
+and by default it checks for updates every three hours
+and installs them silently.
+Logging in (`tessl login`) uses a GitHub or Google account
+and is optional for searching and installing.
+
+In a project, `tessl init` detects the coding agents present
+and configures each of them.
+The supported list is Claude Code, Cursor, Codex, Gemini CLI, Antigravity,
+GitHub Copilot CLI, and GitHub Copilot for VS Code,
+with manual setup documented for other MCP-capable agents
+such as OpenCode and OpenClaw [@tessl_docs_supported_platforms].
+`tessl search "code review"` searches the registry by meaning
+rather than by keyword,
+and `tessl install <workspace>/<skill>` installs a skill
+into `.tessl/plugins/` and links it into each agent's directory,
+so for Claude Code the skill appears under `.claude/skills/`
+[@tessl_docs_faqs].
+Adding `--global` installs into `~/.tessl/` for every project instead.
+On Windows the links are directory junctions,
+so moving the project folder requires running `tessl install` again.
+
+Before installing a third-party skill,
+`tessl review run security ./path-to-skill` scans it
+and returns a Snyk severity from `LOW` to `CRITICAL`;
+`--fail-on high` makes the command exit non-zero
+for use in CI [@tessl_docs_security].
+Installing from the registry warns on critical and high findings
+but leaves the decision to the user,
+unless a workspace administrator has set an install policy that blocks them.
+
+#### Pricing
+
+Tessl charges by usage credits rather than by seat.
+Publishing and installing skills and plugins is always free;
+credits pay for reviews, evals, and Tessl Agent sessions,
+and frontier models consume credits faster than the defaults.
+The tiers as of 2026-09-09 [@tessl_pricing]:
+
+- **Free**: 1,000 credits per month, one workspace,
+  free best-practice reviews on publicly published plugins
+- **Team**: $100 per month for 5,000 credits, top-ups, spending limits,
+  and role management within a workspace
+- **Enterprise**: custom pricing with multiple workspaces,
+  SAML single sign-on, install and publish controls,
+  mandatory skills, and bring-your-own-key models
+
+The CLI collects telemetry by default,
+and the documentation says this may include conversations,
+code snippets, and file contents;
+it can be turned off in the CLI configuration [@tessl_docs_usage_data].
+Tessl also reserves the right to train on data from free-tier usage,
+though it states it has not done so.
+
+#### Useful to us? Marginally, for vetting skills; not as a package manager
+
+The lab's skills already live in
+[Morrison-Lab/ai-config](https://github.com/Morrison-Lab/ai-config),
+where they are version-controlled, reviewed in pull requests,
+and installed as a Claude Code plugin,
+and the Posit skills the lab uses are copied into that repository
+(see @sec-ai-posit-skills).
+Tessl's package-manager features solve a problem the lab does not have:
+one repository is the single source of skills,
+so there is no sprawl to inventory,
+and the governance, role, and policy features are built for organizations
+with many teams rather than one.
+Adopting the CLI would add a Node.js dependency,
+a `tessl.json` manifest and `.tessl/` directory to each project,
+and telemetry that includes code by default.
+
+Two parts are worth using without adopting the rest.
+The registry is a convenient place to browse public skills
+and see a security-scan result and an eval score before copying one,
+and the free `tessl review run security` scan
+is a quick check on a skill from an unfamiliar source
+before it goes into `ai-config`.
+The eval model, running the same task with and without a skill
+and comparing the results,
+is the only part of Tessl the lab has no equivalent for,
+and it is worth keeping in mind
+if the lab ever wants evidence that a skill helps
+rather than an impression that it does.
