@@ -169,6 +169,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/when-to-use-coding-agent.qmd >}}
 
+# Deep Research Modes {#sec-ai-research-modes}
+
+{{< include ai-tools/research-modes.qmd >}}
+
 # Editing with `.docx` files
 
 {{< include ai-tools/editing-with-docx-files.qmd >}}
