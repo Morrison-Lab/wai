@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-09 04:09:28 (PDT)
+Last modified: 2026-09-09 09:02:25 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -801,7 +801,7 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 >
 > See [Section 18](#sec-ai-best-practices) for more details on workflow file security.
 
-**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 39](#sec-ai-when-to-use) for more guidance.
+**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 40](#sec-ai-when-to-use) for more guidance.
 
 #### Scenario 3: Uncertain Which Scenario Applies
 
@@ -832,7 +832,7 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 
 - See the [UCD-SERG Lab Manual’s continuous integration chapter](https://ucd-serg.github.io/lab-manual/continuous-integration.html) for setting up GitHub Actions workflows
 - See [Section 18](#sec-ai-best-practices) and [Section 17](#sec-ai-benefits-hazards) for security considerations with workflow files
-- See [Section 39](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
+- See [Section 40](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
 - See the [GitHub Actions documentation](https://docs.github.com/en/actions) for workflow syntax and troubleshooting
 
 # 17 Benefits and Hazards
@@ -2725,7 +2725,7 @@ Rules are written as `Tool(specifier)` — for example `Bash(npm run test *)`, `
 
 Everything above changes what the agent *knows or must do*. An [MCP](https://modelcontextprotocol.io/) server changes what it *can reach*: typed tools, data resources, and reusable templates exposed over a standard protocol. The specification is explicit that it “does not dictate how AI applications use LLMs or manage the provided context.”
 
-So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. [Section 46](#sec-ai-mcp-server-setup) covers configuration and its failure modes.
+So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. [Section 47](#sec-ai-mcp-server-setup) covers configuration and its failure modes.
 
 #### Choosing
 
@@ -3058,7 +3058,94 @@ Gemini Code Assist enforces several deliberate boundaries on review scope:
 | **Interactive mode** | Built-in `/gemini` comment tags | Configurable via `@claude` or Action triggers |
 | **Credential location** | Google Cloud IAM & Developer Connect token | GitHub Secrets or Workload Identity Federation |
 
-# 38 How a Session Learns a PR Changed
+# 38 PR-Agent: Open-Source Pull-Request Review Bot
+
+[PR-Agent](https://github.com/The-PR-Agent/pr-agent) ([The PR Agent 2026h](#ref-pr_agent_repo)) is an open-source pull-request review bot. It runs one large-language-model call per command, posts the result as a pull-request comment or review, and works against several git forges with any model that LiteLLM can reach. All claims below were checked against the repository at `main`, its release list, and the documentation site at <https://docs.pr-agent.ai/> (measured 2026-09-09; the latest release was `v0.45.0`, published 2026-09-05).
+
+#### History and ownership
+
+PR-Agent began at CodiumAI, later renamed Qodo, and its hosted enterprise edition was sold as Qodo Merge. In 2026 Qodo donated the open-source project to the community. The repository now lives in the `The-PR-Agent` GitHub organization, has an external maintainer, and its README says it “is currently in the process of being donated to an open-source foundation” ([The PR Agent 2026h](#ref-pr_agent_repo)). Qodo Merge was rebranded as Qodo 2.0, a separate hosted product.
+
+The README is emphatic that the two are not the same thing: the repository “is not the Qodo offering for open-source projects”, and PR-Agent is “a community-maintained legacy project of Qodo” ([The PR Agent 2026h](#ref-pr_agent_repo)). Qodo remains the project’s gold sponsor. Read the documentation with that split in mind: pages that describe a hosted app or a free tier for open-source projects are describing Qodo’s product, while PR-Agent itself is software you run.
+
+The Docker images moved with the ownership. Releases `0.34.2` and later are published under `pragent/pr-agent`; the older `codiumai/pr-agent` namespace is a frozen archive ([The PR Agent 2026h](#ref-pr_agent_repo)).
+
+#### Commands
+
+Every command is a slash comment on the pull request or a subcommand of the `pr-agent` command-line tool. The four core commands ([The PR Agent 2026a](#ref-pr_agent_docs)):
+
+- `/describe` generates a title, type, summary, code walk-through, and labels.
+- `/review` generates a review covering possible issues, security concerns, tests, and an estimate of review effort. The review can also rate risk, recommend whether to merge, list the files a human should read first, and check the change against a linked GitHub or Jira ticket ([The PR Agent 2026g](#ref-pr_agent_review)).
+- `/improve` posts actionable code suggestions, which the forge can render as one-click suggestion blocks.
+- `/ask "..."` answers a free-text question about the whole PR or about specific lines.
+
+Six further commands (`/add_docs`, `/generate_labels`, `/similar_issue`, `/help`, `/help_docs`, and `/update_changelog`) round out the set. `/help_docs` is disabled as of `v0.36.1` pending a fix for a credential-exposure issue ([The PR Agent 2026h](#ref-pr_agent_repo)).
+
+Each command is a single model call, which the README describes as “~30 seconds, low cost” ([The PR Agent 2026h](#ref-pr_agent_repo)). Large diffs are handled by a compression strategy rather than by a multi-step agent loop: deletion-only hunks are dropped, deleted files are collapsed into a list, and remaining files are added in order of size until the prompt approaches the model’s token limit ([The PR Agent 2026f](#ref-pr_agent_compression)). Files that do not fit are named but not shown to the model. `v0.45.0` adds an opt-in large-diff chunking mode for `/review` that splits a diff across several calls and merges the results.
+
+Behaviour is configured in a `.pr_agent.toml` file at the repository root, or by environment variables using dotted keys such as `pr_reviewer.extra_instructions` and `config.model` ([The PR Agent 2026c](#ref-pr_agent_automation)). Each tool has an `extra_instructions` field for free-text review guidance, and `/review` has `require_*` switches (`require_security_review`, `require_tests_review`, and so on) that turn individual sections on or off ([The PR Agent 2026g](#ref-pr_agent_review)).
+
+#### Supported forges and models
+
+PR-Agent supports five forges:
+
+- GitHub
+- GitLab
+- Bitbucket
+- Azure DevOps
+- Gitea
+
+Most commands work on all five; the documentation keeps a per-forge feature matrix, and a few commands (such as `/similar_issue`) are GitHub-only ([The PR Agent 2026a](#ref-pr_agent_docs)).
+
+Models are bring-your-own. PR-Agent calls models through LiteLLM, so any provider LiteLLM supports can be selected by setting `config.model` ([The PR Agent 2026d](#ref-pr_agent_models)). Named providers include OpenAI, Azure OpenAI, Anthropic, Google (AI Studio and Vertex AI), Amazon Bedrock, DeepSeek, Mistral, Groq, xAI, OpenRouter, and local servers such as Ollama and vLLM. Further keys let you route work to different models: `config.model_weak` for lighter commands (`/describe`, `/ask`, `/update_changelog`), `config.fallback_models` for retries, and a `[model_routing]` table that picks a model by diff size ([The PR Agent 2026d](#ref-pr_agent_models)).
+
+Local models work but come with a warning. The model-configuration page says that “most open-source models currently available (as of January 2025) face challenges with complex tasks” and recommends them for “experimentation and learning purposes (mainly for the ask command)” ([The PR Agent 2026d](#ref-pr_agent_models)). That note predates the current generation of open-weight coding models, so treat it as a prompt to test rather than as a verdict; [Section 24](#sec-ai-small-local-models) covers what we have found local models can and cannot do.
+
+#### Deployment
+
+There is no hosted PR-Agent service. Every route runs the software on infrastructure you control ([The PR Agent 2026e](#ref-pr_agent_github_install)):
+
+- **GitHub Action** (the README’s recommended route). A workflow that `uses: the-pr-agent/pr-agent@main` with `OPENAI_KEY` (or another provider’s key) and `GITHUB_TOKEN` in `env`, triggered on `pull_request` and `issue_comment` events. `github_action_config.auto_review`, `auto_describe`, and `auto_improve` choose which commands run automatically when a PR opens, and the `issue_comment` trigger enables slash commands.
+- **Self-hosted GitHub App**. A webhook server (the `pr-agent:github_app` Docker target) registered as a GitHub App with pull-request, issue-comment, and metadata permissions. The documentation covers running it as an AWS Lambda function and sizing the `gunicorn` workers. Equivalent webhook servers exist for GitLab and Gitea.
+- **Command line**. `pip install pr-agent`, then `pr-agent --pr_url <url> review` runs a command against an existing PR from your own machine.
+- **Docker**. Versioned images under `pragent/pr-agent` back all of the above.
+
+The README’s data-privacy section says only that a self-hosted PR-Agent with your own OpenAI key “is between you and OpenAI” ([The PR Agent 2026h](#ref-pr_agent_repo)). That is the whole privacy story: no third party sees the diff except the model provider you chose.
+
+#### License and the hosted-versus-open split
+
+The code is MIT-licensed, with the 2026 copyright held by “The PR Agent” ([The PR Agent 2026b](#ref-pr_agent_license)). The current documentation no longer marks individual commands as open-source or hosted-only: after the donation, everything at `docs.pr-agent.ai` describes the open-source tool, and the hosted features moved to Qodo’s own product and documentation. Older blog posts and third-party guides still refer to “PR-Agent Pro” or “Qodo Merge” feature tiers; those describe the product that became Qodo 2.0, not the repository reviewed here.
+
+#### Useful to us?
+
+The lab already runs four pull-request reviewers, so the question is what PR-Agent adds. The comparison uses the same axes as the other review sections:
+
+| Dimension | PR-Agent | [Claude Code Action](#sec-ai-claude-code-action-review) | [Codex review](#sec-ai-codex-github-review) | [Gemini Review Action](#sec-ai-gemini-review-action) | [Gemini Code Assist](#sec-ai-gemini-code-assist-review) |
+|----|----|----|----|----|----|
+| **Source** | Open (MIT) | Open action, closed model | Closed | Open | Closed |
+| **Hosting** | Actions runner or your own webhook server | Actions runner | OpenAI-hosted | Actions runner | Google-hosted |
+| **Model** | Any via LiteLLM, including local | Claude only | OpenAI only | Gemini only | Gemini only |
+| **Forges** | GitHub, GitLab, Bitbucket, Azure DevOps, Gitea | GitHub | GitHub | GitHub | GitHub |
+| **Billing** | Your API key (or free with a local model) | Anthropic API key or federation | ChatGPT workspace | Gemini API key or Google Cloud | Google Cloud |
+| **Review depth** | One model call per command over a compressed diff | Agentic; five reviewer subagents with repository access | Hosted agent | One call with repository context indexing | Managed service |
+| **Interactive** | `/ask`, `/review`, and other slash comments | `@claude` mention (separate workflow) | `@codex review` | Triggered by workflow events | `/gemini` comments |
+| **Customization** | `.pr_agent.toml`, `extra_instructions`, prompts in repo | Review prompt in the workflow file | `AGENTS.md` review rules | Skills directory | Google Cloud Console |
+
+What PR-Agent offers that none of the others do:
+
+- **Model independence.** It is the only reviewer here that can be pointed at whichever provider currently has spare quota, or at an Ollama model for a zero-cost pass on a private repository. For the lab’s quota juggling ([Section 53](#sec-ai-gemini-spend-management) and [Section 23](#sec-ai-claude-code-other-models)), a reviewer whose model is a one-line config change is attractive.
+- **Structured output.** `/review` reports effort, risk, and a merge recommendation in a fixed format, which a script can parse. The other reviewers produce prose.
+- **GitLab and other forges.** Only PR-Agent covers repositories outside GitHub, which matters if a collaborator hosts code elsewhere.
+
+What it lacks:
+
+- **Depth.** A single call over a pruned diff cannot follow a symbol into a file the diff did not touch. The Claude Code Action reviewer runs as an agent with the repository checked out, so it can. For the review standard the lab’s ARDI loop expects (see [Section 35](#sec-ai-claude-code-action-review)), PR-Agent is a first pass, not a replacement.
+- **A stable maintainer story.** The project changed hands in 2026, its README says a foundation transfer is still in progress, and one command is disabled pending a security fix. Release cadence remains weekly (five releases between 2026-08-01 and 2026-09-05), so the project is active, but the governance is newer than the code.
+- **Another bot in the thread.** Each added reviewer costs a review round per push and a comment the ARDI loop has to triage. Adding a fifth reviewer only pays off if it catches something the other four miss.
+
+A reasonable trial is one repository, the GitHub Action route, `auto_review` on and `auto_describe` and `auto_improve` off, with `config.model` set to whichever provider has spare quota that month. If its `/review` findings overlap the Claude reviewer’s after a few weeks, turn it off; if it catches something distinct, keep it as the cheap first pass.
+
+# 39 How a Session Learns a PR Changed
 
 A coding-agent session that is watching a pull request does not poll it. Something wakes the session when the pull request changes, and in Claude Code that “something” is one of **two separate channels**.
 
@@ -3081,7 +3168,7 @@ Two caveats are worth knowing before relying on it.
 
 **A successful subscribe does not guarantee delivery.** If a PR Steward agent already holds the watch on that pull request, the call still succeeds — but this session receives nothing. The tool result says so in as many words, so read the result rather than the exit status. Taking over the watch requires opting the steward out first, by removing its watching label on the pull request.
 
-**The tool does not exist on a locally-run GitHub MCP server.** Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. [Section 46](#sec-ai-mcp-server-setup) covers the local analogues to reach for instead.
+**The tool does not exist on a locally-run GitHub MCP server.** Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. [Section 47](#sec-ai-mcp-server-setup) covers the local analogues to reach for instead.
 
 **Webhook delivery is also not exhaustive**, which is the failure mode most likely to be mistaken for “nothing has happened”. CI *successes*, new pushes, and merge-conflict transitions can arrive late or not at all. A session that treats silence as “still green” will sit indefinitely on a pull request that has gone stale or conflicted, so a subscription is a supplement to periodically re-reading the pull request’s real state, not a replacement for it.
 
@@ -3144,13 +3231,13 @@ So treat a footer as a strong hint and a missing footer as near-conclusive, and 
 >
 > The delivery mechanics and the wording of the instruction template above were established by observation during agent sessions in mid-2026, not from a published specification. Claude Code on the web is a research-preview feature, so treat the specifics as liable to change and re-check them against current behavior before depending on any one detail.
 
-# 39 When to use a coding agent
+# 40 When to use a coding agent
 
 Coding agent sessions are currently[^1] considered “premium requests”, which are limited resources; see <https://github.com/features/copilot/plans> for details. So, use coding agents sparingly. Use them for complex changes that would be difficult or time-consuming for you to complete by hand. Coding agents also take time to get configured for work, every time you make a request. See <https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment#preinstalling-tools-or-dependencies-in-copilots-environment> for ways to reduce that startup time, but it will never be 0. If you can complete the task faster than the coding agent can, you should probably do it yourself. For example, when you have errors in the spell-check or lint workflows, you can often fix them faster than Copilot can. Similarly, when reviewing Copilot’s PRs, you can often make direct changes to the branch faster than you could write clear review comments and get Copilot to address them.
 
 Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.
 
-# 40 Editing with `.docx` files
+# 41 Editing with `.docx` files
 
 GitHub Copilot coding agents can read Microsoft Word (`.docx`) files, including tracked changes and comments. This enables a hybrid editing workflow where:
 
@@ -3185,7 +3272,7 @@ When opening DOCX files generated by Quarto (including this site), Microsoft Wor
 
 This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.
 
-# 41 Copilot Instructions for this Repository
+# 42 Copilot Instructions for this Repository
 
 A `.github/copilot-instructions.md` file contains repository-specific instructions and guidelines for GitHub Copilot coding agents. This file helps ensure that AI-generated contributions follow the project’s formatting standards, coding conventions, and documentation practices.
 
@@ -3202,7 +3289,7 @@ By having these instructions in `.github/copilot-instructions.md`, you ensure th
 
 See this repository’s own [`.github/copilot-instructions.md`](https://github.com/Morrison-Lab/wai/blob/main/.github/copilot-instructions.md) for a working example.
 
-# 42 Using Copilot Review Before Human Review
+# 43 Using Copilot Review Before Human Review
 
 Before requesting review from other humans, **always have Copilot review your pull request first**—even if Copilot created the PR itself. AI review provides fast, thorough feedback that helps catch issues before involving human reviewers, saving everyone time and improving code quality.
 
@@ -3245,7 +3332,7 @@ Even if you’re highly experienced, treating Copilot review as a required pre-r
 
 When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.
 
-# 43 Reviewing a Copilot PR You Didn’t Create
+# 44 Reviewing a Copilot PR You Didn’t Create
 
 When reviewing a pull request where someone else prompted Copilot to make changes, follow these guidelines to avoid confusion and ensure smooth collaboration:
 
@@ -3318,7 +3405,7 @@ To transfer the PR manager role:
 
 This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.
 
-# 44 Agent Sessions and Handoff in Visual Studio Code
+# 45 Agent Sessions and Handoff in Visual Studio Code
 
 In Visual Studio Code, interactions with AI coding assistants are structured around [Agent Sessions and Handoff](https://code.visualstudio.com/docs/agents/concepts/sessions?referrer=in-product) (measured 2026-08-31). Understanding how sessions organize work and transfer state across tools is essential for managing multi-step agent workflows.
 
@@ -3347,7 +3434,7 @@ Session handoff transfers context and intent from an active session to a special
 - **Plan to implementation**: Hand off a high-level architectural plan or task specification directly to an implementation session to generate code.
 - **Continue in the cloud**: Hand off a local session to run in a cloud-hosted agent environment (such as background tasks leading to pull requests), freeing local editor resources while the agent executes in the background.
 
-# 45 Installing Claude Code on Windows
+# 46 Installing Claude Code on Windows
 
 [Claude Code](https://www.anthropic.com/claude-code) is Anthropic’s command-line coding agent. Installing it on Windows works well, but a few platform-specific pitfalls can cost you hours if you don’t know about them. These notes capture a setup that works, and the gotchas to watch for.
 
@@ -3447,7 +3534,7 @@ claude --version      # prints the installed version number
 
 If you get a version number, you’re ready to run `claude` in your project directory. If you get `command not found`, re-check the two `PATH` issues above: the directory must be on `PATH`, and you must `rehash` (or open a fresh window) after changing it.
 
-# 46 Setting up MCP servers
+# 47 Setting up MCP servers
 
 The [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) is how a harness gains typed access to external systems. Configuring a server is usually a one-line command. Diagnosing one that *silently* isn’t working is the part worth writing down, because the common failure mode produces no error at all — only a quiet absence of tools you assumed were there.
 
@@ -3605,7 +3692,7 @@ The gap it closes is the copy-paste loop: without it, using something you discus
 
 It connects through the standard [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) as a remote server at `https://mcp.granola.ai/mcp`. For Claude or ChatGPT, enable it from the app’s connector/app settings and authenticate; for Cursor, Claude Code, or any other MCP client that supports a manual URL, register that URL directly (see [the announcement](https://www.granola.ai/blog/granola-mcp) for per-client steps). On an Enterprise plan it is an early-access beta, off by default until an admin enables it.
 
-# 47 Google Antigravity Python SDK
+# 48 Google Antigravity Python SDK
 
 The [`google-antigravity/antigravity-sdk-python`](https://github.com/google-antigravity/antigravity-sdk-python) repository provides the official Python SDK for building and automating agents on the Google Antigravity agent runtime (measured 2026-08-31; distributed via PyPI as `google-antigravity`).
 
@@ -3634,7 +3721,7 @@ Developers can customize agent behavior and enforce safety policies:
 | **Tool definitions** | In-process Python callables & MCP | JSON manifests, plugins, and CLI scripts |
 | **Runtime engine** | Embedded native binary | Managed local service |
 
-# 48 Unbounded Context with Magic Context
+# 49 Unbounded Context with Magic Context
 
 [`cortexkit/magic-context`](https://github.com/cortexkit/magic-context) is an open-source self-managing memory engine designed to provide unbounded context for AI coding agents (measured 2026-08-31). It operates as a background memory subsystem—often described as a “hippocampus for coding agents”—that extracts, consolidates, and retrieves long-term repository state without pausing the active coding turn.
 
@@ -3654,7 +3741,7 @@ A key challenge with dynamic prompt injection is preserving prompt caching effic
 - **Deferred background extraction**: Memory analysis and summarization tasks are deferred to idle windows or subagent threads, preventing token churn and latency spikes during high-tempo coding loops.
 - **Cross-session persistence**: Extracted knowledge persists in lightweight local stores across IDE restarts, enabling coding agents to resume work with full institutional memory of past decisions.
 
-# 49 Spec-Driven Development with Conductor
+# 50 Spec-Driven Development with Conductor
 
 [`gemini-cli-extensions/conductor`](https://github.com/gemini-cli-extensions/conductor) is an open-source plugin for AI coding agents (including Google Antigravity and Claude Code) that implements **Spec-Driven Development** (measured 2026-08-31). Rather than relying on conversational chat history that degrades over extended sessions, Conductor anchors agent behavior in structured, version-controlled Markdown artifacts stored directly in the repository, providing persistent context across multi-session workflows.
 
@@ -3676,7 +3763,7 @@ Conductor structures development into four distinct, sequential phases:
 | **Verification loop** | Manual spot-checking | Milestone-level automated tests and `/conductor:conductor-review` |
 | **Handoff & resumption** | Requires re-prompting or context replay | Any agent resumes from the checked-in track state |
 
-# 50 Anatomy of Agent Plugins
+# 51 Anatomy of Agent Plugins
 
 In modern AI coding assistants (such as Google Antigravity and Claude Code; see [Section 10](#sec-ai-harness-landscape) on the sunset of legacy Gemini CLI and its folding into Antigravity CLI), **plugins** serve as the top-level packaging and distribution layer for agent capabilities (measured 2026-09-01). While individual skills or Model Context Protocol (MCP) servers extend specific tasks, a plugin aggregates multiple extensibility primitives into a unified, version-controlled bundle.
 
@@ -3708,7 +3795,7 @@ Effective plugin architectures mitigate this through several strategies:
 - **On-demand skill activation**: Agents search skill catalogs dynamically when relevant keywords appear, rather than loading the entire skill directory into the initial system prompt.
 - **Prefix caching preservation**: Static plugin definitions are placed at the root of prompt structures so provider-level prompt caching remains undisturbed during multi-turn sessions.
 
-# 51 Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent
+# 52 Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent
 
 [`code-yeongyu/oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent) (originally published as **Oh My OpenCode** or `omo`, with community forks such as [`opensoft/oh-my-opencode`](https://github.com/opensoft/oh-my-opencode)) is an open-source multi-agent orchestration framework and plugin for AI coding agent harnesses (including OpenCode and OpenAI Codex CLI) with over 65,000 GitHub stars (measured 2026-09-01). Inspired by modular terminal configuration frameworks (such as [Oh My Zsh](https://ohmyz.sh/)), it expands single-agent coding into a specialized multi-agent system with automated model routing and background task execution.
 
@@ -3743,7 +3830,7 @@ A central capability of the framework is decoupling agent roles from a single mo
 | **Execution monitoring** | Standard terminal output | Interactive `tmux`-backed session management |
 | **Extensibility** | Individual plugins and MCPs | Curated bundle of tools, agents, and MCP integrations |
 
-# 52 Managing Gemini API Spend and Cost Optimization
+# 53 Managing Gemini API Spend and Cost Optimization
 
 This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.
 
@@ -3789,7 +3876,7 @@ To maximize the efficiency of your API spend across local CLI sessions, subagent
 - **Use the Batch API for Non-Realtime Tasks**: For offline batch processing, evaluation suites, or background doc updates, submit requests via the Gemini Batch API to receive a 50% discount on input and output tokens.
 - **GitHub UI Diff Collapsing**: Mark dependency lockfiles (`*.lock`, `package-lock.json`, `yarn.lock`, `renv.lock`) and generated build artifacts as `linguist-generated=true` in `.gitattributes` to collapse them in GitHub’s web diff view and exclude them from repository language statistics.
 
-# 53 Collaborative AI Workspaces: Claude Cowork and Gemini Spark
+# 54 Collaborative AI Workspaces: Claude Cowork and Gemini Spark
 
 The 2026 AI ecosystem has expanded beyond reactive chat windows and command-line coding orchestrators into collaborative workspace agents (measured 2026-09-01). These systems operate directly on multi-file workspaces, desktop applications, and cloud productivity suites to automate complex, multi-step analytical and administrative workflows.
 
@@ -3816,7 +3903,7 @@ The 2026 AI ecosystem has expanded beyond reactive chat windows and command-line
 Similar collaborative workspace paradigms have emerged across other frontier ecosystems:
 
 - **ChatGPT Work and OpenAI Canvas**: [ChatGPT Work](https://learn.chatgpt.com/docs/get-started-with-work) ([OpenAI 2026](#ref-chatgpt_work)) (see **?@sec-chatgpt-work**) and Canvas provide side-by-side document and code editing with inline line-level revisions, interactive targeted edits, and multi-file artifact tracking.
-- **Cursor and Google Antigravity Agent Workspaces**: Developer-centric workspace agents providing multi-agent delegation, worktree isolation, and structured planning workflows (such as Conductor extension spec-driven development, [Section 49](#sec-ai-conductor-extension)).
+- **Cursor and Google Antigravity Agent Workspaces**: Developer-centric workspace agents providing multi-agent delegation, worktree isolation, and structured planning workflows (such as Conductor extension spec-driven development, [Section 50](#sec-ai-conductor-extension)).
 - **Notion AI and Microsoft Copilot Studio**: Enterprise knowledge graph agents designed for querying organizational wikis and automating business process workflows.
 
 #### Comparative Taxonomy of Workspace Agents
@@ -3868,6 +3955,22 @@ OpenAI. 2026. *Get Started with ChatGPT Work*. Documentation. <https://learn.cha
 *Terminator 3: Rise of the Machines*. 2003. Film. <https://en.wikipedia.org/wiki/Terminator_3:_Rise_of_the_Machines>.
 
 *The Matrix*. 1999. Film. <https://en.wikipedia.org/wiki/The_Matrix>.
+
+The PR Agent. 2026a. *PR-Agent Documentation*. Documentation. <https://docs.pr-agent.ai/>.
+
+The PR Agent. 2026b. *PR-Agent License*. GitHub repository file. <https://github.com/The-PR-Agent/pr-agent/blob/main/LICENSE>.
+
+The PR Agent. 2026c. *PR-Agent: Automations and Usage*. Documentation. <https://docs.pr-agent.ai/usage-guide/automations_and_usage/>.
+
+The PR Agent. 2026d. *PR-Agent: Changing a Model*. Documentation. <https://docs.pr-agent.ai/usage-guide/changing_a_model/>.
+
+The PR Agent. 2026e. *PR-Agent: GitHub Installation*. Documentation. <https://docs.pr-agent.ai/installation/github/>.
+
+The PR Agent. 2026f. *PR-Agent: PR Compression Strategy*. Documentation. <https://docs.pr-agent.ai/core-abilities/compression_strategy/>.
+
+The PR Agent. 2026g. *PR-Agent: Review Tool*. Documentation. <https://docs.pr-agent.ai/tools/review/>.
+
+The PR Agent. 2026h. *PR-Agent: The Original Open-Source PR Reviewer*. GitHub repository. <https://github.com/The-PR-Agent/pr-agent>.
 
 *WarGames*. 1983. Film. <https://en.wikipedia.org/wiki/WarGames>.
 
