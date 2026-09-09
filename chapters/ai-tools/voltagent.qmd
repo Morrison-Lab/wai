@@ -34,7 +34,7 @@ swapping between OpenAI, Anthropic, Google, and other providers
 is a configuration change rather than a rewrite [@voltagent_repo].
 The agent exposes `generateText()` and `streamText()` methods,
 and both accept an `output` schema for structured results.
-The default step limit is five model calls per turn.
+The default step limit is five model calls per turn [@voltagent_agents].
 
 Other building blocks follow the same pattern:
 
@@ -53,8 +53,15 @@ Other building blocks follow the same pattern:
   and the TypeScript type of the data flowing through the chain
   is inferred at each step [@voltagent_workflows].
 - **Memory** is a `Memory` object wrapping a storage adapter.
-  Adapters exist for in-process memory, LibSQL/SQLite, PostgreSQL,
-  Supabase, Cloudflare D1, and a hosted "Managed Memory" on VoltOps.
+  Adapters exist for:
+
+  - in-process memory
+  - LibSQL/SQLite
+  - PostgreSQL
+  - Supabase
+  - Cloudflare D1
+  - a hosted "Managed Memory" on VoltOps
+
   Optional embedding and vector adapters add semantic recall,
   and a "working memory" slot holds a compact summary
   the agent can read and update through built-in tools
@@ -86,7 +93,7 @@ Langfuse and MLflow are also listed as export targets
 [@voltagent_observability].
 
 VoltOps itself is not open source.
-The README labels it "Cloud" and "Self-Hosted",
+The README labels it "Cloud" and "Self-Hosted" [@voltagent_repo],
 but self-hosting is listed only on the Enterprise plan
 [@voltagent_pricing].
 The plans as of 2026-09-09:
@@ -101,7 +108,8 @@ The plans as of 2026-09-09:
   and self-hosted deployment.
 
 Overage is USD 10 per 5,000 additional traces [@voltagent_pricing].
-The managed RAG "Knowledge Base" and "Managed Memory" adapters
+The managed RAG "Knowledge Base" [@voltagent_repo]
+and "Managed Memory" [@voltagent_memory] adapters
 are also VoltOps features,
 so an agent that uses them depends on the hosted service
 even though the framework around them is MIT-licensed.
@@ -141,7 +149,11 @@ Where it could earn a place:
   so the viewer does not lock us in.
 
 The comparison table in @sec-orch-comparison
-places our stack against other orchestrators on the same dimensions.
-VoltAgent would sit alongside the general-purpose infrastructure tools there,
-with a permissive license on the framework
-and a paid, closed console for everything past local debugging.
+covers three other orchestrators and does not include VoltAgent.
+On that table's dimensions, VoltAgent would read as:
+
+- **Primary domain**: general agent infrastructure, in TypeScript.
+- **License**: MIT framework, paid and closed console.
+- **Maturity**: young but active.
+- **Execution model**: supervisor agents delegating to sub-agents
+  in one Node process.
