@@ -1,0 +1,306 @@
+@sec-ai-useful-plugins names four plugins the lab already uses.
+This section is the map they sit on:
+what Anthropic's official marketplace contains,
+which community plugins are worth knowing about,
+and how each of them relates to the lab's own
+[`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config) [@ai_config_readme].
+It closes with the question that prompted it:
+what the `ralph-loop` plugin is,
+and whether it is the same thing as `ai-config`'s `ardi`.
+
+Plugin counts and names change weekly,
+so every figure below is stamped with the date it was read.
+The anatomy of a plugin bundle
+(skills, hooks, MCP servers, agents, commands)
+is @sec-ai-plugins-deep-dive;
+this section assumes it.
+
+#### The three Anthropic marketplaces
+
+Anthropic runs three plugin catalogs for Claude Code,
+and they differ in who curates them
+[@claude_code_discover_plugins]:
+
+- **`claude-plugins-official`**
+  ([`anthropics/claude-plugins-official`](https://github.com/anthropics/claude-plugins-official) [@claude_plugins_official]).
+  Curated by Anthropic at its discretion; there is no application process.
+  Claude Code registers it automatically the first time it starts interactively,
+  so `/plugin install <name>@claude-plugins-official` works with no setup.
+  Browse it with `/plugin` (the **Discover** tab)
+  or at [claude.com/plugins](https://claude.com/plugins).
+- **`claude-community`**
+  ([`anthropics/claude-plugins-community`](https://github.com/anthropics/claude-plugins-community) [@claude_plugins_community]).
+  Third-party submissions that passed Anthropic's automated validation and safety screening,
+  each pinned to a commit SHA and synced nightly from the review pipeline.
+  Added by hand: `/plugin marketplace add anthropics/claude-plugins-community`,
+  then `/plugin install <name>@claude-community`.
+  Pull requests against the mirror are closed automatically;
+  submissions go through a form.
+- **`claude-code-plugins`**
+  ([`anthropics/claude-code`, `plugins/`](https://github.com/anthropics/claude-code/tree/main/plugins) [@claude_code_demo_plugins]).
+  The demo marketplace: thirteen example plugins
+  (`commit-commands`, `code-review`, `feature-dev`, `hookify`, `ralph-wiggum`, and others)
+  that show what the plugin system can do.
+  Most of them also ship in the official marketplace under the same or a renamed entry
+  (`ralph-wiggum` there is `ralph-loop` here).
+
+The official README carries the warning that governs all three:
+Anthropic does not control what MCP servers, files, or other software a plugin includes,
+and cannot verify that it works as intended or will not change
+[@claude_plugins_official].
+A plugin runs arbitrary code with your user privileges,
+so the trust decision is yours, per plugin, every time.
+
+#### What the official marketplace contains
+
+The official catalog's `marketplace.json` lists 287 plugins
+(measured 2026-09-09 from the copy Claude Code caches locally;
+[@claude_plugins_official]).
+Only 38 of them live in the repository's own `plugins/` directory,
+which the README describes as the plugins Anthropic develops and maintains.
+Another 15 sit in `external_plugins/`,
+and the remaining 234 are pointers to third-party repositories
+(Amazon, Microsoft, Google's `gemini-cli-extensions`, Databricks, Hugging Face, Sentry, and many vendors),
+each pinned to a commit SHA.
+So "official" mostly means "listed and pinned by Anthropic",
+not "written by Anthropic".
+By declared category the catalog is
+development (119), productivity (49), database (38), monitoring (20), security (18),
+and a long tail of deployment, design, automation, learning, location, testing, migration, and math.
+
+The 38 Anthropic-maintained plugins fall into five groups.
+The verdicts are for this lab's work
+(R packages, Quarto sites, Python and shell tooling, GitHub pull requests),
+not for software teams in general.
+
+##### Code intelligence
+
+Twelve `*-lsp` plugins
+(`clangd`, `csharp`, `gopls`, `jdtls`, `kotlin`, `lua`, `php`, `pyright`, `ruby`, `rust-analyzer`, `swift`, `typescript`)
+connect a Language Server Protocol server so that Claude sees type errors and missing imports after every edit
+and can jump to definitions instead of grepping
+[@claude_code_discover_plugins].
+The plugin does not install the language server binary;
+you do, and cloud sessions never start it.
+
+Verdict: `pyright-lsp` is worth installing wherever the lab writes Python.
+There is no R entry in the catalog (measured 2026-09-09),
+so R work gets no diagnostics from this route;
+the docs describe an `.lsp.json` for writing your own LSP plugin,
+which is the path if anyone wants to wire up R's `languageserver`.
+
+##### Development workflows
+
+- `commit-commands`: commit, push, and open a PR from slash commands.
+- `code-review`: multi-agent PR review with confidence-based scoring.
+- `pr-review-toolkit`: reviewer agents specialized by concern (comments, tests, error handling, type design).
+- `feature-dev`: a phased explore-design-implement workflow with dedicated agents.
+- `code-simplifier`: an agent that refines code for clarity without changing behaviour.
+- `code-modernization`: a preflight-assess-transform workflow for legacy codebases.
+- `security-guidance`: pattern warnings on every edit plus an LLM diff review at `Stop`,
+  with fixes applied in the same session.
+- `claude-security`: deeper vulnerability scanning of your own code, at a chosen effort level.
+- `ralph-loop`: the self-referential iteration loop, treated on its own below.
+
+Verdict: `security-guidance` fills a gap `ai-config` does not cover and costs little, so install it.
+`commit-commands`, `code-review`, and `pr-review-toolkit` overlap the lab's forge workflow
+(claim, PR-on-claim, `ardi`, the `@claude` review action) and would run beside it rather than replace it;
+skip them unless you are working outside a lab repository.
+`feature-dev` and `code-modernization` are aimed at application codebases and have not earned a place here.
+
+##### Building your own extensions
+
+- `plugin-dev`: seven skills covering hooks, MCP integration, and plugin structure.
+- `skill-creator`: create, improve, and benchmark skills.
+- `hookify`: write a hook from a conversation pattern or an explicit instruction.
+- `mcp-server-dev` and `agent-sdk-dev`: building MCP servers and Claude Agent SDK programs.
+- `mcp-tunnels`: reach a private MCP server through an Anthropic tunnel.
+- `claude-md-management`: audit `CLAUDE.md`, capture session learnings, keep project memory tidy.
+- `claude-code-setup`: analyze a codebase and recommend hooks, skills, and MCP servers for it.
+
+Verdict: `skill-creator` and `plugin-dev` are the ones to reach for when adding to `ai-config`,
+since the corpus is itself a plugin.
+`claude-md-management` duplicates `ai-config`'s `ums` and `memorize` skills
+and its `MEMORY.md` conventions; skip it in lab repositories.
+`hookify` generates a hook from a description;
+`ai-config`'s hooks are hand-written Python with a test per hook,
+so use `hookify` for a personal one-off and the corpus for anything shared.
+
+##### Output styles and reports
+
+`explanatory-output-style` recreates the deprecated built-in Explanatory style
+(commentary on implementation choices),
+and `learning-output-style` implements a Learning style that never shipped
+(prompts for you to write key pieces yourself).
+`receipts`, `session-report`, and `project-artifact` generate HTML reports
+of what you shipped, what a session cost, and a project status page.
+`playground` builds single-file interactive HTML explorers;
+`frontend-design` targets distinctive web interfaces;
+`math-olympiad` solves competition mathematics with adversarial verification;
+`cwc-makers` sets up a hardware kit.
+
+Verdict: `learning-output-style` is a reasonable choice for a student who wants to learn a codebase rather than delegate it,
+per @sec-ai-when-to-use.
+`session-report` is useful when a quota question comes up.
+The rest are not relevant to lab work.
+
+##### External integrations
+
+The `external_plugins/` directory and many third-party entries bundle a pre-configured MCP server:
+`github`, `gitlab`, `atlassian`, `asana`, `linear`, `notion`, `figma`, `slack`, `sentry`,
+`vercel`, `firebase`, `supabase`, `context7`, `playwright`, `serena`, `terraform`,
+and messaging bridges for Discord, Telegram, and iMessage
+[@claude_code_discover_plugins].
+
+Verdict: `github` is the one that matters here;
+@sec-ai-mcp-server-setup covers configuring it, and @sec-ai-pr-activity-notifications what it adds.
+`context7` (live library documentation lookup) is worth a try for Python and JavaScript work.
+Everything else depends on whether the lab uses the service.
+
+#### Community plugins worth knowing
+
+Beyond the three Anthropic catalogs,
+any GitHub repository with a `.claude-plugin/marketplace.json` is a marketplace
+(`/plugin marketplace add owner/repo`),
+and the four plugins in @sec-ai-useful-plugins
+(`sembr/skills`, `ponytail`, Contextify, and `ai-config` itself)
+all reach you that way.
+Two more are widely enough used to describe.
+
+**Superpowers** ([`obra/superpowers`](https://github.com/obra/superpowers) [@obra_superpowers])
+calls itself "a complete software development methodology for your coding agents,
+built on top of a set of composable skills".
+The 6.3.0 build installed on one lab machine carries fourteen skills
+(measured 2026-09-09):
+brainstorming, writing and executing plans, test-driven development,
+systematic debugging, subagent-driven development,
+requesting and receiving code review, git worktrees,
+finishing a development branch, verification before completion,
+dispatching parallel agents, and two meta-skills for using and writing skills.
+A `using-superpowers` skill loads at session start so the others trigger on their own.
+It installs into more than a dozen agents
+(Claude Code via `/plugin install superpowers@claude-plugins-official`,
+Cursor, Codex, Copilot CLI, Gemini CLI, OpenCode, Antigravity, Pi, Hermes, and others)
+and is MIT-licensed.
+
+Verdict: install it if you want an opinionated end-to-end process and are not already running `ai-config`.
+Running both means two session-start bootstraps competing to set the workflow,
+and `ai-config` already covers the same ground in its own vocabulary
+(`brainstorm`, `st`, `ardi`, `adversarial-reviewer`, `clean-worktrees`, `wrap-up`).
+The skills that do not overlap
+(`systematic-debugging`, `test-driven-development`)
+are worth reading even if you do not install the plugin.
+
+**Ralph Wiggum** is the loop plugin treated in the next subsection.
+
+The community marketplace itself is small so far
+(four plugin directories visible on 2026-09-09: `eli5`, `quickdesign`, `testdino`, `tres-finance-plugin`;
+[@claude_plugins_community]),
+so "branching out" today means the official catalog's third-party entries
+and independent repositories, not that mirror.
+
+#### Compared with `ai-config`
+
+[`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config) [@ai_config_readme]
+is the lab's own plugin.
+The copy Claude Code caches on one lab machine holds 198 skills and 90 hook scripts
+(measured 2026-09-09),
+plus memories and the `shared/` fragments this site vendors into @sec-fully-clean and its neighbours.
+It installs as a Claude Code plugin (`/plugin marketplace add Morrison-Lab/ai-config`),
+as a Cursor plugin,
+and via `bootstrap.sh` for Codex, Gemini CLI and Antigravity, VS Code Copilot, and OpenCode
+(@sec-ai-config-install).
+
+Set beside the marketplaces above, four differences decide what to install:
+
+- **Scope.**
+  A marketplace plugin does one thing: one language server, one MCP server, one workflow.
+  `ai-config` is a whole working style: forge etiquette (claim, PR-on-claim, `ardi`, `mwc`),
+  lab coding and writing conventions, quota management, and the memory that carries lessons between sessions.
+  Nothing in the official catalog is shaped like that;
+  `superpowers` is the closest, and it stops at the software-methodology layer.
+- **Enforcement.**
+  The official workflow plugins are mostly skills and agents, which advise.
+  `ai-config` pairs its skills with hooks that block:
+  an unauthorized merge, a force push, a reply that promises without a mechanism.
+  The one official plugin with a comparable `Stop`-hook design is `security-guidance`,
+  which is why it is the clearest addition.
+- **Cross-agent reach.**
+  Both `ai-config` and `superpowers` install into several agents from one repository;
+  the official plugins are Claude Code only.
+  If a lab member works in Codex or Antigravity as well, that decides it.
+- **Ownership.**
+  A finding in an official plugin is a bug report to Anthropic;
+  a finding in `ai-config` is a PR you can open today,
+  and the corpus's UMS discipline expects exactly that.
+
+The practical composition, as of 2026-09-09:
+`ai-config` as the base,
+`pyright-lsp` and `security-guidance` from the official marketplace,
+`github` where the MCP server is not already configured by hand,
+and `sembr/skills` for prose repositories.
+Everything else is a per-person choice.
+
+#### What is `ralph-loop`, and is it `ardi`?
+
+`ralph-loop` (official marketplace; `ralph-wiggum` in the demo marketplace)
+packages Geoffrey Huntley's "Ralph" technique
+[@ralph_loop_plugin; @ghuntley_ralph].
+Ralph, in Huntley's words, "is a Bash loop":
+
+```bash
+while :; do cat PROMPT.md | claude-code ; done
+```
+
+The same prompt file is fed to a fresh agent run, over and over.
+Nothing changes between iterations except the repository:
+the previous run's files, commits, and test results are what the next run reads.
+Tests supply the backpressure that keeps each pass honest,
+and the operator "tunes Ralph by adding a sign" to the prompt
+when a failure pattern shows up.
+Huntley says it works best on greenfield projects, one task per loop.
+
+The plugin moves that loop inside a single Claude Code session.
+`/ralph-loop "<prompt>" --max-iterations <n> --completion-promise "<text>"`
+installs a `Stop` hook that intercepts the agent's attempt to end the turn
+and feeds the same prompt back,
+until the agent's output contains the completion-promise string exactly,
+or the iteration cap is hit,
+or you run `/cancel-ralph`
+[@ralph_loop_plugin].
+The caveats in the README are the important part:
+the promise is an exact-string match,
+so it cannot distinguish "done" from "blocked",
+and `--max-iterations` (unlimited by default) is the only real safety net.
+It lists tasks needing human judgment, one-shot operations,
+unclear success criteria, and production debugging as cases where not to use it.
+
+So: is it like `ardi`?
+Both are loops that refuse to let the agent stop early,
+and both rely on a `Stop`-time mechanism
+(`ai-config`'s own `Stop` hooks are what block a placeholder reply or an empty promise).
+Past that they answer different questions.
+
+| | `ralph-loop` | `ardi` |
+|---|---|---|
+| What it loops over | one prompt, re-fed to the same session | one pull request, across review rounds and sessions |
+| Who decides "done" | the agent, by emitting an agreed string | an independent reviewer's verdict plus green CI on the current head |
+| What changes each round | nothing but the repository state | the reviewer's new findings, each Addressed, Rebutted, or Deferred |
+| Safety valve | an iteration cap you set | a human merge gate; the loop reports ready and never merges |
+| Where it fits | before a PR exists: grind an implementation against tests | after a PR exists: drive it to fully clean |
+
+`ardi` is not self-referential.
+Each iteration is triggered by something outside the agent
+(a review landing, a check turning red),
+it re-arms itself with a timer rather than a `Stop` hook,
+and its terminal condition is @sec-fully-clean,
+which an agent cannot declare about itself.
+`ralph-loop` has no reviewer in the loop at all;
+its judge is whichever tests the prompt tells it to run.
+
+The two compose rather than compete.
+A Ralph loop is a reasonable way to get a well-specified, well-tested change to the point of opening a PR;
+`ardi` takes over from there.
+What the lab should not do is use `ralph-loop` as a substitute for review:
+a loop whose exit is a string the agent writes will exit
+whether or not the work is right.
