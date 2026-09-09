@@ -483,7 +483,7 @@ For the lab, as of August 2026:
 
 - **Build nothing on the orchestration frameworks** in @sec-orch-frameworks
   until a concrete need appears that Claude Code cannot meet;
-  read LangGraph's documentation as the reference design if one does.
+  read the LangGraph documentation as the reference design if one does.
 
 None of these replaces our current Claude Code and `ai-config` practice.
 Agent Teams extends it,
