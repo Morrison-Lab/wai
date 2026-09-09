@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-09 03:58:27 (PDT)
+Last modified: 2026-09-09 08:40:07 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -63,15 +63,34 @@ The following catalog is a starting point rather than an endorsement:
 |----|----|----|
 | [GitHub Copilot coding agent](https://github.com/features/copilot/agents) | GitHub issues and pull requests | Assign an issue; review the resulting pull request |
 | [OpenAI Codex](https://openai.com/codex/) | Cloud tasks, app, and command line | Delegate a task in an isolated environment or work locally |
-| [Google Jules](https://jules.google.com/) | Cloud coding agent | Connect a repository and review the proposed changes |
+| [Google Jules](https://jules.google.com/) ([Google 2026](#ref-jules_docs)) | Cloud coding agent | Connect a repository and review the proposed changes |
 | [Google Antigravity](https://antigravity.google/) | Agentic development platform | Coordinate coding tasks in a managed development workspace |
 | [Claude Code](https://www.anthropic.com/claude-code) | Terminal, IDE, and cloud | Work interactively or delegate work that returns a pull request |
 | [Gemini CLI](https://github.com/google-gemini/gemini-cli) | Command line | Inspect, edit, and test the current local checkout |
-| [Cursor](https://www.cursor.com/) | IDE | Edit interactively with path-scoped `.cursor/rules` context |
+| [Cursor](https://www.cursor.com/) ([Cursor 2026](#ref-cursor_cloud_agents)) | IDE and cloud agents | Edit interactively with path-scoped `.cursor/rules` context, or hand a task to a cloud agent that pushes a branch |
 | [Aider](https://aider.chat/) | Command line | Pair locally with explicit files and Git commits |
 | [GitKraken Kepler](https://gitkraken.com/kepler) | Agentic development environment (desktop) | Start a Task from an issue, PR, or idea; run multiple agents in parallel isolated worktrees via reusable Actions; review per-branch diffs and open PRs |
+| [OpenCode](https://opencode.ai) ([OpenCode 2026](#ref-opencode_docs)) | Terminal, desktop app, and IDE extension | Bring your own model provider (including local endpoints; see [Section 21](#sec-ai-opencode-ollama)) and edit the local checkout |
+| [Cline](https://cline.bot/) ([Cline 2026](#ref-cline_site)) | VS Code extension, CLI, and SDK | Plan, then act with per-step approval; bring your own key, including Ollama |
+| [Kiro](https://kiro.dev/) ([Amazon Web Services 2026](#ref-kiro_docs)) (AWS) | IDE, CLI, web, and mobile | Spec-driven tasks locally, or delegate a web task that opens a pull request |
+| [Warp](https://docs.warp.dev/) ([Warp 2026](#ref-warp_docs)) | Terminal app, standalone CLI, and cloud agents | Approve actions locally, or trigger cloud agents from Slack, Linear, or GitHub webhooks |
+| [OpenHands](https://docs.openhands.dev/) ([OpenHands 2026](#ref-openhands_docs)) | Browser client, managed cloud, self-hosted backend, and CLI | Run headless or hosted; self-host when code must stay on your infrastructure |
+| [Devin](https://devin.ai/) (Cognition) | Cloud agent and desktop editor | Delegate a task to an isolated cloud machine and review the pull request (see [Section 10](#sec-ai-harness-landscape)) |
+| [Ollama](https://ollama.com/) ([Ollama 2026](#ref-ollama_site)) | Local model runner (not an agent) | Serve open-weight models to any of the harnesses above (see [Section 4.0.0.2](#sec-ai-ollama-agents)) |
 
 Kepler is not an agent itself but an orchestration layer. It hosts agents you already use (Claude Code, Codex, Copilot, Cursor, OpenCode) rather than locking in one model, and builds on a decade of GitKraken plumbing for branches, worktrees, diffs, and merges. Where a single-agent platform handles one repo at a time, a Kepler Task can span many repos, and its Agent Graph visualizes every session, turn, tool call, and subagent live.
+
+#### Where the agent runs
+
+The platforms above sort into three execution models (measured 2026-09-09). The model decides where your code is copied, what the agent can reach, and how its work comes back to you.
+
+- **Hosted sandbox.** The vendor provisions an isolated machine, clones the repository into it, and returns a branch or pull request. Jules clones the repository into a virtual machine and submits a pull request after you approve its plan ([Google 2026](#ref-jules_docs)); Cursor cloud agents clone from GitHub, GitLab, Azure DevOps, or Bitbucket, work on a separate branch, and push it back ([Cursor 2026](#ref-cursor_cloud_agents)); Kiro web tasks and Warp cloud agents follow the same shape ([Amazon Web Services 2026](#ref-kiro_docs); [Warp 2026](#ref-warp_docs)), as do the Copilot coding agent, Codex cloud tasks, Devin, and OpenHands Cloud. Nothing runs on your machine, so the questions are what the sandbox can reach and whether the vendor’s retention terms suit the repository.
+- **Local checkout.** The agent runs on your workstation against the files already there, in a terminal (Claude Code, Codex CLI, OpenCode, Aider, Gemini CLI, Warp) or inside an editor (Cursor, Cline, Kiro, Copilot in VS Code). Code stays put, and the agent inherits whatever credentials and network access your shell has, which is why [Section 18](#sec-ai-best-practices) asks for approval gates and a sandbox. Pairing one of these with Ollama keeps the model local too ([Ollama 2026](#ref-ollama_site)), at the cost of the hardware described in [Section 20](#sec-ai-offline).
+- **Orchestration layer.** Kepler, Kiro Crew, and the Cline Kanban surface do not add a model of their own; they run several of the agents above in parallel worktrees or sessions and present the results for review. Reach for one only once a single agent is no longer the bottleneck ([when orchestration helps](../chapters/agent-orchestration.llms.md#sec-orch-when)).
+
+Several vendors now ship all three, so the platform name alone no longer tells you where the code goes: Claude Code, Codex, Cursor, Kiro, and Warp each offer a local surface and a hosted one. Check the execution model of the specific surface you enable. The Windsurf editor is a naming trap of the same kind: `windsurf.com` now redirects to Devin Desktop, Cognition’s rebranding of that editor (measured 2026-09-09; see [Section 10](#sec-ai-harness-landscape)).
+
+For licensing, token-cost character, and a decision table for choosing among these tools, see [Section 10](#sec-ai-harness-landscape); for the open-weight and fully local end of the spectrum, see [Section 4](#sec-ai-catalog-coding-agents).
 
 Before connecting any platform, check:
 
@@ -101,7 +120,7 @@ The coding agent ecosystem encompasses a spectrum of architectures ranging from 
 
 For air-gapped environments, strict data privacy requirements, or zero-marginal-cost development, developers pair local model runners like **[Ollama](https://ollama.com/)** with dedicated agent harnesses (detailed setup and hardware sizing are covered in [Section 20](#sec-ai-offline)):
 
-- **Terminal Orchestrators**: Harnesses like **[Aider](https://aider.chat/)** and **[OpenHands](https://github.com/All-Hands-AI/OpenHands)** (formerly OpenDevin) connect directly to Ollama endpoints running open-weight coding models (such as `Qwen2.5-Coder`, `DeepSeek-Coder-V2`, or `Llama 3.3`), managing git commits, multi-file edits, and automated test-and-repair loops.
+- **Terminal Orchestrators**: Harnesses like **[OpenCode](https://opencode.ai)** (see [Section 21](#sec-ai-opencode-ollama)), **[Aider](https://aider.chat/)**, and **[OpenHands](https://github.com/All-Hands-AI/OpenHands)** (formerly OpenDevin) connect directly to Ollama endpoints running open-weight coding models (such as `Qwen2.5-Coder`, `DeepSeek-Coder-V2`, or `Llama 3.3`), managing git commits, multi-file edits, and automated test-and-repair loops.
 - **Editor Integrations**: Extensions such as **[Continue](https://www.continue.dev/)** and **[CodeCompanion](https://github.com/olimorris/codecompanion.nvim)** embed local Ollama models directly into VS Code, JetBrains IDEs, and Neovim, providing inline autocompletion and interactive chat without transmitting code to cloud APIs.
 
 #### Comparative Taxonomy of Coding Agent Architectures
@@ -3841,6 +3860,8 @@ When selecting a collaborative workspace agent for academic and computational re
 
 *2001: A Space Odyssey*. 1968. Film. <https://en.wikipedia.org/wiki/2001:_A_Space_Odyssey_(film)>.
 
+Amazon Web Services. 2026. *Kiro Documentation*. Documentation. <https://kiro.dev/docs/>.
+
 Anthropic. 2026. *Claude Cowork Overview*. Documentation. <https://claude.com/docs/cowork/overview>.
 
 Asimov, Isaac. 1950. *I, Robot*. Novel; Gnome Press. <https://search.library.ucdavis.edu/permalink/01UCD_INST/9fle3i/alma990000226350403126>.
@@ -3853,9 +3874,15 @@ Belcak, Peter, Greg Heinrich, Shizhe Diao, et al. 2025. *Small Language Models A
 
 Card, Orson Scott. 1985. *Ender’s Game*. Novel; Tor Books. <https://en.wikipedia.org/wiki/Ender%27s_Game>.
 
+Cline. 2026. *Cline: AI Coding, Open Source and Open Choice*. Product page. <https://cline.bot/>.
+
+Cursor. 2026. *Cloud Agents*. Documentation. <https://cursor.com/docs/cloud-agent>.
+
 Dettmers, Tim, Artidoro Pagnoni, Ari Holtzman, and Luke Zettlemoyer. 2023. *QLoRA: Efficient Finetuning of Quantized LLMs*. arXiv preprint. <https://arxiv.org/abs/2305.14314>.
 
 Flight of the Conchords. 2007. *The Humans Are Dead*. Music Video. <https://www.youtube.com/watch?v=B1BdQcJ2ZYY>.
+
+Google. 2026. *Getting Started with Jules*. Documentation. <https://jules.google.com/docs/>.
 
 Herbert, Frank. 1965. *Dune*. Novel; Chilton Books. <https://en.wikipedia.org/wiki/Organizations_of_the_Dune_universe#Thinking_machines>.
 
@@ -3863,13 +3890,21 @@ Hu, Edward J., Yelong Shen, Phillip Wallis, et al. 2021. *LoRA: Low-Rank Adaptat
 
 LeCun, Yann. 2022. *A Path Towards Autonomous Machine Intelligence*. Meta AI Research; New York University; Technical Report. <https://openreview.net/forum?id=BZ5a1r-kVsf>.
 
+Ollama. 2026. *Ollama*. Product page. <https://ollama.com/>.
+
 OpenAI. 2026. *Get Started with ChatGPT Work*. Documentation. <https://learn.chatgpt.com/docs/get-started-with-work>.
+
+OpenCode. 2026. *Intro: AI Coding Agent Built for the Terminal*. Documentation. <https://opencode.ai/docs/>.
+
+OpenHands. 2026. *OpenHands Documentation: Introduction*. Documentation. <https://docs.openhands.dev/>.
 
 *Terminator 3: Rise of the Machines*. 2003. Film. <https://en.wikipedia.org/wiki/Terminator_3:_Rise_of_the_Machines>.
 
 *The Matrix*. 1999. Film. <https://en.wikipedia.org/wiki/The_Matrix>.
 
 *WarGames*. 1983. Film. <https://en.wikipedia.org/wiki/WarGames>.
+
+Warp. 2026. *Getting Started with Warp*. Documentation. <https://docs.warp.dev/>.
 
 Back to top
 
