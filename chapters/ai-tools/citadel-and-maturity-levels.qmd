@@ -1,0 +1,210 @@
+Every lab that uses a coding agent for more than one-off edits
+eventually builds something around it:
+instruction files, then skills, then hooks, then scripts that watch pull requests.
+@sec-ai-customization maps those mechanisms one at a time.
+This section looks at the question from the other end:
+what does a *complete* layer look like when someone builds one deliberately,
+and how much of it does the lab actually need?
+
+The example is [Citadel](https://github.com/SethGammon/Citadel) [@citadel_repo],
+an open-source "operating layer" for Claude Code and OpenAI Codex.
+Issue [#102](https://github.com/Morrison-Lab/wai/issues/102) paired it with a
+r/ClaudeAI post describing five maturity levels of Claude Code use.
+That post could not be fetched from the network this section was written on
+(every route to `reddit.com` was blocked, measured 2026-09-09),
+so the five-level model is tracked separately in
+[#227](https://github.com/Morrison-Lab/wai/issues/227),
+and the ladder discussed here is Citadel's own.
+
+#### What Citadel is
+
+Citadel is a plugin, not a harness (@sec-ai-harnesses).
+It installs into an existing Claude Code or Codex session through the
+runtime's plugin marketplace, pinned to a release tag,
+and then adds four things around the agent you already run [@citadel_repo]:
+
+- a single natural-language entry point, `/do`, that routes a request to a skill,
+- repository-local state under `.planning/` that survives the end of a session,
+- approval boundaries and verification hooks around multi-step changes, and
+- coordination for several agents working in parallel worktrees.
+
+It is MIT-licensed JavaScript requiring Node.js 22 or later,
+and it is essentially one person's project:
+of roughly 630 commits, 600 are by the author,
+19 by Dependabot, and the rest by three occasional contributors
+(measured 2026-09-09).
+The repository was created in March 2026,
+has 920 stars and 82 forks,
+and its latest release, `v1.3.5`, dates from 2026-08-13.
+The release ships 48 skills, 35 hook scripts across 29 lifecycle events,
+and 7 subagent definitions.
+
+The README frames the operating loop as five public states:
+**Request**, **Run**, **Evidence**, **Needs You**, and **Resume**.
+The last two are the interesting ones.
+"Needs You" is a deliberate stop that names the exact approval,
+conflict, or missing evidence required before the agent continues.
+"Resume" means the repo-local state names the next useful action for a fresh session,
+so that a session ending is not the same as the work being lost.
+
+#### The orchestration ladder
+
+Citadel's architecture document [@citadel_architecture] arranges its capabilities
+as a ladder, with the instruction to use the cheapest rung that fits:
+
+| Rung | Duration | Token cost | State kept | Use when |
+|---|---|---|---|---|
+| Skill | minutes | low | none | a focused task with a known pattern |
+| Marshal | half an hour to two hours | medium | a session log | several steps, one session |
+| Archon | hours to days | high | a campaign file | work that must survive across sessions |
+| Fleet | days | very high | a session file | three or more parallel streams |
+
+: Citadel's orchestration ladder, from the project's architecture document (measured 2026-09-09). {#tbl-citadel-ladder}
+
+A skill is a `SKILL.md` protocol file in the format @sec-ai-agent-skills describes,
+loaded on demand and costing nothing when not loaded.
+Marshal chains skills inside one session.
+Archon runs a multi-session campaign whose state lives in a Markdown campaign file
+with a feature ledger, a decision log, and a machine-readable continuation point,
+re-read at the start of every invocation.
+Fleet spawns agents in isolated git worktrees in waves,
+and compresses each wave's discoveries to a few hundred tokens
+so the next wave starts informed rather than rediscovering.
+
+The `/do` router that sits above the ladder narrows a request in four stages.
+Exact-command matching and a check of active campaign state cost no model tokens;
+candidate discovery from built-in and project-local skills also costs none;
+only the final stage, a semantic classifier that reads scope, complexity,
+persistence, and parallelism, spends around 500 tokens.
+Only an exact command can skip that classifier,
+and an explicit route override changes which skill runs
+without bypassing the approval or verification boundaries.
+
+#### Enforcement and evidence
+
+The part of Citadel most relevant to the lab's own practice is
+how much of its policy is enforced rather than advised.
+@sec-ai-customization makes the point that an instruction file is context the model may ignore,
+and that a rule you cannot afford to have ignored belongs in a hook.
+Citadel takes that seriously in three layers [@citadel_architecture]:
+
+- **Hooks** on every tool call:
+  `PreToolUse` scripts that block edits to protected files and gate pushes and pull requests
+  behind user consent,
+  `PostToolUse` scripts that run the project's type check and file-placement rules,
+  and session-start scripts that scaffold state and restore context after compaction.
+- **A spawned judge**: a read-only `policy-enforcer` subagent
+  that receives a proposed hard-to-reverse action and returns a structured allow-or-block verdict,
+  with the most severe rule tier always blocking.
+- **Signed telemetry**: every event and artifact record carries a content hash,
+  optionally an `HMAC` signature,
+  and lineage fields linking runs, agents, and tasks.
+
+Verification reports one of four outcomes: passed, failed, blocked, or unknown.
+Missing evidence is never promoted to success.
+That is the same instinct as the first rule in @sec-ai-best-practices,
+never to assume an agent's output is correct:
+an unknown that reads as a pass is worse than a failure you can see.
+
+The project's threat model [@citadel_threat_model] is equally plain about what it does not do.
+Citadel runs with whatever permissions the host runtime has;
+it is not a sandbox, it does not make an untrusted repository safe to run,
+and it does not claim to stop prompt injection.
+It "does not replace `CLAUDE.md`, `AGENTS.md`, branch protection, or human review."
+
+#### What the evidence does and does not show
+
+Citadel is unusual among agent-tooling projects in publishing negative results
+beside positive ones [@citadel_experiments].
+Its README states that the first experiment "does not support a savings claim":
+one baseline timeout drove the aggregate advantage,
+and removing that pair reversed the economic direction.
+An outside-authored holdout across 24 repositories verified 3 of 16 tasks for Citadel
+against 2 of 16 for direct Claude, at similar cost,
+and the author calls that a diagnostic rather than proof,
+because a 12.5% baseline is too weak to compare against.
+The deterministic results are stronger but narrower:
+journaled recovery produced zero duplicate side effects where a naive restart produced three,
+and a leased "deploy steward" eliminated every stale-head merge race
+that independent loops produced across 45 pull requests,
+under a generated workload in disposable repositories.
+
+The public claim is stated as deliberately narrow:
+Citadel can make agent evaluations inspectable, reproducible, and honest about failure.
+Whether it makes a real user faster or cheaper is left open.
+For a lab deciding whether to adopt it,
+that candour is itself a reason to trust the rest of the documentation,
+and also the answer:
+the case for Citadel is governance and recoverability, not throughput.
+
+#### Where the lab sits and what the next level would take
+
+The lab's equivalent layer is [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config),
+described in @sec-ai-customization's worked example.
+On 2026-09-09 its `main` branch carried:
+
+- 190 skill directories
+- 47 hook scripts, each with a test file, registered on three lifecycle events
+  (`UserPromptSubmit`, `PreToolUse`, and `Stop`)
+- 8 subagent definitions, including an adversarial reviewer and a prose fact-checker
+- 81 shared workflow fragments imported into `CLAUDE.md`
+- 73 Python scripts, most of them instruments that a hook or a skill calls
+
+Against @tbl-citadel-ladder, that configuration sits firmly on the first rung
+and reaches the others by convention rather than by machinery:
+
+- **Skill.**
+  Fully occupied, and more heavily than Citadel's 48.
+  Nearly every lab convention is a skill,
+  because a skill is the mechanism the model reaches for unprompted.
+- **Marshal.**
+  Covered by skills that chain other skills
+  (the loop that drives a pull request through review rounds to a clean verdict is one)
+  and by the harness's own workflow tool.
+  There is no session log; the transcript is the log.
+- **Archon.**
+  Partly covered.
+  Persistence across sessions comes from memory files,
+  a per-session lab notebook,
+  and GitHub issues and pull requests as the durable record.
+  Nothing re-reads a campaign file at session start;
+  a new session reconstructs where it was from the issue tracker.
+- **Fleet.**
+  Reached in practice, since parallel workers in isolated worktrees are routine,
+  but coordinated by claim comments on issues and by branch naming,
+  not by a claims directory with scope-overlap detection.
+  Two workers editing one file find out at merge time.
+
+The hooks are the sharpest contrast.
+The lab's 47 are concentrated on three events,
+and most of them guard the *conversation*:
+that a reply exists, that a promise ships a mechanism,
+that a push was reviewed, that a merge was authorized.
+Citadel's 35 span 29 events and guard the *repository*:
+protected files, type checks after every edit, file placement, consent before a push.
+Both are enforcement; they enforce different things.
+
+So the next rung, if the lab wants it, is not more skills.
+Concretely it would take:
+
+- **A session-start hook** that scaffolds and re-reads resumable state,
+  so a fresh session begins from a named next action rather than from a tracker search.
+  This is Citadel's "Resume" state, and the lab notebook already holds the content;
+  what is missing is the hook that loads it.
+- **`PostToolUse` quality gates** that run the project's own checks
+  (a spell check, a lint, a render of the edited page) after each edit
+  instead of at push time.
+- **File-level claims for parallel workers**,
+  so that two sessions editing the same fragment collide at claim time rather than at merge time.
+- **A verification vocabulary with an explicit "unknown"**,
+  so that a check that did not run is reported as not having run.
+
+None of that requires adopting Citadel.
+Installing it would add 2,031 files of plugin,
+four state directories to every repository it manages,
+and a single-maintainer dependency,
+in exchange for machinery the lab has mostly rebuilt in its own idiom.
+The more useful reading of Citadel is as a reference design:
+a worked answer to what each rung of the ladder costs and what state it needs,
+written by someone who then measured whether it helped
+and published the answer either way.
