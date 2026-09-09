@@ -35,6 +35,7 @@ CLI
 CLI's
 CS336
 CUDA
+Celik
 Celonis
 ChatGPT
 ChatGPTCoding
@@ -48,6 +49,7 @@ CodeCompanion
 Codestral
 Codestral's
 Codex
+Combinator
 Composability
 Composio
 Conchords
@@ -99,11 +101,13 @@ Graphile
 Grok
 GummySearch
 HIPAA
+HN
 HPC
 HTTPS
 Handoff
 Hephaestus
 Herbert
+Herdr
 Hermes
 Homebrew
 IAM
@@ -124,6 +128,7 @@ Karpathy's
 Keanu
 Kepler
 Kimi
+Kiro
 Kong
 Kubrick
 Kurzweil
@@ -186,12 +191,14 @@ OpenDevin
 OpenHands
 OpenID
 OpenRouter
+OpenSSH
 PATs
 PEFT
 PID
 PR's
 PRMs
 PRs
+PTY
 Pandoc
 Parquet
 Pipedream
@@ -246,6 +253,7 @@ Sourcegraph
 Stanford
 SuperGrok
 SymPy
+TOML
 TORQCLAW
 TUI
 Tabnine
@@ -526,6 +534,7 @@ usefulai
 vLLM
 versionable
 vibecoding
+waitlist
 wakeup
 wakeup's
 webhook
