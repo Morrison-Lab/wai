@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-09 04:05:42 (PDT)
+Last modified: 2026-09-09 08:52:21 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -2725,7 +2725,7 @@ Rules are written as `Tool(specifier)` — for example `Bash(npm run test *)`, `
 
 Everything above changes what the agent *knows or must do*. An [MCP](https://modelcontextprotocol.io/) server changes what it *can reach*: typed tools, data resources, and reusable templates exposed over a standard protocol. The specification is explicit that it “does not dictate how AI applications use LLMs or manage the provided context.”
 
-So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. [Section 46](#sec-ai-mcp-server-setup) covers configuration and its failure modes.
+So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. [Section 47](#sec-ai-mcp-server-setup) covers configuration and its failure modes.
 
 #### Choosing
 
@@ -3081,7 +3081,7 @@ Two caveats are worth knowing before relying on it.
 
 **A successful subscribe does not guarantee delivery.** If a PR Steward agent already holds the watch on that pull request, the call still succeeds — but this session receives nothing. The tool result says so in as many words, so read the result rather than the exit status. Taking over the watch requires opting the steward out first, by removing its watching label on the pull request.
 
-**The tool does not exist on a locally-run GitHub MCP server.** Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. [Section 46](#sec-ai-mcp-server-setup) covers the local analogues to reach for instead.
+**The tool does not exist on a locally-run GitHub MCP server.** Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. [Section 47](#sec-ai-mcp-server-setup) covers the local analogues to reach for instead.
 
 **Webhook delivery is also not exhaustive**, which is the failure mode most likely to be mistaken for “nothing has happened”. CI *successes*, new pushes, and merge-conflict transitions can arrive late or not at all. A session that treats silence as “still green” will sit indefinitely on a pull request that has gone stale or conflicted, so a subscription is a supplement to periodically re-reading the pull request’s real state, not a replacement for it.
 
@@ -3347,7 +3347,55 @@ Session handoff transfers context and intent from an active session to a special
 - **Plan to implementation**: Hand off a high-level architectural plan or task specification directly to an implementation session to generate code.
 - **Continue in the cloud**: Hand off a local session to run in a cloud-hosted agent environment (such as background tasks leading to pull requests), freeing local editor resources while the agent executes in the background.
 
-# 45 Installing Claude Code on Windows
+# 45 Herdr: A Terminal Multiplexer for Coding Agents
+
+[Herdr](https://herdr.dev/) ([herdrdev 2026e](#ref-herdr)) is a terminal multiplexer built for running several coding agents at once (measured 2026-09-09). It describes itself as “the runtime your coding agents live on”: a background server owns the real terminal processes, clients attach to render them, and the server keeps every agent running when the client closes or an SSH connection drops. On top of that `tmux`-like core it detects which agent is running in each pane and reports whether that agent is working, blocked, done, or idle, so the operator looks only at the pane that needs attention.
+
+#### Maker and activity
+
+Herdr is developed by [`herdrdev`](https://github.com/herdrdev/herdr) ([herdrdev 2026f](#ref-herdr_github)), a one-person company founded in 2026 by Can Celik in Ankara, Turkey, and part of the Y Combinator Fall 2026 batch ([Y Combinator 2026](#ref-herdr_yc)). The project is written in Rust and licensed under Apache 2.0. The GitHub repository was created on 2026-03-27 and had about 37,000 stars, 2,700 forks, and 326 open issues on 2026-09-09, with the most recent commit the day before; the latest stable release was v0.9.0 on 2026-09-07, following v0.8.2 (2026-08-19) and v0.8.0 (2026-08-03) ([herdrdev 2026f](#ref-herdr_github)). A Show HN thread drew 166 points and 110 comments ([Hacker News 2026](#ref-herdr_hn)), and a community-maintained list of plugins and integrations has grown around the tool ([Konur 2026](#ref-awesome_herdr)). The software is pre-1.0 and changes quickly, so expect some of what follows to be out of date.
+
+#### What it does
+
+Herdr organizes terminals into a hierarchy of sessions, workspaces, tabs, and panes ([herdrdev 2026b](#ref-herdr_concepts)). A pane is a real terminal (a PTY) that the server owns; a workspace groups the tabs and panes for one repository, task, or investigation. The distinctive features, beyond ordinary multiplexing, are:
+
+- **Agent status detection**: Herdr recognizes 21 coding agents out of the box, including Claude Code, Codex, Cursor Agent CLI, OpenCode, GitHub Copilot CLI, Hermes Agent, Pi, Amp, Grok CLI, Antigravity CLI, and Kiro CLI, with Gemini CLI and Cline detected but less thoroughly tested ([herdrdev 2026a](#ref-herdr_agents)). Where an agent ships lifecycle hooks, the hook reports state authoritatively; otherwise Herdr matches the bottom of the live terminal buffer against a TOML detection manifest, and marks a pane `blocked` only when that snapshot matches a known approval, question, or permission prompt.
+- **Git worktree management**: the socket API exposes `worktree.list`, `worktree.create`, `worktree.open`, and `worktree.remove`, which “manage Git checkouts as Herdr workspaces” ([herdrdev 2026i](#ref-herdr_socket_api)). Creating a worktree checks out (or creates) a branch and opens the checkout as a new workspace grouped under the source workspace; the CLI form is `herdr worktree create --branch <name>` ([Copes 2026](#ref-flaviocopes_herdr)).
+- **A CLI and socket API for agents to drive**: the two are “the same surface agents drive”, speaking newline-delimited JSON over a Unix socket (a named pipe on Windows) at `~/.config/herdr/herdr.sock`. Methods include `pane.read` to read a pane’s recent output, `agent.prompt` to send a prompt, and `agent.wait` to block until another agent reaches `done` or `blocked` rather than polling ([herdrdev 2026i](#ref-herdr_socket_api)).
+- **Persistence and resume**: detaching with `ctrl+b q` leaves every process running; a server restart stops processes but restores workspaces, tabs, panes, working directories, and layout from a `session.json` snapshot, and supported agents can resume their own conversation (for example `claude --resume <id>`) from a saved session reference ([herdrdev 2026h](#ref-herdr_session_state)).
+- **Remote machines**: `herdr machine add <ssh-host>` registers a machine reachable over ordinary SSH, installs or starts the Herdr server there, and folds its agents into one combined agent list; authentication stays with OpenSSH, and Herdr stores no keys or passwords ([herdrdev 2026c](#ref-herdr_machines)). Remote servers must run Linux or macOS; a native Windows server is not supported as an SSH target.
+
+#### Install and use
+
+Herdr ships stable binaries for Linux, macOS, and Windows x86_64 ([herdrdev 2026g](#ref-herdr_install)). The one-line installers are:
+
+``` bash
+curl -fsSL https://herdr.dev/install.sh | sh
+```
+
+``` powershell
+powershell -ExecutionPolicy Bypass -c "irm https://herdr.dev/install.ps1 | iex"
+```
+
+Homebrew (`brew install herdr`), `mise`, and Nix are also supported. Run `herdr` to start the server and attach a client, `herdr agent list` to see detected agents and their states, `herdr status` to summarize the runtime, and `herdr update` to upgrade. The default prefix key is `ctrl+b`, as in `tmux`, and the configuration file lives at `~/.config/herdr/config.toml` (`%APPDATA%\herdr\config.toml` on Windows) ([herdrdev 2026d](#ref-herdr_agent_guide)). The maintainers publish an [agent guide](https://herdr.dev/agent-guide.md) ([herdrdev 2026d](#ref-herdr_agent_guide)) meant to be handed to a coding agent so it can set Herdr up for you.
+
+#### Pricing and license
+
+The runtime is free and open source under the Apache 2.0 license. The landing page announces a paid “Herdr Cloud” as “coming soon”, described as connecting your own machines without configuring SSH, with a waitlist and no published pricing (measured 2026-09-09) ([herdrdev 2026e](#ref-herdr)).
+
+#### Useful to us?
+
+Herdr overlaps with two things the lab already does (**?@sec-orch-baseline**): running several Claude Code sessions in parallel, and isolating each one in its own git worktree. It does not replace either. Herdr runs the same agent CLIs unchanged, and its worktree commands wrap the same `git worktree` calls that Claude Code’s own worktree isolation makes. What it adds is the layer between those sessions and the person watching them:
+
+- **An attention queue instead of a wall of terminals.** When a dozen sessions run at once, the expensive part is finding the one waiting on a permission prompt. The blocked, working, and done states Herdr aggregates across every workspace and every machine answer that question at a glance, which is the gap one early adopter reported it filling when herding parallel agents on a remote box ([Coles 2026](#ref-coles_herdr)).
+- **Sessions that survive a closed laptop.** Long runs of the lab’s review-and-iterate loop currently die with the terminal that started them unless they are already running on a server under `tmux`. Herdr gives the same persistence with a friendlier client, and can reattach to a Claude Code conversation by session ID after a restart.
+- **A machine-readable control surface.** `agent.wait` and `pane.read` let a supervising agent spawn helpers in separate worktrees, wait until each is done or blocked, and read their output, without the polling loops our current scheduled check-ins use.
+
+The same early adopters name the limits ([Coles 2026](#ref-coles_herdr); [Copes 2026](#ref-flaviocopes_herdr)). Herdr provides no sandboxing and does not isolate file changes between agents sharing a directory; worktrees, permissions, and network egress remain the user’s problem, so our hooks and permission rules stay in place unchanged. Windows support is in beta, a Windows machine cannot serve as a remote target, and the tool is pre-1.0. It also sits beside, not inside, the editor-hosted session views described in [Section 44](#sec-ai-vscode-agent-sessions): VS Code discovers CLI sessions and hands work between harnesses, while Herdr owns the terminals those sessions run in.
+
+The practical recommendation is to try Herdr on a Linux workstation or server where a lab member already runs several Claude Code sessions, using one workspace per worktree. It is a small, reversible addition (no wrapper around the agent, no change to `ai-config`), and the status sidebar alone may justify it. Adopting the socket API as an orchestration layer is a larger step that we should defer until the project reaches a stable release.
+
+# 46 Installing Claude Code on Windows
 
 [Claude Code](https://www.anthropic.com/claude-code) is Anthropic’s command-line coding agent. Installing it on Windows works well, but a few platform-specific pitfalls can cost you hours if you don’t know about them. These notes capture a setup that works, and the gotchas to watch for.
 
@@ -3447,7 +3495,7 @@ claude --version      # prints the installed version number
 
 If you get a version number, you’re ready to run `claude` in your project directory. If you get `command not found`, re-check the two `PATH` issues above: the directory must be on `PATH`, and you must `rehash` (or open a fresh window) after changing it.
 
-# 46 Setting up MCP servers
+# 47 Setting up MCP servers
 
 The [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) is how a harness gains typed access to external systems. Configuring a server is usually a one-line command. Diagnosing one that *silently* isn’t working is the part worth writing down, because the common failure mode produces no error at all — only a quiet absence of tools you assumed were there.
 
@@ -3605,7 +3653,7 @@ The gap it closes is the copy-paste loop: without it, using something you discus
 
 It connects through the standard [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) as a remote server at `https://mcp.granola.ai/mcp`. For Claude or ChatGPT, enable it from the app’s connector/app settings and authenticate; for Cursor, Claude Code, or any other MCP client that supports a manual URL, register that URL directly (see [the announcement](https://www.granola.ai/blog/granola-mcp) for per-client steps). On an Enterprise plan it is an early-access beta, off by default until an admin enables it.
 
-# 47 Google Antigravity Python SDK
+# 48 Google Antigravity Python SDK
 
 The [`google-antigravity/antigravity-sdk-python`](https://github.com/google-antigravity/antigravity-sdk-python) repository provides the official Python SDK for building and automating agents on the Google Antigravity agent runtime (measured 2026-08-31; distributed via PyPI as `google-antigravity`).
 
@@ -3634,7 +3682,7 @@ Developers can customize agent behavior and enforce safety policies:
 | **Tool definitions** | In-process Python callables & MCP | JSON manifests, plugins, and CLI scripts |
 | **Runtime engine** | Embedded native binary | Managed local service |
 
-# 48 Unbounded Context with Magic Context
+# 49 Unbounded Context with Magic Context
 
 [`cortexkit/magic-context`](https://github.com/cortexkit/magic-context) is an open-source self-managing memory engine designed to provide unbounded context for AI coding agents (measured 2026-08-31). It operates as a background memory subsystem—often described as a “hippocampus for coding agents”—that extracts, consolidates, and retrieves long-term repository state without pausing the active coding turn.
 
@@ -3654,7 +3702,7 @@ A key challenge with dynamic prompt injection is preserving prompt caching effic
 - **Deferred background extraction**: Memory analysis and summarization tasks are deferred to idle windows or subagent threads, preventing token churn and latency spikes during high-tempo coding loops.
 - **Cross-session persistence**: Extracted knowledge persists in lightweight local stores across IDE restarts, enabling coding agents to resume work with full institutional memory of past decisions.
 
-# 49 Spec-Driven Development with Conductor
+# 50 Spec-Driven Development with Conductor
 
 [`gemini-cli-extensions/conductor`](https://github.com/gemini-cli-extensions/conductor) is an open-source plugin for AI coding agents (including Google Antigravity and Claude Code) that implements **Spec-Driven Development** (measured 2026-08-31). Rather than relying on conversational chat history that degrades over extended sessions, Conductor anchors agent behavior in structured, version-controlled Markdown artifacts stored directly in the repository, providing persistent context across multi-session workflows.
 
@@ -3676,7 +3724,7 @@ Conductor structures development into four distinct, sequential phases:
 | **Verification loop** | Manual spot-checking | Milestone-level automated tests and `/conductor:conductor-review` |
 | **Handoff & resumption** | Requires re-prompting or context replay | Any agent resumes from the checked-in track state |
 
-# 50 Anatomy of Agent Plugins
+# 51 Anatomy of Agent Plugins
 
 In modern AI coding assistants (such as Google Antigravity and Claude Code; see [Section 10](#sec-ai-harness-landscape) on the sunset of legacy Gemini CLI and its folding into Antigravity CLI), **plugins** serve as the top-level packaging and distribution layer for agent capabilities (measured 2026-09-01). While individual skills or Model Context Protocol (MCP) servers extend specific tasks, a plugin aggregates multiple extensibility primitives into a unified, version-controlled bundle.
 
@@ -3708,7 +3756,7 @@ Effective plugin architectures mitigate this through several strategies:
 - **On-demand skill activation**: Agents search skill catalogs dynamically when relevant keywords appear, rather than loading the entire skill directory into the initial system prompt.
 - **Prefix caching preservation**: Static plugin definitions are placed at the root of prompt structures so provider-level prompt caching remains undisturbed during multi-turn sessions.
 
-# 51 Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent
+# 52 Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent
 
 [`code-yeongyu/oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent) (originally published as **Oh My OpenCode** or `omo`, with community forks such as [`opensoft/oh-my-opencode`](https://github.com/opensoft/oh-my-opencode)) is an open-source multi-agent orchestration framework and plugin for AI coding agent harnesses (including OpenCode and OpenAI Codex CLI) with over 65,000 GitHub stars (measured 2026-09-01). Inspired by modular terminal configuration frameworks (such as [Oh My Zsh](https://ohmyz.sh/)), it expands single-agent coding into a specialized multi-agent system with automated model routing and background task execution.
 
@@ -3743,7 +3791,7 @@ A central capability of the framework is decoupling agent roles from a single mo
 | **Execution monitoring** | Standard terminal output | Interactive `tmux`-backed session management |
 | **Extensibility** | Individual plugins and MCPs | Curated bundle of tools, agents, and MCP integrations |
 
-# 52 Managing Gemini API Spend and Cost Optimization
+# 53 Managing Gemini API Spend and Cost Optimization
 
 This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.
 
@@ -3789,7 +3837,7 @@ To maximize the efficiency of your API spend across local CLI sessions, subagent
 - **Use the Batch API for Non-Realtime Tasks**: For offline batch processing, evaluation suites, or background doc updates, submit requests via the Gemini Batch API to receive a 50% discount on input and output tokens.
 - **GitHub UI Diff Collapsing**: Mark dependency lockfiles (`*.lock`, `package-lock.json`, `yarn.lock`, `renv.lock`) and generated build artifacts as `linguist-generated=true` in `.gitattributes` to collapse them in GitHub’s web diff view and exclude them from repository language statistics.
 
-# 53 Collaborative AI Workspaces: Claude Cowork and Gemini Spark
+# 54 Collaborative AI Workspaces: Claude Cowork and Gemini Spark
 
 The 2026 AI ecosystem has expanded beyond reactive chat windows and command-line coding orchestrators into collaborative workspace agents (measured 2026-09-01). These systems operate directly on multi-file workspaces, desktop applications, and cloud productivity suites to automate complex, multi-step analytical and administrative workflows.
 
@@ -3816,7 +3864,7 @@ The 2026 AI ecosystem has expanded beyond reactive chat windows and command-line
 Similar collaborative workspace paradigms have emerged across other frontier ecosystems:
 
 - **ChatGPT Work and OpenAI Canvas**: [ChatGPT Work](https://learn.chatgpt.com/docs/get-started-with-work) ([OpenAI 2026](#ref-chatgpt_work)) (see **?@sec-chatgpt-work**) and Canvas provide side-by-side document and code editing with inline line-level revisions, interactive targeted edits, and multi-file artifact tracking.
-- **Cursor and Google Antigravity Agent Workspaces**: Developer-centric workspace agents providing multi-agent delegation, worktree isolation, and structured planning workflows (such as Conductor extension spec-driven development, [Section 49](#sec-ai-conductor-extension)).
+- **Cursor and Google Antigravity Agent Workspaces**: Developer-centric workspace agents providing multi-agent delegation, worktree isolation, and structured planning workflows (such as Conductor extension spec-driven development, [Section 50](#sec-ai-conductor-extension)).
 - **Notion AI and Microsoft Copilot Studio**: Enterprise knowledge graph agents designed for querying organizational wikis and automating business process workflows.
 
 #### Comparative Taxonomy of Workspace Agents
@@ -3853,13 +3901,39 @@ Belcak, Peter, Greg Heinrich, Shizhe Diao, et al. 2025. *Small Language Models A
 
 Card, Orson Scott. 1985. *Ender’s Game*. Novel; Tor Books. <https://en.wikipedia.org/wiki/Ender%27s_Game>.
 
+Coles, Matt. 2026. *Herding Parallel Agents on a Remote Box with Herdr*. Blog post. <https://coles.codes/posts/herding-agents-with-herdr/>.
+
+Copes, Flavio. 2026. *A Deep Dive into Herdr*. Blog post. <https://flaviocopes.com/herdr/>.
+
 Dettmers, Tim, Artidoro Pagnoni, Ari Holtzman, and Luke Zettlemoyer. 2023. *QLoRA: Efficient Finetuning of Quantized LLMs*. arXiv preprint. <https://arxiv.org/abs/2305.14314>.
 
 Flight of the Conchords. 2007. *The Humans Are Dead*. Music Video. <https://www.youtube.com/watch?v=B1BdQcJ2ZYY>.
 
+Hacker News. 2026. *Herdr: Agent Multiplexer That Lives in Your Terminal*. Show HN discussion thread. <https://news.ycombinator.com/item?id=48714802>.
+
 Herbert, Frank. 1965. *Dune*. Novel; Chilton Books. <https://en.wikipedia.org/wiki/Organizations_of_the_Dune_universe#Thinking_machines>.
 
+herdrdev. 2026a. *Agents*. Herdr documentation. <https://herdr.dev/docs/agents/>.
+
+herdrdev. 2026b. *Concepts and Keybindings*. Herdr documentation. <https://herdr.dev/docs/concepts/>.
+
+herdrdev. 2026c. *Connecting Machines*. Herdr documentation. <https://herdr.dev/docs/connecting-machines/>.
+
+herdrdev. 2026d. *Herdr Agent Guide*. Herdr documentation. <https://herdr.dev/agent-guide.md>.
+
+herdrdev. 2026e. *Herdr: The Runtime Coding Agents Run on*. Website. <https://herdr.dev/>.
+
+herdrdev. 2026f. *Herdrdev/Herdr: The Runtime Your Coding Agents Live on*. GitHub repository. <https://github.com/herdrdev/herdr>.
+
+herdrdev. 2026g. *Install Herdr*. Herdr documentation. <https://herdr.dev/docs/install/>.
+
+herdrdev. 2026h. *Session State*. Herdr documentation. <https://herdr.dev/docs/session-state/>.
+
+herdrdev. 2026i. *Socket API*. Herdr documentation. <https://herdr.dev/docs/socket-api/>.
+
 Hu, Edward J., Yelong Shen, Phillip Wallis, et al. 2021. *LoRA: Low-Rank Adaptation of Large Language Models*. arXiv preprint. <https://arxiv.org/abs/2106.09685>.
+
+Konur, Yigit. 2026. *Awesome-Herdr: A Curated Guide to the Herdr Ecosystem*. GitHub repository. <https://github.com/yigitkonur/awesome-herdr>.
 
 LeCun, Yann. 2022. *A Path Towards Autonomous Machine Intelligence*. Meta AI Research; New York University; Technical Report. <https://openreview.net/forum?id=BZ5a1r-kVsf>.
 
@@ -3870,6 +3944,8 @@ OpenAI. 2026. *Get Started with ChatGPT Work*. Documentation. <https://learn.cha
 *The Matrix*. 1999. Film. <https://en.wikipedia.org/wiki/The_Matrix>.
 
 *WarGames*. 1983. Film. <https://en.wikipedia.org/wiki/WarGames>.
+
+Y Combinator. 2026. *Herdr: Building the Open Agent Runtime*. Company profile. <https://www.ycombinator.com/companies/herdr>.
 
 Back to top
 
