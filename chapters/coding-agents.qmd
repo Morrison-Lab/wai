@@ -161,6 +161,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/gemini-code-assist-review.qmd >}}
 
+# PR-Agent: Open-Source Pull-Request Review Bot {#sec-ai-pr-agent}
+
+{{< include ai-tools/pr-agent.qmd >}}
+
 # How a Session Learns a PR Changed {#sec-ai-pr-activity-notifications}
 
 {{< include ai-tools/pr-activity-notifications.qmd >}}
