@@ -141,6 +141,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/claude-code-config-install.qmd >}}
 
+# Anthropic's Public Repositories {#sec-ai-anthropic-repos}
+
+{{< include ai-tools/anthropic-repos.qmd >}}
+
 # Claude Code Cloud Environments {#sec-ai-claude-cloud-env}
 
 {{< include ai-tools/claude-code-cloud-environments.qmd >}}
