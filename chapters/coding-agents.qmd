@@ -129,6 +129,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/posit-skills.qmd >}}
 
+# Posit AI Tooling on GitHub {#sec-ai-posit-dev-ai-repos}
+
+{{< include ai-tools/posit-dev-ai-repos.qmd >}}
+
 # Useful plugins {#sec-ai-useful-plugins}
 
 {{< include ai-tools/useful-plugins.qmd >}}
