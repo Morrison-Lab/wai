@@ -109,6 +109,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/small-local-models-agentic.qmd >}}
 
+# VoltAgent: TypeScript Agent Framework {#sec-ai-voltagent}
+
+{{< include ai-tools/voltagent.qmd >}}
+
 # Configuring GitHub Copilot Settings {#sec-ai-copilot-settings}
 
 {{< include ai-tools/copilot-settings.qmd >}}
