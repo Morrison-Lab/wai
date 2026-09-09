@@ -24,6 +24,7 @@ AutoGenAI
 BOM
 BYOK
 Badham
+Baseten
 Battlestar
 Belcak
 BenchLM
@@ -84,6 +85,7 @@ GCP
 GDPR
 GDScript's
 GLM
+GPQA
 GPT
 GPUs
 Galactica
@@ -144,6 +146,7 @@ LocalLLM
 LocalLLaMA
 MCP
 MCTS
+MMMU
 MSYS
 MWC
 MachineLearning
@@ -160,9 +163,11 @@ Modelfile
 Momus
 Moonshot
 Mostow
+Murati
 NLP
 NVIDIA
 NYU
+Nemotron
 Neovim
 Nous
 NumPy
@@ -229,6 +234,7 @@ RubyGems
 SDK
 SDKs
 SERG
+SGLang
 SHA
 SHA's
 SHAs
@@ -239,6 +245,7 @@ SSL
 SSO
 SVAMP
 SWE
+Schulman
 SciPy
 SemBr
 Sisyphus
@@ -432,6 +439,7 @@ poller
 ponytail
 positionals
 pre
+prefill
 preinstalls
 preloaded
 pretrained
@@ -461,6 +469,7 @@ reraise
 resyncing
 retryable
 reviewable
+rollouts
 rollup
 roxygen
 rsync
@@ -471,6 +480,7 @@ sandboxing
 schemas
 sembr
 serology
+serverless
 shigella
 signups
 spawner
