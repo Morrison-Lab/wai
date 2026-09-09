@@ -1,5 +1,6 @@
 ACL
 ADK
+AES
 AIME
 AI_Agents
 AMC
@@ -33,6 +34,7 @@ CHANGELOG
 CI's
 CLI
 CLI's
+CRM
 CS336
 CUDA
 Celonis
@@ -59,6 +61,7 @@ CrewAI
 Ctrl
 DDI
 DIFFSTAT
+DMs
 DOCX
 DOIs
 DOTALL
@@ -137,6 +140,7 @@ LangChain
 LangGraph
 LeCun
 Lifecycle
+Lindy
 LiteLLM
 LlamaIndex
 LoRA
@@ -148,9 +152,12 @@ MSYS
 MWC
 MachineLearning
 Maia
+Manus
+Manus's
 Mastra
 MattFlower
 Maxima
+Meta's
 Metis
 MinTTY
 MiniMax
@@ -163,6 +170,7 @@ Mostow
 NLP
 NVIDIA
 NYU
+Nami
 Neovim
 Nous
 NumPy
@@ -189,6 +197,7 @@ OpenRouter
 PATs
 PEFT
 PID
+PIPEDA
 PR's
 PRMs
 PRs
@@ -239,6 +248,7 @@ SSL
 SSO
 SVAMP
 SWE
+SaaS
 SciPy
 SemBr
 Sisyphus
@@ -264,6 +274,8 @@ VPC
 VPN
 VRAM
 Vernor
+Vestra
+Vestra's
 VibeCodeDevs
 Vinge
 WIF
@@ -276,6 +288,7 @@ YAML
 Yann
 Z.ai
 Zapier
+Zapier's
 Zechner
 Zsh
 agentic
@@ -321,6 +334,7 @@ compat
 config
 configs
 crewai
+cron
 cwd
 dabstep
 dbt
@@ -369,6 +383,7 @@ honouring
 honours
 hotspot
 iMessage
+installable
 instantiation
 integrations
 invariants
@@ -486,6 +501,7 @@ subissues
 submodule
 suboptimal
 subprocess
+subprocessor
 subtasks
 summarization
 summarizer

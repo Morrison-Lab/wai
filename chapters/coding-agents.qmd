@@ -173,6 +173,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/editing-with-docx-files.qmd >}}
 
+# Hosted AI Agent Offices: Vestra and Similar {#sec-ai-agent-offices}
+
+{{< include ai-tools/ai-agent-offices.qmd >}}
+
 # Copilot Instructions for this Repository
 
 {{< include ai-tools/copilot-instructions-explanation.qmd >}}
