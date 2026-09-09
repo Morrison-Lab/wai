@@ -1,5 +1,6 @@
 ACL
 ADK
+AGPL
 AIME
 AI_Agents
 AMC
@@ -11,6 +12,7 @@ Andrej
 Anthropic
 Anthropic's
 Antigravity
+Antigravity's
 Apache
 Apikey
 Armin
@@ -45,6 +47,7 @@ ClaudeCode
 Cline
 Cmd
 CodeCompanion
+CodeNomad
 Codestral
 Codestral's
 Codex
@@ -79,6 +82,7 @@ Expo
 Extensibility
 FPV
 FastAPI
+Firecrawl
 Frictionless
 GCP
 GDPR
@@ -102,6 +106,7 @@ HIPAA
 HPC
 HTTPS
 Handoff
+Helicone
 Hephaestus
 Herbert
 Hermes
@@ -114,6 +119,7 @@ Inflexa
 Integrations
 Integromat
 Isabelle
+JFrog
 JSON
 JetBrains
 Jules
@@ -152,6 +158,7 @@ Mastra
 MattFlower
 Maxima
 Metis
+MiMo
 MinTTY
 MiniMax
 Mistral
@@ -159,6 +166,7 @@ MoE
 Modelfile
 Momus
 Moonshot
+Morph's
 Mostow
 NLP
 NVIDIA
@@ -167,6 +175,7 @@ Neovim
 Nous
 NumPy
 NuminaMath
+Numman
 OAI
 OAICopilot
 OAuth
@@ -180,8 +189,10 @@ OpenAI
 OpenAI's
 OpenAPI
 OpenAgent
+OpenChamber
 OpenClaw
 OpenCode
+OpenCode's
 OpenDevin
 OpenHands
 OpenID
@@ -241,14 +252,22 @@ SVAMP
 SWE
 SciPy
 SemBr
+SideCars
 Sisyphus
+Sleev
+SolidJS
 Sourcegraph
 Stanford
 SuperGrok
+Supermemory
 SymPy
 TORQCLAW
+TTY
 TUI
 Tabnine
+Tailscale
+Tauri
+Tavily
 TensorRT
 TinyTeX
 Treg
@@ -263,12 +282,14 @@ VM
 VPC
 VPN
 VRAM
+Vercel
 Vernor
 VibeCodeDevs
 Vinge
 WIF
 WSL
 Wachowskis
+Wakatime
 WhatsApp
 Workspaces
 YAGNI
@@ -277,6 +298,7 @@ Yann
 Z.ai
 Zapier
 Zechner
+Zellij
 Zsh
 agentic
 agentskills
@@ -288,8 +310,10 @@ analytics
 anonymized
 arity
 assignees
+async
 auditability
 auditable
+autocommands
 autocomplete
 autocompletion
 autofix
@@ -327,7 +351,9 @@ dbt
 declaratively
 decomposable
 deduplicate
+deduplicating
 dev
+devcontainer
 diff's
 diffstat
 disambiguator
@@ -471,6 +497,7 @@ sandboxing
 schemas
 sembr
 serology
+shadcn
 shigella
 signups
 spawner
@@ -510,6 +537,7 @@ triages
 uarto
 ucdavis
 un
+unaudited
 unclaim
 unexamined
 unfalsifiable
@@ -528,6 +556,7 @@ versionable
 vibecoding
 wakeup
 wakeup's
+walkthrough
 webhook
 workspace's
 workspaces
