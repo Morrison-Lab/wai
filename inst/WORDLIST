@@ -11,6 +11,8 @@ Andrej
 Anthropic
 Anthropic's
 Antigravity
+Anytype
+Anytype's
 Apache
 Apikey
 Armin
@@ -18,6 +20,8 @@ ArtificialInteligence
 Asimov
 Assignees
 Atlas
+Atlassian
+Atlassian's
 AutoGPT
 AutoGen
 AutoGenAI
@@ -44,6 +48,7 @@ ClaudeAI
 ClaudeCode
 Cline
 Cmd
+Coda
 CodeCompanion
 Codestral
 Codestral's
@@ -52,7 +57,9 @@ Composability
 Composio
 Conchords
 Config
+Confluence
 Contextify
+Copilot
 Coq
 Cowork
 CrewAI
@@ -116,6 +123,7 @@ Integromat
 Isabelle
 JSON
 JetBrains
+Jira
 Jules
 KV
 Kanban
@@ -164,6 +172,7 @@ NLP
 NVIDIA
 NYU
 Neovim
+Notion
 Nous
 NumPy
 NuminaMath
@@ -173,9 +182,11 @@ OAuth
 OIDC
 OSS
 OTPM
+Obsidian
 Ollama
 Ollama's
 OlympiadBench
+OneNote
 OpenAI
 OpenAI's
 OpenAPI
@@ -205,6 +216,7 @@ Pre
 PreToolUse
 Preconfiguring
 Prometheus
+Protobuf
 Prowlo
 Putnam
 PyPI
@@ -225,6 +237,7 @@ Replit
 RevealJS
 Ronacher
 Roo
+Rovo
 RubyGems
 SDK
 SDKs
@@ -245,6 +258,7 @@ Sisyphus
 Sourcegraph
 Stanford
 SuperGrok
+Superhuman
 SymPy
 TORQCLAW
 TUI
@@ -321,6 +335,7 @@ compat
 config
 configs
 crewai
+cron
 cwd
 dabstep
 dbt
@@ -446,6 +461,7 @@ rOpenSci
 rStar
 reachability
 rebase
+rebrand
 rebranded
 reflow
 refspec
@@ -462,6 +478,7 @@ resyncing
 retryable
 reviewable
 rollup
+rollups
 roxygen
 rsync
 rulesets
@@ -485,6 +502,7 @@ subissue
 subissues
 submodule
 suboptimal
+subpages
 subprocess
 subtasks
 summarization

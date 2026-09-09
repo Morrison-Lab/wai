@@ -225,6 +225,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/collaborative-workspaces.qmd >}}
 
+# AI-Enabled Knowledge Workspaces: Notion and Alternatives {#sec-ai-knowledge-workspaces}
+
+{{< include ai-tools/ai-knowledge-workspaces.qmd >}}
+
 # References {.unnumbered}
 
 ::: {#refs}
