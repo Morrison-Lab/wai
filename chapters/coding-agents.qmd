@@ -65,6 +65,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/relative-advantages-ai-humans.qmd >}}
 
+# Twelve Fixes for Claude Usage Limits {#sec-ai-claude-usage-limit-fixes}
+
+{{< include ai-tools/claude-usage-limit-fixes.qmd >}}
+
 # How to Work with Coding Agents
 
 {{< include ai-tools/how-to-work-with-agents.qmd >}}
