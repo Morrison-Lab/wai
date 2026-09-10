@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-10 00:19:21 (PDT)
+Last modified: 2026-09-10 00:48:19 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -606,7 +606,7 @@ As these technologies mature, AI agents may become better at tasks requiring con
 
 # 14 Twelve Fixes for Claude Usage Limits
 
-Issue \#207 asked for a summary of a YouTube video, “Never Hit a Claude Limit Again: 12 Fixes Ranked by How Much Window They Buy”, from the channel Hyperautomation Labs ([Hyperautomation Labs 2026](#ref-hyperautomation_claude_limits)). The video is ten and a half minutes long and was published on 2026-08-16; this summary works from its auto-generated English transcript, fetched with `yt-dlp` on 2026-09-10, so wording attributed to the presenter below may carry speech-to-text errors. The first draft of the summary was produced by the Antigravity command-line program from that transcript and then checked against it by hand.
+[Issue \#207](https://github.com/Morrison-Lab/wai/issues/207) asked for a summary of a YouTube video, “Never Hit a Claude Limit Again: 12 Fixes Ranked by How Much Window They Buy”, from the channel Hyperautomation Labs ([Hyperautomation Labs 2026](#ref-hyperautomation_claude_limits)). The video is ten and a half minutes long and was published on 2026-08-16; this summary works from its auto-generated English transcript, fetched with `yt-dlp` on 2026-09-10, so wording attributed to the presenter below may carry speech-to-text errors. The first draft of the summary was produced by the Antigravity command-line program from that transcript and then checked against it by hand.
 
 #### What the video claims
 
