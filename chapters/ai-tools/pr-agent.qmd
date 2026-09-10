@@ -64,7 +64,7 @@ Files that do not fit are named but not shown to the model.
 `v0.45.0` adds an opt-in large-diff chunking mode for `/review`
 that splits a diff across several calls and merges the results.
 
-Behaviour is configured in a `.pr_agent.toml` file at the repository root,
+Behavior is configured in a `.pr_agent.toml` file at the repository root,
 or by environment variables using dotted keys such as
 `pr_reviewer.extra_instructions` and `config.model` [@pr_agent_automation].
 Each tool has an `extra_instructions` field for free-text review guidance,
