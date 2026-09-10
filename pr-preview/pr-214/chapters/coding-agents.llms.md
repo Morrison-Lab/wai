@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-09 08:54:14 (PDT)
+Last modified: 2026-09-10 00:03:13 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -513,7 +513,7 @@ Table 7: General AI communities
 
 # 12 Thinking Machines Lab’s Inkling Models
 
-[Inkling](https://thinkingmachines.ai/inkling/) ([Thinking Machines Lab 2026a](#ref-inkling_page)) is a pair of open-weight, multimodal foundation models from Thinking Machines Lab (measured 2026-09-09). It is a model release, not a coding agent or a chat product: the weights are downloadable, and the company’s own hosted surfaces for it are a fine-tuning API and a playground rather than an end-user assistant. This section summarizes the release and asks whether it matters for our workflow.
+[Inkling](https://thinkingmachines.ai/inkling/) ([Thinking Machines Lab 2026a](#ref-inkling_page)) is a pair of open-weight, multimodal foundation models from Thinking Machines Lab (measured 2026-09-09). This is a model release, not a coding agent or a chat product: the weights are downloadable, and the company’s own hosted surfaces for it are a fine-tuning API and a playground rather than an end-user assistant. This section summarizes the release and asks whether it matters for our workflow.
 
 #### Who Thinking Machines Lab is
 
@@ -530,9 +530,9 @@ Both accept text, image, and audio input and produce text only ([Thinking Machin
 
 The announcement positions Inkling as a broad base for customization rather than a leaderboard winner ([Thinking Machines Lab 2026c](#ref-inkling_announcement)). Its claims, and the evidence offered for them:
 
-- **Breadth**: reported scores of 77.6% on SWE-Bench Verified, 63.8% on Terminal Bench 2.1, 87.2% on GPQA Diamond, and 73.5% on MMMU Pro, all at the highest effort setting.
-- **Efficiency**: the company reports that Inkling matches NVIDIA’s Nemotron 3 Ultra on Terminal Bench 2.1 using roughly a third of the tokens.
-- **Training**: 45 trillion tokens of text, image, audio, and video, then supervised fine-tuning on synthetic data and reinforcement learning with more than 30 million rollouts.
+- **Breadth**: reported scores of 77.6% on SWE-Bench Verified, 63.8% on Terminal Bench 2.1, 87.2% on GPQA Diamond, and 73.5% on MMMU Pro, all at the highest effort setting ([Thinking Machines Lab 2026c](#ref-inkling_announcement)).
+- **Efficiency**: the company reports that Inkling matches NVIDIA’s Nemotron 3 Ultra on Terminal Bench 2.1 using roughly a third of the tokens ([Thinking Machines Lab 2026c](#ref-inkling_announcement)).
+- **Training**: 45 trillion tokens of text, image, audio, and video, then supervised fine-tuning on synthetic data and reinforcement learning with more than 30 million rollouts ([Thinking Machines Lab 2026c](#ref-inkling_announcement)).
 
 These are the vendor’s own numbers on the vendor’s own runs; we have not reproduced any of them. Inkling-Small’s announcement reports 80.2% on SWE-Bench Verified and 31.6% on Humanity’s Last Exam, against Inkling’s 77.6% and 29.7% ([Thinking Machines Lab 2026e](#ref-inkling_small_announcement)).
 
