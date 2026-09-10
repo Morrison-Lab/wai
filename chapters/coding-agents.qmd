@@ -89,7 +89,7 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/agents-best-practices.qmd >}}
 
-# Firewall and Network Configuration
+# Firewall and Network Configuration {#sec-ai-firewall}
 
 {{< include ai-tools/agents-firewall-config.qmd >}}
 
@@ -152,6 +152,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 # How the Config Reaches a Machine {#sec-ai-config-install}
 
 {{< include ai-tools/claude-code-config-install.qmd >}}
+
+# Anthropic's Public Repositories {#sec-ai-anthropic-repos}
+
+{{< include ai-tools/anthropic-repos.qmd >}}
 
 # Claude Code Cloud Environments {#sec-ai-claude-cloud-env}
 
