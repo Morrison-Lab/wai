@@ -23,7 +23,8 @@ and they differ in who curates them
 
 - **`claude-plugins-official`**
   ([`anthropics/claude-plugins-official`](https://github.com/anthropics/claude-plugins-official) [@claude_plugins_official]).
-  Curated by Anthropic at its discretion; there is no application process.
+  Curated by Anthropic at its discretion;
+  there is no application process.
   Claude Code registers it automatically the first time it starts interactively,
   so `/plugin install <name>@claude-plugins-official` works with no setup.
   Browse it with `/plugin` (the **Discover** tab)
@@ -102,9 +103,11 @@ which is the path if anyone wants to wire up R's `languageserver`.
 - `claude-security`: deeper vulnerability scanning of your own code, at a chosen effort level.
 - `ralph-loop`: the self-referential iteration loop, treated on its own below.
 
-Verdict: `security-guidance` fills a gap `ai-config` does not cover and costs little, so install it.
+Verdict: `security-guidance` fills a gap `ai-config` does not cover and costs little,
+so install it.
 `commit-commands`, `code-review`, and `pr-review-toolkit` overlap the lab's forge workflow
-(claim, PR-on-claim, `ardi`, the `@claude` review action) and would run beside it rather than replace it;
+(claim, PR-on-claim, `ardi`, the `@claude` review action)
+and would run beside it rather than replace it;
 skip them unless you are working outside a lab repository.
 `feature-dev` and `code-modernization` are aimed at application codebases and have not earned a place here.
 
@@ -121,7 +124,8 @@ skip them unless you are working outside a lab repository.
 Verdict: `skill-creator` and `plugin-dev` are the ones to reach for when adding to `ai-config`,
 since the corpus is itself a plugin.
 `claude-md-management` duplicates `ai-config`'s `ums` and `memorize` skills
-and its `MEMORY.md` conventions; skip it in lab repositories.
+and its `MEMORY.md` conventions;
+skip it in lab repositories.
 `hookify` generates a hook from a description;
 `ai-config`'s hooks are hand-written Python with a test per hook,
 so use `hookify` for a personal one-off and the corpus for anything shared.
@@ -153,7 +157,8 @@ and messaging bridges for Discord, Telegram, and iMessage
 [@claude_code_discover_plugins].
 
 Verdict: `github` is the one that matters here;
-@sec-ai-mcp-server-setup covers configuring it, and @sec-ai-pr-activity-notifications what it adds.
+@sec-ai-mcp-server-setup covers configuring it,
+and @sec-ai-pr-activity-notifications what it adds.
 `context7` (live library documentation lookup) is worth a try for Python and JavaScript work.
 Everything else depends on whether the lab uses the service.
 
@@ -165,7 +170,7 @@ any GitHub repository with a `.claude-plugin/marketplace.json` is a marketplace
 and the four plugins in @sec-ai-useful-plugins
 (`sembr/skills`, `ponytail`, Contextify, and `ai-config` itself)
 all reach you that way.
-Two more are widely enough used to describe.
+One more is widely enough used to describe here.
 
 **Superpowers** ([`obra/superpowers`](https://github.com/obra/superpowers) [@obra_superpowers])
 calls itself "a complete software development methodology for your coding agents,
@@ -190,8 +195,6 @@ and `ai-config` already covers the same ground in its own vocabulary
 The skills that do not overlap
 (`systematic-debugging`, `test-driven-development`)
 are worth reading even if you do not install the plugin.
-
-**Ralph Wiggum** is the loop plugin treated in the next subsection.
 
 The community marketplace itself is small so far
 (four plugin directories visible on 2026-09-09: `eli5`, `quickdesign`, `testdino`, `tres-finance-plugin`;
@@ -257,8 +260,9 @@ Nothing changes between iterations except the repository:
 the previous run's files, commits, and test results are what the next run reads.
 Tests supply the backpressure that keeps each pass honest,
 and the operator "tunes Ralph by adding a sign" to the prompt
-when a failure pattern shows up.
-Huntley says it works best on greenfield projects, one task per loop.
+when a failure pattern shows up [@ghuntley_ralph].
+Huntley says it works best on greenfield projects,
+one task per loop [@ghuntley_ralph].
 
 The plugin moves that loop inside a single Claude Code session.
 `/ralph-loop "<prompt>" --max-iterations <n> --completion-promise "<text>"`
