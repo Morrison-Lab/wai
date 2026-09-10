@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-09 09:02:25 (PDT)
+Last modified: 2026-09-09 23:58:13 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3083,7 +3083,7 @@ Six further commands (`/add_docs`, `/generate_labels`, `/similar_issue`, `/help`
 
 Each command is a single model call, which the README describes as “~30 seconds, low cost” ([The PR Agent 2026h](#ref-pr_agent_repo)). Large diffs are handled by a compression strategy rather than by a multi-step agent loop: deletion-only hunks are dropped, deleted files are collapsed into a list, and remaining files are added in order of size until the prompt approaches the model’s token limit ([The PR Agent 2026f](#ref-pr_agent_compression)). Files that do not fit are named but not shown to the model. `v0.45.0` adds an opt-in large-diff chunking mode for `/review` that splits a diff across several calls and merges the results.
 
-Behaviour is configured in a `.pr_agent.toml` file at the repository root, or by environment variables using dotted keys such as `pr_reviewer.extra_instructions` and `config.model` ([The PR Agent 2026c](#ref-pr_agent_automation)). Each tool has an `extra_instructions` field for free-text review guidance, and `/review` has `require_*` switches (`require_security_review`, `require_tests_review`, and so on) that turn individual sections on or off ([The PR Agent 2026g](#ref-pr_agent_review)).
+Behavior is configured in a `.pr_agent.toml` file at the repository root, or by environment variables using dotted keys such as `pr_reviewer.extra_instructions` and `config.model` ([The PR Agent 2026c](#ref-pr_agent_automation)). Each tool has an `extra_instructions` field for free-text review guidance, and `/review` has `require_*` switches (`require_security_review`, `require_tests_review`, and so on) that turn individual sections on or off ([The PR Agent 2026g](#ref-pr_agent_review)).
 
 #### Supported forges and models
 
@@ -3958,7 +3958,7 @@ OpenAI. 2026. *Get Started with ChatGPT Work*. Documentation. <https://learn.cha
 
 The PR Agent. 2026a. *PR-Agent Documentation*. Documentation. <https://docs.pr-agent.ai/>.
 
-The PR Agent. 2026b. *PR-Agent License*. GitHub repository file. <https://github.com/The-PR-Agent/pr-agent/blob/main/LICENSE>.
+The PR Agent. 2026b. *PR-Agent License*. Documentation. <https://github.com/The-PR-Agent/pr-agent/blob/main/LICENSE>.
 
 The PR Agent. 2026c. *PR-Agent: Automations and Usage*. Documentation. <https://docs.pr-agent.ai/usage-guide/automations_and_usage/>.
 
@@ -3970,7 +3970,7 @@ The PR Agent. 2026f. *PR-Agent: PR Compression Strategy*. Documentation. <https:
 
 The PR Agent. 2026g. *PR-Agent: Review Tool*. Documentation. <https://docs.pr-agent.ai/tools/review/>.
 
-The PR Agent. 2026h. *PR-Agent: The Original Open-Source PR Reviewer*. GitHub repository. <https://github.com/The-PR-Agent/pr-agent>.
+The PR Agent. 2026h. *PR-Agent: The Original Open-Source PR Reviewer*. Software. <https://github.com/The-PR-Agent/pr-agent>.
 
 *WarGames*. 1983. Film. <https://en.wikipedia.org/wiki/WarGames>.
 
