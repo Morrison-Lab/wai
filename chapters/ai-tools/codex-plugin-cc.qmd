@@ -19,15 +19,17 @@ and the same repository checkout that the Codex CLI would use directly [@codex_p
 A Node.js script (`codex-companion.mjs`) does the actual work;
 the Markdown command files tell Claude to invoke that script once
 and to return Codex's output verbatim rather than paraphrasing it.
-That design is deliberate:
-the commands' own instructions forbid Claude from fixing anything
+The command files enforce this:
+they forbid Claude from fixing anything
 a Codex review reports until the user says which findings to act on.
 
 #### Installation
 
-Node.js 18.18 or later is required.
+Node.js 18.18 or later is required [@codex_plugin_cc].
 The plugin is installed through Claude Code's plugin marketplace mechanism
-(see @sec-ai-plugins-deep-dive for how marketplaces and manifests fit together):
+(see @sec-ai-plugins-deep-dive for how marketplaces and manifests fit together);
+the repository's `marketplace.json` names the marketplace `openai-codex`,
+which is why the install command does not repeat the repository name:
 
 ```bash
 /plugin marketplace add openai/codex-plugin-cc
@@ -49,11 +51,14 @@ whose bundle contains commands, one subagent, three skills, and a hook file
 Slash commands:
 
 - `/codex:review` runs Codex's built-in read-only review
-  on the working tree or on the branch against `--base <ref>`.
+  on the working tree or on the branch against `--base <ref>`,
+  with `--scope` to force one or the other
+  and `--wait` or `--background` to choose whether it blocks the session.
   It takes no focus text.
 - `/codex:adversarial-review` is the steerable version:
   it questions the design and assumptions rather than only the diff,
-  and accepts free-text focus such as "look for race conditions".
+  accepts free-text focus such as "look for race conditions",
+  and takes the same `--base`, `--scope`, `--wait`, and `--background` flags.
 - `/codex:rescue` hands a task to Codex to investigate or fix,
   with `--model`, `--effort`, `--resume`, and `--fresh` flags.
   By default this run is write-capable.
@@ -69,14 +74,18 @@ Subagent:
 - `codex:codex-rescue` (pinned to the Sonnet model tier)
   is a thin forwarder that `/codex:rescue` invokes.
   Its definition tells it to make exactly one `Bash` call to the companion script
-  and to do no repository inspection or independent reasoning of its own.
+  and to do no repository inspection or independent reasoning of its own,
+  beyond using the `gpt-5-4-prompting` skill to tighten the forwarded prompt.
 
 Skills (all marked `user-invocable: false`,
-so they load only inside the subagent):
+so Claude loads them by description and the user cannot call them by name):
 
-- `codex-cli-runtime`, the calling contract for the companion script
-- `gpt-5-4-prompting`, guidance for tightening a request into a block-structured Codex prompt
-- `codex-result-handling`, rules for presenting Codex output without altering it
+- `codex-cli-runtime`, the calling contract for the companion script,
+  attached to the subagent
+- `gpt-5-4-prompting`, guidance for tightening a request into a block-structured Codex prompt,
+  attached to the subagent
+- `codex-result-handling`, rules for presenting Codex output without altering it,
+  attached to no agent and so available to the main session
 
 Hooks:
 
@@ -88,7 +97,7 @@ Hooks:
   Codex reviews that turn and blocks the stop if it finds problems.
   The README warns that this can produce a long Claude-Codex loop
   that drains usage limits quickly,
-  and recommends enabling it only in an actively monitored session.
+  and recommends enabling it only in an actively monitored session [@codex_plugin_cc].
 
 #### Authentication and cost
 
@@ -102,12 +111,12 @@ Two routes exist [@codex_plugin_cc; @codex_pricing]:
   which OpenAI positions for shared or automated environments such as CI.
 
 Either way, the Claude Code session itself still bills to the Anthropic plan.
-A rescue run therefore spends two subscriptions at once:
+A rescue run therefore spends on both providers at once:
 Claude's tokens to dispatch and read back,
-and Codex's to do the work.
+and Codex's usage limits or API credits to do the work.
 Model and reasoning-effort defaults come from `~/.codex/config.toml`
 or a project-level `.codex/config.toml`,
-the latter only in a trusted project.
+the latter only in a trusted project [@codex_plugin_cc].
 
 #### Comparison with the lab's existing Codex paths
 
@@ -124,7 +133,7 @@ and polls a completion marker.
 It exists to spend the separately billed ChatGPT plan
 on heavy read/draft/verify fan-out before Claude's own quota.
 The plugin covers the single-task case of that skill
-with a nicer interface:
+and adds three things the skill lacks:
 job tracking, threads that can be resumed, and a subagent Claude can call proactively.
 It does not cover the fan-out case,
 it defaults to write-capable runs where the skill defaults to read-only,
@@ -148,7 +157,7 @@ that the lab's pull-request workflow relies on.
 
 #### Useful to us? Yes, for local second-opinion reviews; not a replacement
 
-The clearest win is `/codex:adversarial-review --base main`
+The main use is `/codex:adversarial-review --base main`
 as a cross-vendor second opinion before pushing,
 which is what `ai-config`'s adversarial self-review rule asks for
 and what the `delegate-to-codex` skill implements by hand.
@@ -159,7 +168,7 @@ Three cautions apply:
 
 - Leave the review gate off.
   A `Stop` hook that reruns Codex on every turn
-  burns both subscriptions at the rate of a chat conversation,
+  spends on both providers at the rate of a chat conversation,
   and the lab's own `Stop` hooks already gate on cheaper deterministic checks.
 - `/codex:rescue` writes to the working tree by default.
   In a shared worktree or a multi-agent session,
