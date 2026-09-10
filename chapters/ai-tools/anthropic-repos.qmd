@@ -1,0 +1,320 @@
+Anthropic publishes its code under the
+[`anthropics`](https://github.com/anthropics) GitHub organization.
+The organization held 108 repositories when surveyed
+(measured 2026-09-09).
+Claude Code itself is not open source,
+but its public repository is still useful,
+and so are several others.
+This section inventories the repositories that matter to us,
+says what the two headline repositories actually contain,
+and ends with a verdict on each.
+
+All counts below come from the GitHub API on the survey date
+(measured 2026-09-09);
+stars and push dates drift daily,
+and the license column reports what the API detected.
+`none` means the API found no license;
+for `claude-code` and `claude-agent-sdk-typescript` that is because
+`LICENSE.md` is a proprietary notice rather than a recognized open-source license,
+marked `none (proprietary)`,
+and for the other `none` rows there is no license file at all.
+`not detected` means a license file exists that the API could not classify
+(it reports `NOASSERTION`).
+A single row can also hide a split:
+`skills` has no root license file, so the API reports none,
+while its README says four of its skills are source-available.
+
+#### Which repositories matter to us
+
+Forks and archived repositories together are 38 of the 108
+(measured 2026-09-09):
+forks of infrastructure projects that Anthropic contributes patches to
+(`tokio`, `rayon`, `argo-cd`, `httpcore`, `orjson`, `beam`),
+and archived companions to research papers
+(`hh-rlhf`, `toy-models-of-superposition`, `sleeper-agents-paper`).
+Neither group concerns a lab that consumes Claude as a product.
+The rest sorts into six groups.
+
+| Repository | Purpose | Language | Stars | Last push | License | Verdict |
+|---|---|---|---|---|---|---|
+| `claude-code` | Issue tracker, changelog, and bundled plugins for the Claude Code CLI | Python (plugin scripts) | 144.5k | 2026-09-08 | none (proprietary) | Track issues and read the plugins |
+| `claude-code-action` | GitHub Action that runs Claude Code on PRs and issues | TypeScript | 8.8k | 2026-09-08 | MIT | Already in use; read its `examples/` |
+| `claude-code-base-action` | Read-only mirror of `base-action/` from the repository above | TypeScript | 974 | 2026-09-08 | MIT | Reference only; do not pin to it |
+| `claude-code-security-review` | Security-focused PR review action | Python | 6.2k | 2026-02-11 | MIT | Low priority; superseded by a review prompt |
+| `claude-agent-sdk-python` | Python SDK wrapping the Claude Code agent loop | Python | 8.1k | 2026-09-08 | MIT | Useful for scripted agents |
+| `claude-agent-sdk-typescript` | Issue tracker and changelog for the TypeScript agent SDK | Shell | 1.7k | 2026-09-08 | none (proprietary) | Track issues only |
+| `anthropic-sdk-python` | Raw Messages API client | Python | 3.9k | 2026-09-04 | MIT | Useful for direct API calls |
+| `sandbox-runtime` | OS-level sandbox (`srt`) for processes, MCP servers, and agents | TypeScript | 5.2k | 2026-09-07 | Apache-2.0 | Trial on Linux and macOS; alpha on Windows |
+| `skills` | Reference Agent Skills plus the `spec/` for the skill format | Python | 175.4k | 2026-09-03 | none | Read the spec; borrow document skills |
+| `claude-plugins-official` | Anthropic-curated plugin marketplace | Python | 36.1k | 2026-09-09 | Apache-2.0 | Install from it; see @sec-ai-useful-plugins |
+| `claude-plugins-community` | Read-only mirror of the community marketplace | Python | 3.7k | 2026-08-25 | Apache-2.0 | Browse before writing our own |
+| `knowledge-work-plugins` | Role-specific plugins built for Claude Cowork | Python | 23.9k | 2026-09-09 | Apache-2.0 | Templates for a lab-role plugin |
+| `claude-cookbooks` | Notebook recipes for the Claude API | Jupyter Notebook | 52.6k | 2026-09-03 | MIT | Reference when scripting the API |
+| `courses` | Five API and prompting courses | Jupyter Notebook | 22.8k | 2026-08-28 | not detected | Introductory material |
+| `prompt-eng-interactive-tutorial` | Nine-chapter prompting tutorial | Jupyter Notebook | 38.1k | 2026-08-28 | none | Introductory material; dated model names |
+| `claude-quickstarts` | Starter apps you can deploy (support agent, computer use) | TypeScript | 17.6k | 2026-09-04 | MIT | Skim only |
+| `devcontainer-features` | Dev Container feature that installs the CLI | Shell | 302 | 2025-12-16 | MIT | Useful for a GitHub Codespaces setup |
+| `claude-code-monitoring-guide` | Telemetry and cost-tracking guide | Markdown | 369 | 2025-07-29 | none | Read once if we meter usage |
+| `claude-ai-mcp` | Issue tracker for MCP inside claude.ai | Markdown | 467 | 2026-06-08 | not detected | Search before filing an MCP bug |
+
+The six groups, and what each is for:
+
+- **Product trackers.**
+  `claude-code`, `claude-agent-sdk-typescript`, and `claude-ai-mcp`
+  exist mainly so users can file issues against a closed product.
+- **Automation.**
+  `claude-code-action`, its mirror, and `claude-code-security-review`
+  run Claude inside GitHub Actions.
+- **Programmatic access.**
+  The `anthropic-sdk-*` clients (Python, TypeScript, Go, Java, Ruby, C#, PHP)
+  speak the raw API;
+  `claude-agent-sdk-python` wraps the whole Claude Code agent loop
+  and bundles the CLI,
+  and the TypeScript package does the same from npm,
+  though its repository here is only a tracker.
+- **Extensions.**
+  `skills`, the two plugin marketplaces, and `knowledge-work-plugins`
+  hold the skills and plugins the harness loads.
+- **Infrastructure.**
+  `sandbox-runtime`, `devcontainer-features`, and `claude-code-monitoring-guide`
+  are about where the CLI runs and what it costs.
+- **Learning material.**
+  `claude-cookbooks`, `courses`, `prompt-eng-interactive-tutorial`,
+  and `claude-quickstarts` teach the API rather than the CLI.
+
+Two repositories one might look for are not in the organization.
+There is no `mcp` repository,
+because the Model Context Protocol lives under its own
+`modelcontextprotocol` organization,
+and the former `dxt` repository (Desktop Extensions)
+now redirects to `modelcontextprotocol/mcpb`,
+the renamed MCP Bundles format
+(measured 2026-09-09).
+
+#### What the public `claude-code` repository actually contains
+
+The repository named after Claude Code,
+second in the table only to `skills` by stars,
+does not contain Claude Code.
+The tree at `main` has 333 paths and no `src/` directory
+(measured 2026-09-09) [@anthropics_claude_code_repo].
+`LICENSE.md` is a one-line proprietary notice
+pointing at Anthropic's commercial terms,
+which is why the API reports no license.
+The CLI itself ships as a compiled npm package
+(and, since the README marked npm installation deprecated,
+as a native installer, a Homebrew cask, and a `winget` package;
+read 2026-09-09) [@anthropics_claude_code_repo],
+and this repository is the public face of that closed product.
+
+The repository holds five things the lab can use:
+
+- **`CHANGELOG.md`** is the only authoritative per-release changelog.
+  It is the file to read when a behavior changes between versions,
+  and its entries are detailed enough to diagnose regressions
+  (the entry for 2.1.266, for example,
+  names the gateway environment variable, `CLAUDE_CODE_USE_GATEWAY`,
+  that 2.1.265 had started honoring on its own,
+  and says no configuration change is needed;
+  read 2026-09-09) [@anthropics_claude_code_changelog].
+- **`plugins/`** holds thirteen first-party plugins
+  and a `.claude-plugin/marketplace.json` that publishes them
+  as the `claude-code-plugins` marketplace [@anthropics_claude_code_plugins_readme].
+  Several map directly onto lab workflows:
+  `code-review` (five parallel review agents with confidence scoring),
+  `pr-review-toolkit` (six specialist review agents,
+  including a `silent-failure-hunter`),
+  `commit-commands`,
+  `hookify` (generates hooks from observed misbehavior),
+  `ralph-wiggum` (a `Stop`-hook loop that keeps re-running one task),
+  and `security-guidance` (a `PreToolUse` hook watching nine patterns).
+  `plugin-dev` is the toolkit for writing more.
+- **`examples/`** holds the reference configurations
+  that the documentation describes in prose:
+  `settings/` (strict, lax, and bash-sandbox profiles),
+  `hooks/` (a Bash command validation hook),
+  `mdm/` (managed settings for macOS and Windows fleets),
+  and `gateway/` (AWS and GCP gateway setups).
+- **`.devcontainer/`** is the container Anthropic uses
+  for its own sandboxed sessions,
+  including `init-firewall.sh`,
+  the allowlist firewall that
+  @sec-ai-firewall discusses.
+- **`.github/workflows/`** is a live example of running the action
+  against a very large issue tracker:
+  `claude.yml` (the `@claude` agent),
+  `claude-issue-triage.yml`,
+  `claude-dedupe-issues.yml`,
+  and `auto-close-duplicates.yml`,
+  with the TypeScript behind them in `scripts/`.
+  The repository had 12,563 open issues (measured 2026-09-09),
+  which is why that automation exists.
+
+So the honest description is
+"issue tracker plus plugins plus example configs".
+The harness internals are described from the outside in
+@sec-ai-harness-construction;
+nothing in this repository lets you read them.
+
+#### `claude-code-action`: modes and what ships with it
+
+`claude-code-action` is genuinely open source (MIT),
+and the whole action is readable:
+`src/` holds the entry points, the GitHub client,
+an in-process MCP server for file operations,
+and the two execution modes;
+`test/` has a test file per concern
+(comment sanitizing, branch validation, permissions,
+public-comment redaction, SSH signing)
+[@anthropics_claude_code_action_repo].
+
+@sec-ai-claude-code-action-review already explains
+that review is a prompt, not a separate action.
+The general form of that observation is the mode detector
+in `src/modes/detector.ts`,
+documented in `docs/experimental.md`
+[@anthropics_claude_code_action_experimental]:
+
+1. If the workflow supplies a `prompt` input,
+   the action runs in **agent mode**:
+   it executes the prompt directly on whatever event fired,
+   which is how scheduled maintenance,
+   issue triage, and one-shot review work.
+2. If there is no `prompt` but the event carries an `@claude` mention,
+   an assignment, or the trigger label,
+   it runs in **tag mode**:
+   it posts a tracking comment with progress checkboxes
+   and runs an open-ended session that can push code.
+3. If neither, it does nothing.
+
+The `track_progress` input forces tag-mode tracking comments
+onto `pull_request` and `issues` events
+that would otherwise run in agent mode.
+Everything else about behavior is set through `claude_args`,
+which passes flags straight to the CLI
+(`--max-turns`, `--system-prompt`, and so on),
+and through `plugins`,
+which installs named marketplace plugins before the run.
+
+Three other things in the repository are easy to miss:
+
+- **`examples/`** has eleven copy-paste workflows (measured 2026-09-09):
+  the three review variants,
+  plus `claude.yml` (the general `@claude` mention workflow),
+  `ci-failure-auto-fix.yml`, `test-failure-analysis.yml`,
+  `issue-deduplication.yml`, `issue-triage.yml`,
+  `manual-code-analysis.yml`, `agent-approval-check.yml`,
+  and `claude-wif.yml`,
+  the workload-identity-federation variant
+  that avoids storing a long-lived API key.
+- **`agent-approval-check/`** is a second, smaller action
+  that gates a workflow on whether the actor is a recognized agent identity,
+  with an example identities file.
+- **Authentication inputs** cover a direct API key,
+  a Claude Code OAuth token,
+  federation (`anthropic_federation_rule_id` plus organization,
+  workspace, and service-account IDs),
+  and OIDC to Bedrock, Vertex AI, or Microsoft Foundry.
+
+The `allowed_non_write_users` input carries its own warning
+in `action.yml`:
+letting users without write access trigger the action
+exposes the run to prompt injection,
+and the secret scrubbing it performs is best-effort.
+`claude-code-security-review` says the same of itself
+in its README and recommends requiring approval for fork PRs
+[@anthropics_claude_code_security_review].
+Both are the upstream statement of the caution
+in @sec-ai-benefits-hazards.
+
+#### The extension and SDK repositories, briefly
+
+`skills` is the reference implementation of the Agent Skills format
+that @sec-ai-agent-skills describes.
+Its `spec/` directory is the format definition,
+`template/` is a starting skill,
+and `skills/` holds the examples.
+The README states the licensing split plainly:
+most skills are Apache-2.0,
+while the `docx`, `pdf`, `pptx`, and `xlsx` skills
+that power Claude's own document features
+are source-available rather than open source
+[@anthropics_skills_repo].
+Read a license header before copying one.
+
+`claude-plugins-official` is the marketplace behind
+`/plugin install <name>@claude-plugins-official`,
+split into Anthropic-maintained `plugins/`
+and partner-submitted `external_plugins/` [@anthropics_claude_plugins_official].
+Its README states a rule that applies to any marketplace we publish:
+a plugin's `name` is an immutable slug,
+since renaming it breaks every existing install,
+and a `renames` map exists for the unavoidable case.
+`claude-plugins-community` is a nightly, read-only mirror
+of the community submissions that passed security scanning
+[@anthropics_claude_plugins_community],
+and `knowledge-work-plugins` holds eleven role-specific bundles
+built for Claude Cowork (@sec-ai-collaborative-workspaces)
+that also load in Claude Code [@anthropics_knowledge_work_plugins].
+
+Of the two agent SDKs,
+only the Python one is open source.
+`claude-agent-sdk-python` bundles the CLI inside the wheel
+and exposes `query()` and `ClaudeAgentOptions`
+for driving a full agent session from a script
+[@anthropics_claude_agent_sdk_python].
+`claude-agent-sdk-typescript` has the same shape as `claude-code`:
+a proprietary `LICENSE.md`, a changelog, examples,
+and an issue tracker for the npm package
+[@anthropics_claude_agent_sdk_typescript].
+The lower-level `anthropic-sdk-python` is the raw API client
+(MIT) for anyone who wants the model without the agent loop
+[@anthropics_anthropic_sdk_python].
+
+`sandbox-runtime` (`srt`) is the sandbox Claude Code uses internally,
+released as a beta research preview.
+It wraps `sandbox-exec` on macOS and `bubblewrap` on Linux
+with a proxy-based network allowlist,
+and the headline use case in its README is wrapping a local MCP server
+so it can read only the directories you name
+[@anthropics_sandbox_runtime].
+Windows support is marked alpha,
+through a bundled `srt-win.exe` helper
+that runs the process under a dedicated local user account
+(measured 2026-09-09),
+so Windows users in the lab should treat it as experimental.
+
+#### Useful to us?
+
+Yes, selectively, and less for code than for reference.
+
+- **Adopt now.**
+  `claude-code-action` is already how our repositories run `@claude`
+  and review (@sec-ai-claude-code-action-review);
+  the `examples/` directory and `claude-wif.yml`
+  are the upgrade path when we move off static API keys.
+  `claude-plugins-official` is the safe default source for plugins.
+- **Read, then borrow.**
+  The `plugins/` directory in `claude-code`
+  duplicates several things our own instruction repository does by hand ---
+  a multi-agent review command, a silent-failure hunter,
+  a hook generator ---
+  and a `hookify`-style rule
+  is a lighter way to encode a "never do X again" correction
+  than a hand-written hook.
+  `skills/spec/` is the authority when a skill fails to load.
+- **Track, do not depend on.**
+  `claude-code` and `claude-agent-sdk-typescript` are trackers.
+  Search their issues before filing;
+  read `CHANGELOG.md` before blaming a regression on your config.
+  Pin workflows to `claude-code-action@v1`, never to the base-action mirror.
+- **Trial on Linux and macOS.**
+  `sandbox-runtime` could replace part of the
+  firewall configuration in @sec-ai-firewall
+  for macOS and Linux users;
+  its Windows path is alpha.
+- **Skip.**
+  `claude-code-security-review` has not been pushed since February 2026
+  and its job is now a review prompt;
+  the quickstarts and courses are for API programming,
+  which is not the lab's main use of Claude.
