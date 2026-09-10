@@ -7,6 +7,7 @@ AMC
 ARD
 ARDI
 ARDIA
+Aeris
 AgentsOfAI
 Andrej
 Anthropic
@@ -78,6 +79,7 @@ Docker
 DuckDB
 E2B
 ECR
+ECS
 ESP32
 Electron
 Ender's
@@ -510,6 +512,7 @@ reraise
 resyncing
 retryable
 reviewable
+roadmap
 rollup
 roxygen
 rsync
