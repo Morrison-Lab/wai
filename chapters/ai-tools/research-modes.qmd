@@ -170,9 +170,11 @@ The
 update added a code sandbox, uploaded-document input, clarifying questions,
 follow-up questions while a run is in progress,
 and reports that stream into an editable file.
-It also names the underlying models by plan:
-Max subscribers get Claude Opus 4.6 Thinking
-and Pro subscribers get Claude 4.5 Thinking.
+It also names the underlying model by plan.
+Which model each plan gets has changed more than once,
+and Perplexity's help-center pages refuse automated requests,
+so this section does not reproduce the mapping:
+check the linked page before relying on a particular model being behind your plan.
 
 The API equivalent is the
 [`sonar-deep-research`](https://docs.perplexity.ai/docs/sonar/models/sonar-deep-research) model [@perplexity_sonar_deep_research],
