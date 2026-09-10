@@ -65,9 +65,14 @@ and the remaining 234 are pointers to third-party repositories
 each pinned to a commit SHA.
 So "official" mostly means "listed and pinned by Anthropic",
 not "written by Anthropic".
-By declared category the catalog is
-development (119), productivity (49), database (38), monitoring (20), security (18),
-and a long tail of deployment, design, automation, learning, location, testing, migration, and math.
+By declared category the catalog is:
+
+- development (119)
+- productivity (49)
+- database (38)
+- monitoring (20)
+- security (18)
+- a long tail of deployment, design, automation, learning, location, testing, migration, and math
 
 The 38 Anthropic-maintained plugins fall into five groups.
 The verdicts are for this lab's work
@@ -177,16 +182,25 @@ calls itself "a complete software development methodology for your coding agents
 built on top of a set of composable skills".
 The 6.3.0 build installed on one lab machine carries fourteen skills
 (measured 2026-09-09):
-brainstorming, writing and executing plans, test-driven development,
-systematic debugging, subagent-driven development,
-requesting and receiving code review, git worktrees,
-finishing a development branch, verification before completion,
-dispatching parallel agents, and two meta-skills for using and writing skills.
-A `using-superpowers` skill loads at session start so the others trigger on their own.
-It installs into more than a dozen agents
-(Claude Code via `/plugin install superpowers@claude-plugins-official`,
-Cursor, Codex, Copilot CLI, Gemini CLI, OpenCode, Antigravity, Pi, Hermes, and others)
-and is MIT-licensed.
+
+- `brainstorming`
+- `writing-plans` and `executing-plans`
+- `test-driven-development`
+- `systematic-debugging`
+- `subagent-driven-development` and `dispatching-parallel-agents`
+- `requesting-code-review` and `receiving-code-review`
+- `using-git-worktrees`
+- `finishing-a-development-branch`
+- `verification-before-completion`
+- `using-superpowers` and `writing-skills`, the two meta-skills
+
+The `using-superpowers` skill loads at session start so the others trigger on their own.
+It is MIT-licensed and installs into more than a dozen agents, among them:
+
+- Claude Code, via `/plugin install superpowers@claude-plugins-official`
+- Cursor, Codex, and Copilot CLI
+- Gemini CLI, OpenCode, and Antigravity
+- Pi and Hermes
 
 Verdict: install it if you want an opinionated end-to-end process and are not already running `ai-config`.
 Running both means two session-start bootstraps competing to set the workflow,
