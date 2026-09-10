@@ -12,9 +12,14 @@ and ends with a verdict on each.
 All counts below come from the GitHub API on the survey date
 (measured 2026-09-09);
 stars and push dates drift daily,
-and the license column reports what the API detected,
-which is `none` for a repository whose license file
-is a proprietary notice rather than a recognized open-source license.
+and the license column reports what the API detected.
+`none` means the API found no license;
+for `claude-code` and `claude-agent-sdk-typescript` that is because
+`LICENSE.md` is a proprietary notice rather than a recognized open-source license,
+marked `none (proprietary)`,
+and for the other `none` rows there is no license file at all.
+`not detected` means a license file exists that the API could not classify
+(it reports `NOASSERTION`).
 
 #### Which repositories matter to us
 
@@ -77,7 +82,8 @@ and there is no `dxt` repository at this name
 
 #### What the public `claude-code` repository actually contains
 
-The most-starred coding repository in the organization
+The repository named after Claude Code,
+second in the table only to `skills` by stars,
 does not contain Claude Code.
 The tree at `main` has 333 paths and no `src/` directory
 (measured 2026-09-09) [@anthropics_claude_code_repo].
@@ -89,14 +95,16 @@ The CLI itself ships as a compiled npm package
 as a native installer, a Homebrew cask, and a `winget` package),
 and this repository is the public face of that closed product.
 
-What the repository does hold is worth knowing about:
+The repository holds five things the lab can use:
 
 - **`CHANGELOG.md`** is the only authoritative per-release changelog.
   It is the file to read when a behavior changes between versions,
   and its entries are detailed enough to diagnose regressions
   (the entry for 2.1.266, for example,
-  explains which gateway environment variable
-  the previous release had started honoring by mistake).
+  names the gateway environment variable, `CLAUDE_CODE_USE_GATEWAY`,
+  that 2.1.265 had started honoring on its own,
+  and says no configuration change is needed;
+  read 2026-09-09) [@anthropics_claude_code_changelog].
 - **`plugins/`** holds thirteen first-party plugins
   and a `.claude-plugin/marketplace.json` that publishes them
   as the `claude-code-plugins` marketplace [@anthropics_claude_code_plugins_readme].
@@ -128,7 +136,7 @@ What the repository does hold is worth knowing about:
   `claude-dedupe-issues.yml`,
   and `auto-close-duplicates.yml`,
   with the TypeScript behind them in `scripts/`.
-  The repository had 12,563 open issues on the survey date,
+  The repository had 12,563 open issues (measured 2026-09-09),
   which is why that automation exists.
 
 So the honest description is
