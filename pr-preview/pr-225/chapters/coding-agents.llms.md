@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-09 21:34:07 (PDT)
+Last modified: 2026-09-09 23:56:50 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3977,7 +3977,7 @@ When selecting a collaborative workspace agent for academic and computational re
 
 Anthropic. 2026a. *Agent SDK Overview*. Documentation. <https://code.claude.com/docs/en/agent-sdk/overview>.
 
-Anthropic. 2026b. *Claude Code Changelog*. GitHub repository file. <https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md>.
+Anthropic. 2026b. *Claude Code Changelog*. Documentation. <https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md>.
 
 Anthropic. 2026c. *Claude Cowork Overview*. Documentation. <https://claude.com/docs/cowork/overview>.
 
@@ -4019,7 +4019,7 @@ Belcak, Peter, Greg Heinrich, Shizhe Diao, et al. 2025. *Small Language Models A
 
 Card, Orson Scott. 1985. *Ender’s Game*. Novel; Tor Books. <https://en.wikipedia.org/wiki/Ender%27s_Game>.
 
-cnighswonger. 2026. *Heron_brook Bootstrap Channel: Disclosure Record (2026-05)*. GitHub repository file, claude-code-cache-fix. <https://github.com/cnighswonger/claude-code-cache-fix/blob/main/docs/disclosure/heron-brook-2026-05.md>.
+cnighswonger. 2026. *Heron_brook Bootstrap Channel: Disclosure Record (2026-05)*. Documentation. <https://github.com/cnighswonger/claude-code-cache-fix/blob/main/docs/disclosure/heron-brook-2026-05.md>.
 
 Dettmers, Tim, Artidoro Pagnoni, Ari Holtzman, and Luke Zettlemoyer. 2023. *QLoRA: Efficient Finetuning of Quantized LLMs*. arXiv preprint. <https://arxiv.org/abs/2305.14314>.
 
@@ -4043,7 +4043,7 @@ r/ClaudeCode. 2026. *Claude Code Has a Hardcoded Instruction Telling ...* Reddit
 
 *WarGames*. 1983. Film. <https://en.wikipedia.org/wiki/WarGames>.
 
-wtfwhs. 2026. *Tengu-Decoded: Internal Codenames, Version 2.1.169*. GitHub repository. <https://github.com/wtfwhs/tengu-decoded/blob/main/versions/2.1.169/codenames.md>.
+wtfwhs. 2026. *Tengu-Decoded: Internal Codenames, Version 2.1.169*. Software. <https://github.com/wtfwhs/tengu-decoded/blob/main/versions/2.1.169/codenames.md>.
 
 Back to top
 
