@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-09 23:54:30 (PDT)
+Last modified: 2026-09-10 00:04:32 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -90,7 +90,7 @@ The platforms above sort into three execution models (measured 2026-09-09). The 
 
 Several vendors now ship all three, so the platform name alone no longer tells you where the code goes: Claude Code, Codex, Cursor, Kiro, and Warp each offer a local surface and a hosted one. Check the execution model of the specific surface you enable. The Windsurf editor is a naming trap of the same kind: `windsurf.com` now redirects to Devin Desktop, Cognition’s rebranding of that editor (measured 2026-09-09; see [Section 10](#sec-ai-harness-landscape)).
 
-For licensing, token-cost character, and a decision table for choosing among these tools, see [Section 10](#sec-ai-harness-landscape); for the open-weight and fully local end of the spectrum, see [Section 4](#sec-ai-catalog-coding-agents).
+For licensing, token-cost characteristics, and a decision table for choosing among these tools, see [Section 10](#sec-ai-harness-landscape); for the open-weight and fully local end of the spectrum, see [Section 4](#sec-ai-catalog-coding-agents).
 
 Before connecting any platform, check:
 
