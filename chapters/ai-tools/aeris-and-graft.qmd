@@ -9,7 +9,7 @@ as read on 2026-09-09.
 [`Cedrick-Coto/Aeris`](https://github.com/Cedrick-Coto/Aeris) [@aeris]
 describes itself as a deterministic cognitive simulation engine
 with emergent narrative,
-built on an entity-component-system (ECS) architecture in C# (.NET 10).
+whose README describes an entity-component-system (ECS) architecture in C# (.NET 10).
 Its design premise is that the language model "verbalizes, never thinks":
 a deterministic simulation core computes perception, attention, memory, affect, and goals each tick,
 and the LLM only turns that state into narrative or dialogue,
@@ -19,7 +19,7 @@ The target application is a simulated character in a Pokemon world.
 Repository facts (measured 2026-09-09):
 
 - GPL-3.0 license
-- 2 stars, 0 forks, 2 contributors, 80 commits since creation on 2026-07-26
+- 2 stars, 1 fork, 2 contributors, 80 commits since creation on 2026-07-26
 - 2 commits in the month before the reading date
 - 87 Markdown files and three `.csproj` project files on `main`, but no `.cs` source files,
   so the "complete" engine and "210 tests" that the README roadmap reports
@@ -44,8 +44,8 @@ No further action is warranted.
 
 #### Graft
 
-[`NanoNets/Graft`](https://github.com/NanoNets/Graft) [@graft]
-(the repository has since moved to `trailhq/Graft`, and the old URL redirects)
+[`trailhq/Graft`](https://github.com/trailhq/Graft) [@graft]
+(formerly `NanoNets/Graft`; the old URL redirected at the reading date)
 is an open-source "context layer" for coding agents.
 Its aim is to stop an agent re-exploring a repository at the start of every task
 by building a persistent map of the codebase once
@@ -54,9 +54,10 @@ and feeding the relevant parts of that map into each prompt.
 Repository facts (measured 2026-09-09):
 
 - MIT license
-- TypeScript, published on npm as `@nanonets/graft` (version 0.17.0), requiring Node 20 or later
-- 6,697 stars, 603 forks, 34 contributors
-- at least 100 commits in the month before the reading date, and 94 open issues
+- TypeScript, published on npm as `@nanonets/graft`
+  (0.16.0 on npm; `package.json` on `main` reads 0.17.0), requiring Node 20 or later
+- 6,788 stars, 613 forks, 34 contributors
+- 174 commits in the 30 days before the reading date, and 43 open issues (excluding pull requests)
 
 How it works, per the README:
 
@@ -84,7 +85,8 @@ How it works, per the README:
 
 The README reports benchmarks from the project's own harness
 (42% fewer tokens and 60% less latency with equal correctness on 162 runs across two repositories)
-and a 50-instance SWE-bench Verified run
+and a 50-instance SWE-bench Verified run,
+Claude Code with Claude Sonnet 5 on both arms
 (33 of 50 resolved with Graft against 27 without, using 23% fewer tokens).
 These are vendor-run measurements on the vendor's chosen tasks,
 so treat them as an upper bound until reproduced.
@@ -92,7 +94,7 @@ The package sends an anonymous batched usage ping by default;
 the README states the ping carries no code, paths, or queries,
 and that `graft telemetry disable` or `DO_NOT_TRACK=1` turns it off.
 
-##### Useful to us? Yes, worth a trial on one R package
+##### Useful to us? Yes, trial it on one R package
 
 Graft addresses a cost the lab pays constantly:
 each new agent session re-reads an R package to rebuild the same picture of its structure.
@@ -110,7 +112,7 @@ Three things make it a good fit for a trial:
   the mechanism @sec-ai-mcp-server-setup covers,
   so a trial adds no new harness.
 
-Two things to check before adopting it lab-wide.
+Check two things before adopting it lab-wide.
 First, the benchmark claims are vendor-run,
 so measure the token and tool-call counts on one of our own packages
 before and after `graft init`.
