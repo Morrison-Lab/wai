@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-09 23:58:13 (PDT)
+Last modified: 2026-09-10 00:08:27 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3099,7 +3099,7 @@ Most commands work on all five; the documentation keeps a per-forge feature matr
 
 Models are bring-your-own. PR-Agent calls models through LiteLLM, so any provider LiteLLM supports can be selected by setting `config.model` ([The PR Agent 2026d](#ref-pr_agent_models)). Named providers include OpenAI, Azure OpenAI, Anthropic, Google (AI Studio and Vertex AI), Amazon Bedrock, DeepSeek, Mistral, Groq, xAI, OpenRouter, and local servers such as Ollama and vLLM. Further keys let you route work to different models: `config.model_weak` for lighter commands (`/describe`, `/ask`, `/update_changelog`), `config.fallback_models` for retries, and a `[model_routing]` table that picks a model by diff size ([The PR Agent 2026d](#ref-pr_agent_models)).
 
-Local models work but come with a warning. The model-configuration page says that “most open-source models currently available (as of January 2025) face challenges with complex tasks” and recommends them for “experimentation and learning purposes (mainly for the ask command)” ([The PR Agent 2026d](#ref-pr_agent_models)). That note predates the current generation of open-weight coding models, so treat it as a prompt to test rather than as a verdict; [Section 24](#sec-ai-small-local-models) covers what we have found local models can and cannot do.
+Local models work but come with a warning. The model-configuration page says that “most open-source models currently available (as of January 2025) face challenges with these complex tasks” and recommends them for “experimentation and learning purposes (mainly for the ask command)” ([The PR Agent 2026d](#ref-pr_agent_models)). That note predates the current generation of open-weight coding models, so treat it as a prompt to test rather than as a verdict; [Section 24](#sec-ai-small-local-models) covers what we have found local models can and cannot do.
 
 #### Deployment
 
