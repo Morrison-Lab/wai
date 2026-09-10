@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-09 09:00:52 (PDT)
+Last modified: 2026-09-09 23:54:59 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3233,7 +3233,7 @@ Relevance AI ([Relevance AI 2026a](#ref-relevanceai_agents)) calls itself “the
 - **Data handling** ([Relevance AI 2026b](#ref-relevanceai_security)). The data security policy covers AES-256 encryption in transit, need-to-know staff access, and background checks, but does not address model training on customer data, data residency regions, or certifications.
 - **Agent and API access.** The strongest developer surface of the five: API, MCP, webhooks, and cron.
 
-## 41.6 Useful to us?
+## 41.6 Useful to us? Not for research work
 
 For an epidemiology lab whose work is code, data, and manuscripts, these products solve a problem we mostly do not have. Their value is in gluing SaaS business tools together (CRM, inbox, calendar, Slack) for people who do not write code. Our work lives in Git repositories, R and Python environments, and Quarto documents, where the coding agents in [Section 4](#sec-ai-catalog-coding-agents) and the collaborative workspace agents in [Section 54](#sec-ai-collaborative-workspaces) already reach the files directly.
 
