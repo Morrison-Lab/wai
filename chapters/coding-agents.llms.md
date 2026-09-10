@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-10 01:06:45 (PDT)
+Last modified: 2026-09-10 01:58:14 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3854,7 +3854,108 @@ A central capability of the framework is decoupling agent roles from a single mo
 | **Execution monitoring** | Standard terminal output | Interactive `tmux`-backed session management |
 | **Extensibility** | Individual plugins and MCPs | Curated bundle of tools, agents, and MCP integrations |
 
-# 53 Managing Gemini API Spend and Cost Optimization
+# 53 The OpenCode Ecosystem
+
+[OpenCode](https://opencode.ai) ([anomalyco 2026](#ref-opencode_repo)) is the open-source coding agent harness (MIT-licensed, about 206,000 GitHub stars, measured 2026-09-09) that the earlier OpenCode sections of this chapter build on: running it against local models ([Section 22](#sec-ai-opencode-ollama)), against OpenRouter ([Section 23](#sec-ai-opencode-openrouter)), and under the Oh My OpenCode multi-agent framework ([Section 52](#sec-ai-oh-my-opencode)). Around the harness itself sits a community ecosystem of plugins, clients, and agent bundles, which the OpenCode maintainers index on a single documentation page ([OpenCode 2026a](#ref-opencode_ecosystem)). This section maps that page (as of 2026-09-09) and calls out the entries most relevant to us. Where the site already covers a project, this section points there instead of repeating it.
+
+#### How the ecosystem is organized
+
+The ecosystem page groups its entries into three lists ([OpenCode 2026a](#ref-opencode_ecosystem)):
+
+- **Plugins** (38 entries): JavaScript or TypeScript modules that OpenCode loads at startup and that hook into its lifecycle events (tool execution, file edits, session compaction, permissions, notifications, and so on). A plugin is named in the `plugin` key of `opencode.json` as an npm package, or dropped as a file into `.opencode/plugins/` (project) or `~/.config/opencode/plugins/` (global); npm packages are fetched automatically with Bun ([OpenCode 2026c](#ref-opencode_plugins)).
+- **Projects** (11 entries): clients and integrations built on the OpenCode server API or SDK — editor front ends, web and desktop apps, a Discord bot, an Obsidian plugin, and an extension manager.
+- **Agents** (2 entries): bundles of agent definitions, prompts, and commands that reshape how OpenCode plans and executes work.
+
+The issue that prompted this section also asked about **providers**. The ecosystem page has no provider list; model providers are configured in `opencode.json` and documented separately, and the two first-party paid options are covered under “OpenCode Zen and OpenCode Go” below.
+
+A recurring caveat applies to almost every entry: these projects are independent, and most carry an explicit “not built by the OpenCode team and not affiliated with OpenCode” disclaimer (for example `ocx` ([kdcokenny 2026a](#ref-ocx)) and `opencode-worktree` ([kdcokenny 2026d](#ref-opencode_worktree))). Listing on the ecosystem page is a courtesy index, not an endorsement or a security review. Every plugin runs with the same permissions as OpenCode itself, so treat adding one the way you would treat adding any unaudited dependency (see [Section 18](#sec-ai-benefits-hazards)).
+
+#### Notable plugins
+
+Activity figures below (stars, last push, latest release) were read from the GitHub API on 2026-09-09. Several repositories have moved since the ecosystem page was written; the current location is given where it differs.
+
+**Context and token management**
+
+- [`opencode-dynamic-context-pruning`](https://github.com/Opencode-DCP/opencode-dynamic-context-pruning) ([Opencode-DCP 2026](#ref-opencode_dcp)) (now under the `Opencode-DCP` organization; AGPL-3.0; about 4,200 stars; release `v3.1.15` on 2026-08-16). Reduces token spend by deduplicating repeated tool calls, purging the inputs of failed tool calls after a configurable number of turns, and letting the model compress stale conversation content into summaries. The README reports prompt-cache hit rates of roughly 85% with the plugin versus 90% without, and says development focus has shifted to a separate tool called Sleev. *Useful to us?* Yes, for long ARDI sessions on paid metered providers; the AGPL license is irrelevant for a locally-run tool but worth knowing.
+- [`opencode-morph-plugin`](https://github.com/morphllm/opencode-morph-plugin) (Morph, the vendor; MIT; 85 stars; release `v2.0.17` on 2026-09-07) and its community predecessor [`opencode-morph-fast-apply`](https://github.com/JRedeker/opencode-morph-fast-apply) (MIT; 170 stars). Both route edits through Morph’s hosted “Fast Apply” model to cut edit latency, which means a second paid API and a second party seeing your code. *Useful to us?* Not by default; the privacy cost outweighs the speed gain for research code.
+
+**Subscription and quota bridges**
+
+These plugins let OpenCode consume a chat subscription you already pay for instead of API credits. They are among the most-starred plugins on the page and also the most fragile, since they depend on undocumented OAuth flows that the subscription vendors can close at any time:
+
+- [`opencode-openai-codex-auth`](https://github.com/numman-ali/opencode-openai-codex-auth) ([Ali 2026](#ref-opencode_codex_auth)) (Numman Ali; about 2,200 stars; release `v4.4.0` on 2026-01-09; no push since then). Uses the ChatGPT Plus/Pro OAuth flow to expose the GPT and Codex model presets, and its README restricts it to “personal development use” with your own subscription.
+- [`opencode-gemini-auth`](https://github.com/jenslys/opencode-gemini-auth) (MIT; about 1,700 stars; release `v1.4.16` on 2026-05-21). The same idea for a Gemini plan.
+- [`opencode-antigravity-auth`](https://github.com/NoeFabris/opencode-antigravity-auth) ([Fabris 2026](#ref-opencode_antigravity_auth)) (MIT; about 11,000 stars; **archived** on GitHub as of 2026-09-09). Authenticated against Google Antigravity’s model pool with a Google account, rotating across accounts to stay under quota. Its own README states that using it “violates Google’s Terms of Service” and that your account “may be suspended or permanently banned”. The similar [`opencode-google-antigravity-auth`](https://github.com/shekohex/opencode-google-antigravity-auth) (375 stars) is archived as well.
+
+*Useful to us?* No. Our lab policy is to use delegation budgets through their supported routes (the `codex` CLI on the ChatGPT plan, OpenCode Go or Zen, OpenRouter credits), and a bridge whose README concedes a terms-of-service violation is a liability, not a saving. The Codex and Gemini bridges are less clearly prohibited but share the fragility.
+
+**Sandboxing, isolation, and worktrees**
+
+- [`opencode-daytona`](https://github.com/daytona/integrations/tree/main/packages/opencode-plugin) ([Daytona 2026](#ref-opencode_daytona)) (Daytona, the vendor; Apache-2.0; release `opencode-plugin-v0.192.1` on 2026-09-03). Runs each session in a hosted Daytona sandbox, syncs the sandbox to a local branch named `opencode/<n>`, and produces live preview links when a server starts. Requires a Daytona account and API key. *Useful to us?* Maybe, for untrusted-code experiments; otherwise the firewall and container setups in this chapter’s Firewall and Network Configuration section cover the same ground.
+- [`opencode-devcontainers`](https://github.com/athal7/opencode-devcontainers) (MIT; 222 stars; release `v0.5.1` on 2026-08-24; pushed 2026-09-08). Runs several devcontainer instances at once, one per branch, with auto-assigned ports. *Useful to us?* Yes, for repositories that already ship a `.devcontainer/`.
+- [`opencode-worktree`](https://github.com/kdcokenny/opencode-worktree) ([kdcokenny 2026d](#ref-opencode_worktree)) (MIT; 726 stars; no tagged release; pushed 2026-08-17). Adds `worktree_create` and `worktree_delete` tools that create an isolated git worktree under `~/.local/share/opencode/worktree/`, sync configured files into it, and open a terminal with OpenCode running there. *Useful to us?* Yes; it is the OpenCode counterpart of the per-agent worktrees our Claude Code sessions use.
+
+**Orchestration and workflow bundles**
+
+- [`oh-my-opencode`](https://github.com/code-yeongyu/oh-my-openagent) (now `oh-my-openagent`; about 68,800 stars; release `v5.0.0-beta.51` on 2026-09-09). Covered in [Section 52](#sec-ai-oh-my-opencode).
+- [`opencode-workspace`](https://github.com/kdcokenny/opencode-workspace) ([kdcokenny 2026c](#ref-opencode_workspace)) (MIT; 586 stars; no tagged release). A one-install bundle of 16 components: four plugins (workspace management, async delegation, notifications, git isolation), two npm plugins, three MCP servers (documentation, web search, code search), four specialist agents (researcher, coder, scribe, reviewer), four skill modules, and one command interface. Its sibling [`opencode-background-agents`](https://github.com/kdcokenny/opencode-background-agents) ([kdcokenny 2026b](#ref-opencode_background_agents)) (MIT; 382 stars) provides `delegate()`, `delegation_read()`, and `delegation_list()` tools whose results persist to disk under `~/.local/share/opencode/delegations/`, so they survive context compaction; only read-only sub-agents may run in the background, because background sessions sit outside OpenCode’s undo and branching system. *Useful to us?* Worth a trial as a lighter alternative to Oh My OpenCode; the disk-persisted delegation results address the same loss-on-compaction problem our lab notebook convention exists for.
+- [`micode`](https://github.com/vtemian/micode) (MIT; 483 stars) and [`octto`](https://github.com/vtemian/octto) (MIT; 493 stars), from the same author: a brainstorm-plan-implement workflow with session continuity, and a browser UI that turns an agent’s clarifying questions into multi-question forms. *Useful to us?* Possibly `octto`, which does for OpenCode what `AskUserQuestion` does in Claude Code.
+- [`opencode-conductor`](https://github.com/derekbar90/opencode-conductor) (Apache-2.0; 129 stars; last push 2026-03-02) ports the Context, Spec, Plan, Implement lifecycle described in [Section 50](#sec-ai-conductor-extension) to OpenCode. *Useful to us?* Only if that lifecycle is adopted; the port looks dormant.
+- [`plannotator`](https://github.com/backnotprop/plannotator) (Apache-2.0; about 8,600 stars; release `v0.27.12` on 2026-09-03) is a visual plan-and-diff annotation tool with an OpenCode plugin; it is agent-agnostic and also targets Claude Code. *Useful to us?* Yes, for reviewing agent plans before implementation; it addresses the plan-review step directly.
+- [`opencode-goal-plugin`](https://github.com/willytop8/OpenCode-goal-plugin) (MIT; 252 stars; release `v0.10.0` on 2026-09-07) adds a session-scoped `/goal` that keeps an objective in context and auto-continues until “evidence-gated completion”. *Useful to us?* Maybe, for unattended ARDI-style loops.
+
+**Safety and observability**
+
+- [`opencode-vibeguard`](https://github.com/inkdust2021/opencode-vibeguard) ([inkdust2021 2026](#ref-opencode_vibeguard)) (MIT; 198 stars; no tagged release; last push 2026-03-01). Replaces configured secrets and personal data with placeholders of the form `__VG_<CATEGORY>_<hash>__` before each request leaves for the model provider, restores them locally when output completes, and restores them again before tool execution so shell commands still work. *Useful to us?* Yes in principle, for work touching participant data, but the redaction list is hand-configured and the project has been quiet for six months; test it before relying on it.
+- [`opencode-shell-strategy`](https://github.com/JRedeker/opencode-shell-strategy) (MIT; 136 stars) and [`opencode-pty`](https://github.com/shekohex/opencode-pty) (MIT; 571 stars) tackle the same hang: an agent running a TTY-dependent command with no terminal attached. The first injects instructions to use non-interactive flags; the second gives the agent a real pseudo-terminal it can write to and read from. *Useful to us?* Yes; the hang they fix is one we hit regularly with `R` and `quarto preview`.
+- [`opencode-sentry-monitor`](https://github.com/stolinski/opencode-sentry-monitor) (53 stars), [`opencode-wakatime`](https://github.com/angristan/opencode-wakatime) (198 stars), and [`opencode-helicone-session`](https://github.com/H2Shami/opencode-helicone-session) (16 stars) send traces or usage to Sentry, Wakatime, and Helicone respectively. *Useful to us?* No; we do not run those services.
+
+**Notifications and quality of life**
+
+Four plugins do desktop notifications (`opencode-notifier`, 810 stars, is the most-used; `opencode-notify`, `opencode-notificator`), and the rest of the list is small conveniences: `opencode-md-table-formatter` cleans up model-generated Markdown tables, `opencode-zellij-namer` names Zellij sessions, `opencode-supermemory` (about 1,600 stars) adds cross-session memory through the hosted Supermemory service, and `opencode-scheduler` runs recurring jobs through `launchd` or `systemd`. Vendor plugins from JFrog, Firecrawl, and Tavily wrap their own CLIs. *Useful to us?* A notifier, yes; the rest only with a specific need.
+
+#### Notable clients and integrations
+
+- [`CodeNomad`](https://github.com/NeuralNomadsAI/CodeNomad) ([Neural Nomads AI 2026](#ref-codenomad)) (Neural Nomads AI; MIT; about 2,600 stars; release `v0.19.0` on 2026-08-24; pushed 2026-09-09). Describes itself as “The AI Coding Cockpit for OpenCode”: a SolidJS front end with a Node.js server that wraps an OpenCode CLI already on your `PATH`. It ships as Electron and Tauri desktop builds for macOS, Windows (x64 and ARM64), and Linux, and as a password-protected local web server (`npx @neuralnomads/codenomad --password <password> --launch`) for remote or browser access. Features include multi-instance workspaces, session management, git worktrees, voice input, a file browser, a command palette, and “SideCars” that embed local web tools as tabs. Despite the ecosystem page’s “Desktop, Web, Mobile and Remote” description, the README documents no native mobile app; mobile access is through the web server. *Useful to us?* Yes, as the most complete graphical front end for OpenCode and a plausible answer to “I want several OpenCode sessions side by side without `tmux`”.
+- [`OpenChamber`](https://github.com/openchamber/openchamber) ([OpenChamber 2026](#ref-openchamber)) (now under its own organization; MIT; about 9,700 stars; release `v1.22.2` on 2026-09-05). A workspace for running and reviewing agent work on desktop, web, VS Code, iOS, and Android, with session goals, a “multi-run” mode that runs the same task across up to five models, a guided changes walkthrough for large diffs, scheduled tasks, and an end-to-end encrypted “Private Relay” for remote connections. Like CodeNomad it uses OpenCode as the engine and is not affiliated with the OpenCode team. *Useful to us?* Yes; the multi-model run is a direct fit for our habit of getting a second model’s review.
+- [`OpenWork`](https://github.com/different-ai/openwork) ([different-ai 2026](#ref-openwork)) (different-ai; about 23,400 stars; release `v0.18.44` on 2026-09-09). Positions itself as “an open-source alternative to Claude Cowork and Codex” for macOS, Windows, and Linux, sharing skills, MCP servers, and connected services across tools and machines. Code outside `ee/` is MIT; the organizational control plane under `ee/` uses a separate license that is free for up to five users. *Useful to us?* Compare against the collaborative workspaces in [Section 55](#sec-ai-collaborative-workspaces); the five-user free tier fits a lab, and the open core makes it auditable.
+- [`opencode.nvim`](https://github.com/nickjvandyke/opencode.nvim) ([Dyke 2026](#ref-opencode_nvim)) (Nick van Dyke; MIT; about 3,800 stars; release `v1.0.0` on 2026-08-20) connects Neovim to a running OpenCode server (`opencode --port`), injects editor context (cursor, selection, diagnostics) into prompts, surfaces OpenCode’s server-sent events as Neovim autocommands, and reloads buffers when the agent edits files. A second, unrelated [`sudo-tee/opencode.nvim`](https://github.com/sudo-tee/opencode.nvim) (Apache-2.0; 937 stars) is a full Neovim front end rather than a bridge. *Useful to us?* For the Neovim users in the lab, yes.
+- [`kimaki`](https://github.com/remorses/kimaki) ([remorses 2026](#ref-kimaki)) (MIT; about 1,400 stars; release `kimaki@0.27.0` on 2026-09-01). A Discord bot in which each project is a channel and each session a thread; it queues messages, forks sessions, transcribes voice messages, shows diffs, and maps Discord roles to permission controls. *Useful to us?* No for now; our coordination runs through GitHub, not Discord.
+- [`portal`](https://github.com/hosenur/portal) ([hosenur 2026](#ref-opencode_portal)) (MIT; 798 stars; last push 2026-05-12) is a mobile-first web UI meant to be reached over Tailscale. [`OpenCode-Obsidian`](https://github.com/mtymek/opencode-obsidian) (MIT; about 1,100 stars) embeds OpenCode in Obsidian’s sidebar. *Useful to us?* Niche; CodeNomad and OpenChamber cover the remote-access case with more activity.
+- [`ocx`](https://github.com/kdcokenny/ocx) ([kdcokenny 2026a](#ref-ocx)) (MIT; 942 stars; release `v2.0.15` on 2026-08-17). An extension manager with portable, isolated profiles: `ocx profile add` installs a profile from a registry, `ocx oc -p <name>` launches OpenCode with it, and components are copied into `.opencode/` (the shadcn model) rather than hidden in dependencies, with SHA verification of what is installed. *Useful to us?* Yes, if we standardize an OpenCode profile for the lab; it is the closest thing to the plugin marketplace we use for Claude Code ([Section 51](#sec-ai-plugins-deep-dive)).
+- [`ai-sdk-provider-opencode-sdk`](https://github.com/ben-vargas/ai-sdk-provider-opencode-sdk) (MIT; 116 stars) exposes OpenCode’s configured providers to the Vercel AI SDK, and [`opencode-plugin-template`](https://github.com/zenobi-us/opencode-plugin-template) (archived) was the scaffold for writing plugins. *Useful to us?* Only when building on the SDK.
+
+#### Agent bundles
+
+- [`OpenAgentsControl`](https://github.com/darrenhinde/OpenAgentsControl) (listed as `opencode-agents`; MIT; about 4,800 stars; release `v0.7.1` on 2026-01-30) is a plan-first framework with approval-gated execution and built-in test, review, and validation steps.
+- [`agentic`](https://github.com/Cluster444/agentic) (MIT; 638 stars; last push 2025-09-02) is a context-engineering toolkit that appears dormant.
+
+*Useful to us?* `OpenAgentsControl` overlaps heavily with Oh My OpenCode ([Section 52](#sec-ai-oh-my-opencode)) and `opencode-workspace`; pick one such harness rather than layering them.
+
+#### OpenCode Zen and OpenCode Go
+
+The ecosystem page does not describe them, but two first-party paid services sit alongside the community projects:
+
+- **OpenCode Zen** ([OpenCode 2026d](#ref-opencode_zen)) is the maintainers’ own model gateway: a curated set of models tested against coding-agent workloads, billed pay-as-you-go per million tokens from a prepaid balance (with optional auto-reload, by default \$20 whenever the balance drops below \$5). As of 2026-09-09 it lists six free models under limited-time trials, including `Big Pickle`, `MiMo-V2.5 Free`, and `Nemotron 3 Ultra Free`, beside paid Claude, GPT, Gemini, Grok, Qwen, DeepSeek, Kimi, and GLM models.
+- **OpenCode Go** ([OpenCode 2026b](#ref-opencode_go)) is a \$10-per-month subscription to 30-plus open-weight coding models (Qwen, DeepSeek, Kimi, GLM, MiMo, Grok, and others) with usage caps expressed in dollar value: \$12 per five hours, \$30 per week, \$60 per month. When a cap is hit, an optional “Use balance” setting falls back to Zen credits. Only one member per workspace can hold the subscription.
+
+*Useful to us?* Yes; OpenCode Go is already one of the lab’s delegation budgets, and the Zen free tier is a zero-cost way to try a new open-weight model before routing work to it (compare the OpenRouter `:free` models in [Section 23](#sec-ai-opencode-openrouter)).
+
+#### Summary
+
+| Need | Start with | Also see |
+|----|----|----|
+| Graphical or remote front end | `CodeNomad`, `OpenChamber` | `portal`, `OpenWork` |
+| Multi-agent orchestration | Oh My OpenCode ([Section 52](#sec-ai-oh-my-opencode)) | `opencode-workspace`, `OpenAgentsControl` |
+| Cheaper tokens | OpenCode Go, Zen free models | `opencode-dynamic-context-pruning` |
+| Isolation per task | `opencode-worktree`, `opencode-devcontainers` | `opencode-daytona` |
+| Redaction of sensitive data | `opencode-vibeguard` | (none) |
+| Plan review before implementation | `plannotator`, `octto` | `opencode-conductor` |
+| Shareable lab configuration | `ocx` | (none) |
+
+Skip the subscription-bridge plugins.
+
+# 54 Managing Gemini API Spend and Cost Optimization
 
 This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.
 
@@ -3900,7 +4001,7 @@ To maximize the efficiency of your API spend across local CLI sessions, subagent
 - **Use the Batch API for Non-Realtime Tasks**: For offline batch processing, evaluation suites, or background doc updates, submit requests via the Gemini Batch API to receive a 50% discount on input and output tokens.
 - **GitHub UI Diff Collapsing**: Mark dependency lockfiles (`*.lock`, `package-lock.json`, `yarn.lock`, `renv.lock`) and generated build artifacts as `linguist-generated=true` in `.gitattributes` to collapse them in GitHub’s web diff view and exclude them from repository language statistics.
 
-# 54 Collaborative AI Workspaces: Claude Cowork and Gemini Spark
+# 55 Collaborative AI Workspaces: Claude Cowork and Gemini Spark
 
 The 2026 AI ecosystem has expanded beyond reactive chat windows and command-line coding orchestrators into collaborative workspace agents (measured 2026-09-01). These systems operate directly on multi-file workspaces, desktop applications, and cloud productivity suites to automate complex, multi-step analytical and administrative workflows.
 
@@ -3952,6 +4053,10 @@ When selecting a collaborative workspace agent for academic and computational re
 
 *2001: A Space Odyssey*. 1968. Film. <https://en.wikipedia.org/wiki/2001:_A_Space_Odyssey_(film)>.
 
+Ali, Numman. 2026. *Opencode-Openai-Codex-Auth: Use Your ChatGPT Plus/Pro Subscription with OpenCode*. GitHub repository. <https://github.com/numman-ali/opencode-openai-codex-auth>.
+
+anomalyco. 2026. *OpenCode: The Open Source Coding Agent*. GitHub repository. <https://github.com/anomalyco/opencode>.
+
 Anthropic. 2026. *Claude Cowork Overview*. Documentation. <https://claude.com/docs/cowork/overview>.
 
 Asimov, Isaac. 1950. *I, Robot*. Novel; Gnome Press. <https://search.library.ucdavis.edu/permalink/01UCD_INST/9fle3i/alma990000226350403126>.
@@ -3966,7 +4071,15 @@ Card, Orson Scott. 1985. *Ender’s Game*. Novel; Tor Books. <https://en.wikiped
 
 code-yeongyu. 2025. *My-Claude-Code-Harness*. Software. <https://github.com/code-yeongyu/my-claude-code-harness>.
 
+Daytona. 2026. *Daytona Integrations: OpenCode Plugin*. GitHub repository. <https://github.com/daytona/integrations/tree/main/packages/opencode-plugin>.
+
 Dettmers, Tim, Artidoro Pagnoni, Ari Holtzman, and Luke Zettlemoyer. 2023. *QLoRA: Efficient Finetuning of Quantized LLMs*. arXiv preprint. <https://arxiv.org/abs/2305.14314>.
+
+different-ai. 2026. *OpenWork: The Open-Source Alternative to Claude Cowork*. GitHub repository. <https://github.com/different-ai/openwork>.
+
+Dyke, Nick van. 2026. *Opencode.nvim: Neovim Plugin for Editor-Aware Prompts*. GitHub repository. <https://github.com/nickjvandyke/opencode.nvim>.
+
+Fabris, Noe. 2026. *Opencode-Antigravity-Auth (Archived)*. GitHub repository. <https://github.com/NoeFabris/opencode-antigravity-auth>.
 
 Flight of the Conchords. 2007. *The Humans Are Dead*. Music Video. <https://www.youtube.com/watch?v=B1BdQcJ2ZYY>.
 
@@ -3976,13 +4089,41 @@ Herbert, Frank. 1965. *Dune*. Novel; Chilton Books. <https://en.wikipedia.org/wi
 
 HKUDS. 2026. *OpenHarness: Open Agent Harness with a Built-in Personal Agent*. Software. <https://github.com/HKUDS/OpenHarness>.
 
+hosenur. 2026. *Portal: Mobile-First Web UI for OpenCode*. GitHub repository. <https://github.com/hosenur/portal>.
+
 Hu, Edward J., Yelong Shen, Phillip Wallis, et al. 2021. *LoRA: Low-Rank Adaptation of Large Language Models*. arXiv preprint. <https://arxiv.org/abs/2106.09685>.
+
+inkdust2021. 2026. *Opencode-Vibeguard: Redact Secrets and PII Before LLM Calls*. GitHub repository. <https://github.com/inkdust2021/opencode-vibeguard>.
+
+kdcokenny. 2026a. *Ocx: OpenCode Extension Manager with Portable, Isolated Profiles*. GitHub repository. <https://github.com/kdcokenny/ocx>.
+
+kdcokenny. 2026b. *Opencode-Background-Agents: Async Delegation with Context Persistence*. GitHub repository. <https://github.com/kdcokenny/opencode-background-agents>.
+
+kdcokenny. 2026c. *Opencode-Workspace: Bundled Multi-Agent Orchestration Harness*. GitHub repository. <https://github.com/kdcokenny/opencode-workspace>.
+
+kdcokenny. 2026d. *Opencode-Worktree: Zero-Friction Git Worktrees for OpenCode*. GitHub repository. <https://github.com/kdcokenny/opencode-worktree>.
 
 LeCun, Yann. 2022. *A Path Towards Autonomous Machine Intelligence*. Meta AI Research; New York University; Technical Report. <https://openreview.net/forum?id=BZ5a1r-kVsf>.
 
+Neural Nomads AI. 2026. *CodeNomad: The AI Coding Cockpit for OpenCode*. GitHub repository. <https://github.com/NeuralNomadsAI/CodeNomad>.
+
 OpenAI. 2026. *Get Started with ChatGPT Work*. Documentation. <https://learn.chatgpt.com/docs/get-started-with-work>.
 
+OpenChamber. 2026. *OpenChamber: Agentic Development Environment for OpenCode*. GitHub repository. <https://github.com/openchamber/openchamber>.
+
+OpenCode. 2026a. *OpenCode Documentation: Ecosystem*. Documentation. <https://opencode.ai/docs/ecosystem/>.
+
+OpenCode. 2026b. *OpenCode Documentation: Go*. Documentation. <https://opencode.ai/docs/go/>.
+
+OpenCode. 2026c. *OpenCode Documentation: Plugins*. Documentation. <https://opencode.ai/docs/plugins/>.
+
+OpenCode. 2026d. *OpenCode Documentation: Zen*. Documentation. <https://opencode.ai/docs/zen/>.
+
+Opencode-DCP. 2026. *Opencode-Dynamic-Context-Pruning: Optimize Token Usage by Pruning Obsolete Tool Outputs*. GitHub repository. <https://github.com/Opencode-DCP/opencode-dynamic-context-pruning>.
+
 open-gsd. 2026. *GSD Core: Git. Ship. Done.* Software. <https://github.com/open-gsd/gsd-core>.
+
+remorses. 2026. *Kimaki: Discord Bot to Control OpenCode Sessions*. GitHub repository. <https://github.com/remorses/kimaki>.
 
 Runkle, Sydney. 2026. *How to Build a Custom Agent Harness*. Documentation. <https://www.langchain.com/blog/how-to-build-a-custom-agent-harness>.
 
