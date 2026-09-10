@@ -85,7 +85,7 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/agents-best-practices.qmd >}}
 
-# Firewall and Network Configuration
+# Firewall and Network Configuration {#sec-ai-firewall}
 
 {{< include ai-tools/agents-firewall-config.qmd >}}
 
