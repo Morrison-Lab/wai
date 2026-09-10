@@ -125,7 +125,7 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/agent-skills.qmd >}}
 
-# Tessl: Skills Registry and Spec-Driven Tooling {#sec-ai-tessl}
+# Tessl: Skills Registry and CLI {#sec-ai-tessl}
 
 {{< include ai-tools/tessl.qmd >}}
 

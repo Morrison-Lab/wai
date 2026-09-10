@@ -80,7 +80,7 @@ through Homebrew, or on Windows through `winget install tessl.tessl`;
 the `npm` package is deprecated [@tessl_docs_installation].
 It needs Node.js 22.17 or later,
 and by default it checks for updates every three hours
-and installs them silently.
+and installs them silently [@tessl_docs_installation].
 Logging in (`tessl login`) uses a GitHub or Google account
 and is optional for searching and installing.
 
@@ -130,13 +130,14 @@ and the documentation says this may include conversations,
 code snippets, and file contents;
 it can be turned off in the CLI configuration [@tessl_docs_usage_data].
 Tessl also reserves the right to train on data from free-tier usage,
-though it states it has not done so.
+though it states it has not done so [@tessl_docs_usage_data].
 
 #### Useful to us? Marginally, for vetting skills; not as a package manager
 
 The lab's skills already live in
 [Morrison-Lab/ai-config](https://github.com/Morrison-Lab/ai-config),
-where they are version-controlled, reviewed in pull requests,
+where they are version-controlled,
+reviewed in pull requests,
 and installed as a Claude Code plugin,
 and the Posit skills the lab uses are copied into that repository
 (see @sec-ai-posit-skills).
