@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-10 01:38:35 (PDT)
+Last modified: 2026-09-10 02:43:25 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -461,7 +461,7 @@ The first kind is days of work and inherits every vendor upgrade for free. The s
 |----|----|----|----|----|
 | [`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode) ([Heo 2026](#ref-oh_my_claudecode)) | layer | Claude Code (plus CLI workers for Codex, Gemini, Antigravity, Grok, Cursor) | MIT | 39.1k stars |
 | [Hoyeon](https://github.com/team-attention/hoyeon) ([team-attention 2026](#ref-hoyeon)) | layer | Claude Code | MIT | 174 stars; last push 2026-05-21 |
-| [Superpowers](https://github.com/obra/superpowers) ([Vincent 2026](#ref-superpowers)) | layer | Claude Code, Codex, Cursor, OpenCode, Pi, Hermes, and eight others | MIT | 283.8k stars; on the official Claude plugin marketplace |
+| [Superpowers](https://github.com/obra/superpowers) ([Vincent 2026b](#ref-superpowers)) | layer | Claude Code, Codex, Cursor, OpenCode, Pi, Hermes, and eight others | MIT | 283.8k stars; on the official Claude plugin marketplace |
 | [GSD Core](https://github.com/open-gsd/gsd-core) ([open-gsd 2026](#ref-gsd_core)) | layer | Claude Code, OpenCode, Codex, Copilot, Cursor, and four others | MIT | 9.3k stars |
 | [`OpenHarness`](https://github.com/HKUDS/OpenHarness) ([HKUDS 2026](#ref-openharness)) | runtime | any Anthropic- or OpenAI-compatible endpoint | MIT | 15.7k stars; last push 2026-06-04 |
 | [LangChain `create_agent`](https://www.langchain.com/blog/how-to-build-a-custom-agent-harness) ([Runkle 2026](#ref-langchain_custom_harness)) | runtime | any LangChain model | MIT (library) | guide, not a product |
@@ -477,7 +477,7 @@ The `README` states: “Multi-agent orchestration for Claude Code. Zero learning
 - `/skillify`, which extracts a reusable skill from a session into `.omc/skills/` (project) or `~/.omc/skills/` (user) and auto-injects matching skills later;
 - a HUD status line, cost tracking, Discord/Telegram/Slack notifications, and a `tmux`-based mode that drives other vendors’ CLIs as workers.
 
-It is the same family as the Oh My OpenCode project in [Section 53](#sec-ai-oh-my-opencode) (the npm package is still named `oh-my-claude-sisyphus`), and by star count the most-used custom harness in this survey after Superpowers.
+It is the same family as the Oh My OpenCode project in [Section 56](#sec-ai-oh-my-opencode) (the npm package is still named `oh-my-claude-sisyphus`), and by star count the most-used custom harness in this survey after Superpowers.
 
 **Useful to us?** Partly. Its model routing and skill extraction are things `Morrison-Lab/ai-config` already does with `select-model` and `ums`, so installing OMC on top would double them. Its notification integrations and HUD are the pieces we lack, and they are separable.
 
@@ -485,11 +485,11 @@ It is the same family as the Oh My OpenCode project in [Section 53](#sec-ai-oh-
 
 Hoyeon calls itself a “Requirements-first Harness — derive, verify, execute” ([team-attention 2026](#ref-hoyeon)). Its idea is that most agent failures are planning failures, so it forces a derivation chain (goal, context, decisions, requirements, tasks, execution) and gates each transition twice: a CLI validates the structure of `requirements.md` and `plan.json` before any model reads them, and a reviewer agent checks for scope drift and blind spots. The commands are `/specify` (a Socratic interview), `/blueprint` (contract-first planning into a task dependency graph), `/execute` (parallel workers plus independent verification against sub-requirements), `/bugfix`, `/council`, and `/tribunal` (a three-agent adversarial review: risk, value, feasibility). It ships 22 agents and 29 skills and installs with `claude plugin add team-attention/hoyeon` plus an npm CLI.
 
-**Useful to us?** The design principle is exactly the lab’s own “deterministic tools over model judgment” rule ([Section 32](#sec-ai-customization)): a CLI that rejects malformed plans before an LLM sees them is the kind of instrument our hooks already are for pushes and merges. The requirements interview is heavier than most of our tasks need, and it is Claude-Code-only.
+**Useful to us?** The design principle is exactly the lab’s own “deterministic tools over model judgment” rule ([Section 34](#sec-ai-customization)): a CLI that rejects malformed plans before an LLM sees them is the kind of instrument our hooks already are for pushes and merges. The requirements interview is heavier than most of our tasks need, and it is Claude-Code-only.
 
 #### Superpowers
 
-Superpowers is Jesse Vincent’s “agentic skills framework & software development methodology” ([Vincent 2026](#ref-superpowers)). It is the purest example of the layer kind: a set of skills and one bootstrap that makes them mandatory. The `using-superpowers` meta-skill injects itself at session start so the agent checks for a relevant skill before any task, and the skills encode a workflow: brainstorming, writing and executing plans, test-driven development, systematic debugging, git worktrees, requesting and receiving code review, and subagent-driven development with a two-stage review (spec compliance first, then code quality). It installs from the official Claude plugin marketplace (`/plugin install superpowers@claude-plugins-official`) and from Codex’s `/plugins`, and supports fourteen harnesses. Its own README records the cost of the layer approach: Hermes has no post-compaction hook, so a long session that compacts loses the bootstrap.
+Superpowers is Jesse Vincent’s “agentic skills framework & software development methodology” ([Vincent 2026b](#ref-superpowers)). It is the purest example of the layer kind: a set of skills and one bootstrap that makes them mandatory. The `using-superpowers` meta-skill injects itself at session start so the agent checks for a relevant skill before any task, and the skills encode a workflow: brainstorming, writing and executing plans, test-driven development, systematic debugging, git worktrees, requesting and receiving code review, and subagent-driven development with a two-stage review (spec compliance first, then code quality). It installs from the official Claude plugin marketplace (`/plugin install superpowers@claude-plugins-official`) and from Codex’s `/plugins`, and supports fourteen harnesses. Its own README records the cost of the layer approach: Hermes has no post-compaction hook, so a long session that compacts loses the bootstrap.
 
 **Useful to us?** Yes, and the lab’s maintainer already runs it alongside `ai-config` in Claude Code. The overlap is real (both have a brainstorming skill, both have a code-review workflow), so treat it as a reference implementation of skill design rather than a second source of truth.
 
@@ -543,7 +543,7 @@ The runtime-kind projects add the loop itself, the permission model, and provide
 - 94 hook scripts, and a `hooks/hooks.json` with 55 registrations (30 `PreToolUse`, 10 `UserPromptSubmit`, and 15 `Stop`);
 - 8 subagent definitions (including the `adversarial-reviewer` that gates every push);
 - 131 shared prose fragments and 59 memory files;
-- a plugin manifest, so Claude Code and Cursor load it as a plugin ([Section 33](#sec-ai-config-install) explains how, and [Section 32](#sec-ai-customization) what the corpus contains).
+- a plugin manifest, so Claude Code and Cursor load it as a plugin ([Section 35](#sec-ai-config-install) explains how, and [Section 34](#sec-ai-customization) what the corpus contains).
 
 It already implements all five common moves: the bootstrap is `CLAUDE.md` and `AGENTS.md`, planning goes through issue-first and `st`, fresh-context workers are the `Agent` and `Workflow` calls, independent verification is the adversarial-reviewer subagent, and the deterministic gates are the hooks. So “building our own” means three concrete things, in order:
 
@@ -912,7 +912,7 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 >
 > See [Section 19](#sec-ai-best-practices) for more details on workflow file security.
 
-**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 40](#sec-ai-when-to-use) for more guidance.
+**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 43](#sec-ai-when-to-use) for more guidance.
 
 #### Scenario 3: Uncertain Which Scenario Applies
 
@@ -943,7 +943,7 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 
 - See the [UCD-SERG Lab Manual’s continuous integration chapter](https://ucd-serg.github.io/lab-manual/continuous-integration.html) for setting up GitHub Actions workflows
 - See [Section 19](#sec-ai-best-practices) and [Section 18](#sec-ai-benefits-hazards) for security considerations with workflow files
-- See [Section 40](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
+- See [Section 43](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
 - See the [GitHub Actions documentation](https://docs.github.com/en/actions) for workflow syntax and troubleshooting
 
 # 18 Benefits and Hazards
@@ -2649,7 +2649,7 @@ Skills package procedural knowledge and team-specific context into portable, ver
 
 For the complete specification and more details, see [agentskills.io](https://agentskills.io/home).
 
-A skill is one of several ways to customize an agent, and not always the right one. [Section 32](#sec-ai-customization) compares it against:
+A skill is one of several ways to customize an agent, and not always the right one. [Section 34](#sec-ai-customization) compares it against:
 
 - instruction files
 - subagents
@@ -2705,9 +2705,49 @@ The R and Quarto skills match this lab’s daily work, and nine of them are alre
 - `release-post`
 - `testing-r-packages`
 
-Copying the skills in rather than installing the marketplace plugin lets them follow the lab’s own review and hook conventions, at the cost of tracking upstream changes by hand. Four categories are not adopted. Three of them have the least overlap with lab work: Shiny app development, `ggsql`, and Posit Connect deployment. The fourth, `posit-dev`, overlaps with practices the lab already has: its `critical-code-reviewer` parallels the adversarial self-review subagent that the lab’s agent configuration dispatches before every push, and `new-work` / `working-on` keep a per-task tracking document where the lab uses the issue tracker and a session notebook. The `github` skills likewise overlap with the lab’s own [pull-request workflow](../chapters/pr-workflow-with-agents.llms.md) and with the review setup in [Section 36](#sec-ai-claude-code-action-review), so both categories are worth reading for ideas rather than installing alongside that tooling. The contribution guidance in the repository recommends Anthropic’s `skill-creator` skill for authoring new skills.
+Copying the skills in rather than installing the marketplace plugin lets them follow the lab’s own review and hook conventions, at the cost of tracking upstream changes by hand. Four categories are not adopted. Three of them have the least overlap with lab work: Shiny app development, `ggsql`, and Posit Connect deployment. The fourth, `posit-dev`, overlaps with practices the lab already has: its `critical-code-reviewer` parallels the adversarial self-review subagent that the lab’s agent configuration dispatches before every push, and `new-work` / `working-on` keep a per-task tracking document where the lab uses the issue tracker and a session notebook. The `github` skills likewise overlap with the lab’s own [pull-request workflow](../chapters/pr-workflow-with-agents.llms.md) and with the review setup in [Section 39](#sec-ai-claude-code-action-review), so both categories are worth reading for ideas rather than installing alongside that tooling. The contribution guidance in the repository recommends Anthropic’s `skill-creator` skill for authoring new skills.
 
-# 31 Useful plugins
+# 31 Posit AI Tooling on GitHub
+
+The [`posit-dev`](https://github.com/posit-dev) GitHub organization holds the open-source work of Posit PBC that does not live under the `rstudio`, `tidyverse`, `r-lib`, or `quarto-dev` organizations. Much of the LLM tooling from Posit started there, so this section reviews the organization for repositories relevant to working with AI. The Posit skill collection, `posit-dev/skills`, is covered separately in [Section 30](#sec-ai-posit-skills) and is not repeated here.
+
+The listing below was derived from the GitHub API (`gh repo list posit-dev --limit 300`) rather than from browsing the website. The organization had 226 public repositories, of which the 16 below are about building with or evaluating LLMs (measured 2026-09-09). Star counts and last-push dates are as of the same date. The rest of the organization is Positron and its extensions, Shiny for Python, `great-tables`, `pointblank`, `air`, `ggsql`, Posit Team deployment tooling, container images, and workshop material.
+
+#### AI-related repositories
+
+| Repository | Purpose | Language | Stars | Last push | Verdict for this lab |
+|----|----|----|----|----|----|
+| [`querychat`](https://github.com/posit-dev/querychat) ([Posit PBC 2026m](#ref-posit_dev_querychat)) | Natural-language exploration of tabular data, translated to SQL, for R and Python Shiny apps | Python, R | 211 | 2026-09-08 | Maybe: a safe pattern for letting an LLM query a data frame |
+| [`mcptools`](https://github.com/posit-dev/mcptools) ([Posit PBC 2026i](#ref-posit_dev_mcptools)) | Model Context Protocol for R: expose a running R session as an MCP server, or register MCP servers with `ellmer` chats | R | 194 | 2026-08-22 | Yes: the MCP layer `btw` uses, and the way to expose a lab function as a tool |
+| [`chatlas`](https://github.com/posit-dev/chatlas) ([Posit PBC 2026e](#ref-posit_dev_chatlas)) | Python client for LLM chat and tool calling, the Python counterpart of `ellmer` | Python | 175 | 2026-09-08 | No: the lab builds in R |
+| [`shinychat`](https://github.com/posit-dev/shinychat) ([Posit PBC 2026p](#ref-posit_dev_shinychat)) | Chat UI component for Shiny, in R and Python | TypeScript, R, Python | 137 | 2026-09-09 | Maybe: only if a lab app needs a chat panel |
+| [`btw`](https://github.com/posit-dev/btw) ([Posit PBC 2026d](#ref-posit_dev_btw)) | Toolkit for giving LLMs context about an R session: copy context to the clipboard, chat in the IDE, or connect R to coding agents through `mcptools` | R | 135 | 2026-09-09 | Yes: the most direct fit for an R-centric workflow |
+| [`mcp-repl`](https://github.com/posit-dev/mcp-repl) ([Posit PBC 2026h](#ref-posit_dev_mcp_repl)) | Sandboxed MCP server that keeps a persistent R or Python session alive across an agent’s tool calls, with plots returned as images | Rust | 65 | 2026-07-27 | Yes, untried: replaces `Rscript -e` round trips in Claude Code |
+| [`shiny-assistant`](https://github.com/posit-dev/shiny-assistant) ([Posit PBC 2026o](#ref-posit_dev_shiny_assistant)) | Source of the hosted Shiny Assistant chat app | Python | 58 | 2026-01-17 | No: an application, not a library |
+| [`raghilda`](https://github.com/posit-dev/raghilda) ([Posit PBC 2026n](#ref-posit_dev_raghilda)) | Retrieval-augmented generation pipeline in Python, with DuckDB or ChromaDB storage | Python | 36 | 2026-09-02 | No: the R counterpart is `tidyverse/ragnar` |
+| [`shinyrealtime`](https://github.com/posit-dev/shinyrealtime) ([Posit PBC 2026q](#ref-posit_dev_shinyrealtime)) | Voice chat in Shiny apps via the OpenAI Realtime API | Python, R, TypeScript | 25 | 2026-07-31 | No |
+| [`commons`](https://github.com/posit-dev/commons) ([Posit PBC 2026g](#ref-posit_dev_commons)) | Experimental framework for data agents built on trusted R or Python calculations and data dictionaries | R, Python | 20 | 2026-09-09 | Watch: experimental, but aimed at the “agent over our own analyses” problem |
+| [`code-index`](https://github.com/posit-dev/code-index) ([Posit PBC 2026f](#ref-posit_dev_code_index)) | Semantic code search over a repository, exposed to coding agents through MCP; parses R, Python, Quarto, and Markdown | Go | 6 | 2026-04-29 | Maybe: for large codebases only |
+| [`ai-lib`](https://github.com/posit-dev/ai-lib) ([Posit PBC 2026a](#ref-posit_dev_ai_lib)) | TypeScript LLM-provider infrastructure behind Posit Assistant, successor to the archived `ai-provider-bridge` | TypeScript | 5 | 2026-09-08 | No: internal infrastructure |
+| [`bluffbench2`](https://github.com/posit-dev/bluffbench2) ([Posit PBC 2026c](#ref-posit_dev_bluffbench2)) | Evaluation of whether agents notice subtle data-quality artifacts in plots, implemented with `vitals` | R | 4 | 2026-07-21 | Yes, as a reference: an eval built in R about data-analysis judgment |
+| [`positron-copilot-chat`](https://github.com/posit-dev/positron-copilot-chat) ([Posit PBC 2026l](#ref-posit_dev_positron_copilot_chat)) | Fork of Microsoft’s Copilot Chat extension bundled into Positron | TypeScript | 4 | 2026-05-06 | No: consumed through Positron itself |
+| [`assistant-feedback`](https://github.com/posit-dev/assistant-feedback) ([Posit PBC 2026b](#ref-posit_dev_assistant_feedback)) | Issue tracker for feedback on Posit Assistant | none | 4 | 2026-05-28 | Reference: where to report Positron Assistant problems |
+| [`nesevals`](https://github.com/posit-dev/nesevals) ([Posit PBC 2026j](#ref-posit_dev_nesevals)) | Evaluation tooling for next-edit-suggestion prompts and models | R | 2 | 2026-04-07 | No: relevant to IDE builders |
+
+Two tools the lab might expect to find here live elsewhere. [`ellmer`](https://github.com/tidyverse/ellmer), the R package for LLM chat and tool calling that `btw` and `querychat` build on and that `mcptools` and `shinychat` integrate with, and [`ragnar`](https://github.com/tidyverse/ragnar), its retrieval companion, are in the `tidyverse` organization. Positron Assistant has no public repository of its own. Going by the repository descriptions, its provider layer is `ai-lib`, the Copilot fork above supplies its chat surface, and the rest is part of the [`positron`](https://github.com/posit-dev/positron) repository ([Posit PBC 2026k](#ref-posit_dev_positron)). The organization also holds workshop and demo repositories (`positron-ai-workshop`, `ai-powered-app-workshop`, `shiny-querychat-workshop`, `posit-conf-chat`) that are worked examples of the packages above rather than tools.
+
+#### Useful to us? Yes, three tools and one reference
+
+The lab’s workflow is R and Quarto driven by Claude Code and Copilot, so the question is which of these repositories connect that workflow to an R session.
+
+- **`btw`** is the direct fit. Its clipboard mode pastes the structure of the objects in an R session into whatever chat is open, and its MCP server route (through `mcptools`) lets Claude Code read package documentation and inspect the global environment instead of guessing at column names. The MCP route follows the setup pattern in [Section 50](#sec-ai-mcp-server-setup).
+- **`mcptools`** is the layer underneath `btw`, and the package to use directly when a lab package wants to expose one of its own functions to an agent as a tool.
+- **`mcp-repl`** addresses a cost the lab already pays: each `Rscript -e` call an agent makes starts a fresh process, so data and packages are reloaded on every check. A persistent, sandboxed session with inline plots is a better fit for iterating on an analysis with an agent, at the cost of a Rust binary to install. It has not yet been tried in the lab.
+- **`bluffbench2`** is a reference rather than a dependency. It is an evaluation written in R with [`vitals`](https://github.com/tidyverse/vitals) that measures whether an agent notices data-quality problems, which is the kind of judgment the lab expects a human reviewer to keep. Anyone building an eval of the lab’s own agent configuration can start from its harness.
+
+`querychat` and `shinychat` matter only if the lab ships Shiny apps with a chat interface. `commons` is a framework for data agents rather than a chat component, and it is still marked experimental. The Python packages (`chatlas`, `raghilda`) duplicate R tools the lab already prefers. Positron Assistant is configured through Positron rather than through these repositories; see [Section 26](#sec-ai-copilot-settings) for its OpenAI setup and [Section 21](#sec-ai-offline) for running it against Ollama.
+
+# 32 Useful plugins
 
 This site’s Quarto sources already use [Semantic Line Breaks](https://sembr.org/) (SemBr): a line break after each substantial unit of thought, so the source is easier to edit while the rendered HTML still reads as ordinary paragraphs.
 
@@ -2734,9 +2774,149 @@ The agent reads the touched code first and is lazy about the solution, never abo
 
 [Contextify](https://contextify.sh/) keeps your Claude Code and Codex history forever in a private, searchable timeline. Claude Code deletes history after 30 days; Contextify watches both tools, summarizes each message (on-device via Apple Intelligence on macOS 26, or Lite Mode on macOS 15), and lets you search every conversation you ever had. It runs local-first with no account required, and optionally syncs across devices via Cloud Sync or a self-hosted instance you operate. The ambient timeline lets you follow sessions in real time or skim what happened while you were away.
 
-The lab’s portable agent config lives in [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config). It is a plugin-or-symlink install of skills, hooks, and memories — not a third marketplace next to SemBr. How that config actually reaches a machine, and how a doubled plugin install fails, is [Section 33](#sec-ai-config-install). [Section 32](#sec-ai-customization) is the worked example of what the corpus contains.
+The lab’s portable agent config lives in [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config). It is a plugin-or-symlink install of skills, hooks, and memories — not a third marketplace next to SemBr. How that config actually reaches a machine, and how a doubled plugin install fails, is [Section 35](#sec-ai-config-install). [Section 34](#sec-ai-customization) is the worked example of what the corpus contains. [Section 33](#sec-ai-plugin-catalog) maps the official and community marketplaces these four sit in and sets each against `ai-config`.
 
-# 32 Customizing an Agent
+# 33 The plugin catalog
+
+[Section 32](#sec-ai-useful-plugins) names four plugins the lab already uses. This section is the map they sit on: what Anthropic’s official marketplace contains, which community plugins are worth knowing about, and how each of them relates to the lab’s own [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config) ([Morrison Lab 2026a](#ref-ai_config_readme)). It closes with the question that prompted it: what the `ralph-loop` plugin is, and whether it is the same thing as `ai-config`’s `ardi`.
+
+Plugin counts and names change weekly, so every figure below is stamped with the date it was read. The anatomy of a plugin bundle (skills, hooks, MCP servers, agents, commands) is [Section 54](#sec-ai-plugins-deep-dive); this section assumes it.
+
+#### The three Anthropic marketplaces
+
+Anthropic runs three plugin catalogs for Claude Code, and they differ in who curates them ([Anthropic 2026r](#ref-claude_code_discover_plugins)):
+
+- **`claude-plugins-official`** ([`anthropics/claude-plugins-official`](https://github.com/anthropics/claude-plugins-official) ([Anthropic 2026o](#ref-claude_plugins_official))). Curated by Anthropic at its discretion; there is no application process. Claude Code registers it automatically the first time it starts interactively, so `/plugin install <name>@claude-plugins-official` works with no setup. Browse it with `/plugin` (the **Discover** tab) or at [claude.com/plugins](https://claude.com/plugins).
+- **`claude-community`** ([`anthropics/claude-plugins-community`](https://github.com/anthropics/claude-plugins-community) ([Anthropic 2026q](#ref-claude_plugins_community))). Third-party submissions that passed Anthropic’s automated validation and safety screening, each pinned to a commit SHA and synced nightly from the review pipeline. Added by hand: `/plugin marketplace add anthropics/claude-plugins-community`, then `/plugin install <name>@claude-community`. Pull requests against the mirror are closed automatically; submissions go through a form.
+- **`claude-code-plugins`** ([`anthropics/claude-code`, `plugins/`](https://github.com/anthropics/claude-code/tree/main/plugins) ([Anthropic 2026n](#ref-claude_code_demo_plugins))). The demo marketplace: thirteen example plugins (`commit-commands`, `code-review`, `feature-dev`, `hookify`, `ralph-wiggum`, and others) that show what the plugin system can do. Most of them also ship in the official marketplace under the same or a renamed entry (`ralph-wiggum` there is `ralph-loop` here).
+
+The official README carries the warning that governs all three: Anthropic does not control what MCP servers, files, or other software a plugin includes, and cannot verify that it works as intended or will not change ([Anthropic 2026o](#ref-claude_plugins_official)). A plugin runs arbitrary code with your user privileges, so the trust decision is yours, per plugin, every time.
+
+#### What the official marketplace contains
+
+The official catalog’s `marketplace.json` lists 287 plugins (measured 2026-09-09 from the copy Claude Code caches locally; ([Anthropic 2026o](#ref-claude_plugins_official))). Only 38 of them live in the repository’s own `plugins/` directory, which the README describes as the plugins Anthropic develops and maintains. Another 15 sit in `external_plugins/`, and the remaining 234 are pointers to third-party repositories (Amazon, Microsoft, Google’s `gemini-cli-extensions`, Databricks, Hugging Face, Sentry, and many vendors), each pinned to a commit SHA. So “official” mostly means “listed and pinned by Anthropic”, not “written by Anthropic”. By declared category the catalog is:
+
+- development (119)
+- productivity (49)
+- database (38)
+- monitoring (20)
+- security (18)
+- a long tail of deployment, design, automation, learning, location, testing, migration, and math
+
+The 38 Anthropic-maintained plugins fall into five groups. The verdicts are for this lab’s work (R packages, Quarto sites, Python and shell tooling, GitHub pull requests), not for software teams in general.
+
+##### Code intelligence
+
+Twelve `*-lsp` plugins (`clangd`, `csharp`, `gopls`, `jdtls`, `kotlin`, `lua`, `php`, `pyright`, `ruby`, `rust-analyzer`, `swift`, `typescript`) connect a Language Server Protocol server so that Claude sees type errors and missing imports after every edit and can jump to definitions instead of grepping ([Anthropic 2026r](#ref-claude_code_discover_plugins)). The plugin does not install the language server binary; you do, and cloud sessions never start it.
+
+Verdict: `pyright-lsp` is worth installing wherever the lab writes Python. There is no R entry in the catalog (measured 2026-09-09), so R work gets no diagnostics from this route; the docs describe an `.lsp.json` for writing your own LSP plugin, which is the path if anyone wants to wire up R’s `languageserver`.
+
+##### Development workflows
+
+- `commit-commands`: commit, push, and open a PR from slash commands.
+- `code-review`: multi-agent PR review with confidence-based scoring.
+- `pr-review-toolkit`: reviewer agents specialized by concern (comments, tests, error handling, type design).
+- `feature-dev`: a phased explore-design-implement workflow with dedicated agents.
+- `code-simplifier`: an agent that refines code for clarity without changing behaviour.
+- `code-modernization`: a preflight-assess-transform workflow for legacy codebases.
+- `security-guidance`: pattern warnings on every edit plus an LLM diff review at `Stop`, with fixes applied in the same session.
+- `claude-security`: deeper vulnerability scanning of your own code, at a chosen effort level.
+- `ralph-loop`: the self-referential iteration loop, treated on its own below.
+
+Verdict: `security-guidance` fills a gap `ai-config` does not cover and costs little, so install it. `commit-commands`, `code-review`, and `pr-review-toolkit` overlap the lab’s forge workflow (claim, PR-on-claim, `ardi`, the `@claude` review action) and would run beside it rather than replace it; skip them unless you are working outside a lab repository. `feature-dev` and `code-modernization` are aimed at application codebases and have not earned a place here.
+
+##### Building your own extensions
+
+- `plugin-dev`: seven skills covering hooks, MCP integration, and plugin structure.
+- `skill-creator`: create, improve, and benchmark skills.
+- `hookify`: write a hook from a conversation pattern or an explicit instruction.
+- `mcp-server-dev` and `agent-sdk-dev`: building MCP servers and Claude Agent SDK programs.
+- `mcp-tunnels`: reach a private MCP server through an Anthropic tunnel.
+- `claude-md-management`: audit `CLAUDE.md`, capture session learnings, keep project memory tidy.
+- `claude-code-setup`: analyze a codebase and recommend hooks, skills, and MCP servers for it.
+
+Verdict: `skill-creator` and `plugin-dev` are the ones to reach for when adding to `ai-config`, since the corpus is itself a plugin. `claude-md-management` duplicates `ai-config`’s `ums` and `memorize` skills and its `MEMORY.md` conventions; skip it in lab repositories. `hookify` generates a hook from a description; `ai-config`’s hooks are hand-written Python with a test per hook, so use `hookify` for a personal one-off and the corpus for anything shared.
+
+##### Output styles and reports
+
+`explanatory-output-style` recreates the deprecated built-in Explanatory style (commentary on implementation choices), and `learning-output-style` implements a Learning style that never shipped (prompts for you to write key pieces yourself). `receipts`, `session-report`, and `project-artifact` generate HTML reports of what you shipped, what a session cost, and a project status page. `playground` builds single-file interactive HTML explorers; `frontend-design` targets distinctive web interfaces; `math-olympiad` solves competition mathematics with adversarial verification; `cwc-makers` sets up a hardware kit.
+
+Verdict: `learning-output-style` is a reasonable choice for a student who wants to learn a codebase rather than delegate it, per [Section 43](#sec-ai-when-to-use). `session-report` is useful when a quota question comes up. The rest are not relevant to lab work.
+
+##### External integrations
+
+The `external_plugins/` directory and many third-party entries bundle a pre-configured MCP server: `github`, `gitlab`, `atlassian`, `asana`, `linear`, `notion`, `figma`, `slack`, `sentry`, `vercel`, `firebase`, `supabase`, `context7`, `playwright`, `serena`, `terraform`, and messaging bridges for Discord, Telegram, and iMessage ([Anthropic 2026r](#ref-claude_code_discover_plugins)).
+
+Verdict: `github` is the one that matters here; [Section 50](#sec-ai-mcp-server-setup) covers configuring it, and [Section 42](#sec-ai-pr-activity-notifications) what it adds. `context7` (live library documentation lookup) is worth a try for Python and JavaScript work. Everything else depends on whether the lab uses the service.
+
+#### Community plugins worth knowing
+
+Beyond the three Anthropic catalogs, any GitHub repository with a `.claude-plugin/marketplace.json` is a marketplace (`/plugin marketplace add owner/repo`), and the four plugins in [Section 32](#sec-ai-useful-plugins) (`sembr/skills`, `ponytail`, Contextify, and `ai-config` itself) all reach you that way. One more is widely enough used to describe here.
+
+**Superpowers** ([`obra/superpowers`](https://github.com/obra/superpowers) ([Vincent 2026a](#ref-obra_superpowers))) calls itself “a complete software development methodology for your coding agents, built on top of a set of composable skills”. The 6.3.0 build installed on one lab machine carries fourteen skills (measured 2026-09-09):
+
+- `brainstorming`
+- `writing-plans` and `executing-plans`
+- `test-driven-development`
+- `systematic-debugging`
+- `subagent-driven-development` and `dispatching-parallel-agents`
+- `requesting-code-review` and `receiving-code-review`
+- `using-git-worktrees`
+- `finishing-a-development-branch`
+- `verification-before-completion`
+- `using-superpowers` and `writing-skills`, the two meta-skills
+
+The `using-superpowers` skill loads at session start so the others trigger on their own. It is MIT-licensed and installs into more than a dozen agents, among them:
+
+- Claude Code, via `/plugin install superpowers@claude-plugins-official`
+- Cursor, Codex, and Copilot CLI
+- Gemini CLI, OpenCode, and Antigravity
+- Pi and Hermes
+
+Verdict: install it if you want an opinionated end-to-end process and are not already running `ai-config`. Running both means two session-start bootstraps competing to set the workflow, and `ai-config` already covers the same ground in its own vocabulary (`brainstorm`, `st`, `ardi`, `adversarial-reviewer`, `clean-worktrees`, `wrap-up`). The skills that do not overlap (`systematic-debugging`, `test-driven-development`) are worth reading even if you do not install the plugin.
+
+The community marketplace itself is small so far (four plugin directories visible on 2026-09-09: `eli5`, `quickdesign`, `testdino`, `tres-finance-plugin`; ([Anthropic 2026q](#ref-claude_plugins_community))), so “branching out” today means the official catalog’s third-party entries and independent repositories, not that mirror.
+
+#### Compared with `ai-config`
+
+[`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config) ([Morrison Lab 2026a](#ref-ai_config_readme)) is the lab’s own plugin. The copy Claude Code caches on one lab machine holds 198 skills and 90 hook scripts (measured 2026-09-09), plus memories and the `shared/` fragments this site vendors into **?@sec-fully-clean** and its neighbours. It installs as a Claude Code plugin (`/plugin marketplace add Morrison-Lab/ai-config`), as a Cursor plugin, and via `bootstrap.sh` for Codex, Gemini CLI and Antigravity, VS Code Copilot, and OpenCode ([Section 35](#sec-ai-config-install)).
+
+Set beside the marketplaces above, four differences decide what to install:
+
+- **Scope.** A marketplace plugin does one thing: one language server, one MCP server, one workflow. `ai-config` is a whole working style: forge etiquette (claim, PR-on-claim, `ardi`, `mwc`), lab coding and writing conventions, quota management, and the memory that carries lessons between sessions. Nothing in the official catalog is shaped like that; `superpowers` is the closest, and it stops at the software-methodology layer.
+- **Enforcement.** The official workflow plugins are mostly skills and agents, which advise. `ai-config` pairs its skills with hooks that block: an unauthorized merge, a force push, a reply that promises without a mechanism. The one official plugin with a comparable `Stop`-hook design is `security-guidance`, which is why it is the clearest addition.
+- **Cross-agent reach.** Both `ai-config` and `superpowers` install into several agents from one repository; the official plugins are Claude Code only. If a lab member works in Codex or Antigravity as well, that decides it.
+- **Ownership.** A finding in an official plugin is a bug report to Anthropic; a finding in `ai-config` is a PR you can open today, and the corpus’s UMS discipline expects exactly that.
+
+The practical composition, as of 2026-09-09: `ai-config` as the base, `pyright-lsp` and `security-guidance` from the official marketplace, `github` where the MCP server is not already configured by hand, and `sembr/skills` for prose repositories. Everything else is a per-person choice.
+
+#### What is `ralph-loop`, and is it `ardi`?
+
+`ralph-loop` (official marketplace; `ralph-wiggum` in the demo marketplace) packages Geoffrey Huntley’s “Ralph” technique ([Anthropic 2026t](#ref-ralph_loop_plugin); [Huntley 2025](#ref-ghuntley_ralph)). Ralph, in Huntley’s words, “is a Bash loop”:
+
+``` bash
+while :; do cat PROMPT.md | claude-code ; done
+```
+
+The same prompt file is fed to a fresh agent run, over and over. Nothing changes between iterations except the repository: the previous run’s files, commits, and test results are what the next run reads. Tests supply the backpressure that keeps each pass honest, and the operator “tunes Ralph by adding a sign” to the prompt when a failure pattern shows up ([Huntley 2025](#ref-ghuntley_ralph)). Huntley says it works best on greenfield projects, one task per loop ([Huntley 2025](#ref-ghuntley_ralph)).
+
+The plugin moves that loop inside a single Claude Code session. `/ralph-loop "<prompt>" --max-iterations <n> --completion-promise "<text>"` installs a `Stop` hook that intercepts the agent’s attempt to end the turn and feeds the same prompt back, until the agent’s output contains the completion-promise string exactly, or the iteration cap is hit, or you run `/cancel-ralph` ([Anthropic 2026t](#ref-ralph_loop_plugin)). The caveats in the README are the important part: the promise is an exact-string match, so it cannot distinguish “done” from “blocked”, and `--max-iterations` (unlimited by default) is the only real safety net. It lists tasks needing human judgment, one-shot operations, unclear success criteria, and production debugging as cases where not to use it.
+
+So: is it like `ardi`? Both are loops that refuse to let the agent stop early, and both rely on a `Stop`-time mechanism (`ai-config`’s own `Stop` hooks are what block a placeholder reply or an empty promise). Past that they answer different questions.
+
+|  | `ralph-loop` | `ardi` |
+|----|----|----|
+| What it loops over | one prompt, re-fed to the same session | one pull request, across review rounds and sessions |
+| Who decides “done” | the agent, by emitting an agreed string | an independent reviewer’s verdict plus green CI on the current head |
+| What changes each round | nothing but the repository state | the reviewer’s new findings, each Addressed, Rebutted, or Deferred |
+| Safety valve | an iteration cap you set | a human merge gate; the loop reports ready and never merges |
+| Where it fits | before a PR exists: grind an implementation against tests | after a PR exists: drive it to fully clean |
+
+`ardi` is not self-referential. Each iteration is triggered by something outside the agent (a review landing, a check turning red), it re-arms itself with a timer rather than a `Stop` hook, and its terminal condition is **?@sec-fully-clean**, which an agent cannot declare about itself. `ralph-loop` has no reviewer in the loop at all; its judge is whichever tests the prompt tells it to run.
+
+The two compose rather than compete. A Ralph loop is a reasonable way to get a well-specified, well-tested change to the point of opening a PR; `ardi` takes over from there. What the lab should not do is use `ralph-loop` as a substitute for review: a loop whose exit is a string the agent writes will exit whether or not the work is right.
+
+# 34 Customizing an Agent
 
 [Section 29](#sec-ai-agent-skills) describes one way to extend an agent. It is not the only one, and a lab that knows only that one tends to write every customization as a skill, including the ones that should have been something else.
 
@@ -2836,7 +3016,7 @@ Rules are written as `Tool(specifier)` — for example `Bash(npm run test *)`, `
 
 Everything above changes what the agent *knows or must do*. An [MCP](https://modelcontextprotocol.io/) server changes what it *can reach*: typed tools, data resources, and reusable templates exposed over a standard protocol. The specification is explicit that it “does not dictate how AI applications use LLMs or manage the provided context.”
 
-So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. [Section 47](#sec-ai-mcp-server-setup) covers configuration and its failure modes.
+So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. [Section 50](#sec-ai-mcp-server-setup) covers configuration and its failure modes.
 
 #### Choosing
 
@@ -2879,9 +3059,9 @@ That distribution is itself the argument. Nearly everything is a skill, because 
 
 This repository is a smaller example of the same idea: it carries a `.github/copilot-instructions.md` for conventions that apply everywhere, plus path-scoped files under `.github/instructions/` whose `applyTo` globs attach them only when you edit a matching file.
 
-# 33 How the Config Reaches a Machine
+# 35 How the Config Reaches a Machine
 
-[Section 32](#sec-ai-customization) describes *which* mechanism a customization should use. This section is about the step after that decision: how a config like a shared instruction repository actually reaches a machine, and how a broken install fails.
+[Section 34](#sec-ai-customization) describes *which* mechanism a customization should use. This section is about the step after that decision: how a config like a shared instruction repository actually reaches a machine, and how a broken install fails.
 
 Two agents can load the identical instruction corpus and still behave differently, because behavior depends not only on what the config says but on how it is installed where the agent runs. An install problem is quiet by construction — nothing errors, the work still gets done, and a capability simply goes missing with no message that it existed.
 
@@ -2919,7 +3099,104 @@ A broken install rarely announces itself; you read it backward from a symptom.
 
 The common thread is that the install layer is a real surface, distinct from the content of the config, with its own failure modes and its own checks. When an agent behaves as though a rule or skill you wrote does not exist, suspect the install before you suspect the rule.
 
-# 34 Claude Code Cloud Environments
+# 36 Anthropic’s Public Repositories
+
+Anthropic publishes its code under the [`anthropics`](https://github.com/anthropics) GitHub organization. The organization held 108 repositories when surveyed (measured 2026-09-09). Claude Code itself is not open source, but its public repository is still useful, and so are several others. This section inventories the repositories that matter to us, says what the two headline repositories actually contain, and ends with a verdict on each.
+
+All counts below come from the GitHub API on the survey date (measured 2026-09-09); stars and push dates drift daily, and the license column reports what the API detected. `none` means the API found no license; for `claude-code` and `claude-agent-sdk-typescript` that is because `LICENSE.md` is a proprietary notice rather than a recognized open-source license, marked `none (proprietary)`, and for the other `none` rows there is no license file at all. `not detected` means a license file exists that the API could not classify (it reports `NOASSERTION`). A single row can also hide a split: `skills` has no root license file, so the API reports none, while its README says four of its skills are source-available.
+
+#### Which repositories matter to us
+
+Forks and archived repositories together are 38 of the 108 (measured 2026-09-09): forks of infrastructure projects that Anthropic contributes patches to (`tokio`, `rayon`, `argo-cd`, `httpcore`, `orjson`, `beam`), and archived companions to research papers (`hh-rlhf`, `toy-models-of-superposition`, `sleeper-agents-paper`). Neither group concerns a lab that consumes Claude as a product. The rest sorts into six groups.
+
+| Repository | Purpose | Language | Stars | Last push | License | Verdict |
+|----|----|----|----|----|----|----|
+| `claude-code` | Issue tracker, changelog, and bundled plugins for the Claude Code CLI | Python (plugin scripts) | 144.5k | 2026-09-08 | none (proprietary) | Track issues and read the plugins |
+| `claude-code-action` | GitHub Action that runs Claude Code on PRs and issues | TypeScript | 8.8k | 2026-09-08 | MIT | Already in use; read its `examples/` |
+| `claude-code-base-action` | Read-only mirror of `base-action/` from the repository above | TypeScript | 974 | 2026-09-08 | MIT | Reference only; do not pin to it |
+| `claude-code-security-review` | Security-focused PR review action | Python | 6.2k | 2026-02-11 | MIT | Low priority; superseded by a review prompt |
+| `claude-agent-sdk-python` | Python SDK wrapping the Claude Code agent loop | Python | 8.1k | 2026-09-08 | MIT | Useful for scripted agents |
+| `claude-agent-sdk-typescript` | Issue tracker and changelog for the TypeScript agent SDK | Shell | 1.7k | 2026-09-08 | none (proprietary) | Track issues only |
+| `anthropic-sdk-python` | Raw Messages API client | Python | 3.9k | 2026-09-04 | MIT | Useful for direct API calls |
+| `sandbox-runtime` | OS-level sandbox (`srt`) for processes, MCP servers, and agents | TypeScript | 5.2k | 2026-09-07 | Apache-2.0 | Trial on Linux and macOS; alpha on Windows |
+| `skills` | Reference Agent Skills plus the `spec/` for the skill format | Python | 175.4k | 2026-09-03 | none | Read the spec; borrow document skills |
+| `claude-plugins-official` | Anthropic-curated plugin marketplace | Python | 36.1k | 2026-09-09 | Apache-2.0 | Install from it; see [Section 32](#sec-ai-useful-plugins) |
+| `claude-plugins-community` | Read-only mirror of the community marketplace | Python | 3.7k | 2026-08-25 | Apache-2.0 | Browse before writing our own |
+| `knowledge-work-plugins` | Role-specific plugins built for Claude Cowork | Python | 23.9k | 2026-09-09 | Apache-2.0 | Templates for a lab-role plugin |
+| `claude-cookbooks` | Notebook recipes for the Claude API | Jupyter Notebook | 52.6k | 2026-09-03 | MIT | Reference when scripting the API |
+| `courses` | Five API and prompting courses | Jupyter Notebook | 22.8k | 2026-08-28 | not detected | Introductory material |
+| `prompt-eng-interactive-tutorial` | Nine-chapter prompting tutorial | Jupyter Notebook | 38.1k | 2026-08-28 | none | Introductory material; dated model names |
+| `claude-quickstarts` | Starter apps you can deploy (support agent, computer use) | TypeScript | 17.6k | 2026-09-04 | MIT | Skim only |
+| `devcontainer-features` | Dev Container feature that installs the CLI | Shell | 302 | 2025-12-16 | MIT | Useful for a GitHub Codespaces setup |
+| `claude-code-monitoring-guide` | Telemetry and cost-tracking guide | Markdown | 369 | 2025-07-29 | none | Read once if we meter usage |
+| `claude-ai-mcp` | Issue tracker for MCP inside claude.ai | Markdown | 467 | 2026-06-08 | not detected | Search before filing an MCP bug |
+
+The six groups, and what each is for:
+
+- **Product trackers.** `claude-code`, `claude-agent-sdk-typescript`, and `claude-ai-mcp` exist mainly so users can file issues against a closed product.
+- **Automation.** `claude-code-action`, its mirror, and `claude-code-security-review` run Claude inside GitHub Actions.
+- **Programmatic access.** The `anthropic-sdk-*` clients (Python, TypeScript, Go, Java, Ruby, C#, PHP) speak the raw API; `claude-agent-sdk-python` wraps the whole Claude Code agent loop and bundles the CLI, and the TypeScript package does the same from npm, though its repository here is only a tracker.
+- **Extensions.** `skills`, the two plugin marketplaces, and `knowledge-work-plugins` hold the skills and plugins the harness loads.
+- **Infrastructure.** `sandbox-runtime`, `devcontainer-features`, and `claude-code-monitoring-guide` are about where the CLI runs and what it costs.
+- **Learning material.** `claude-cookbooks`, `courses`, `prompt-eng-interactive-tutorial`, and `claude-quickstarts` teach the API rather than the CLI.
+
+Two repositories one might look for are not in the organization. There is no `mcp` repository, because the Model Context Protocol lives under its own `modelcontextprotocol` organization, and the former `dxt` repository (Desktop Extensions) now redirects to `modelcontextprotocol/mcpb`, the renamed MCP Bundles format (measured 2026-09-09).
+
+#### What the public `claude-code` repository actually contains
+
+The repository named after Claude Code, second in the table only to `skills` by stars, does not contain Claude Code. The tree at `main` has 333 paths and no `src/` directory (measured 2026-09-09) ([Anthropic 2026d](#ref-anthropics_claude_code_repo)). `LICENSE.md` is a one-line proprietary notice pointing at Anthropic’s commercial terms, which is why the API reports no license. The CLI itself ships as a compiled npm package (and, since the README marked npm installation deprecated, as a native installer, a Homebrew cask, and a `winget` package; read 2026-09-09) ([Anthropic 2026d](#ref-anthropics_claude_code_repo)), and this repository is the public face of that closed product.
+
+The repository holds five things the lab can use:
+
+- **`CHANGELOG.md`** is the only authoritative per-release changelog. It is the file to read when a behavior changes between versions, and its entries are detailed enough to diagnose regressions (the entry for 2.1.266, for example, names the gateway environment variable, `CLAUDE_CODE_USE_GATEWAY`, that 2.1.265 had started honoring on its own, and says no configuration change is needed; read 2026-09-09) ([Anthropic 2026e](#ref-anthropics_claude_code_changelog)).
+- **`plugins/`** holds thirteen first-party plugins and a `.claude-plugin/marketplace.json` that publishes them as the `claude-code-plugins` marketplace ([Anthropic 2026m](#ref-anthropics_claude_code_plugins_readme)). Several map directly onto lab workflows: `code-review` (five parallel review agents with confidence scoring), `pr-review-toolkit` (six specialist review agents, including a `silent-failure-hunter`), `commit-commands`, `hookify` (generates hooks from observed misbehavior), `ralph-wiggum` (a `Stop`-hook loop that keeps re-running one task), and `security-guidance` (a `PreToolUse` hook watching nine patterns). `plugin-dev` is the toolkit for writing more.
+- **`examples/`** holds the reference configurations that the documentation describes in prose: `settings/` (strict, lax, and bash-sandbox profiles), `hooks/` (a Bash command validation hook), `mdm/` (managed settings for macOS and Windows fleets), and `gateway/` (AWS and GCP gateway setups).
+- **`.devcontainer/`** is the container Anthropic uses for its own sandboxed sessions, including `init-firewall.sh`, the allowlist firewall that [Section 20](#sec-ai-firewall) discusses.
+- **`.github/workflows/`** is a live example of running the action against a very large issue tracker: `claude.yml` (the `@claude` agent), `claude-issue-triage.yml`, `claude-dedupe-issues.yml`, and `auto-close-duplicates.yml`, with the TypeScript behind them in `scripts/`. The repository had 12,563 open issues (measured 2026-09-09), which is why that automation exists.
+
+So the honest description is “issue tracker plus plugins plus example configs”. The harness internals are described from the outside in [Section 7](#sec-ai-harness-construction); nothing in this repository lets you read them.
+
+#### `claude-code-action`: modes and what ships with it
+
+`claude-code-action` is genuinely open source (MIT), and the whole action is readable: `src/` holds the entry points, the GitHub client, an in-process MCP server for file operations, and the two execution modes; `test/` has a test file per concern (comment sanitizing, branch validation, permissions, public-comment redaction, SSH signing) ([Anthropic 2026f](#ref-anthropics_claude_code_action_repo)).
+
+[Section 39](#sec-ai-claude-code-action-review) already explains that review is a prompt, not a separate action. The general form of that observation is the mode detector in `src/modes/detector.ts`, documented in `docs/experimental.md` ([Anthropic 2026s](#ref-anthropics_claude_code_action_experimental)):
+
+1.  If the workflow supplies a `prompt` input, the action runs in **agent mode**: it executes the prompt directly on whatever event fired, which is how scheduled maintenance, issue triage, and one-shot review work.
+2.  If there is no `prompt` but the event carries an `@claude` mention, an assignment, or the trigger label, it runs in **tag mode**: it posts a tracking comment with progress checkboxes and runs an open-ended session that can push code.
+3.  If neither, it does nothing.
+
+The `track_progress` input forces tag-mode tracking comments onto `pull_request` and `issues` events that would otherwise run in agent mode. Everything else about behavior is set through `claude_args`, which passes flags straight to the CLI (`--max-turns`, `--system-prompt`, and so on), and through `plugins`, which installs named marketplace plugins before the run.
+
+Three other things in the repository are easy to miss:
+
+- **`examples/`** has eleven copy-paste workflows (measured 2026-09-09): the three review variants, plus `claude.yml` (the general `@claude` mention workflow), `ci-failure-auto-fix.yml`, `test-failure-analysis.yml`, `issue-deduplication.yml`, `issue-triage.yml`, `manual-code-analysis.yml`, `agent-approval-check.yml`, and `claude-wif.yml`, the workload-identity-federation variant that avoids storing a long-lived API key.
+- **`agent-approval-check/`** is a second, smaller action that gates a workflow on whether the actor is a recognized agent identity, with an example identities file.
+- **Authentication inputs** cover a direct API key, a Claude Code OAuth token, federation (`anthropic_federation_rule_id` plus organization, workspace, and service-account IDs), and OIDC to Bedrock, Vertex AI, or Microsoft Foundry.
+
+The `allowed_non_write_users` input carries its own warning in `action.yml`: letting users without write access trigger the action exposes the run to prompt injection, and the secret scrubbing it performs is best-effort. `claude-code-security-review` says the same of itself in its README and recommends requiring approval for fork PRs ([Anthropic 2026g](#ref-anthropics_claude_code_security_review)). Both are the upstream statement of the caution in [Section 18](#sec-ai-benefits-hazards).
+
+#### The extension and SDK repositories, briefly
+
+`skills` is the reference implementation of the Agent Skills format that [Section 29](#sec-ai-agent-skills) describes. Its `spec/` directory is the format definition, `template/` is a starting skill, and `skills/` holds the examples. The README states the licensing split plainly: most skills are Apache-2.0, while the `docx`, `pdf`, `pptx`, and `xlsx` skills that power Claude’s own document features are source-available rather than open source ([Anthropic 2026l](#ref-anthropics_skills_repo)). Read a license header before copying one.
+
+`claude-plugins-official` is the marketplace behind `/plugin install <name>@claude-plugins-official`, split into Anthropic-maintained `plugins/` and partner-submitted `external_plugins/` ([Anthropic 2026i](#ref-anthropics_claude_plugins_official)). Its README states a rule that applies to any marketplace we publish: a plugin’s `name` is an immutable slug, since renaming it breaks every existing install, and a `renames` map exists for the unavoidable case. `claude-plugins-community` is a nightly, read-only mirror of the community submissions that passed security scanning ([Anthropic 2026h](#ref-anthropics_claude_plugins_community)), and `knowledge-work-plugins` holds eleven role-specific bundles built for Claude Cowork ([Section 59](#sec-ai-collaborative-workspaces)) that also load in Claude Code ([Anthropic 2026j](#ref-anthropics_knowledge_work_plugins)).
+
+Of the two agent SDKs, only the Python one is open source. `claude-agent-sdk-python` bundles the CLI inside the wheel and exposes `query()` and `ClaudeAgentOptions` for driving a full agent session from a script ([Anthropic 2026b](#ref-anthropics_claude_agent_sdk_python)). `claude-agent-sdk-typescript` has the same shape as `claude-code`: a proprietary `LICENSE.md`, a changelog, examples, and an issue tracker for the npm package ([Anthropic 2026c](#ref-anthropics_claude_agent_sdk_typescript)). The lower-level `anthropic-sdk-python` is the raw API client (MIT) for anyone who wants the model without the agent loop ([Anthropic 2026a](#ref-anthropics_anthropic_sdk_python)).
+
+`sandbox-runtime` (`srt`) is the sandbox Claude Code uses internally, released as a beta research preview. It wraps `sandbox-exec` on macOS and `bubblewrap` on Linux with a proxy-based network allowlist, and the headline use case in its README is wrapping a local MCP server so it can read only the directories you name ([Anthropic 2026k](#ref-anthropics_sandbox_runtime)). Windows support is marked alpha, through a bundled `srt-win.exe` helper that runs the process under a dedicated local user account (measured 2026-09-09), so Windows users in the lab should treat it as experimental.
+
+#### Useful to us?
+
+Yes, selectively, and less for code than for reference.
+
+- **Adopt now.** `claude-code-action` is already how our repositories run `@claude` and review ([Section 39](#sec-ai-claude-code-action-review)); the `examples/` directory and `claude-wif.yml` are the upgrade path when we move off static API keys. `claude-plugins-official` is the safe default source for plugins.
+- **Read, then borrow.** The `plugins/` directory in `claude-code` duplicates several things our own instruction repository does by hand — a multi-agent review command, a silent-failure hunter, a hook generator — and a `hookify`-style rule is a lighter way to encode a “never do X again” correction than a hand-written hook. `skills/spec/` is the authority when a skill fails to load.
+- **Track, do not depend on.** `claude-code` and `claude-agent-sdk-typescript` are trackers. Search their issues before filing; read `CHANGELOG.md` before blaming a regression on your config. Pin workflows to `claude-code-action@v1`, never to the base-action mirror.
+- **Trial on Linux and macOS.** `sandbox-runtime` could replace part of the firewall configuration in [Section 20](#sec-ai-firewall) for macOS and Linux users; its Windows path is alpha.
+- **Skip.** `claude-code-security-review` has not been pushed since February 2026 and its job is now a review prompt; the quickstarts and courses are for API programming, which is not the lab’s main use of Claude.
+
+# 37 Claude Code Cloud Environments
 
 [Claude Code](https://www.anthropic.com/claude-code) is a CLI coding agent that can also run tasks on Anthropic-managed cloud infrastructure— either from the web at [claude.ai/code](https://claude.ai/code) (“Claude Code on the web”), or from the terminal by adding the `--remote` flag to move a session into the cloud.
 
@@ -2944,7 +3221,7 @@ The `/remote-env` slash command sets **which configured environment is the defau
 
 For details, see the [Claude Code on the web documentation](https://code.claude.com/docs/en/claude-code-on-the-web) and the [slash command reference](https://code.claude.com/docs/en/commands).
 
-# 35 Using a ChatGPT Account for Codex Pull-Request Reviews
+# 38 Using a ChatGPT Account for Codex Pull-Request Reviews
 
 OpenAI Codex can act as a reviewer on GitHub pull requests. The native integration uses the Codex service connected to a ChatGPT workspace and posts a standard GitHub review through the Codex connector bot. It does not require you to build a separate GitHub Action.
 
@@ -3031,7 +3308,7 @@ Codex review is an additional signal; it does not replace:
 
 For current setup details, see OpenAI’s [GitHub code-review documentation](https://learn.chatgpt.com/docs/third-party/github).
 
-# 36 Where Pull-Request Review Lives in Claude Code Action
+# 39 Where Pull-Request Review Lives in Claude Code Action
 
 A common question about [`anthropics/claude-code-action`](https://github.com/anthropics/claude-code-action) is where its pull-request review lives. The answer is surprising: **there is no dedicated review action.** The repository publishes one general-purpose top-level action, and “review” is a *prompt* you pass it, not a separate artifact.
 
@@ -3087,7 +3364,7 @@ This distinction explains a common debugging dead end: “`@claude` answered my 
 
 This is the Claude-side counterpart to [using a ChatGPT account for Codex pull-request reviews](#sec-ai-codex-github-review). Codex ships a hosted native reviewer configured through the ChatGPT workspace, with no workflow file. Claude Code’s reviewer is the opposite trade: you own a workflow file and supply API credentials, but the prompt, tools, model, and triggering events are all visible and editable in your repository.
 
-# 37 Gemini Review Action for GitHub Pull Requests
+# 40 Gemini Review Action for GitHub Pull Requests
 
 [`derailed-dash/gemini-review-action`](https://github.com/derailed-dash/gemini-review-action) is an open-source GitHub Action that provides automated code reviews on pull requests and automated triage on issues using Google’s Gemini models (measured 2026-08-31; repository at `v1.6.6`).
 
@@ -3138,7 +3415,7 @@ jobs:
 
 Like [Claude Code Action](#sec-ai-claude-code-action-review), `derailed-dash/gemini-review-action` gives the repository owner full visibility over workflow triggers, authentication methods, and review prompts. In contrast to hosted review offerings that require platform-level permissions across an entire organization, this GitHub Action operates per-repository with credentials scoped to GitHub Actions secrets or Google Cloud IAM roles.
 
-# 38 Gemini Code Assist for Repository Code Review
+# 41 Gemini Code Assist for Repository Code Review
 
 Google Cloud provides a native code-review capability through [Gemini Code Assist](https://docs.cloud.google.com/gemini/docs/code-review/review-repo-code) (measured 2026-08-31; documentation in Enterprise preview). Unlike GitHub Actions that run inside individual repository workflows, Gemini Code Assist operates as a managed service connected at the organization or repository level.
 
@@ -3169,7 +3446,7 @@ Gemini Code Assist enforces several deliberate boundaries on review scope:
 | **Interactive mode** | Built-in `/gemini` comment tags | Configurable via `@claude` or Action triggers |
 | **Credential location** | Google Cloud IAM & Developer Connect token | GitHub Secrets or Workload Identity Federation |
 
-# 39 How a Session Learns a PR Changed
+# 42 How a Session Learns a PR Changed
 
 A coding-agent session that is watching a pull request does not poll it. Something wakes the session when the pull request changes, and in Claude Code that “something” is one of **two separate channels**.
 
@@ -3192,7 +3469,7 @@ Two caveats are worth knowing before relying on it.
 
 **A successful subscribe does not guarantee delivery.** If a PR Steward agent already holds the watch on that pull request, the call still succeeds — but this session receives nothing. The tool result says so in as many words, so read the result rather than the exit status. Taking over the watch requires opting the steward out first, by removing its watching label on the pull request.
 
-**The tool does not exist on a locally-run GitHub MCP server.** Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. [Section 47](#sec-ai-mcp-server-setup) covers the local analogues to reach for instead.
+**The tool does not exist on a locally-run GitHub MCP server.** Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. [Section 50](#sec-ai-mcp-server-setup) covers the local analogues to reach for instead.
 
 **Webhook delivery is also not exhaustive**, which is the failure mode most likely to be mistaken for “nothing has happened”. CI *successes*, new pushes, and merge-conflict transitions can arrive late or not at all. A session that treats silence as “still green” will sit indefinitely on a pull request that has gone stale or conflicted, so a subscription is a supplement to periodically re-reading the pull request’s real state, not a replacement for it.
 
@@ -3208,7 +3485,7 @@ Three properties of that panel surprise people:
 - **No agent-side tool can reach it.** It is client-UI state, not something an agent’s configuration surface touches, so asking an agent to enable it cannot work. If the checkbox changes, a human changed it.
 - **One of the two has a shortcut, and the other does not.** Running `/autofix-pr` from the command line on a pull request’s branch spawns a web session with **Auto-fix CI & address comments** already on. There is no equivalent shortcut for **Auto-merge when ready**.
 
-See [Section 34](#sec-ai-claude-cloud-env) for the web-session context these run in.
+See [Section 37](#sec-ai-claude-cloud-env) for the web-session context these run in.
 
 #### The instruction template is boilerplate
 
@@ -3255,13 +3532,13 @@ So treat a footer as a strong hint and a missing footer as near-conclusive, and 
 >
 > The delivery mechanics and the wording of the instruction template above were established by observation during agent sessions in mid-2026, not from a published specification. Claude Code on the web is a research-preview feature, so treat the specifics as liable to change and re-check them against current behavior before depending on any one detail.
 
-# 40 When to use a coding agent
+# 43 When to use a coding agent
 
 Coding agent sessions are currently[^1] considered “premium requests”, which are limited resources; see <https://github.com/features/copilot/plans> for details. So, use coding agents sparingly. Use them for complex changes that would be difficult or time-consuming for you to complete by hand. Coding agents also take time to get configured for work, every time you make a request. See <https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment#preinstalling-tools-or-dependencies-in-copilots-environment> for ways to reduce that startup time, but it will never be 0. If you can complete the task faster than the coding agent can, you should probably do it yourself. For example, when you have errors in the spell-check or lint workflows, you can often fix them faster than Copilot can. Similarly, when reviewing Copilot’s PRs, you can often make direct changes to the branch faster than you could write clear review comments and get Copilot to address them.
 
 Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.
 
-# 41 Editing with `.docx` files
+# 44 Editing with `.docx` files
 
 GitHub Copilot coding agents can read Microsoft Word (`.docx`) files, including tracked changes and comments. This enables a hybrid editing workflow where:
 
@@ -3296,7 +3573,7 @@ When opening DOCX files generated by Quarto (including this site), Microsoft Wor
 
 This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.
 
-# 42 Copilot Instructions for this Repository
+# 45 Copilot Instructions for this Repository
 
 A `.github/copilot-instructions.md` file contains repository-specific instructions and guidelines for GitHub Copilot coding agents. This file helps ensure that AI-generated contributions follow the project’s formatting standards, coding conventions, and documentation practices.
 
@@ -3313,7 +3590,7 @@ By having these instructions in `.github/copilot-instructions.md`, you ensure th
 
 See this repository’s own [`.github/copilot-instructions.md`](https://github.com/Morrison-Lab/wai/blob/main/.github/copilot-instructions.md) for a working example.
 
-# 43 Using Copilot Review Before Human Review
+# 46 Using Copilot Review Before Human Review
 
 Before requesting review from other humans, **always have Copilot review your pull request first**—even if Copilot created the PR itself. AI review provides fast, thorough feedback that helps catch issues before involving human reviewers, saving everyone time and improving code quality.
 
@@ -3356,7 +3633,7 @@ Even if you’re highly experienced, treating Copilot review as a required pre-r
 
 When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.
 
-# 44 Reviewing a Copilot PR You Didn’t Create
+# 47 Reviewing a Copilot PR You Didn’t Create
 
 When reviewing a pull request where someone else prompted Copilot to make changes, follow these guidelines to avoid confusion and ensure smooth collaboration:
 
@@ -3429,7 +3706,7 @@ To transfer the PR manager role:
 
 This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.
 
-# 45 Agent Sessions and Handoff in Visual Studio Code
+# 48 Agent Sessions and Handoff in Visual Studio Code
 
 In Visual Studio Code, interactions with AI coding assistants are structured around [Agent Sessions and Handoff](https://code.visualstudio.com/docs/agents/concepts/sessions?referrer=in-product) (measured 2026-08-31). Understanding how sessions organize work and transfer state across tools is essential for managing multi-step agent workflows.
 
@@ -3458,7 +3735,7 @@ Session handoff transfers context and intent from an active session to a special
 - **Plan to implementation**: Hand off a high-level architectural plan or task specification directly to an implementation session to generate code.
 - **Continue in the cloud**: Hand off a local session to run in a cloud-hosted agent environment (such as background tasks leading to pull requests), freeing local editor resources while the agent executes in the background.
 
-# 46 Installing Claude Code on Windows
+# 49 Installing Claude Code on Windows
 
 [Claude Code](https://www.anthropic.com/claude-code) is Anthropic’s command-line coding agent. Installing it on Windows works well, but a few platform-specific pitfalls can cost you hours if you don’t know about them. These notes capture a setup that works, and the gotchas to watch for.
 
@@ -3558,7 +3835,7 @@ claude --version      # prints the installed version number
 
 If you get a version number, you’re ready to run `claude` in your project directory. If you get `command not found`, re-check the two `PATH` issues above: the directory must be on `PATH`, and you must `rehash` (or open a fresh window) after changing it.
 
-# 47 Setting up MCP servers
+# 50 Setting up MCP servers
 
 The [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) is how a harness gains typed access to external systems. Configuring a server is usually a one-line command. Diagnosing one that *silently* isn’t working is the part worth writing down, because the common failure mode produces no error at all — only a quiet absence of tools you assumed were there.
 
@@ -3716,7 +3993,7 @@ The gap it closes is the copy-paste loop: without it, using something you discus
 
 It connects through the standard [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) as a remote server at `https://mcp.granola.ai/mcp`. For Claude or ChatGPT, enable it from the app’s connector/app settings and authenticate; for Cursor, Claude Code, or any other MCP client that supports a manual URL, register that URL directly (see [the announcement](https://www.granola.ai/blog/granola-mcp) for per-client steps). On an Enterprise plan it is an early-access beta, off by default until an admin enables it.
 
-# 48 Google Antigravity Python SDK
+# 51 Google Antigravity Python SDK
 
 The [`google-antigravity/antigravity-sdk-python`](https://github.com/google-antigravity/antigravity-sdk-python) repository provides the official Python SDK for building and automating agents on the Google Antigravity agent runtime (measured 2026-08-31; distributed via PyPI as `google-antigravity`).
 
@@ -3745,7 +4022,7 @@ Developers can customize agent behavior and enforce safety policies:
 | **Tool definitions** | In-process Python callables & MCP | JSON manifests, plugins, and CLI scripts |
 | **Runtime engine** | Embedded native binary | Managed local service |
 
-# 49 Unbounded Context with Magic Context
+# 52 Unbounded Context with Magic Context
 
 [`cortexkit/magic-context`](https://github.com/cortexkit/magic-context) is an open-source self-managing memory engine designed to provide unbounded context for AI coding agents (measured 2026-08-31). It operates as a background memory subsystem—often described as a “hippocampus for coding agents”—that extracts, consolidates, and retrieves long-term repository state without pausing the active coding turn.
 
@@ -3765,7 +4042,7 @@ A key challenge with dynamic prompt injection is preserving prompt caching effic
 - **Deferred background extraction**: Memory analysis and summarization tasks are deferred to idle windows or subagent threads, preventing token churn and latency spikes during high-tempo coding loops.
 - **Cross-session persistence**: Extracted knowledge persists in lightweight local stores across IDE restarts, enabling coding agents to resume work with full institutional memory of past decisions.
 
-# 50 Spec-Driven Development with Conductor
+# 53 Spec-Driven Development with Conductor
 
 [`gemini-cli-extensions/conductor`](https://github.com/gemini-cli-extensions/conductor) is an open-source plugin for AI coding agents (including Google Antigravity and Claude Code) that implements **Spec-Driven Development** (measured 2026-08-31). Rather than relying on conversational chat history that degrades over extended sessions, Conductor anchors agent behavior in structured, version-controlled Markdown artifacts stored directly in the repository, providing persistent context across multi-session workflows.
 
@@ -3787,7 +4064,7 @@ Conductor structures development into four distinct, sequential phases:
 | **Verification loop** | Manual spot-checking | Milestone-level automated tests and `/conductor:conductor-review` |
 | **Handoff & resumption** | Requires re-prompting or context replay | Any agent resumes from the checked-in track state |
 
-# 51 Anatomy of Agent Plugins
+# 54 Anatomy of Agent Plugins
 
 In modern AI coding assistants (such as Google Antigravity and Claude Code; see [Section 10](#sec-ai-harness-landscape) on the sunset of legacy Gemini CLI and its folding into Antigravity CLI), **plugins** serve as the top-level packaging and distribution layer for agent capabilities (measured 2026-09-01). While individual skills or Model Context Protocol (MCP) servers extend specific tasks, a plugin aggregates multiple extensibility primitives into a unified, version-controlled bundle.
 
@@ -3819,7 +4096,7 @@ Effective plugin architectures mitigate this through several strategies:
 - **On-demand skill activation**: Agents search skill catalogs dynamically when relevant keywords appear, rather than loading the entire skill directory into the initial system prompt.
 - **Prefix caching preservation**: Static plugin definitions are placed at the root of prompt structures so provider-level prompt caching remains undisturbed during multi-turn sessions.
 
-# 52 Running Codex Inside Claude Code: the codex-plugin-cc Plugin
+# 55 Running Codex Inside Claude Code: the codex-plugin-cc Plugin
 
 [`openai/codex-plugin-cc`](https://github.com/openai/codex-plugin-cc) is OpenAI’s official Claude Code plugin for running Codex from inside a Claude Code session ([OpenAI 2026a](#ref-codex_plugin_cc)). It adds slash commands that ask Codex to review the current work or take over a task, while Claude Code stays the harness the user is typing into. The repository is Apache-2.0 licensed, has about 33,000 GitHub stars, and its latest release is `v1.0.6` from 2026-07-08 (measured 2026-09-09).
 
@@ -3829,7 +4106,7 @@ The plugin does not ship a second Codex runtime. It wraps the `codex` binary alr
 
 #### Installation
 
-Node.js 18.18 or later is required ([OpenAI 2026a](#ref-codex_plugin_cc)). The plugin is installed through Claude Code’s plugin marketplace mechanism (see [Section 51](#sec-ai-plugins-deep-dive) for how marketplaces and manifests fit together); the repository’s `marketplace.json` names the marketplace `openai-codex`, which is why the install command does not repeat the repository name:
+Node.js 18.18 or later is required ([OpenAI 2026a](#ref-codex_plugin_cc)). The plugin is installed through Claude Code’s plugin marketplace mechanism (see [Section 54](#sec-ai-plugins-deep-dive) for how marketplaces and manifests fit together); the repository’s `marketplace.json` names the marketplace `openai-codex`, which is why the install command does not repeat the repository name:
 
 ``` text
 /plugin marketplace add openai/codex-plugin-cc
@@ -3881,9 +4158,9 @@ Either way, the Claude Code session itself still bills to the Anthropic plan. A 
 
 The lab already reaches Codex two ways, and the plugin overlaps with both.
 
-**`delegate-to-codex` in `ai-config`** ([Morrison Lab 2026](#ref-ai_config_delegate_to_codex)). That skill runs `codex exec` directly from a Bash call, with a read-only sandbox by default, prompts written to files, an optional JSON output schema, and a background runner that fans out several prompts at once and polls a completion marker. It exists to spend the separately billed ChatGPT plan on heavy read/draft/verify fan-out before Claude’s own quota. The plugin covers the single-task case of that skill and adds three things the skill lacks: job tracking, threads that can be resumed, and a subagent Claude can call proactively. It does not cover the fan-out case, it defaults to write-capable runs where the skill defaults to read-only, and it does not enforce structured output. The two also disagree on who orchestrates: the skill keeps Claude as the integrator that assembles Codex’s parts, while the plugin’s result-handling skill tells Claude to relay Codex’s answer and stop.
+**`delegate-to-codex` in `ai-config`** ([Morrison Lab 2026b](#ref-ai_config_delegate_to_codex)). That skill runs `codex exec` directly from a Bash call, with a read-only sandbox by default, prompts written to files, an optional JSON output schema, and a background runner that fans out several prompts at once and polls a completion marker. It exists to spend the separately billed ChatGPT plan on heavy read/draft/verify fan-out before Claude’s own quota. The plugin covers the single-task case of that skill and adds three things the skill lacks: job tracking, threads that can be resumed, and a subagent Claude can call proactively. It does not cover the fan-out case, it defaults to write-capable runs where the skill defaults to read-only, and it does not enforce structured output. The two also disagree on who orchestrates: the skill keeps Claude as the integrator that assembles Codex’s parts, while the plugin’s result-handling skill tells Claude to relay Codex’s answer and stop.
 
-**Codex as a GitHub reviewer** ([Section 35](#sec-ai-codex-github-review)). That path runs through Codex Cloud and posts a review on the pull request, so it needs a connected repository and a workspace that permits Codex Cloud. `/codex:review` runs locally against the checkout instead, with no GitHub side effects. It is the same local `/review` that the GitHub-review section names as the fallback when an administrator has disabled Codex Cloud, reachable without leaving Claude Code. Its output stays in the terminal, so it does not create the durable review record that the lab’s pull-request workflow relies on.
+**Codex as a GitHub reviewer** ([Section 38](#sec-ai-codex-github-review)). That path runs through Codex Cloud and posts a review on the pull request, so it needs a connected repository and a workspace that permits Codex Cloud. `/codex:review` runs locally against the checkout instead, with no GitHub side effects. It is the same local `/review` that the GitHub-review section names as the fallback when an administrator has disabled Codex Cloud, reachable without leaving Claude Code. Its output stays in the terminal, so it does not create the durable review record that the lab’s pull-request workflow relies on.
 
 #### Useful to us? Yes, for local second-opinion reviews; not a replacement
 
@@ -3895,9 +4172,9 @@ Three cautions apply:
 - `/codex:rescue` writes to the working tree by default. In a shared worktree or a multi-agent session, ask for a read-only run or use the `delegate-to-codex` skill, which sandboxes by default.
 - The plugin is a wrapper, so it inherits Codex’s model access rules: a ChatGPT login cannot reach every `--model` value the CLI accepts, and the refusal arrives from the API after the flag is accepted.
 
-For fan-out work, structured output, or anything a script needs to consume, the `delegate-to-codex` skill remains the right tool. For pull-request reviews that must be visible to other contributors, the GitHub integration in [Section 35](#sec-ai-codex-github-review) remains the right tool. See [Section 31](#sec-ai-useful-plugins) for the rest of the plugins the lab has evaluated.
+For fan-out work, structured output, or anything a script needs to consume, the `delegate-to-codex` skill remains the right tool. For pull-request reviews that must be visible to other contributors, the GitHub integration in [Section 38](#sec-ai-codex-github-review) remains the right tool. See [Section 32](#sec-ai-useful-plugins) for the rest of the plugins the lab has evaluated.
 
-# 53 Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent
+# 56 Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent
 
 [`code-yeongyu/oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent) (originally published as **Oh My OpenCode** or `omo`, with community forks such as [`opensoft/oh-my-opencode`](https://github.com/opensoft/oh-my-opencode)) is an open-source multi-agent orchestration framework and plugin for AI coding agent harnesses (including OpenCode and OpenAI Codex CLI) with over 65,000 GitHub stars (measured 2026-09-01). Inspired by modular terminal configuration frameworks (such as [Oh My Zsh](https://ohmyz.sh/)), it expands single-agent coding into a specialized multi-agent system with automated model routing and background task execution.
 
@@ -3932,7 +4209,108 @@ A central capability of the framework is decoupling agent roles from a single mo
 | **Execution monitoring** | Standard terminal output | Interactive `tmux`-backed session management |
 | **Extensibility** | Individual plugins and MCPs | Curated bundle of tools, agents, and MCP integrations |
 
-# 54 Managing Gemini API Spend and Cost Optimization
+# 57 The OpenCode Ecosystem
+
+[OpenCode](https://opencode.ai) ([anomalyco 2026](#ref-opencode_repo)) is the open-source coding agent harness (MIT-licensed, about 206,000 GitHub stars, measured 2026-09-09) that the earlier OpenCode sections of this chapter build on: running it against local models ([Section 22](#sec-ai-opencode-ollama)), against OpenRouter ([Section 23](#sec-ai-opencode-openrouter)), and under the Oh My OpenCode multi-agent framework ([Section 56](#sec-ai-oh-my-opencode)). Around the harness itself sits a community ecosystem of plugins, clients, and agent bundles, which the OpenCode maintainers index on a single documentation page ([OpenCode 2026a](#ref-opencode_ecosystem)). This section maps that page (as of 2026-09-09) and calls out the entries most relevant to us. Where the site already covers a project, this section points there instead of repeating it.
+
+#### How the ecosystem is organized
+
+The ecosystem page groups its entries into three lists ([OpenCode 2026a](#ref-opencode_ecosystem)):
+
+- **Plugins** (38 entries): JavaScript or TypeScript modules that OpenCode loads at startup and that hook into its lifecycle events (tool execution, file edits, session compaction, permissions, notifications, and so on). A plugin is named in the `plugin` key of `opencode.json` as an npm package, or dropped as a file into `.opencode/plugins/` (project) or `~/.config/opencode/plugins/` (global); npm packages are fetched automatically with Bun ([OpenCode 2026c](#ref-opencode_plugins)).
+- **Projects** (11 entries): clients and integrations built on the OpenCode server API or SDK — editor front ends, web and desktop apps, a Discord bot, an Obsidian plugin, and an extension manager.
+- **Agents** (2 entries): bundles of agent definitions, prompts, and commands that reshape how OpenCode plans and executes work.
+
+The issue that prompted this section also asked about **providers**. The ecosystem page has no provider list; model providers are configured in `opencode.json` and documented separately, and the two first-party paid options are covered under “OpenCode Zen and OpenCode Go” below.
+
+A recurring caveat applies to almost every entry: these projects are independent, and most carry an explicit “not built by the OpenCode team and not affiliated with OpenCode” disclaimer (for example `ocx` ([kdcokenny 2026a](#ref-ocx)) and `opencode-worktree` ([kdcokenny 2026d](#ref-opencode_worktree))). Listing on the ecosystem page is a courtesy index, not an endorsement or a security review. Every plugin runs with the same permissions as OpenCode itself, so treat adding one the way you would treat adding any unaudited dependency (see [Section 18](#sec-ai-benefits-hazards)).
+
+#### Notable plugins
+
+Activity figures below (stars, last push, latest release) were read from the GitHub API on 2026-09-09. Several repositories have moved since the ecosystem page was written; the current location is given where it differs.
+
+**Context and token management**
+
+- [`opencode-dynamic-context-pruning`](https://github.com/Opencode-DCP/opencode-dynamic-context-pruning) ([Opencode-DCP 2026](#ref-opencode_dcp)) (now under the `Opencode-DCP` organization; AGPL-3.0; about 4,200 stars; release `v3.1.15` on 2026-08-16). Reduces token spend by deduplicating repeated tool calls, purging the inputs of failed tool calls after a configurable number of turns, and letting the model compress stale conversation content into summaries. The README reports prompt-cache hit rates of roughly 85% with the plugin versus 90% without, and says development focus has shifted to a separate tool called Sleev. *Useful to us?* Yes, for long ARDI sessions on paid metered providers; the AGPL license is irrelevant for a locally-run tool but worth knowing.
+- [`opencode-morph-plugin`](https://github.com/morphllm/opencode-morph-plugin) (Morph, the vendor; MIT; 85 stars; release `v2.0.17` on 2026-09-07) and its community predecessor [`opencode-morph-fast-apply`](https://github.com/JRedeker/opencode-morph-fast-apply) (MIT; 170 stars). Both route edits through Morph’s hosted “Fast Apply” model to cut edit latency, which means a second paid API and a second party seeing your code. *Useful to us?* Not by default; the privacy cost outweighs the speed gain for research code.
+
+**Subscription and quota bridges**
+
+These plugins let OpenCode consume a chat subscription you already pay for instead of API credits. They are among the most-starred plugins on the page and also the most fragile, since they depend on undocumented OAuth flows that the subscription vendors can close at any time:
+
+- [`opencode-openai-codex-auth`](https://github.com/numman-ali/opencode-openai-codex-auth) ([Ali 2026](#ref-opencode_codex_auth)) (Numman Ali; about 2,200 stars; release `v4.4.0` on 2026-01-09; no push since then). Uses the ChatGPT Plus/Pro OAuth flow to expose the GPT and Codex model presets, and its README restricts it to “personal development use” with your own subscription.
+- [`opencode-gemini-auth`](https://github.com/jenslys/opencode-gemini-auth) (MIT; about 1,700 stars; release `v1.4.16` on 2026-05-21). The same idea for a Gemini plan.
+- [`opencode-antigravity-auth`](https://github.com/NoeFabris/opencode-antigravity-auth) ([Fabris 2026](#ref-opencode_antigravity_auth)) (MIT; about 11,000 stars; **archived** on GitHub as of 2026-09-09). Authenticated against Google Antigravity’s model pool with a Google account, rotating across accounts to stay under quota. Its own README states that using it “violates Google’s Terms of Service” and that your account “may be suspended or permanently banned”. The similar [`opencode-google-antigravity-auth`](https://github.com/shekohex/opencode-google-antigravity-auth) (375 stars) is archived as well.
+
+*Useful to us?* No. Our lab policy is to use delegation budgets through their supported routes (the `codex` CLI on the ChatGPT plan, OpenCode Go or Zen, OpenRouter credits), and a bridge whose README concedes a terms-of-service violation is a liability, not a saving. The Codex and Gemini bridges are less clearly prohibited but share the fragility.
+
+**Sandboxing, isolation, and worktrees**
+
+- [`opencode-daytona`](https://github.com/daytona/integrations/tree/main/packages/opencode-plugin) ([Daytona 2026](#ref-opencode_daytona)) (Daytona, the vendor; Apache-2.0; release `opencode-plugin-v0.192.1` on 2026-09-03). Runs each session in a hosted Daytona sandbox, syncs the sandbox to a local branch named `opencode/<n>`, and produces live preview links when a server starts. Requires a Daytona account and API key. *Useful to us?* Maybe, for untrusted-code experiments; otherwise the firewall and container setups in this chapter’s Firewall and Network Configuration section cover the same ground.
+- [`opencode-devcontainers`](https://github.com/athal7/opencode-devcontainers) (MIT; 222 stars; release `v0.5.1` on 2026-08-24; pushed 2026-09-08). Runs several devcontainer instances at once, one per branch, with auto-assigned ports. *Useful to us?* Yes, for repositories that already ship a `.devcontainer/`.
+- [`opencode-worktree`](https://github.com/kdcokenny/opencode-worktree) ([kdcokenny 2026d](#ref-opencode_worktree)) (MIT; 726 stars; no tagged release; pushed 2026-08-17). Adds `worktree_create` and `worktree_delete` tools that create an isolated git worktree under `~/.local/share/opencode/worktree/`, sync configured files into it, and open a terminal with OpenCode running there. *Useful to us?* Yes; it is the OpenCode counterpart of the per-agent worktrees our Claude Code sessions use.
+
+**Orchestration and workflow bundles**
+
+- [`oh-my-opencode`](https://github.com/code-yeongyu/oh-my-openagent) (now `oh-my-openagent`; about 68,800 stars; release `v5.0.0-beta.51` on 2026-09-09). Covered in [Section 56](#sec-ai-oh-my-opencode).
+- [`opencode-workspace`](https://github.com/kdcokenny/opencode-workspace) ([kdcokenny 2026c](#ref-opencode_workspace)) (MIT; 586 stars; no tagged release). A one-install bundle of 16 components: four plugins (workspace management, async delegation, notifications, git isolation), two npm plugins, three MCP servers (documentation, web search, code search), four specialist agents (researcher, coder, scribe, reviewer), four skill modules, and one command interface. Its sibling [`opencode-background-agents`](https://github.com/kdcokenny/opencode-background-agents) ([kdcokenny 2026b](#ref-opencode_background_agents)) (MIT; 382 stars) provides `delegate()`, `delegation_read()`, and `delegation_list()` tools whose results persist to disk under `~/.local/share/opencode/delegations/`, so they survive context compaction; only read-only sub-agents may run in the background, because background sessions sit outside OpenCode’s undo and branching system. *Useful to us?* Worth a trial as a lighter alternative to Oh My OpenCode; the disk-persisted delegation results address the same loss-on-compaction problem our lab notebook convention exists for.
+- [`micode`](https://github.com/vtemian/micode) (MIT; 483 stars) and [`octto`](https://github.com/vtemian/octto) (MIT; 493 stars), from the same author: a brainstorm-plan-implement workflow with session continuity, and a browser UI that turns an agent’s clarifying questions into multi-question forms. *Useful to us?* Possibly `octto`, which does for OpenCode what `AskUserQuestion` does in Claude Code.
+- [`opencode-conductor`](https://github.com/derekbar90/opencode-conductor) (Apache-2.0; 129 stars; last push 2026-03-02) ports the Context, Spec, Plan, Implement lifecycle described in [Section 53](#sec-ai-conductor-extension) to OpenCode. *Useful to us?* Only if that lifecycle is adopted; the port looks dormant.
+- [`plannotator`](https://github.com/backnotprop/plannotator) (Apache-2.0; about 8,600 stars; release `v0.27.12` on 2026-09-03) is a visual plan-and-diff annotation tool with an OpenCode plugin; it is agent-agnostic and also targets Claude Code. *Useful to us?* Yes, for reviewing agent plans before implementation; it addresses the plan-review step directly.
+- [`opencode-goal-plugin`](https://github.com/willytop8/OpenCode-goal-plugin) (MIT; 252 stars; release `v0.10.0` on 2026-09-07) adds a session-scoped `/goal` that keeps an objective in context and auto-continues until “evidence-gated completion”. *Useful to us?* Maybe, for unattended ARDI-style loops.
+
+**Safety and observability**
+
+- [`opencode-vibeguard`](https://github.com/inkdust2021/opencode-vibeguard) ([inkdust2021 2026](#ref-opencode_vibeguard)) (MIT; 198 stars; no tagged release; last push 2026-03-01). Replaces configured secrets and personal data with placeholders of the form `__VG_<CATEGORY>_<hash>__` before each request leaves for the model provider, restores them locally when output completes, and restores them again before tool execution so shell commands still work. *Useful to us?* Yes in principle, for work touching participant data, but the redaction list is hand-configured and the project has been quiet for six months; test it before relying on it.
+- [`opencode-shell-strategy`](https://github.com/JRedeker/opencode-shell-strategy) (MIT; 136 stars) and [`opencode-pty`](https://github.com/shekohex/opencode-pty) (MIT; 571 stars) tackle the same hang: an agent running a TTY-dependent command with no terminal attached. The first injects instructions to use non-interactive flags; the second gives the agent a real pseudo-terminal it can write to and read from. *Useful to us?* Yes; the hang they fix is one we hit regularly with `R` and `quarto preview`.
+- [`opencode-sentry-monitor`](https://github.com/stolinski/opencode-sentry-monitor) (53 stars), [`opencode-wakatime`](https://github.com/angristan/opencode-wakatime) (198 stars), and [`opencode-helicone-session`](https://github.com/H2Shami/opencode-helicone-session) (16 stars) send traces or usage to Sentry, Wakatime, and Helicone respectively. *Useful to us?* No; we do not run those services.
+
+**Notifications and quality of life**
+
+Four plugins do desktop notifications (`opencode-notifier`, 810 stars, is the most-used; `opencode-notify`, `opencode-notificator`), and the rest of the list is small conveniences: `opencode-md-table-formatter` cleans up model-generated Markdown tables, `opencode-zellij-namer` names Zellij sessions, `opencode-supermemory` (about 1,600 stars) adds cross-session memory through the hosted Supermemory service, and `opencode-scheduler` runs recurring jobs through `launchd` or `systemd`. Vendor plugins from JFrog, Firecrawl, and Tavily wrap their own CLIs. *Useful to us?* A notifier, yes; the rest only with a specific need.
+
+#### Notable clients and integrations
+
+- [`CodeNomad`](https://github.com/NeuralNomadsAI/CodeNomad) ([Neural Nomads AI 2026](#ref-codenomad)) (Neural Nomads AI; MIT; about 2,600 stars; release `v0.19.0` on 2026-08-24; pushed 2026-09-09). Describes itself as “The AI Coding Cockpit for OpenCode”: a SolidJS front end with a Node.js server that wraps an OpenCode CLI already on your `PATH`. It ships as Electron and Tauri desktop builds for macOS, Windows (x64 and ARM64), and Linux, and as a password-protected local web server (`npx @neuralnomads/codenomad --password <password> --launch`) for remote or browser access. Features include multi-instance workspaces, session management, git worktrees, voice input, a file browser, a command palette, and “SideCars” that embed local web tools as tabs. Despite the ecosystem page’s “Desktop, Web, Mobile and Remote” description, the README documents no native mobile app; mobile access is through the web server. *Useful to us?* Yes, as the most complete graphical front end for OpenCode and a plausible answer to “I want several OpenCode sessions side by side without `tmux`”.
+- [`OpenChamber`](https://github.com/openchamber/openchamber) ([OpenChamber 2026](#ref-openchamber)) (now under its own organization; MIT; about 9,700 stars; release `v1.22.2` on 2026-09-05). A workspace for running and reviewing agent work on desktop, web, VS Code, iOS, and Android, with session goals, a “multi-run” mode that runs the same task across up to five models, a guided changes walkthrough for large diffs, scheduled tasks, and an end-to-end encrypted “Private Relay” for remote connections. Like CodeNomad it uses OpenCode as the engine and is not affiliated with the OpenCode team. *Useful to us?* Yes; the multi-model run is a direct fit for our habit of getting a second model’s review.
+- [`OpenWork`](https://github.com/different-ai/openwork) ([different-ai 2026](#ref-openwork)) (different-ai; about 23,400 stars; release `v0.18.44` on 2026-09-09). Positions itself as “an open-source alternative to Claude Cowork and Codex” for macOS, Windows, and Linux, sharing skills, MCP servers, and connected services across tools and machines. Code outside `ee/` is MIT; the organizational control plane under `ee/` uses a separate license that is free for up to five users. *Useful to us?* Compare against the collaborative workspaces in [Section 59](#sec-ai-collaborative-workspaces); the five-user free tier fits a lab, and the open core makes it auditable.
+- [`opencode.nvim`](https://github.com/nickjvandyke/opencode.nvim) ([Dyke 2026](#ref-opencode_nvim)) (Nick van Dyke; MIT; about 3,800 stars; release `v1.0.0` on 2026-08-20) connects Neovim to a running OpenCode server (`opencode --port`), injects editor context (cursor, selection, diagnostics) into prompts, surfaces OpenCode’s server-sent events as Neovim autocommands, and reloads buffers when the agent edits files. A second, unrelated [`sudo-tee/opencode.nvim`](https://github.com/sudo-tee/opencode.nvim) (Apache-2.0; 937 stars) is a full Neovim front end rather than a bridge. *Useful to us?* For the Neovim users in the lab, yes.
+- [`kimaki`](https://github.com/remorses/kimaki) ([remorses 2026](#ref-kimaki)) (MIT; about 1,400 stars; release `kimaki@0.27.0` on 2026-09-01). A Discord bot in which each project is a channel and each session a thread; it queues messages, forks sessions, transcribes voice messages, shows diffs, and maps Discord roles to permission controls. *Useful to us?* No for now; our coordination runs through GitHub, not Discord.
+- [`portal`](https://github.com/hosenur/portal) ([hosenur 2026](#ref-opencode_portal)) (MIT; 798 stars; last push 2026-05-12) is a mobile-first web UI meant to be reached over Tailscale. [`OpenCode-Obsidian`](https://github.com/mtymek/opencode-obsidian) (MIT; about 1,100 stars) embeds OpenCode in Obsidian’s sidebar. *Useful to us?* Niche; CodeNomad and OpenChamber cover the remote-access case with more activity.
+- [`ocx`](https://github.com/kdcokenny/ocx) ([kdcokenny 2026a](#ref-ocx)) (MIT; 942 stars; release `v2.0.15` on 2026-08-17). An extension manager with portable, isolated profiles: `ocx profile add` installs a profile from a registry, `ocx oc -p <name>` launches OpenCode with it, and components are copied into `.opencode/` (the shadcn model) rather than hidden in dependencies, with SHA verification of what is installed. *Useful to us?* Yes, if we standardize an OpenCode profile for the lab; it is the closest thing to the plugin marketplace we use for Claude Code ([Section 54](#sec-ai-plugins-deep-dive)).
+- [`ai-sdk-provider-opencode-sdk`](https://github.com/ben-vargas/ai-sdk-provider-opencode-sdk) (MIT; 116 stars) exposes OpenCode’s configured providers to the Vercel AI SDK, and [`opencode-plugin-template`](https://github.com/zenobi-us/opencode-plugin-template) (archived) was the scaffold for writing plugins. *Useful to us?* Only when building on the SDK.
+
+#### Agent bundles
+
+- [`OpenAgentsControl`](https://github.com/darrenhinde/OpenAgentsControl) (listed as `opencode-agents`; MIT; about 4,800 stars; release `v0.7.1` on 2026-01-30) is a plan-first framework with approval-gated execution and built-in test, review, and validation steps.
+- [`agentic`](https://github.com/Cluster444/agentic) (MIT; 638 stars; last push 2025-09-02) is a context-engineering toolkit that appears dormant.
+
+*Useful to us?* `OpenAgentsControl` overlaps heavily with Oh My OpenCode ([Section 56](#sec-ai-oh-my-opencode)) and `opencode-workspace`; pick one such harness rather than layering them.
+
+#### OpenCode Zen and OpenCode Go
+
+The ecosystem page does not describe them, but two first-party paid services sit alongside the community projects:
+
+- **OpenCode Zen** ([OpenCode 2026d](#ref-opencode_zen)) is the maintainers’ own model gateway: a curated set of models tested against coding-agent workloads, billed pay-as-you-go per million tokens from a prepaid balance (with optional auto-reload, by default \$20 whenever the balance drops below \$5). As of 2026-09-09 it lists six free models under limited-time trials, including `Big Pickle`, `MiMo-V2.5 Free`, and `Nemotron 3 Ultra Free`, beside paid Claude, GPT, Gemini, Grok, Qwen, DeepSeek, Kimi, and GLM models.
+- **OpenCode Go** ([OpenCode 2026b](#ref-opencode_go)) is a \$10-per-month subscription to 30-plus open-weight coding models (Qwen, DeepSeek, Kimi, GLM, MiMo, Grok, and others) with usage caps expressed in dollar value: \$12 per five hours, \$30 per week, \$60 per month. When a cap is hit, an optional “Use balance” setting falls back to Zen credits. Only one member per workspace can hold the subscription.
+
+*Useful to us?* Yes; OpenCode Go is already one of the lab’s delegation budgets, and the Zen free tier is a zero-cost way to try a new open-weight model before routing work to it (compare the OpenRouter `:free` models in [Section 23](#sec-ai-opencode-openrouter)).
+
+#### Summary
+
+| Need | Start with | Also see |
+|----|----|----|
+| Graphical or remote front end | `CodeNomad`, `OpenChamber` | `portal`, `OpenWork` |
+| Multi-agent orchestration | Oh My OpenCode ([Section 56](#sec-ai-oh-my-opencode)) | `opencode-workspace`, `OpenAgentsControl` |
+| Cheaper tokens | OpenCode Go, Zen free models | `opencode-dynamic-context-pruning` |
+| Isolation per task | `opencode-worktree`, `opencode-devcontainers` | `opencode-daytona` |
+| Redaction of sensitive data | `opencode-vibeguard` | (none) |
+| Plan review before implementation | `plannotator`, `octto` | `opencode-conductor` |
+| Shareable lab configuration | `ocx` | (none) |
+
+Skip the subscription-bridge plugins.
+
+# 58 Managing Gemini API Spend and Cost Optimization
 
 This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.
 
@@ -3978,13 +4356,13 @@ To maximize the efficiency of your API spend across local CLI sessions, subagent
 - **Use the Batch API for Non-Realtime Tasks**: For offline batch processing, evaluation suites, or background doc updates, submit requests via the Gemini Batch API to receive a 50% discount on input and output tokens.
 - **GitHub UI Diff Collapsing**: Mark dependency lockfiles (`*.lock`, `package-lock.json`, `yarn.lock`, `renv.lock`) and generated build artifacts as `linguist-generated=true` in `.gitattributes` to collapse them in GitHub’s web diff view and exclude them from repository language statistics.
 
-# 55 Collaborative AI Workspaces: Claude Cowork and Gemini Spark
+# 59 Collaborative AI Workspaces: Claude Cowork and Gemini Spark
 
 The 2026 AI ecosystem has expanded beyond reactive chat windows and command-line coding orchestrators into collaborative workspace agents (measured 2026-09-01). These systems operate directly on multi-file workspaces, desktop applications, and cloud productivity suites to automate complex, multi-step analytical and administrative workflows.
 
 #### Claude Cowork
 
-[Claude Cowork](https://claude.com/docs/cowork/overview) ([Anthropic 2026](#ref-claude_cowork)) (also discussed in **?@sec-claude-cowork**) is Anthropic’s desktop-native agent architecture designed to collaborate directly within local folders and desktop application environments:
+[Claude Cowork](https://claude.com/docs/cowork/overview) ([Anthropic 2026p](#ref-claude_cowork)) (also discussed in **?@sec-claude-cowork**) is Anthropic’s desktop-native agent architecture designed to collaborate directly within local folders and desktop application environments:
 
 - **Local Sandboxed Execution**: Cowork runs in a sandboxed virtual environment on the host machine, reading, modifying, and creating local files (spreadsheets, markdown manuscripts, datasets) without requiring manual file uploads or cloud synchronizations.
 - **Desktop Application and Browser Interaction**: Beyond static file manipulation, Cowork interfaces with local applications and browser sessions (via [Claude in Chrome](https://claude.com/claude-in-chrome)) to execute multi-application workflows.
@@ -4005,7 +4383,7 @@ The 2026 AI ecosystem has expanded beyond reactive chat windows and command-line
 Similar collaborative workspace paradigms have emerged across other frontier ecosystems:
 
 - **ChatGPT Work and OpenAI Canvas**: [ChatGPT Work](https://learn.chatgpt.com/docs/get-started-with-work) ([OpenAI 2026c](#ref-chatgpt_work)) (see **?@sec-chatgpt-work**) and Canvas provide side-by-side document and code editing with inline line-level revisions, interactive targeted edits, and multi-file artifact tracking.
-- **Cursor and Google Antigravity Agent Workspaces**: Developer-centric workspace agents providing multi-agent delegation, worktree isolation, and structured planning workflows (such as Conductor extension spec-driven development, [Section 50](#sec-ai-conductor-extension)).
+- **Cursor and Google Antigravity Agent Workspaces**: Developer-centric workspace agents providing multi-agent delegation, worktree isolation, and structured planning workflows (such as Conductor extension spec-driven development, [Section 53](#sec-ai-conductor-extension)).
 - **Notion AI and Microsoft Copilot Studio**: Enterprise knowledge graph agents designed for querying organizational wikis and automating business process workflows.
 
 #### Comparative Taxonomy of Workspace Agents
@@ -4030,7 +4408,49 @@ When selecting a collaborative workspace agent for academic and computational re
 
 *2001: A Space Odyssey*. 1968. Film. <https://en.wikipedia.org/wiki/2001:_A_Space_Odyssey_(film)>.
 
-Anthropic. 2026. *Claude Cowork Overview*. Documentation. <https://claude.com/docs/cowork/overview>.
+Ali, Numman. 2026. *Opencode-Openai-Codex-Auth: Use Your ChatGPT Plus/Pro Subscription with OpenCode*. GitHub repository. <https://github.com/numman-ali/opencode-openai-codex-auth>.
+
+anomalyco. 2026. *OpenCode: The Open Source Coding Agent*. GitHub repository. <https://github.com/anomalyco/opencode>.
+
+Anthropic. 2026a. *Anthropics/Anthropic-Sdk-Python*. Software. <https://github.com/anthropics/anthropic-sdk-python>.
+
+Anthropic. 2026b. *Anthropics/Claude-Agent-Sdk-Python*. Software. <https://github.com/anthropics/claude-agent-sdk-python>.
+
+Anthropic. 2026c. *Anthropics/Claude-Agent-Sdk-Typescript*. Software. <https://github.com/anthropics/claude-agent-sdk-typescript>.
+
+Anthropic. 2026d. *Anthropics/Claude-Code*. Software. <https://github.com/anthropics/claude-code>.
+
+Anthropic. 2026e. *Anthropics/Claude-Code: CHANGELOG.md*. Documentation. <https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md>.
+
+Anthropic. 2026f. *Anthropics/Claude-Code-Action*. Software. <https://github.com/anthropics/claude-code-action>.
+
+Anthropic. 2026g. *Anthropics/Claude-Code-Security-Review*. Software. <https://github.com/anthropics/claude-code-security-review>.
+
+Anthropic. 2026h. *Anthropics/Claude-Plugins-Community*. Software. <https://github.com/anthropics/claude-plugins-community>.
+
+Anthropic. 2026i. *Anthropics/Claude-Plugins-Official*. Software. <https://github.com/anthropics/claude-plugins-official>.
+
+Anthropic. 2026j. *Anthropics/Knowledge-Work-Plugins*. Software. <https://github.com/anthropics/knowledge-work-plugins>.
+
+Anthropic. 2026k. *Anthropics/Sandbox-Runtime*. Software. <https://github.com/anthropics/sandbox-runtime>.
+
+Anthropic. 2026l. *Anthropics/Skills*. Software. <https://github.com/anthropics/skills>.
+
+Anthropic. 2026m. *Claude Code Plugins*. Documentation. <https://github.com/anthropics/claude-code/blob/main/plugins/README.md>.
+
+Anthropic. 2026n. *Claude Code Plugins Directory*. Software. <https://github.com/anthropics/claude-code/tree/main/plugins>.
+
+Anthropic. 2026o. *Claude Code Plugins Official Marketplace*. Software. <https://github.com/anthropics/claude-plugins-official>.
+
+Anthropic. 2026p. *Claude Cowork Overview*. Documentation. <https://claude.com/docs/cowork/overview>.
+
+Anthropic. 2026q. *Claude Plugins Community Marketplace*. Software. <https://github.com/anthropics/claude-plugins-community>.
+
+Anthropic. 2026r. *Discover and Install Prebuilt Plugins Through Marketplaces*. Documentation. <https://code.claude.com/docs/en/discover-plugins>.
+
+Anthropic. 2026s. *Experimental Features*. Documentation. <https://github.com/anthropics/claude-code-action/blob/main/docs/experimental.md>.
+
+Anthropic. 2026t. *Ralph Loop Plugin*. Documentation. <https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/plugins/ralph-loop/README.md>.
 
 Asimov, Isaac. 1950. *I, Robot*. Novel; Gnome Press. <https://search.library.ucdavis.edu/permalink/01UCD_INST/9fle3i/alma990000226350403126>.
 
@@ -4044,7 +4464,15 @@ Card, Orson Scott. 1985. *Ender’s Game*. Novel; Tor Books. <https://en.wikiped
 
 code-yeongyu. 2025. *My-Claude-Code-Harness*. Software. <https://github.com/code-yeongyu/my-claude-code-harness>.
 
+Daytona. 2026. *Daytona Integrations: OpenCode Plugin*. GitHub repository. <https://github.com/daytona/integrations/tree/main/packages/opencode-plugin>.
+
 Dettmers, Tim, Artidoro Pagnoni, Ari Holtzman, and Luke Zettlemoyer. 2023. *QLoRA: Efficient Finetuning of Quantized LLMs*. arXiv preprint. <https://arxiv.org/abs/2305.14314>.
+
+different-ai. 2026. *OpenWork: The Open-Source Alternative to Claude Cowork*. GitHub repository. <https://github.com/different-ai/openwork>.
+
+Dyke, Nick van. 2026. *Opencode.nvim: Neovim Plugin for Editor-Aware Prompts*. GitHub repository. <https://github.com/nickjvandyke/opencode.nvim>.
+
+Fabris, Noe. 2026. *Opencode-Antigravity-Auth (Archived)*. GitHub repository. <https://github.com/NoeFabris/opencode-antigravity-auth>.
 
 Flight of the Conchords. 2007. *The Humans Are Dead*. Music Video. <https://www.youtube.com/watch?v=B1BdQcJ2ZYY>.
 
@@ -4054,11 +4482,29 @@ Herbert, Frank. 1965. *Dune*. Novel; Chilton Books. <https://en.wikipedia.org/wi
 
 HKUDS. 2026. *OpenHarness: Open Agent Harness with a Built-in Personal Agent*. Software. <https://github.com/HKUDS/OpenHarness>.
 
+hosenur. 2026. *Portal: Mobile-First Web UI for OpenCode*. GitHub repository. <https://github.com/hosenur/portal>.
+
 Hu, Edward J., Yelong Shen, Phillip Wallis, et al. 2021. *LoRA: Low-Rank Adaptation of Large Language Models*. arXiv preprint. <https://arxiv.org/abs/2106.09685>.
+
+Huntley, Geoffrey. 2025. *Ralph*. Blog post. <https://ghuntley.com/ralph/>.
+
+inkdust2021. 2026. *Opencode-Vibeguard: Redact Secrets and PII Before LLM Calls*. GitHub repository. <https://github.com/inkdust2021/opencode-vibeguard>.
+
+kdcokenny. 2026a. *Ocx: OpenCode Extension Manager with Portable, Isolated Profiles*. GitHub repository. <https://github.com/kdcokenny/ocx>.
+
+kdcokenny. 2026b. *Opencode-Background-Agents: Async Delegation with Context Persistence*. GitHub repository. <https://github.com/kdcokenny/opencode-background-agents>.
+
+kdcokenny. 2026c. *Opencode-Workspace: Bundled Multi-Agent Orchestration Harness*. GitHub repository. <https://github.com/kdcokenny/opencode-workspace>.
+
+kdcokenny. 2026d. *Opencode-Worktree: Zero-Friction Git Worktrees for OpenCode*. GitHub repository. <https://github.com/kdcokenny/opencode-worktree>.
 
 LeCun, Yann. 2022. *A Path Towards Autonomous Machine Intelligence*. Meta AI Research; New York University; Technical Report. <https://openreview.net/forum?id=BZ5a1r-kVsf>.
 
-Morrison Lab. 2026. *Delegate-to-Codex: Run Heavy Sidecar Work on Codex, Not Claude*. Documentation. <https://github.com/Morrison-Lab/ai-config/blob/main/skills/delegate-to-codex/SKILL.md>.
+Morrison Lab. 2026a. *Ai-Config: Portable AI Agent Config*. Software. <https://github.com/Morrison-Lab/ai-config>.
+
+Morrison Lab. 2026b. *Delegate-to-Codex: Run Heavy Sidecar Work on Codex, Not Claude*. Documentation. <https://github.com/Morrison-Lab/ai-config/blob/main/skills/delegate-to-codex/SKILL.md>.
+
+Neural Nomads AI. 2026. *CodeNomad: The AI Coding Cockpit for OpenCode*. GitHub repository. <https://github.com/NeuralNomadsAI/CodeNomad>.
 
 OpenAI. 2026a. *Codex Plugin for Claude Code*. Software. <https://github.com/openai/codex-plugin-cc>.
 
@@ -4066,7 +4512,55 @@ OpenAI. 2026b. *Codex Pricing*. Documentation. <https://developers.openai.com/co
 
 OpenAI. 2026c. *Get Started with ChatGPT Work*. Documentation. <https://learn.chatgpt.com/docs/get-started-with-work>.
 
+OpenChamber. 2026. *OpenChamber: Agentic Development Environment for OpenCode*. GitHub repository. <https://github.com/openchamber/openchamber>.
+
+OpenCode. 2026a. *OpenCode Documentation: Ecosystem*. Documentation. <https://opencode.ai/docs/ecosystem/>.
+
+OpenCode. 2026b. *OpenCode Documentation: Go*. Documentation. <https://opencode.ai/docs/go/>.
+
+OpenCode. 2026c. *OpenCode Documentation: Plugins*. Documentation. <https://opencode.ai/docs/plugins/>.
+
+OpenCode. 2026d. *OpenCode Documentation: Zen*. Documentation. <https://opencode.ai/docs/zen/>.
+
+Opencode-DCP. 2026. *Opencode-Dynamic-Context-Pruning: Optimize Token Usage by Pruning Obsolete Tool Outputs*. GitHub repository. <https://github.com/Opencode-DCP/opencode-dynamic-context-pruning>.
+
 open-gsd. 2026. *GSD Core: Git. Ship. Done.* Software. <https://github.com/open-gsd/gsd-core>.
+
+Posit PBC. 2026a. *Ai-Lib: LLM Provider Infrastructure for Posit Assistant*. Software. <https://github.com/posit-dev/ai-lib>.
+
+Posit PBC. 2026b. *Assistant-Feedback: Repository for Feedback on Posit Assistant*. Software. <https://github.com/posit-dev/assistant-feedback>.
+
+Posit PBC. 2026c. *Bluffbench2: A Visual Reasoning LLM Benchmark*. Software. <https://github.com/posit-dev/bluffbench2>.
+
+Posit PBC. 2026d. *Btw: A Complete Toolkit for Connecting r and LLMs*. Software. <https://github.com/posit-dev/btw>.
+
+Posit PBC. 2026e. *Chatlas: Your Friendly Guide to Building LLM Chat Apps in Python*. Software. <https://github.com/posit-dev/chatlas>.
+
+Posit PBC. 2026f. *Code-Index: Semantic Code Search for AI Coding Assistants*. Software. <https://github.com/posit-dev/code-index>.
+
+Posit PBC. 2026g. *Commons: AI Agents for Data Analysis*. Software. <https://github.com/posit-dev/commons>.
+
+Posit PBC. 2026h. *Mcp-Repl: A Persistent, Sandboxed r or Python Session for MCP Agents*. Software. <https://github.com/posit-dev/mcp-repl>.
+
+Posit PBC. 2026i. *Mcptools: Model Context Protocol for r*. Software. <https://github.com/posit-dev/mcptools>.
+
+Posit PBC. 2026j. *Nesevals: Evaluate Next Edit Suggestion Scaffolds*. Software. <https://github.com/posit-dev/nesevals>.
+
+Posit PBC. 2026k. *Positron, a Next-Generation Data Science IDE*. Software. <https://github.com/posit-dev/positron>.
+
+Posit PBC. 2026l. *Positron-Copilot-Chat: Copilot Chat Extension for Positron*. Software. <https://github.com/posit-dev/positron-copilot-chat>.
+
+Posit PBC. 2026m. *Querychat: Chat with Your Data in r and Python*. Software. <https://github.com/posit-dev/querychat>.
+
+Posit PBC. 2026n. *Raghilda: RAG Made Simple*. Software. <https://github.com/posit-dev/raghilda>.
+
+Posit PBC. 2026o. *Shiny-Assistant: Chat Assistant for Shiny*. Software. <https://github.com/posit-dev/shiny-assistant>.
+
+Posit PBC. 2026p. *Shinychat: Chat UI Component for Shiny*. Software. <https://github.com/posit-dev/shinychat>.
+
+Posit PBC. 2026q. *Shinyrealtime: OpenAI Realtime API for Shiny*. Software. <https://github.com/posit-dev/shinyrealtime>.
+
+remorses. 2026. *Kimaki: Discord Bot to Control OpenCode Sessions*. GitHub repository. <https://github.com/remorses/kimaki>.
 
 Runkle, Sydney. 2026. *How to Build a Custom Agent Harness*. Documentation. <https://www.langchain.com/blog/how-to-build-a-custom-agent-harness>.
 
@@ -4076,7 +4570,9 @@ team-attention. 2026. *Hoyeon: Requirements-First Harness*. Software. <https://g
 
 *The Matrix*. 1999. Film. <https://en.wikipedia.org/wiki/The_Matrix>.
 
-Vincent, Jesse. 2026. *Superpowers: An Agentic Skills Framework and Software Development Methodology*. Software. <https://github.com/obra/superpowers>.
+Vincent, Jesse. 2026a. *Superpowers*. Software. <https://github.com/obra/superpowers>.
+
+Vincent, Jesse. 2026b. *Superpowers: An Agentic Skills Framework and Software Development Methodology*. Software. <https://github.com/obra/superpowers>.
 
 *WarGames*. 1983. Film. <https://en.wikipedia.org/wiki/WarGames>.
 
