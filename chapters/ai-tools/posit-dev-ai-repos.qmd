@@ -1,0 +1,90 @@
+The [`posit-dev`](https://github.com/posit-dev) GitHub organization
+holds the open-source work of Posit PBC that does not live under
+the `rstudio`, `tidyverse`, `r-lib`, or `quarto-dev` organizations.
+Much of the LLM tooling from Posit started there,
+so this section reviews the organization for repositories relevant to working with AI.
+The Posit skill collection, `posit-dev/skills`, is covered separately in @sec-ai-posit-skills
+and is not repeated here.
+
+The listing below was derived from the GitHub API
+(`gh repo list posit-dev --limit 300`) rather than from browsing the website.
+The organization had 226 public repositories,
+of which the 16 below are about building with or evaluating LLMs
+(measured 2026-09-09).
+Star counts and last-push dates are as of the same date.
+The rest of the organization is Positron and its extensions,
+Shiny for Python, `great-tables`, `pointblank`, `air`, `ggsql`,
+Posit Team deployment tooling, container images, and workshop material.
+
+#### AI-related repositories
+
+| Repository | Purpose | Language | Stars | Last push | Verdict for this lab |
+|---|---|---|---|---|---|
+| [`querychat`](https://github.com/posit-dev/querychat) [@posit_dev_querychat] | Natural-language exploration of tabular data, translated to SQL, for R and Python Shiny apps | Python, R | 211 | 2026-09-08 | Maybe: a safe pattern for letting an LLM query a data frame |
+| [`mcptools`](https://github.com/posit-dev/mcptools) [@posit_dev_mcptools] | Model Context Protocol for R: expose a running R session as an MCP server, or register MCP servers with `ellmer` chats | R | 194 | 2026-08-22 | Yes: the MCP layer `btw` uses, and the way to expose a lab function as a tool |
+| [`chatlas`](https://github.com/posit-dev/chatlas) [@posit_dev_chatlas] | Python client for LLM chat and tool calling, the Python counterpart of `ellmer` | Python | 175 | 2026-09-08 | No: the lab builds in R |
+| [`shinychat`](https://github.com/posit-dev/shinychat) [@posit_dev_shinychat] | Chat UI component for Shiny, in R and Python | TypeScript, R, Python | 137 | 2026-09-09 | Maybe: only if a lab app needs a chat panel |
+| [`btw`](https://github.com/posit-dev/btw) [@posit_dev_btw] | Toolkit for giving LLMs context about an R session: copy context to the clipboard, chat in the IDE, or connect R to coding agents through `mcptools` | R | 135 | 2026-09-09 | Yes: the most direct fit for an R-centric workflow |
+| [`mcp-repl`](https://github.com/posit-dev/mcp-repl) [@posit_dev_mcp_repl] | Sandboxed MCP server that keeps a persistent R or Python session alive across an agent's tool calls, with plots returned as images | Rust | 65 | 2026-07-27 | Yes, untried: replaces `Rscript -e` round trips in Claude Code |
+| [`shiny-assistant`](https://github.com/posit-dev/shiny-assistant) [@posit_dev_shiny_assistant] | Source of the hosted Shiny Assistant chat app | Python | 58 | 2026-01-17 | No: an application, not a library |
+| [`raghilda`](https://github.com/posit-dev/raghilda) [@posit_dev_raghilda] | Retrieval-augmented generation pipeline in Python, with DuckDB or ChromaDB storage | Python | 36 | 2026-09-02 | No: the R counterpart is `tidyverse/ragnar` |
+| [`shinyrealtime`](https://github.com/posit-dev/shinyrealtime) [@posit_dev_shinyrealtime] | Voice chat in Shiny apps via the OpenAI Realtime API | Python, R, TypeScript | 25 | 2026-07-31 | No |
+| [`commons`](https://github.com/posit-dev/commons) [@posit_dev_commons] | Experimental framework for data agents built on trusted R or Python calculations and data dictionaries | R, Python | 20 | 2026-09-09 | Watch: experimental, but aimed at the "agent over our own analyses" problem |
+| [`code-index`](https://github.com/posit-dev/code-index) [@posit_dev_code_index] | Semantic code search over a repository, exposed to coding agents through MCP; parses R, Python, Quarto, and Markdown | Go | 6 | 2026-04-29 | Maybe: for large codebases only |
+| [`ai-lib`](https://github.com/posit-dev/ai-lib) [@posit_dev_ai_lib] | TypeScript LLM-provider infrastructure behind Posit Assistant, successor to the archived `ai-provider-bridge` | TypeScript | 5 | 2026-09-08 | No: internal infrastructure |
+| [`bluffbench2`](https://github.com/posit-dev/bluffbench2) [@posit_dev_bluffbench2] | Evaluation of whether agents notice subtle data-quality artifacts in plots, implemented with `vitals` | R | 4 | 2026-07-21 | Yes, as a reference: an eval built in R about data-analysis judgment |
+| [`positron-copilot-chat`](https://github.com/posit-dev/positron-copilot-chat) [@posit_dev_positron_copilot_chat] | Fork of Microsoft's Copilot Chat extension bundled into Positron | TypeScript | 4 | 2026-05-06 | No: consumed through Positron itself |
+| [`assistant-feedback`](https://github.com/posit-dev/assistant-feedback) [@posit_dev_assistant_feedback] | Issue tracker for feedback on Posit Assistant | none | 4 | 2026-05-28 | Reference: where to report Positron Assistant problems |
+| [`nesevals`](https://github.com/posit-dev/nesevals) [@posit_dev_nesevals] | Evaluation tooling for next-edit-suggestion prompts and models | R | 2 | 2026-04-07 | No: relevant to IDE builders |
+
+Two tools the lab might expect to find here live elsewhere.
+[`ellmer`](https://github.com/tidyverse/ellmer), the R package for LLM chat and tool calling
+that `btw` and `querychat` build on and that `mcptools` and `shinychat` integrate with,
+and [`ragnar`](https://github.com/tidyverse/ragnar), its retrieval companion,
+are in the `tidyverse` organization.
+Positron Assistant has no public repository of its own.
+Going by the repository descriptions,
+its provider layer is `ai-lib`,
+the Copilot fork above supplies its chat surface,
+and the rest is part of the [`positron`](https://github.com/posit-dev/positron) repository [@posit_dev_positron].
+The organization also holds workshop and demo repositories
+(`positron-ai-workshop`, `ai-powered-app-workshop`, `shiny-querychat-workshop`, `posit-conf-chat`)
+that are worked examples of the packages above rather than tools.
+
+#### Useful to us? Yes, three tools and one reference
+
+The lab's workflow is R and Quarto driven by Claude Code and Copilot,
+so the question is which of these repositories connect that workflow to an R session.
+
+- **`btw`** is the direct fit.
+  Its clipboard mode pastes the structure of the objects in an R session
+  into whatever chat is open,
+  and its MCP server route (through `mcptools`) lets Claude Code
+  read package documentation and inspect the global environment
+  instead of guessing at column names.
+  The MCP route follows the setup pattern in @sec-ai-mcp-server-setup.
+- **`mcptools`** is the layer underneath `btw`,
+  and the package to use directly
+  when a lab package wants to expose one of its own functions to an agent as a tool.
+- **`mcp-repl`** addresses a cost the lab already pays:
+  each `Rscript -e` call an agent makes starts a fresh process,
+  so data and packages are reloaded on every check.
+  A persistent, sandboxed session with inline plots is a better fit for
+  iterating on an analysis with an agent,
+  at the cost of a Rust binary to install.
+  It has not yet been tried in the lab.
+- **`bluffbench2`** is a reference rather than a dependency.
+  It is an evaluation written in R with [`vitals`](https://github.com/tidyverse/vitals)
+  that measures whether an agent notices data-quality problems,
+  which is the kind of judgment the lab expects a human reviewer to keep.
+  Anyone building an eval of the lab's own agent configuration
+  can start from its harness.
+
+`querychat` and `shinychat` matter only if the lab ships Shiny apps
+with a chat interface.
+`commons` is a framework for data agents rather than a chat component,
+and it is still marked experimental.
+The Python packages (`chatlas`, `raghilda`) duplicate R tools the lab already prefers.
+Positron Assistant is configured through Positron rather than through these repositories;
+see @sec-ai-copilot-settings for its OpenAI setup
+and @sec-ai-offline for running it against Ollama.

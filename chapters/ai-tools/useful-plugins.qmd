@@ -68,3 +68,5 @@ How that config actually reaches a machine,
 and how a doubled plugin install fails,
 is @sec-ai-config-install.
 @sec-ai-customization is the worked example of what the corpus contains.
+@sec-ai-plugin-catalog maps the official and community marketplaces these four sit in
+and sets each against `ai-config`.
