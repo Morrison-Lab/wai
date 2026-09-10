@@ -467,7 +467,7 @@ if a durable Python pipeline with human sign-off ever becomes a lab need.
 
 # Recommendation {#sec-orch-recommendation}
 
-For the lab, as of August 2026:
+For the lab, as of September 2026:
 
 - **Try Agent Teams** on a research or review task where parallel, arguing agents
   would beat one agent working alone.
