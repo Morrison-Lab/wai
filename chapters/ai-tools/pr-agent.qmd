@@ -101,7 +101,7 @@ and a `[model_routing]` table that picks a model by diff size [@pr_agent_models]
 Local models work but come with a warning.
 The model-configuration page says that
 "most open-source models currently available (as of January 2025)
-face challenges with complex tasks"
+face challenges with these complex tasks"
 and recommends them for "experimentation and learning purposes (mainly for the ask command)" [@pr_agent_models].
 That note predates the current generation of open-weight coding models,
 so treat it as a prompt to test rather than as a verdict;
