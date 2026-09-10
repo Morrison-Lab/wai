@@ -29,6 +29,8 @@ which is the only reason to pay for it.
 
 #### Surveyed projects
 
+@tbl-custom-harnesses lists the projects surveyed.
+
 | Project | Kind | Runs on | License | Size (2026-09-09) |
 |---|---|---|---|---|
 | [`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode) [@oh_my_claudecode] | layer | Claude Code (plus CLI workers for Codex, Gemini, Antigravity, Grok, Cursor) | MIT | 39.1k stars |
@@ -63,7 +65,7 @@ and adds:
 
 It is the same family as the Oh My OpenCode project in @sec-ai-oh-my-opencode
 (the npm package is still named `oh-my-claude-sisyphus`),
-and by star count the most-used custom harness in this survey.
+and by star count the most-used custom harness in this survey after Superpowers.
 
 **Useful to us?**
 Partly.
@@ -150,7 +152,7 @@ which asks which of nine runtimes to target.
 
 **Useful to us?**
 The fresh-context-executor pattern is the same one
-[the orchestration chapter](agent-orchestration.qmd#sec-orch-when) recommends,
+@sec-orch-when recommends,
 and `ai-config`'s `compress-session` and `handoff` skills
 play the role of `STATE.md`.
 GSD's contribution is having made the loop the default rather than an option.
@@ -210,14 +212,12 @@ whichever kind you build.
 
 #### The community thread
 
-Issue #112 also asked for the r/ClaudeCode thread
-"Show off your own harness setups here."
-Reddit blocked every fetch attempted while writing this section on 2026-09-09
-(`www.reddit.com` returned a "Blocked" page and `old.reddit.com` was unreachable),
-so that thread is not summarized here;
-a reader with a browser should read it directly,
-and a later edit can fold it in.
-One small repository a web search surfaced instead,
+The r/ClaudeCode thread "Show off your own harness setups here"
+collects personal setups of the layer kind.
+Reddit blocks automated fetches,
+so the thread is not summarized here
+and is worth reading directly.
+One small repository of the same kind,
 [`my-claude-code-harness`](https://github.com/code-yeongyu/my-claude-code-harness) [@my_claude_code_harness]
 (12 stars, no license, last pushed 2025-11-28),
 shows the shape such personal setups take:
@@ -241,18 +241,19 @@ Across the layer-kind harnesses the same five moves recur:
 
 The runtime-kind projects add the loop itself,
 the permission model,
-and provider independence,
-and nothing else the layer kind lacks.
+and provider independence;
+nothing else in the surveyed runtimes is missing from the layer kind.
 
 #### How we would build our own
 
-The honest answer is that `Morrison-Lab/ai-config` already is a custom harness of the layer kind,
+`Morrison-Lab/ai-config` is already a custom harness of the layer kind,
 and a large one.
 On 2026-09-09 a local checkout held:
 
 - 191 skills;
-- 94 hook scripts, which `hooks/hooks.json` registers as
-  30 `PreToolUse`, 10 `UserPromptSubmit`, and 15 `Stop` entries;
+- 94 hook scripts,
+  and a `hooks/hooks.json` with 55 registrations
+  (30 `PreToolUse`, 10 `UserPromptSubmit`, and 15 `Stop`);
 - 8 subagent definitions (including the `adversarial-reviewer` that gates every push);
 - 131 shared prose fragments and 59 memory files;
 - a plugin manifest, so Claude Code and Cursor load it as a plugin
