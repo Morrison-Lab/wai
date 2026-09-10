@@ -188,7 +188,6 @@ What is documented, and what is not, about `heron_brook` as of 2026-09-09:
 | Whether the remote sources have ever carried non-empty text in production, and what | Unknown; one Windows reporter found the flag absent from the locally cached flag set, meaning the fallback branch was firing |
 | Why the directive exists (cost control, quality regression, an experiment that leaked) | Unknown; Anthropic has not said |
 | Whether it is still active in the build you are running | Unknown until you check |
-
 : `heron_brook`: documented, inferred, and unknown {#tbl-heron-brook-status}
 
 The lab's own [ai-config](https://github.com/Morrison-Lab/ai-config) leans heavily on subagents
