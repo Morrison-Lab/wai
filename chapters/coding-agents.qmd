@@ -101,6 +101,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/running-agents-offline.qmd >}}
 
+# Assessing Aeris and Graft {#sec-ai-aeris-and-graft}
+
+{{< include ai-tools/aeris-and-graft.qmd >}}
+
 # Connecting OpenCode to Local Models {#sec-ai-opencode-ollama}
 
 {{< include ai-tools/opencode-ollama.qmd >}}
