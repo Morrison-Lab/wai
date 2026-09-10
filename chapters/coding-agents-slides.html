@@ -332,7 +332,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-09-10 01:58:14 (PDT)</p>
+  <p class="date">Last modified: 2026-09-10 02:13:34 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -1052,11 +1052,11 @@ Table&nbsp;4: Custom harnesses surveyed for this section
 <li><code>/skillify</code>, which extracts a reusable skill from a session into <code>.omc/skills/</code> (project) or <code>~/.omc/skills/</code> (user) and auto-injects matching skills later;</li>
 <li>a HUD status line, cost tracking, Discord/Telegram/Slack notifications, and a <code>tmux</code>-based mode that drives other vendors’ CLIs as workers.</li>
 </ul>
-<p>It is the same family as the Oh My OpenCode project in <a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;52</a> (the npm package is still named <code>oh-my-claude-sisyphus</code>), and by star count the most-used custom harness in this survey after Superpowers.</p>
+<p>It is the same family as the Oh My OpenCode project in <a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;53</a> (the npm package is still named <code>oh-my-claude-sisyphus</code>), and by star count the most-used custom harness in this survey after Superpowers.</p>
 <p><strong>Useful to us?</strong> Partly. Its model routing and skill extraction are things <code>Morrison-Lab/ai-config</code> already does with <code>select-model</code> and <code>ums</code>, so installing OMC on top would double them. Its notification integrations and HUD are the pieces we lack, and they are separable.</p>
 <h4 id="hoyeon">Hoyeon</h4>
 <p>Hoyeon calls itself a “Requirements-first Harness — derive, verify, execute” <span class="citation" data-cites="hoyeon">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">team-attention</span> 2026</a>)</span>. Its idea is that most agent failures are planning failures, so it forces a derivation chain (goal, context, decisions, requirements, tasks, execution) and gates each transition twice: a CLI validates the structure of <code>requirements.md</code> and <code>plan.json</code> before any model reads them, and a reviewer agent checks for scope drift and blind spots. The commands are <code>/specify</code> (a Socratic interview), <code>/blueprint</code> (contract-first planning into a task dependency graph), <code>/execute</code> (parallel workers plus independent verification against sub-requirements), <code>/bugfix</code>, <code>/council</code>, and <code>/tribunal</code> (a three-agent adversarial review: risk, value, feasibility). It ships 22 agents and 29 skills and installs with <code>claude plugin add team-attention/hoyeon</code> plus an npm CLI.</p>
-<p><strong>Useful to us?</strong> The design principle is exactly the lab’s own “deterministic tools over model judgment” rule (<a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;32</a>): a CLI that rejects malformed plans before an LLM sees them is the kind of instrument our hooks already are for pushes and merges. The requirements interview is heavier than most of our tasks need, and it is Claude-Code-only.</p>
+<p><strong>Useful to us?</strong> The design principle is exactly the lab’s own “deterministic tools over model judgment” rule (<a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;33</a>): a CLI that rejects malformed plans before an LLM sees them is the kind of instrument our hooks already are for pushes and merges. The requirements interview is heavier than most of our tasks need, and it is Claude-Code-only.</p>
 <h4 id="superpowers">Superpowers</h4>
 <p>Superpowers is Jesse Vincent’s “agentic skills framework &amp; software development methodology” <span class="citation" data-cites="superpowers">(<a href="#/references" role="doc-biblioref" onclick="">Vincent 2026</a>)</span>. It is the purest example of the layer kind: a set of skills and one bootstrap that makes them mandatory. The <code>using-superpowers</code> meta-skill injects itself at session start so the agent checks for a relevant skill before any task, and the skills encode a workflow: brainstorming, writing and executing plans, test-driven development, systematic debugging, git worktrees, requesting and receiving code review, and subagent-driven development with a two-stage review (spec compliance first, then code quality). It installs from the official Claude plugin marketplace (<code>/plugin install superpowers@claude-plugins-official</code>) and from Codex’s <code>/plugins</code>, and supports fourteen harnesses. Its own README records the cost of the layer approach: Hermes has no post-compaction hook, so a long session that compacts loses the bootstrap.</p>
 <p><strong>Useful to us?</strong> Yes, and the lab’s maintainer already runs it alongside <code>ai-config</code> in Claude Code. The overlap is real (both have a brainstorming skill, both have a code-review workflow), so treat it as a reference implementation of skill design rather than a second source of truth.</p>
@@ -1096,7 +1096,7 @@ Table&nbsp;4: Custom harnesses surveyed for this section
 <li>94 hook scripts, and a <code>hooks/hooks.json</code> with 55 registrations (30 <code>PreToolUse</code>, 10 <code>UserPromptSubmit</code>, and 15 <code>Stop</code>);</li>
 <li>8 subagent definitions (including the <code>adversarial-reviewer</code> that gates every push);</li>
 <li>131 shared prose fragments and 59 memory files;</li>
-<li>a plugin manifest, so Claude Code and Cursor load it as a plugin (<a href="#/sec-ai-config-install" class="quarto-xref">Section&nbsp;33</a> explains how, and <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;32</a> what the corpus contains).</li>
+<li>a plugin manifest, so Claude Code and Cursor load it as a plugin (<a href="#/sec-ai-config-install" class="quarto-xref">Section&nbsp;34</a> explains how, and <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;33</a> what the corpus contains).</li>
 </ul>
 <p>It already implements all five common moves: the bootstrap is <code>CLAUDE.md</code> and <code>AGENTS.md</code>, planning goes through issue-first and <code>st</code>, fresh-context workers are the <code>Agent</code> and <code>Workflow</code> calls, independent verification is the adversarial-reviewer subagent, and the deterministic gates are the hooks. So “building our own” means three concrete things, in order:</p>
 <ol type="1">
@@ -1707,7 +1707,7 @@ Table&nbsp;10: Relative advantages of humans and Agents
 </div>
 </div>
 </div>
-<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;40</a> for more guidance.</p>
+<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;41</a> for more guidance.</p>
 <h4 id="scenario-3-uncertain-which-scenario-applies">Scenario 3: Uncertain Which Scenario Applies</h4>
 <p><strong>When to use:</strong> You’re not sure whether the failure is due to code issues or workflow configuration problems.</p>
 <p><strong>Recommended approach:</strong></p>
@@ -1735,7 +1735,7 @@ Table&nbsp;10: Relative advantages of humans and Agents
 <ul>
 <li>See the <a href="https://ucd-serg.github.io/lab-manual/continuous-integration.html">UCD-SERG Lab Manual’s continuous integration chapter</a> for setting up GitHub Actions workflows</li>
 <li>See <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;19</a> and <a href="#/sec-ai-benefits-hazards" class="quarto-xref">Section&nbsp;18</a> for security considerations with workflow files</li>
-<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;40</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
+<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;41</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
 <li>See the <a href="https://docs.github.com/en/actions">GitHub Actions documentation</a> for workflow syntax and troubleshooting</li>
 </ul>
 </section></section>
@@ -3650,7 +3650,7 @@ while the selected main agent model is BYOK.</code></pre>
 </ul>
 <h4 id="further-reading-2">Further Reading</h4>
 <p>For the complete specification and more details, see <a href="https://agentskills.io/home">agentskills.io</a>.</p>
-<p>A skill is one of several ways to customize an agent, and not always the right one. <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;32</a> compares it against:</p>
+<p>A skill is one of several ways to customize an agent, and not always the right one. <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;33</a> compares it against:</p>
 <ul>
 <li>instruction files</li>
 <li>subagents</li>
@@ -3704,11 +3704,174 @@ while the selected main agent model is BYOK.</code></pre>
 <li><code>release-post</code></li>
 <li><code>testing-r-packages</code></li>
 </ul>
-<p>Copying the skills in rather than installing the marketplace plugin lets them follow the lab’s own review and hook conventions, at the cost of tracking upstream changes by hand. Four categories are not adopted. Three of them have the least overlap with lab work: Shiny app development, <code>ggsql</code>, and Posit Connect deployment. The fourth, <code>posit-dev</code>, overlaps with practices the lab already has: its <code>critical-code-reviewer</code> parallels the adversarial self-review subagent that the lab’s agent configuration dispatches before every push, and <code>new-work</code> / <code>working-on</code> keep a per-task tracking document where the lab uses the issue tracker and a session notebook. The <code>github</code> skills likewise overlap with the lab’s own <a href="../chapters/pr-workflow-with-agents.html">pull-request workflow</a> and with the review setup in <a href="#/sec-ai-claude-code-action-review" class="quarto-xref">Section&nbsp;36</a>, so both categories are worth reading for ideas rather than installing alongside that tooling. The contribution guidance in the repository recommends Anthropic’s <code>skill-creator</code> skill for authoring new skills.</p>
+<p>Copying the skills in rather than installing the marketplace plugin lets them follow the lab’s own review and hook conventions, at the cost of tracking upstream changes by hand. Four categories are not adopted. Three of them have the least overlap with lab work: Shiny app development, <code>ggsql</code>, and Posit Connect deployment. The fourth, <code>posit-dev</code>, overlaps with practices the lab already has: its <code>critical-code-reviewer</code> parallels the adversarial self-review subagent that the lab’s agent configuration dispatches before every push, and <code>new-work</code> / <code>working-on</code> keep a per-task tracking document where the lab uses the issue tracker and a session notebook. The <code>github</code> skills likewise overlap with the lab’s own <a href="../chapters/pr-workflow-with-agents.html">pull-request workflow</a> and with the review setup in <a href="#/sec-ai-claude-code-action-review" class="quarto-xref">Section&nbsp;37</a>, so both categories are worth reading for ideas rather than installing alongside that tooling. The contribution guidance in the repository recommends Anthropic’s <code>skill-creator</code> skill for authoring new skills.</p>
 </section></section>
 <section>
-<section id="sec-ai-useful-plugins" class="title-slide slide level1 center" data-number="31">
-<h1><span class="header-section-number">31</span> Useful plugins</h1>
+<section id="sec-ai-posit-dev-ai-repos" class="title-slide slide level1 center" data-number="31">
+<h1><span class="header-section-number">31</span> Posit AI Tooling on GitHub</h1>
+
+</section>
+<section class="slide level2">
+
+<p>The <a href="https://github.com/posit-dev"><code>posit-dev</code></a> GitHub organization holds the open-source work of Posit PBC that does not live under the <code>rstudio</code>, <code>tidyverse</code>, <code>r-lib</code>, or <code>quarto-dev</code> organizations. Much of the LLM tooling from Posit started there, so this section reviews the organization for repositories relevant to working with AI. The Posit skill collection, <code>posit-dev/skills</code>, is covered separately in <a href="#/sec-ai-posit-skills" class="quarto-xref">Section&nbsp;30</a> and is not repeated here.</p>
+<p>The listing below was derived from the GitHub API (<code>gh repo list posit-dev --limit 300</code>) rather than from browsing the website. The organization had 226 public repositories, of which the 16 below are about building with or evaluating LLMs (measured 2026-09-09). Star counts and last-push dates are as of the same date. The rest of the organization is Positron and its extensions, Shiny for Python, <code>great-tables</code>, <code>pointblank</code>, <code>air</code>, <code>ggsql</code>, Posit Team deployment tooling, container images, and workshop material.</p>
+<h4 id="ai-related-repositories">AI-related repositories</h4>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Repository</th>
+<th>Purpose</th>
+<th>Language</th>
+<th>Stars</th>
+<th>Last push</th>
+<th>Verdict for this lab</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/posit-dev/querychat"><code>querychat</code></a> <span class="citation" data-cites="posit_dev_querychat">(<a href="#/references" role="doc-biblioref" onclick="">Posit PBC 2026m</a>)</span></td>
+<td>Natural-language exploration of tabular data, translated to SQL, for R and Python Shiny apps</td>
+<td>Python, R</td>
+<td>211</td>
+<td>2026-09-08</td>
+<td>Maybe: a safe pattern for letting an LLM query a data frame</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/posit-dev/mcptools"><code>mcptools</code></a> <span class="citation" data-cites="posit_dev_mcptools">(<a href="#/references" role="doc-biblioref" onclick="">Posit PBC 2026i</a>)</span></td>
+<td>Model Context Protocol for R: expose a running R session as an MCP server, or register MCP servers with <code>ellmer</code> chats</td>
+<td>R</td>
+<td>194</td>
+<td>2026-08-22</td>
+<td>Yes: the MCP layer <code>btw</code> uses, and the way to expose a lab function as a tool</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/posit-dev/chatlas"><code>chatlas</code></a> <span class="citation" data-cites="posit_dev_chatlas">(<a href="#/references" role="doc-biblioref" onclick="">Posit PBC 2026e</a>)</span></td>
+<td>Python client for LLM chat and tool calling, the Python counterpart of <code>ellmer</code></td>
+<td>Python</td>
+<td>175</td>
+<td>2026-09-08</td>
+<td>No: the lab builds in R</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/posit-dev/shinychat"><code>shinychat</code></a> <span class="citation" data-cites="posit_dev_shinychat">(<a href="#/references" role="doc-biblioref" onclick="">Posit PBC 2026p</a>)</span></td>
+<td>Chat UI component for Shiny, in R and Python</td>
+<td>TypeScript, R, Python</td>
+<td>137</td>
+<td>2026-09-09</td>
+<td>Maybe: only if a lab app needs a chat panel</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/posit-dev/btw"><code>btw</code></a> <span class="citation" data-cites="posit_dev_btw">(<a href="#/references" role="doc-biblioref" onclick="">Posit PBC 2026d</a>)</span></td>
+<td>Toolkit for giving LLMs context about an R session: copy context to the clipboard, chat in the IDE, or connect R to coding agents through <code>mcptools</code></td>
+<td>R</td>
+<td>135</td>
+<td>2026-09-09</td>
+<td>Yes: the most direct fit for an R-centric workflow</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/posit-dev/mcp-repl"><code>mcp-repl</code></a> <span class="citation" data-cites="posit_dev_mcp_repl">(<a href="#/references" role="doc-biblioref" onclick="">Posit PBC 2026h</a>)</span></td>
+<td>Sandboxed MCP server that keeps a persistent R or Python session alive across an agent’s tool calls, with plots returned as images</td>
+<td>Rust</td>
+<td>65</td>
+<td>2026-07-27</td>
+<td>Yes, untried: replaces <code>Rscript -e</code> round trips in Claude Code</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/posit-dev/shiny-assistant"><code>shiny-assistant</code></a> <span class="citation" data-cites="posit_dev_shiny_assistant">(<a href="#/references" role="doc-biblioref" onclick="">Posit PBC 2026o</a>)</span></td>
+<td>Source of the hosted Shiny Assistant chat app</td>
+<td>Python</td>
+<td>58</td>
+<td>2026-01-17</td>
+<td>No: an application, not a library</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/posit-dev/raghilda"><code>raghilda</code></a> <span class="citation" data-cites="posit_dev_raghilda">(<a href="#/references" role="doc-biblioref" onclick="">Posit PBC 2026n</a>)</span></td>
+<td>Retrieval-augmented generation pipeline in Python, with DuckDB or ChromaDB storage</td>
+<td>Python</td>
+<td>36</td>
+<td>2026-09-02</td>
+<td>No: the R counterpart is <code>tidyverse/ragnar</code></td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/posit-dev/shinyrealtime"><code>shinyrealtime</code></a> <span class="citation" data-cites="posit_dev_shinyrealtime">(<a href="#/references" role="doc-biblioref" onclick="">Posit PBC 2026q</a>)</span></td>
+<td>Voice chat in Shiny apps via the OpenAI Realtime API</td>
+<td>Python, R, TypeScript</td>
+<td>25</td>
+<td>2026-07-31</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/posit-dev/commons"><code>commons</code></a> <span class="citation" data-cites="posit_dev_commons">(<a href="#/references" role="doc-biblioref" onclick="">Posit PBC 2026g</a>)</span></td>
+<td>Experimental framework for data agents built on trusted R or Python calculations and data dictionaries</td>
+<td>R, Python</td>
+<td>20</td>
+<td>2026-09-09</td>
+<td>Watch: experimental, but aimed at the “agent over our own analyses” problem</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/posit-dev/code-index"><code>code-index</code></a> <span class="citation" data-cites="posit_dev_code_index">(<a href="#/references" role="doc-biblioref" onclick="">Posit PBC 2026f</a>)</span></td>
+<td>Semantic code search over a repository, exposed to coding agents through MCP; parses R, Python, Quarto, and Markdown</td>
+<td>Go</td>
+<td>6</td>
+<td>2026-04-29</td>
+<td>Maybe: for large codebases only</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/posit-dev/ai-lib"><code>ai-lib</code></a> <span class="citation" data-cites="posit_dev_ai_lib">(<a href="#/references" role="doc-biblioref" onclick="">Posit PBC 2026a</a>)</span></td>
+<td>TypeScript LLM-provider infrastructure behind Posit Assistant, successor to the archived <code>ai-provider-bridge</code></td>
+<td>TypeScript</td>
+<td>5</td>
+<td>2026-09-08</td>
+<td>No: internal infrastructure</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/posit-dev/bluffbench2"><code>bluffbench2</code></a> <span class="citation" data-cites="posit_dev_bluffbench2">(<a href="#/references" role="doc-biblioref" onclick="">Posit PBC 2026c</a>)</span></td>
+<td>Evaluation of whether agents notice subtle data-quality artifacts in plots, implemented with <code>vitals</code></td>
+<td>R</td>
+<td>4</td>
+<td>2026-07-21</td>
+<td>Yes, as a reference: an eval built in R about data-analysis judgment</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/posit-dev/positron-copilot-chat"><code>positron-copilot-chat</code></a> <span class="citation" data-cites="posit_dev_positron_copilot_chat">(<a href="#/references" role="doc-biblioref" onclick="">Posit PBC 2026l</a>)</span></td>
+<td>Fork of Microsoft’s Copilot Chat extension bundled into Positron</td>
+<td>TypeScript</td>
+<td>4</td>
+<td>2026-05-06</td>
+<td>No: consumed through Positron itself</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/posit-dev/assistant-feedback"><code>assistant-feedback</code></a> <span class="citation" data-cites="posit_dev_assistant_feedback">(<a href="#/references" role="doc-biblioref" onclick="">Posit PBC 2026b</a>)</span></td>
+<td>Issue tracker for feedback on Posit Assistant</td>
+<td>none</td>
+<td>4</td>
+<td>2026-05-28</td>
+<td>Reference: where to report Positron Assistant problems</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/posit-dev/nesevals"><code>nesevals</code></a> <span class="citation" data-cites="posit_dev_nesevals">(<a href="#/references" role="doc-biblioref" onclick="">Posit PBC 2026j</a>)</span></td>
+<td>Evaluation tooling for next-edit-suggestion prompts and models</td>
+<td>R</td>
+<td>2</td>
+<td>2026-04-07</td>
+<td>No: relevant to IDE builders</td>
+</tr>
+</tbody>
+</table>
+<p>Two tools the lab might expect to find here live elsewhere. <a href="https://github.com/tidyverse/ellmer"><code>ellmer</code></a>, the R package for LLM chat and tool calling that <code>btw</code> and <code>querychat</code> build on and that <code>mcptools</code> and <code>shinychat</code> integrate with, and <a href="https://github.com/tidyverse/ragnar"><code>ragnar</code></a>, its retrieval companion, are in the <code>tidyverse</code> organization. Positron Assistant has no public repository of its own. Going by the repository descriptions, its provider layer is <code>ai-lib</code>, the Copilot fork above supplies its chat surface, and the rest is part of the <a href="https://github.com/posit-dev/positron"><code>positron</code></a> repository <span class="citation" data-cites="posit_dev_positron">(<a href="#/references" role="doc-biblioref" onclick="">Posit PBC 2026k</a>)</span>. The organization also holds workshop and demo repositories (<code>positron-ai-workshop</code>, <code>ai-powered-app-workshop</code>, <code>shiny-querychat-workshop</code>, <code>posit-conf-chat</code>) that are worked examples of the packages above rather than tools.</p>
+<h4 id="useful-to-us-yes-three-tools-and-one-reference">Useful to us? Yes, three tools and one reference</h4>
+<p>The lab’s workflow is R and Quarto driven by Claude Code and Copilot, so the question is which of these repositories connect that workflow to an R session.</p>
+<ul>
+<li><strong><code>btw</code></strong> is the direct fit. Its clipboard mode pastes the structure of the objects in an R session into whatever chat is open, and its MCP server route (through <code>mcptools</code>) lets Claude Code read package documentation and inspect the global environment instead of guessing at column names. The MCP route follows the setup pattern in <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;48</a>.</li>
+<li><strong><code>mcptools</code></strong> is the layer underneath <code>btw</code>, and the package to use directly when a lab package wants to expose one of its own functions to an agent as a tool.</li>
+<li><strong><code>mcp-repl</code></strong> addresses a cost the lab already pays: each <code>Rscript -e</code> call an agent makes starts a fresh process, so data and packages are reloaded on every check. A persistent, sandboxed session with inline plots is a better fit for iterating on an analysis with an agent, at the cost of a Rust binary to install. It has not yet been tried in the lab.</li>
+<li><strong><code>bluffbench2</code></strong> is a reference rather than a dependency. It is an evaluation written in R with <a href="https://github.com/tidyverse/vitals"><code>vitals</code></a> that measures whether an agent notices data-quality problems, which is the kind of judgment the lab expects a human reviewer to keep. Anyone building an eval of the lab’s own agent configuration can start from its harness.</li>
+</ul>
+<p><code>querychat</code> and <code>shinychat</code> matter only if the lab ships Shiny apps with a chat interface. <code>commons</code> is a framework for data agents rather than a chat component, and it is still marked experimental. The Python packages (<code>chatlas</code>, <code>raghilda</code>) duplicate R tools the lab already prefers. Positron Assistant is configured through Positron rather than through these repositories; see <a href="#/sec-ai-copilot-settings" class="quarto-xref">Section&nbsp;26</a> for its OpenAI setup and <a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;21</a> for running it against Ollama.</p>
+</section></section>
+<section>
+<section id="sec-ai-useful-plugins" class="title-slide slide level1 center" data-number="32">
+<h1><span class="header-section-number">32</span> Useful plugins</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -3734,11 +3897,11 @@ while the selected main agent model is BYOK.</code></pre>
 </ol>
 <p>The agent reads the touched code first and is lazy about the solution, never about reading, and never cuts validation, error handling, security, or accessibility. Measured on twelve real Claude Code tasks in a FastAPI + React repo (Haiku 4.5, n=4), it averages about 54 percent less code (up to 94 percent where the agent would otherwise overbuild, for example a date picker) with about 20 percent lower cost and 27 percent faster, while staying fully safe. It installs as a plugin or skill for more than twenty agents (Claude Code, Codex, Copilot, Cursor, OpenCode, Gemini, and others) and works from a checkout via <code>AGENTS.md</code> where a plugin is not needed.</p>
 <p><a href="https://contextify.sh/">Contextify</a> keeps your Claude Code and Codex history forever in a private, searchable timeline. Claude Code deletes history after 30 days; Contextify watches both tools, summarizes each message (on-device via Apple Intelligence on macOS 26, or Lite Mode on macOS 15), and lets you search every conversation you ever had. It runs local-first with no account required, and optionally syncs across devices via Cloud Sync or a self-hosted instance you operate. The ambient timeline lets you follow sessions in real time or skim what happened while you were away.</p>
-<p>The lab’s portable agent config lives in <a href="https://github.com/Morrison-Lab/ai-config"><code>Morrison-Lab/ai-config</code></a>. It is a plugin-or-symlink install of skills, hooks, and memories — not a third marketplace next to SemBr. How that config actually reaches a machine, and how a doubled plugin install fails, is <a href="#/sec-ai-config-install" class="quarto-xref">Section&nbsp;33</a>. <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;32</a> is the worked example of what the corpus contains.</p>
+<p>The lab’s portable agent config lives in <a href="https://github.com/Morrison-Lab/ai-config"><code>Morrison-Lab/ai-config</code></a>. It is a plugin-or-symlink install of skills, hooks, and memories — not a third marketplace next to SemBr. How that config actually reaches a machine, and how a doubled plugin install fails, is <a href="#/sec-ai-config-install" class="quarto-xref">Section&nbsp;34</a>. <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;33</a> is the worked example of what the corpus contains.</p>
 </section></section>
 <section>
-<section id="sec-ai-customization" class="title-slide slide level1 center" data-number="32">
-<h1><span class="header-section-number">32</span> Customizing an Agent</h1>
+<section id="sec-ai-customization" class="title-slide slide level1 center" data-number="33">
+<h1><span class="header-section-number">33</span> Customizing an Agent</h1>
 
 </section>
 <section class="slide level2">
@@ -3834,7 +3997,7 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Rules are written as <code>Tool(specifier)</code> — for example <code>Bash(npm run test *)</code>, <code>Read(./.env)</code>, or <code>Skill(commit)</code> — and sorted into <code>allow</code>, <code>ask</code>, and <code>deny</code>. Because a project’s rules merge with yours rather than replacing them, a repository can tighten what you allow, and cannot quietly loosen it.</p>
 <h4 id="mcp-servers-are-a-different-axis-entirely">MCP Servers Are a Different Axis Entirely</h4>
 <p>Everything above changes what the agent <em>knows or must do</em>. An <a href="https://modelcontextprotocol.io/">MCP</a> server changes what it <em>can reach</em>: typed tools, data resources, and reusable templates exposed over a standard protocol. The specification is explicit that it “does not dictate how AI applications use LLMs or manage the provided context.”</p>
-<p>So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;47</a> covers configuration and its failure modes.</p>
+<p>So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;48</a> covers configuration and its failure modes.</p>
 <h4 id="choosing-1">Choosing</h4>
 <table class="caption-top">
 <colgroup>
@@ -3957,13 +4120,13 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This repository is a smaller example of the same idea: it carries a <code>.github/copilot-instructions.md</code> for conventions that apply everywhere, plus path-scoped files under <code>.github/instructions/</code> whose <code>applyTo</code> globs attach them only when you edit a matching file.</p>
 </section></section>
 <section>
-<section id="sec-ai-config-install" class="title-slide slide level1 center" data-number="33">
-<h1><span class="header-section-number">33</span> How the Config Reaches a Machine</h1>
+<section id="sec-ai-config-install" class="title-slide slide level1 center" data-number="34">
+<h1><span class="header-section-number">34</span> How the Config Reaches a Machine</h1>
 
 </section>
 <section class="slide level2">
 
-<p><a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;32</a> describes <em>which</em> mechanism a customization should use. This section is about the step after that decision: how a config like a shared instruction repository actually reaches a machine, and how a broken install fails.</p>
+<p><a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;33</a> describes <em>which</em> mechanism a customization should use. This section is about the step after that decision: how a config like a shared instruction repository actually reaches a machine, and how a broken install fails.</p>
 <p>Two agents can load the identical instruction corpus and still behave differently, because behavior depends not only on what the config says but on how it is installed where the agent runs. An install problem is quiet by construction — nothing errors, the work still gets done, and a capability simply goes missing with no message that it existed.</p>
 <h4 id="two-ways-the-same-config-reaches-a-machine">Two Ways the Same Config Reaches a Machine</h4>
 <p>A repository of skills, hooks, and instruction files can be delivered two ways, and they are alternatives rather than layers.</p>
@@ -3992,8 +4155,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>The common thread is that the install layer is a real surface, distinct from the content of the config, with its own failure modes and its own checks. When an agent behaves as though a rule or skill you wrote does not exist, suspect the install before you suspect the rule.</p>
 </section></section>
 <section>
-<section id="sec-ai-claude-cloud-env" class="title-slide slide level1 center" data-number="34">
-<h1><span class="header-section-number">34</span> Claude Code Cloud Environments</h1>
+<section id="sec-ai-claude-cloud-env" class="title-slide slide level1 center" data-number="35">
+<h1><span class="header-section-number">35</span> Claude Code Cloud Environments</h1>
 
 </section>
 <section class="slide level2">
@@ -4028,8 +4191,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>For details, see the <a href="https://code.claude.com/docs/en/claude-code-on-the-web">Claude Code on the web documentation</a> and the <a href="https://code.claude.com/docs/en/commands">slash command reference</a>.</p>
 </section></section>
 <section>
-<section id="sec-ai-codex-github-review" class="title-slide slide level1 center" data-number="35">
-<h1><span class="header-section-number">35</span> Using a ChatGPT Account for Codex Pull-Request Reviews</h1>
+<section id="sec-ai-codex-github-review" class="title-slide slide level1 center" data-number="36">
+<h1><span class="header-section-number">36</span> Using a ChatGPT Account for Codex Pull-Request Reviews</h1>
 
 </section>
 <section class="slide level2">
@@ -4096,8 +4259,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>For current setup details, see OpenAI’s <a href="https://learn.chatgpt.com/docs/third-party/github">GitHub code-review documentation</a>.</p>
 </section></section>
 <section>
-<section id="sec-ai-claude-code-action-review" class="title-slide slide level1 center" data-number="36">
-<h1><span class="header-section-number">36</span> Where Pull-Request Review Lives in Claude Code Action</h1>
+<section id="sec-ai-claude-code-action-review" class="title-slide slide level1 center" data-number="37">
+<h1><span class="header-section-number">37</span> Where Pull-Request Review Lives in Claude Code Action</h1>
 
 </section>
 <section class="slide level2">
@@ -4168,8 +4331,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This is the Claude-side counterpart to <a href="#/sec-ai-codex-github-review">using a ChatGPT account for Codex pull-request reviews</a>. Codex ships a hosted native reviewer configured through the ChatGPT workspace, with no workflow file. Claude Code’s reviewer is the opposite trade: you own a workflow file and supply API credentials, but the prompt, tools, model, and triggering events are all visible and editable in your repository.</p>
 </section></section>
 <section>
-<section id="sec-ai-gemini-review-action" class="title-slide slide level1 center" data-number="37">
-<h1><span class="header-section-number">37</span> Gemini Review Action for GitHub Pull Requests</h1>
+<section id="sec-ai-gemini-review-action" class="title-slide slide level1 center" data-number="38">
+<h1><span class="header-section-number">38</span> Gemini Review Action for GitHub Pull Requests</h1>
 
 </section>
 <section class="slide level2">
@@ -4216,8 +4379,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Like <a href="#/sec-ai-claude-code-action-review">Claude Code Action</a>, <code>derailed-dash/gemini-review-action</code> gives the repository owner full visibility over workflow triggers, authentication methods, and review prompts. In contrast to hosted review offerings that require platform-level permissions across an entire organization, this GitHub Action operates per-repository with credentials scoped to GitHub Actions secrets or Google Cloud IAM roles.</p>
 </section></section>
 <section>
-<section id="sec-ai-gemini-code-assist-review" class="title-slide slide level1 center" data-number="38">
-<h1><span class="header-section-number">38</span> Gemini Code Assist for Repository Code Review</h1>
+<section id="sec-ai-gemini-code-assist-review" class="title-slide slide level1 center" data-number="39">
+<h1><span class="header-section-number">39</span> Gemini Code Assist for Repository Code Review</h1>
 
 </section>
 <section class="slide level2">
@@ -4277,8 +4440,8 @@ while the selected main agent model is BYOK.</code></pre>
 </table>
 </section></section>
 <section>
-<section id="sec-ai-pr-activity-notifications" class="title-slide slide level1 center" data-number="39">
-<h1><span class="header-section-number">39</span> How a Session Learns a PR Changed</h1>
+<section id="sec-ai-pr-activity-notifications" class="title-slide slide level1 center" data-number="40">
+<h1><span class="header-section-number">40</span> How a Session Learns a PR Changed</h1>
 
 </section>
 <section class="slide level2">
@@ -4326,7 +4489,7 @@ while the selected main agent model is BYOK.</code></pre>
 <p><code>subscribe_pr_activity</code> and <code>unsubscribe_pr_activity</code> are ordinary tool calls, taking an owner, a repository, and a pull-request number. Subscribing delivers that pull request’s activity into the conversation as <code>&lt;github-webhook-activity&gt;</code> messages until the session unsubscribes, or the pull request merges or closes.</p>
 <p>Two caveats are worth knowing before relying on it.</p>
 <p><strong>A successful subscribe does not guarantee delivery.</strong> If a PR Steward agent already holds the watch on that pull request, the call still succeeds — but this session receives nothing. The tool result says so in as many words, so read the result rather than the exit status. Taking over the watch requires opting the steward out first, by removing its watching label on the pull request.</p>
-<p><strong>The tool does not exist on a locally-run GitHub MCP server.</strong> Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;47</a> covers the local analogues to reach for instead.</p>
+<p><strong>The tool does not exist on a locally-run GitHub MCP server.</strong> Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;48</a> covers the local analogues to reach for instead.</p>
 <p><strong>Webhook delivery is also not exhaustive</strong>, which is the failure mode most likely to be mistaken for “nothing has happened”. CI <em>successes</em>, new pushes, and merge-conflict transitions can arrive late or not at all. A session that treats silence as “still green” will sit indefinitely on a pull request that has gone stale or conflicted, so a subscription is a supplement to periodically re-reading the pull request’s real state, not a replacement for it.</p>
 <h4 id="the-channel-only-a-human-controls">The channel only a human controls</h4>
 <p>Claude Code on the web shows a per-pull-request <strong>CI monitoring</strong> panel in the session sidebar, with two checkboxes: <strong>Auto-fix CI &amp; address comments</strong> and <strong>Auto-merge when ready</strong>.</p>
@@ -4337,7 +4500,7 @@ while the selected main agent model is BYOK.</code></pre>
 <li><strong>No agent-side tool can reach it.</strong> It is client-UI state, not something an agent’s configuration surface touches, so asking an agent to enable it cannot work. If the checkbox changes, a human changed it.</li>
 <li><strong>One of the two has a shortcut, and the other does not.</strong> Running <code>/autofix-pr</code> from the command line on a pull request’s branch spawns a web session with <strong>Auto-fix CI &amp; address comments</strong> already on. There is no equivalent shortcut for <strong>Auto-merge when ready</strong>.</li>
 </ul>
-<p>See <a href="#/sec-ai-claude-cloud-env" class="quarto-xref">Section&nbsp;34</a> for the web-session context these run in.</p>
+<p>See <a href="#/sec-ai-claude-cloud-env" class="quarto-xref">Section&nbsp;35</a> for the web-session context these run in.</p>
 <h4 id="the-instruction-template-is-boilerplate">The instruction template is boilerplate</h4>
 <p>Each <code>&lt;ci-monitor-event&gt;</code> quotes the triggering comment verbatim and then appends a <strong>fixed instruction template</strong>:</p>
 <ul>
@@ -4394,8 +4557,8 @@ while the selected main agent model is BYOK.</code></pre>
 </div>
 </section></section>
 <section>
-<section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="40">
-<h1><span class="header-section-number">40</span> When to use a coding agent</h1>
+<section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="41">
+<h1><span class="header-section-number">41</span> When to use a coding agent</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -4404,8 +4567,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.</p>
 <aside><ol class="aside-footnotes"><li id="fn1"><p>2026-01-10</p></li></ol></aside></section></section>
 <section>
-<section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="41">
-<h1><span class="header-section-number">41</span> Editing with <code>.docx</code> files</h1>
+<section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="42">
+<h1><span class="header-section-number">42</span> Editing with <code>.docx</code> files</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -4441,8 +4604,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.</p>
 </section></section>
 <section>
-<section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="42">
-<h1><span class="header-section-number">42</span> Copilot Instructions for this Repository</h1>
+<section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="43">
+<h1><span class="header-section-number">43</span> Copilot Instructions for this Repository</h1>
 
 </section>
 <section class="slide level2">
@@ -4461,8 +4624,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>See this repository’s own <a href="https://github.com/Morrison-Lab/wai/blob/main/.github/copilot-instructions.md"><code>.github/copilot-instructions.md</code></a> for a working example.</p>
 </section></section>
 <section>
-<section id="using-copilot-review-before-human-review" class="title-slide slide level1 center" data-number="43">
-<h1><span class="header-section-number">43</span> Using Copilot Review Before Human Review</h1>
+<section id="using-copilot-review-before-human-review" class="title-slide slide level1 center" data-number="44">
+<h1><span class="header-section-number">44</span> Using Copilot Review Before Human Review</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -4502,8 +4665,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.</p>
 </section></section>
 <section>
-<section id="reviewing-a-copilot-pr-you-didnt-create" class="title-slide slide level1 center" data-number="44">
-<h1><span class="header-section-number">44</span> Reviewing a Copilot PR You Didn’t Create</h1>
+<section id="reviewing-a-copilot-pr-you-didnt-create" class="title-slide slide level1 center" data-number="45">
+<h1><span class="header-section-number">45</span> Reviewing a Copilot PR You Didn’t Create</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -4589,8 +4752,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.</p>
 </section></section>
 <section>
-<section id="sec-ai-vscode-agent-sessions" class="title-slide slide level1 center" data-number="45">
-<h1><span class="header-section-number">45</span> Agent Sessions and Handoff in Visual Studio Code</h1>
+<section id="sec-ai-vscode-agent-sessions" class="title-slide slide level1 center" data-number="46">
+<h1><span class="header-section-number">46</span> Agent Sessions and Handoff in Visual Studio Code</h1>
 
 </section>
 <section class="slide level2">
@@ -4620,8 +4783,8 @@ while the selected main agent model is BYOK.</code></pre>
 </ul>
 </section></section>
 <section>
-<section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="46">
-<h1><span class="header-section-number">46</span> Installing Claude Code on Windows</h1>
+<section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="47">
+<h1><span class="header-section-number">47</span> Installing Claude Code on Windows</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -4708,8 +4871,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>If you get a version number, you’re ready to run <code>claude</code> in your project directory. If you get <code>command not found</code>, re-check the two <code>PATH</code> issues above: the directory must be on <code>PATH</code>, and you must <code>rehash</code> (or open a fresh window) after changing it.</p>
 </section></section>
 <section>
-<section id="sec-ai-mcp-server-setup" class="title-slide slide level1 center" data-number="47">
-<h1><span class="header-section-number">47</span> Setting up MCP servers</h1>
+<section id="sec-ai-mcp-server-setup" class="title-slide slide level1 center" data-number="48">
+<h1><span class="header-section-number">48</span> Setting up MCP servers</h1>
 
 </section>
 <section class="slide level2">
@@ -4815,8 +4978,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <p>It connects through the standard <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> (MCP) as a remote server at <code>https://mcp.granola.ai/mcp</code>. For Claude or ChatGPT, enable it from the app’s connector/app settings and authenticate; for Cursor, Claude Code, or any other MCP client that supports a manual URL, register that URL directly (see <a href="https://www.granola.ai/blog/granola-mcp">the announcement</a> for per-client steps). On an Enterprise plan it is an early-access beta, off by default until an admin enables it.</p>
 </section></section>
 <section>
-<section id="sec-ai-antigravity-python-sdk" class="title-slide slide level1 center" data-number="48">
-<h1><span class="header-section-number">48</span> Google Antigravity Python SDK</h1>
+<section id="sec-ai-antigravity-python-sdk" class="title-slide slide level1 center" data-number="49">
+<h1><span class="header-section-number">49</span> Google Antigravity Python SDK</h1>
 
 </section>
 <section class="slide level2">
@@ -4875,8 +5038,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </table>
 </section></section>
 <section>
-<section id="sec-ai-magic-context" class="title-slide slide level1 center" data-number="49">
-<h1><span class="header-section-number">49</span> Unbounded Context with Magic Context</h1>
+<section id="sec-ai-magic-context" class="title-slide slide level1 center" data-number="50">
+<h1><span class="header-section-number">50</span> Unbounded Context with Magic Context</h1>
 
 </section>
 <section class="slide level2">
@@ -4898,8 +5061,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </ul>
 </section></section>
 <section>
-<section id="sec-ai-conductor-extension" class="title-slide slide level1 center" data-number="50">
-<h1><span class="header-section-number">50</span> Spec-Driven Development with Conductor</h1>
+<section id="sec-ai-conductor-extension" class="title-slide slide level1 center" data-number="51">
+<h1><span class="header-section-number">51</span> Spec-Driven Development with Conductor</h1>
 
 </section>
 <section class="slide level2">
@@ -4952,8 +5115,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </table>
 </section></section>
 <section>
-<section id="sec-ai-plugins-deep-dive" class="title-slide slide level1 center" data-number="51">
-<h1><span class="header-section-number">51</span> Anatomy of Agent Plugins</h1>
+<section id="sec-ai-plugins-deep-dive" class="title-slide slide level1 center" data-number="52">
+<h1><span class="header-section-number">52</span> Anatomy of Agent Plugins</h1>
 
 </section>
 <section class="slide level2">
@@ -5020,8 +5183,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </ul>
 </section></section>
 <section>
-<section id="sec-ai-oh-my-opencode" class="title-slide slide level1 center" data-number="52">
-<h1><span class="header-section-number">52</span> Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent</h1>
+<section id="sec-ai-oh-my-opencode" class="title-slide slide level1 center" data-number="53">
+<h1><span class="header-section-number">53</span> Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent</h1>
 
 </section>
 <section class="slide level2">
@@ -5086,13 +5249,13 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </table>
 </section></section>
 <section>
-<section id="sec-ai-opencode-ecosystem" class="title-slide slide level1 center" data-number="53">
-<h1><span class="header-section-number">53</span> The OpenCode Ecosystem</h1>
+<section id="sec-ai-opencode-ecosystem" class="title-slide slide level1 center" data-number="54">
+<h1><span class="header-section-number">54</span> The OpenCode Ecosystem</h1>
 
 </section>
 <section class="slide level2">
 
-<p><a href="https://opencode.ai">OpenCode</a> <span class="citation" data-cites="opencode_repo">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">anomalyco</span> 2026</a>)</span> is the open-source coding agent harness (MIT-licensed, about 206,000 GitHub stars, measured 2026-09-09) that the earlier OpenCode sections of this chapter build on: running it against local models (<a href="#/sec-ai-opencode-ollama" class="quarto-xref">Section&nbsp;22</a>), against OpenRouter (<a href="#/sec-ai-opencode-openrouter" class="quarto-xref">Section&nbsp;23</a>), and under the Oh My OpenCode multi-agent framework (<a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;52</a>). Around the harness itself sits a community ecosystem of plugins, clients, and agent bundles, which the OpenCode maintainers index on a single documentation page <span class="citation" data-cites="opencode_ecosystem">(<a href="#/references" role="doc-biblioref" onclick="">OpenCode 2026a</a>)</span>. This section maps that page (as of 2026-09-09) and calls out the entries most relevant to us. Where the site already covers a project, this section points there instead of repeating it.</p>
+<p><a href="https://opencode.ai">OpenCode</a> <span class="citation" data-cites="opencode_repo">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">anomalyco</span> 2026</a>)</span> is the open-source coding agent harness (MIT-licensed, about 206,000 GitHub stars, measured 2026-09-09) that the earlier OpenCode sections of this chapter build on: running it against local models (<a href="#/sec-ai-opencode-ollama" class="quarto-xref">Section&nbsp;22</a>), against OpenRouter (<a href="#/sec-ai-opencode-openrouter" class="quarto-xref">Section&nbsp;23</a>), and under the Oh My OpenCode multi-agent framework (<a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;53</a>). Around the harness itself sits a community ecosystem of plugins, clients, and agent bundles, which the OpenCode maintainers index on a single documentation page <span class="citation" data-cites="opencode_ecosystem">(<a href="#/references" role="doc-biblioref" onclick="">OpenCode 2026a</a>)</span>. This section maps that page (as of 2026-09-09) and calls out the entries most relevant to us. Where the site already covers a project, this section points there instead of repeating it.</p>
 <h4 id="how-the-ecosystem-is-organized">How the ecosystem is organized</h4>
 <p>The ecosystem page groups its entries into three lists <span class="citation" data-cites="opencode_ecosystem">(<a href="#/references" role="doc-biblioref" onclick="">OpenCode 2026a</a>)</span>:</p>
 <ul>
@@ -5125,10 +5288,10 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </ul>
 <p><strong>Orchestration and workflow bundles</strong></p>
 <ul>
-<li><a href="https://github.com/code-yeongyu/oh-my-openagent"><code>oh-my-opencode</code></a> (now <code>oh-my-openagent</code>; about 68,800 stars; release <code>v5.0.0-beta.51</code> on 2026-09-09). Covered in <a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;52</a>.</li>
+<li><a href="https://github.com/code-yeongyu/oh-my-openagent"><code>oh-my-opencode</code></a> (now <code>oh-my-openagent</code>; about 68,800 stars; release <code>v5.0.0-beta.51</code> on 2026-09-09). Covered in <a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;53</a>.</li>
 <li><a href="https://github.com/kdcokenny/opencode-workspace"><code>opencode-workspace</code></a> <span class="citation" data-cites="opencode_workspace">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">kdcokenny</span> 2026c</a>)</span> (MIT; 586 stars; no tagged release). A one-install bundle of 16 components: four plugins (workspace management, async delegation, notifications, git isolation), two npm plugins, three MCP servers (documentation, web search, code search), four specialist agents (researcher, coder, scribe, reviewer), four skill modules, and one command interface. Its sibling <a href="https://github.com/kdcokenny/opencode-background-agents"><code>opencode-background-agents</code></a> <span class="citation" data-cites="opencode_background_agents">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">kdcokenny</span> 2026b</a>)</span> (MIT; 382 stars) provides <code>delegate()</code>, <code>delegation_read()</code>, and <code>delegation_list()</code> tools whose results persist to disk under <code>~/.local/share/opencode/delegations/</code>, so they survive context compaction; only read-only sub-agents may run in the background, because background sessions sit outside OpenCode’s undo and branching system. <em>Useful to us?</em> Worth a trial as a lighter alternative to Oh My OpenCode; the disk-persisted delegation results address the same loss-on-compaction problem our lab notebook convention exists for.</li>
 <li><a href="https://github.com/vtemian/micode"><code>micode</code></a> (MIT; 483 stars) and <a href="https://github.com/vtemian/octto"><code>octto</code></a> (MIT; 493 stars), from the same author: a brainstorm-plan-implement workflow with session continuity, and a browser UI that turns an agent’s clarifying questions into multi-question forms. <em>Useful to us?</em> Possibly <code>octto</code>, which does for OpenCode what <code>AskUserQuestion</code> does in Claude Code.</li>
-<li><a href="https://github.com/derekbar90/opencode-conductor"><code>opencode-conductor</code></a> (Apache-2.0; 129 stars; last push 2026-03-02) ports the Context, Spec, Plan, Implement lifecycle described in <a href="#/sec-ai-conductor-extension" class="quarto-xref">Section&nbsp;50</a> to OpenCode. <em>Useful to us?</em> Only if that lifecycle is adopted; the port looks dormant.</li>
+<li><a href="https://github.com/derekbar90/opencode-conductor"><code>opencode-conductor</code></a> (Apache-2.0; 129 stars; last push 2026-03-02) ports the Context, Spec, Plan, Implement lifecycle described in <a href="#/sec-ai-conductor-extension" class="quarto-xref">Section&nbsp;51</a> to OpenCode. <em>Useful to us?</em> Only if that lifecycle is adopted; the port looks dormant.</li>
 <li><a href="https://github.com/backnotprop/plannotator"><code>plannotator</code></a> (Apache-2.0; about 8,600 stars; release <code>v0.27.12</code> on 2026-09-03) is a visual plan-and-diff annotation tool with an OpenCode plugin; it is agent-agnostic and also targets Claude Code. <em>Useful to us?</em> Yes, for reviewing agent plans before implementation; it addresses the plan-review step directly.</li>
 <li><a href="https://github.com/willytop8/OpenCode-goal-plugin"><code>opencode-goal-plugin</code></a> (MIT; 252 stars; release <code>v0.10.0</code> on 2026-09-07) adds a session-scoped <code>/goal</code> that keeps an objective in context and auto-continues until “evidence-gated completion”. <em>Useful to us?</em> Maybe, for unattended ARDI-style loops.</li>
 </ul>
@@ -5144,11 +5307,11 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <ul>
 <li><a href="https://github.com/NeuralNomadsAI/CodeNomad"><code>CodeNomad</code></a> <span class="citation" data-cites="codenomad">(<a href="#/references" role="doc-biblioref" onclick="">Neural Nomads AI 2026</a>)</span> (Neural Nomads AI; MIT; about 2,600 stars; release <code>v0.19.0</code> on 2026-08-24; pushed 2026-09-09). Describes itself as “The AI Coding Cockpit for OpenCode”: a SolidJS front end with a Node.js server that wraps an OpenCode CLI already on your <code>PATH</code>. It ships as Electron and Tauri desktop builds for macOS, Windows (x64 and ARM64), and Linux, and as a password-protected local web server (<code>npx @neuralnomads/codenomad --password &lt;password&gt; --launch</code>) for remote or browser access. Features include multi-instance workspaces, session management, git worktrees, voice input, a file browser, a command palette, and “SideCars” that embed local web tools as tabs. Despite the ecosystem page’s “Desktop, Web, Mobile and Remote” description, the README documents no native mobile app; mobile access is through the web server. <em>Useful to us?</em> Yes, as the most complete graphical front end for OpenCode and a plausible answer to “I want several OpenCode sessions side by side without <code>tmux</code>”.</li>
 <li><a href="https://github.com/openchamber/openchamber"><code>OpenChamber</code></a> <span class="citation" data-cites="openchamber">(<a href="#/references" role="doc-biblioref" onclick="">OpenChamber 2026</a>)</span> (now under its own organization; MIT; about 9,700 stars; release <code>v1.22.2</code> on 2026-09-05). A workspace for running and reviewing agent work on desktop, web, VS Code, iOS, and Android, with session goals, a “multi-run” mode that runs the same task across up to five models, a guided changes walkthrough for large diffs, scheduled tasks, and an end-to-end encrypted “Private Relay” for remote connections. Like CodeNomad it uses OpenCode as the engine and is not affiliated with the OpenCode team. <em>Useful to us?</em> Yes; the multi-model run is a direct fit for our habit of getting a second model’s review.</li>
-<li><a href="https://github.com/different-ai/openwork"><code>OpenWork</code></a> <span class="citation" data-cites="openwork">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">different-ai</span> 2026</a>)</span> (different-ai; about 23,400 stars; release <code>v0.18.44</code> on 2026-09-09). Positions itself as “an open-source alternative to Claude Cowork and Codex” for macOS, Windows, and Linux, sharing skills, MCP servers, and connected services across tools and machines. Code outside <code>ee/</code> is MIT; the organizational control plane under <code>ee/</code> uses a separate license that is free for up to five users. <em>Useful to us?</em> Compare against the collaborative workspaces in <a href="#/sec-ai-collaborative-workspaces" class="quarto-xref">Section&nbsp;55</a>; the five-user free tier fits a lab, and the open core makes it auditable.</li>
+<li><a href="https://github.com/different-ai/openwork"><code>OpenWork</code></a> <span class="citation" data-cites="openwork">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">different-ai</span> 2026</a>)</span> (different-ai; about 23,400 stars; release <code>v0.18.44</code> on 2026-09-09). Positions itself as “an open-source alternative to Claude Cowork and Codex” for macOS, Windows, and Linux, sharing skills, MCP servers, and connected services across tools and machines. Code outside <code>ee/</code> is MIT; the organizational control plane under <code>ee/</code> uses a separate license that is free for up to five users. <em>Useful to us?</em> Compare against the collaborative workspaces in <a href="#/sec-ai-collaborative-workspaces" class="quarto-xref">Section&nbsp;56</a>; the five-user free tier fits a lab, and the open core makes it auditable.</li>
 <li><a href="https://github.com/nickjvandyke/opencode.nvim"><code>opencode.nvim</code></a> <span class="citation" data-cites="opencode_nvim">(<a href="#/references" role="doc-biblioref" onclick="">Dyke 2026</a>)</span> (Nick van Dyke; MIT; about 3,800 stars; release <code>v1.0.0</code> on 2026-08-20) connects Neovim to a running OpenCode server (<code>opencode --port</code>), injects editor context (cursor, selection, diagnostics) into prompts, surfaces OpenCode’s server-sent events as Neovim autocommands, and reloads buffers when the agent edits files. A second, unrelated <a href="https://github.com/sudo-tee/opencode.nvim"><code>sudo-tee/opencode.nvim</code></a> (Apache-2.0; 937 stars) is a full Neovim front end rather than a bridge. <em>Useful to us?</em> For the Neovim users in the lab, yes.</li>
 <li><a href="https://github.com/remorses/kimaki"><code>kimaki</code></a> <span class="citation" data-cites="kimaki">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">remorses</span> 2026</a>)</span> (MIT; about 1,400 stars; release <code>kimaki@0.27.0</code> on 2026-09-01). A Discord bot in which each project is a channel and each session a thread; it queues messages, forks sessions, transcribes voice messages, shows diffs, and maps Discord roles to permission controls. <em>Useful to us?</em> No for now; our coordination runs through GitHub, not Discord.</li>
 <li><a href="https://github.com/hosenur/portal"><code>portal</code></a> <span class="citation" data-cites="opencode_portal">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">hosenur</span> 2026</a>)</span> (MIT; 798 stars; last push 2026-05-12) is a mobile-first web UI meant to be reached over Tailscale. <a href="https://github.com/mtymek/opencode-obsidian"><code>OpenCode-Obsidian</code></a> (MIT; about 1,100 stars) embeds OpenCode in Obsidian’s sidebar. <em>Useful to us?</em> Niche; CodeNomad and OpenChamber cover the remote-access case with more activity.</li>
-<li><a href="https://github.com/kdcokenny/ocx"><code>ocx</code></a> <span class="citation" data-cites="ocx">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">kdcokenny</span> 2026a</a>)</span> (MIT; 942 stars; release <code>v2.0.15</code> on 2026-08-17). An extension manager with portable, isolated profiles: <code>ocx profile add</code> installs a profile from a registry, <code>ocx oc -p &lt;name&gt;</code> launches OpenCode with it, and components are copied into <code>.opencode/</code> (the shadcn model) rather than hidden in dependencies, with SHA verification of what is installed. <em>Useful to us?</em> Yes, if we standardize an OpenCode profile for the lab; it is the closest thing to the plugin marketplace we use for Claude Code (<a href="#/sec-ai-plugins-deep-dive" class="quarto-xref">Section&nbsp;51</a>).</li>
+<li><a href="https://github.com/kdcokenny/ocx"><code>ocx</code></a> <span class="citation" data-cites="ocx">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">kdcokenny</span> 2026a</a>)</span> (MIT; 942 stars; release <code>v2.0.15</code> on 2026-08-17). An extension manager with portable, isolated profiles: <code>ocx profile add</code> installs a profile from a registry, <code>ocx oc -p &lt;name&gt;</code> launches OpenCode with it, and components are copied into <code>.opencode/</code> (the shadcn model) rather than hidden in dependencies, with SHA verification of what is installed. <em>Useful to us?</em> Yes, if we standardize an OpenCode profile for the lab; it is the closest thing to the plugin marketplace we use for Claude Code (<a href="#/sec-ai-plugins-deep-dive" class="quarto-xref">Section&nbsp;52</a>).</li>
 <li><a href="https://github.com/ben-vargas/ai-sdk-provider-opencode-sdk"><code>ai-sdk-provider-opencode-sdk</code></a> (MIT; 116 stars) exposes OpenCode’s configured providers to the Vercel AI SDK, and <a href="https://github.com/zenobi-us/opencode-plugin-template"><code>opencode-plugin-template</code></a> (archived) was the scaffold for writing plugins. <em>Useful to us?</em> Only when building on the SDK.</li>
 </ul>
 <h4 id="agent-bundles">Agent bundles</h4>
@@ -5156,7 +5319,7 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <li><a href="https://github.com/darrenhinde/OpenAgentsControl"><code>OpenAgentsControl</code></a> (listed as <code>opencode-agents</code>; MIT; about 4,800 stars; release <code>v0.7.1</code> on 2026-01-30) is a plan-first framework with approval-gated execution and built-in test, review, and validation steps.</li>
 <li><a href="https://github.com/Cluster444/agentic"><code>agentic</code></a> (MIT; 638 stars; last push 2025-09-02) is a context-engineering toolkit that appears dormant.</li>
 </ul>
-<p><em>Useful to us?</em> <code>OpenAgentsControl</code> overlaps heavily with Oh My OpenCode (<a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;52</a>) and <code>opencode-workspace</code>; pick one such harness rather than layering them.</p>
+<p><em>Useful to us?</em> <code>OpenAgentsControl</code> overlaps heavily with Oh My OpenCode (<a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;53</a>) and <code>opencode-workspace</code>; pick one such harness rather than layering them.</p>
 <h4 id="opencode-zen-and-opencode-go">OpenCode Zen and OpenCode Go</h4>
 <p>The ecosystem page does not describe them, but two first-party paid services sit alongside the community projects:</p>
 <ul>
@@ -5186,7 +5349,7 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </tr>
 <tr class="even">
 <td>Multi-agent orchestration</td>
-<td>Oh My OpenCode (<a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;52</a>)</td>
+<td>Oh My OpenCode (<a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;53</a>)</td>
 <td><code>opencode-workspace</code>, <code>OpenAgentsControl</code></td>
 </tr>
 <tr class="odd">
@@ -5219,8 +5382,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <p>Skip the subscription-bridge plugins.</p>
 </section></section>
 <section>
-<section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="54">
-<h1><span class="header-section-number">54</span> Managing Gemini API Spend and Cost Optimization</h1>
+<section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="55">
+<h1><span class="header-section-number">55</span> Managing Gemini API Spend and Cost Optimization</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -5263,8 +5426,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </ul>
 </section></section>
 <section>
-<section id="sec-ai-collaborative-workspaces" class="title-slide slide level1 center" data-number="55">
-<h1><span class="header-section-number">55</span> Collaborative AI Workspaces: Claude Cowork and Gemini Spark</h1>
+<section id="sec-ai-collaborative-workspaces" class="title-slide slide level1 center" data-number="56">
+<h1><span class="header-section-number">56</span> Collaborative AI Workspaces: Claude Cowork and Gemini Spark</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -5290,7 +5453,7 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <p>Similar collaborative workspace paradigms have emerged across other frontier ecosystems:</p>
 <ul>
 <li><strong>ChatGPT Work and OpenAI Canvas</strong>: <a href="https://learn.chatgpt.com/docs/get-started-with-work">ChatGPT Work</a> <span class="citation" data-cites="chatgpt_work">(<a href="#/references" role="doc-biblioref" onclick="">OpenAI 2026</a>)</span> (see <strong>?@sec-chatgpt-work</strong>) and Canvas provide side-by-side document and code editing with inline line-level revisions, interactive targeted edits, and multi-file artifact tracking.</li>
-<li><strong>Cursor and Google Antigravity Agent Workspaces</strong>: Developer-centric workspace agents providing multi-agent delegation, worktree isolation, and structured planning workflows (such as Conductor extension spec-driven development, <a href="#/sec-ai-conductor-extension" class="quarto-xref">Section&nbsp;50</a>).</li>
+<li><strong>Cursor and Google Antigravity Agent Workspaces</strong>: Developer-centric workspace agents providing multi-agent delegation, worktree isolation, and structured planning workflows (such as Conductor extension spec-driven development, <a href="#/sec-ai-conductor-extension" class="quarto-xref">Section&nbsp;51</a>).</li>
 <li><strong>Notion AI and Microsoft Copilot Studio</strong>: Enterprise knowledge graph agents designed for querying organizational wikis and automating business process workflows.</li>
 </ul>
 <h4 id="comparative-taxonomy-of-workspace-agents">Comparative Taxonomy of Workspace Agents</h4>
@@ -5472,6 +5635,57 @@ Opencode-DCP. 2026. <em>Opencode-Dynamic-Context-Pruning: Optimize Token Usage b
 </div>
 <div id="ref-gsd_core" class="csl-entry" role="listitem">
 <span class="nocase">open-gsd</span>. 2026. <em>GSD Core: Git. Ship. Done.</em> Software. <a href="https://github.com/open-gsd/gsd-core">https://github.com/open-gsd/gsd-core</a>.
+</div>
+<div id="ref-posit_dev_ai_lib" class="csl-entry" role="listitem">
+Posit PBC. 2026a. <em>Ai-Lib: LLM Provider Infrastructure for Posit Assistant</em>. Software. <a href="https://github.com/posit-dev/ai-lib">https://github.com/posit-dev/ai-lib</a>.
+</div>
+<div id="ref-posit_dev_assistant_feedback" class="csl-entry" role="listitem">
+Posit PBC. 2026b. <em>Assistant-Feedback: Repository for Feedback on Posit Assistant</em>. Software. <a href="https://github.com/posit-dev/assistant-feedback">https://github.com/posit-dev/assistant-feedback</a>.
+</div>
+<div id="ref-posit_dev_bluffbench2" class="csl-entry" role="listitem">
+Posit PBC. 2026c. <em>Bluffbench2: A Visual Reasoning LLM Benchmark</em>. Software. <a href="https://github.com/posit-dev/bluffbench2">https://github.com/posit-dev/bluffbench2</a>.
+</div>
+<div id="ref-posit_dev_btw" class="csl-entry" role="listitem">
+Posit PBC. 2026d. <em>Btw: A Complete Toolkit for Connecting r and LLMs</em>. Software. <a href="https://github.com/posit-dev/btw">https://github.com/posit-dev/btw</a>.
+</div>
+<div id="ref-posit_dev_chatlas" class="csl-entry" role="listitem">
+Posit PBC. 2026e. <em>Chatlas: Your Friendly Guide to Building LLM Chat Apps in Python</em>. Software. <a href="https://github.com/posit-dev/chatlas">https://github.com/posit-dev/chatlas</a>.
+</div>
+<div id="ref-posit_dev_code_index" class="csl-entry" role="listitem">
+Posit PBC. 2026f. <em>Code-Index: Semantic Code Search for AI Coding Assistants</em>. Software. <a href="https://github.com/posit-dev/code-index">https://github.com/posit-dev/code-index</a>.
+</div>
+<div id="ref-posit_dev_commons" class="csl-entry" role="listitem">
+Posit PBC. 2026g. <em>Commons: AI Agents for Data Analysis</em>. Software. <a href="https://github.com/posit-dev/commons">https://github.com/posit-dev/commons</a>.
+</div>
+<div id="ref-posit_dev_mcp_repl" class="csl-entry" role="listitem">
+Posit PBC. 2026h. <em>Mcp-Repl: A Persistent, Sandboxed r or Python Session for MCP Agents</em>. Software. <a href="https://github.com/posit-dev/mcp-repl">https://github.com/posit-dev/mcp-repl</a>.
+</div>
+<div id="ref-posit_dev_mcptools" class="csl-entry" role="listitem">
+Posit PBC. 2026i. <em>Mcptools: Model Context Protocol for r</em>. Software. <a href="https://github.com/posit-dev/mcptools">https://github.com/posit-dev/mcptools</a>.
+</div>
+<div id="ref-posit_dev_nesevals" class="csl-entry" role="listitem">
+Posit PBC. 2026j. <em>Nesevals: Evaluate Next Edit Suggestion Scaffolds</em>. Software. <a href="https://github.com/posit-dev/nesevals">https://github.com/posit-dev/nesevals</a>.
+</div>
+<div id="ref-posit_dev_positron" class="csl-entry" role="listitem">
+Posit PBC. 2026k. <em>Positron, a Next-Generation Data Science IDE</em>. Software. <a href="https://github.com/posit-dev/positron">https://github.com/posit-dev/positron</a>.
+</div>
+<div id="ref-posit_dev_positron_copilot_chat" class="csl-entry" role="listitem">
+Posit PBC. 2026l. <em>Positron-Copilot-Chat: Copilot Chat Extension for Positron</em>. Software. <a href="https://github.com/posit-dev/positron-copilot-chat">https://github.com/posit-dev/positron-copilot-chat</a>.
+</div>
+<div id="ref-posit_dev_querychat" class="csl-entry" role="listitem">
+Posit PBC. 2026m. <em>Querychat: Chat with Your Data in r and Python</em>. Software. <a href="https://github.com/posit-dev/querychat">https://github.com/posit-dev/querychat</a>.
+</div>
+<div id="ref-posit_dev_raghilda" class="csl-entry" role="listitem">
+Posit PBC. 2026n. <em>Raghilda: RAG Made Simple</em>. Software. <a href="https://github.com/posit-dev/raghilda">https://github.com/posit-dev/raghilda</a>.
+</div>
+<div id="ref-posit_dev_shiny_assistant" class="csl-entry" role="listitem">
+Posit PBC. 2026o. <em>Shiny-Assistant: Chat Assistant for Shiny</em>. Software. <a href="https://github.com/posit-dev/shiny-assistant">https://github.com/posit-dev/shiny-assistant</a>.
+</div>
+<div id="ref-posit_dev_shinychat" class="csl-entry" role="listitem">
+Posit PBC. 2026p. <em>Shinychat: Chat UI Component for Shiny</em>. Software. <a href="https://github.com/posit-dev/shinychat">https://github.com/posit-dev/shinychat</a>.
+</div>
+<div id="ref-posit_dev_shinyrealtime" class="csl-entry" role="listitem">
+Posit PBC. 2026q. <em>Shinyrealtime: OpenAI Realtime API for Shiny</em>. Software. <a href="https://github.com/posit-dev/shinyrealtime">https://github.com/posit-dev/shinyrealtime</a>.
 </div>
 <div id="ref-kimaki" class="csl-entry" role="listitem">
 <span class="nocase">remorses</span>. 2026. <em>Kimaki: Discord Bot to Control OpenCode Sessions</em>. GitHub repository. <a href="https://github.com/remorses/kimaki">https://github.com/remorses/kimaki</a>.
