@@ -56,7 +56,7 @@ not a mode inside the editor.
 The lab already built this once.
 `Morrison-Lab/ai-config` carries an `agy-review-workflow` skill
 and a reusable `antigravity-code-review.yml` workflow in `Morrison-Lab/gha`
-that posted an Antigravity review, security audit, and generated tests on every pull request.
+that posted a review, a security audit, and a set of generated tests on every pull request.
 That route ran on prepaid API credits,
 and it was retired on 2026-08-20 after a dispatched run ended with the credits depleted;
 the skill now documents itself as history and points cross-vendor second opinions at Codex instead
@@ -65,7 +65,11 @@ the skill now documents itself as history and points cross-vendor second opinion
 The Antigravity command-line program, `agy`, is a separate lane and still works.
 Its headless form, `agy --print "<prompt>"`,
 answers a single prompt on standard output under the subscription's own quota
-(measured 2026-09-09; the prompt must be the token immediately after `--print`).
+(measured 2026-09-09).
+Quote the prompt so the shell passes it as one argument,
+and put it directly after `--print`:
+on this machine, placing another flag between the two
+made `agy` treat that flag as the prompt.
 The lab uses it as a local adversarial reviewer before a push:
 pipe the branch diff into a prompt that asks for factual errors, unsupported claims,
 broken cross-references, and style violations,
