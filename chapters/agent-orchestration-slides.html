@@ -261,11 +261,11 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-09-10 16:15:18 (PDT)</p>
+  <p class="date">Last modified: 2026-09-10 16:29:57 (PDT)</p>
 </section>
 <section class="slide level2">
 
-<p>A single coding agent works one problem at a time. <em>Orchestration</em> is the step up from that: running several agents at once and coordinating their work. This chapter explains when orchestration is worth the added cost, describes what our lab already uses for it, and evaluates three outside “agent orchestrator” projects that lab members have asked about.</p>
+<p>A single coding agent works one problem at a time. <em>Orchestration</em> is the step up from that: running several agents at once and coordinating their work. This chapter explains when orchestration is worth the added cost, describes what our lab already uses for it, evaluates three outside “agent orchestrator” projects that lab members have asked about, and surveys the general-purpose orchestration frameworks a lab could build its own agent systems on.</p>
 <div class="callout callout-warning callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -382,8 +382,162 @@
 </div>
 </section></section>
 <section>
-<section id="sec-orch-comparison" class="title-slide slide level1 center" data-number="6">
-<h1><span class="header-section-number">6</span> Comparison</h1>
+<section id="sec-orch-frameworks" class="title-slide slide level1 center" data-number="6">
+<h1><span class="header-section-number">6</span> Agent Orchestration Frameworks</h1>
+
+</section>
+<section class="slide level2">
+
+<p>The three projects above are finished tools. The projects in this section are <em>frameworks</em>: software libraries for building your own multi-agent system from agents, tools, and a control flow that you write in code. They matter to us for a different reason. Nobody in the lab is asking to run <code>AutoGen</code>; the question is whether any of these libraries would let us build something our Claude Code stack cannot.</p>
+<p>Every framework below shares one property worth stating up front. Each is a Python (or TypeScript, or .NET) library for writing an <em>application</em> that calls model APIs directly. Our workflow instead orchestrates a coding agent from the outside, through Claude Code’s subagents, <code>Workflow</code> fan-out, hooks, and Git worktrees, and our research code is in R and Quarto. None of these frameworks has an R interface, so adopting one would add a Python application layer between us and the models, and that layer would need its own maintenance. That cost is the yardstick for every verdict here.</p>
+<p>Star counts, release versions, and dates in this section were read from the GitHub API on 2026-09-09 and will drift.</p>
+</section>
+<section id="sec-orch-autogen" class="slide level2" data-number="6.1">
+<h2><span class="header-section-number">6.1</span> Microsoft AutoGen</h2>
+</section>
+<section class="slide level2">
+
+<p><a href="https://microsoft.github.io/autogen/stable/">AutoGen</a> <span class="citation" data-cites="autogen_docs">(<a href="#/references" role="doc-biblioref" onclick="">Microsoft 2026b</a>)</span> is Microsoft’s original multi-agent framework, and the one issue #101 named first. Its current design is layered:</p>
+<ul>
+<li><code>Core</code>: an event-driven, actor-style runtime for message-passing agents.</li>
+<li><code>AgentChat</code>: the high-level API most users see, where agents are grouped into <em>teams</em> (round-robin group chats, model-selected speakers, swarm-style handoff) that pass a task around until a termination condition fires <span class="citation" data-cites="autogen_teams">(<a href="#/references" role="doc-biblioref" onclick="">Microsoft 2026a</a>)</span>.</li>
+<li><code>Extensions</code>: model clients and tools for outside services.</li>
+<li><code>Studio</code>: a no-code web interface built on <code>AgentChat</code>.</li>
+</ul>
+<p>It is Python-first (Python 3.10 or later), with a .NET port. The code is under the <strong>MIT</strong> license and the documentation under CC-BY-4.0 <span class="citation" data-cites="autogen_repo">(<a href="#/references" role="doc-biblioref" onclick="">Microsoft 2026c</a>)</span>.</p>
+<p>The decisive fact is on its own README (measured 2026-09-09): AutoGen is in <strong>maintenance mode</strong>. It “will not receive new features or enhancements and is community managed going forward,” and new users are directed to the Microsoft Agent Framework below. The last release was <code>python-v0.7.5</code> on 2025-09-30, and the repository’s last push was in April 2026, even though it still carries about 60,900 stars <span class="citation" data-cites="autogen_repo">(<a href="#/references" role="doc-biblioref" onclick="">Microsoft 2026c</a>)</span>.</p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Useful to us? No</strong></p>
+</div>
+<div class="callout-content">
+<p>AutoGen is the best-known name on this list and is no longer where its own authors want new work to go. Its group-chat orchestration is what our subagents and <code>Workflow</code> fan-out already give us, without a Python application to maintain. If any Microsoft framework is worth watching, it is the successor.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-orch-maf" class="slide level2" data-number="6.2">
+<h2><span class="header-section-number">6.2</span> Microsoft Agent Framework</h2>
+</section>
+<section class="slide level2">
+
+<p>The <a href="https://github.com/microsoft/agent-framework">Microsoft Agent Framework</a> <span class="citation" data-cites="microsoft_agent_framework">(<a href="#/references" role="doc-biblioref" onclick="">Microsoft 2026d</a>)</span> merges AutoGen with Semantic Kernel, Microsoft’s earlier .NET-first library, into one production-oriented framework for Python and .NET, with a separate Go SDK. Orchestration is expressed as <strong>graph-based workflows</strong> with built-in sequential, concurrent, handoff, and group-collaboration patterns, plus checkpoints, streaming, human-in-the-loop steps, and <code>OpenTelemetry</code> tracing. Agents can also be declared in YAML. It is under the <strong>MIT</strong> license, has about 13,400 stars, and released <code>python-1.17.0</code> on 2026-09-03 (measured 2026-09-09).</p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Useful to us? Not now</strong></p>
+</div>
+<div class="callout-content">
+<p>It is the framework to name if someone asks “what replaced AutoGen?”, and its workflow patterns are a clean catalog of the orchestration shapes that also appear in our <code>Workflow</code> tool. But its hosting story centers on Microsoft Foundry and Azure, which we do not use, and the general Python-layer cost applies.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-orch-langgraph" class="slide level2" data-number="6.3">
+<h2><span class="header-section-number">6.3</span> LangGraph</h2>
+</section>
+<section class="slide level2">
+
+<p><a href="https://docs.langchain.com/oss/python/langgraph/overview">LangGraph</a> <span class="citation" data-cites="langgraph_docs">(<a href="#/references" role="doc-biblioref" onclick="">LangChain 2026b</a>)</span> is LangChain Inc.’s “low-level orchestration framework and runtime for building, managing, and deploying long-running, stateful agents.” Orchestration is a <strong>graph</strong>: you write nodes (a model call, a tool, or plain deterministic code), connect them with edges, including conditional ones, and share a typed state object between them. The runtime adds checkpoints, so a run can be paused, resumed, or replayed, interrupts for human-in-the-loop approval, and durable execution for long tasks. It is available in Python and JavaScript, can be used without the wider LangChain library, and integrates with LangSmith for tracing and hosted deployment <span class="citation" data-cites="langgraph_repo">(<a href="#/references" role="doc-biblioref" onclick="">LangChain 2026a</a>)</span>. The code is under the <strong>MIT</strong> license, has about 41,300 stars, and releases are tagged per package (the most recent, <code>sdk==0.4.4</code>, on 2026-08-27; measured 2026-09-09).</p>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Useful to us? Worth knowing, not adopting</strong></p>
+</div>
+<div class="callout-content">
+<p>LangGraph is the most general and least opinionated framework here, and its checkpoint-and-resume model is the right design for a long analysis pipeline that must survive interruption. That is the one case where a lab member might reach for it: a durable, multi-step Python pipeline with human sign-off in the middle. For coordinating coding agents on a repository, which is what we actually do, it duplicates what Claude Code and the <code>Workflow</code> tool already provide.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-orch-crewai" class="slide level2" data-number="6.4">
+<h2><span class="header-section-number">6.4</span> CrewAI</h2>
+</section>
+<section class="slide level2">
+
+<p><a href="https://docs.crewai.com/en/introduction">CrewAI</a> <span class="citation" data-cites="crewai_docs">(<a href="#/references" role="doc-biblioref" onclick="">CrewAI 2026b</a>)</span> organizes agents by <strong>role</strong>. A <em>crew</em> is a set of agents, each with a role, goal, and tools, working through a list of tasks either sequentially or under a manager agent (the hierarchical process), delegating to each other as they see fit <span class="citation" data-cites="crewai_repo">(<a href="#/references" role="doc-biblioref" onclick="">CrewAI 2026a</a>)</span>. A <em>flow</em> is the newer, event-driven layer that manages state and decides when to run which crew. It is Python-only, under the <strong>MIT</strong> license, has about 58,300 stars, and released version <code>1.15.20</code> on 2026-09-04 (measured 2026-09-09). The open-source library sits under a commercial platform for deploying and monitoring crews.</p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Useful to us? No</strong></p>
+</div>
+<div class="callout-content">
+<p>The role-playing metaphor is easy to start with and is the same thing our subagent definitions do (a reviewer role, a search role, a verification role), with less control over what each agent may touch. Nothing here is missing from our stack.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-orch-openai-agents" class="slide level2" data-number="6.5">
+<h2><span class="header-section-number">6.5</span> OpenAI Agents SDK</h2>
+</section>
+<section class="slide level2">
+
+<p>The <a href="https://github.com/openai/openai-agents-python">OpenAI Agents SDK</a> <span class="citation" data-cites="openai_agents_sdk">(<a href="#/references" role="doc-biblioref" onclick="">OpenAI 2026</a>)</span> is a deliberately small framework built around a few primitives: agents, <strong>handoff</strong> between agents, agents used as tools, guardrails on input and output, sessions for conversation history, human-in-the-loop hooks, and tracing. Newer additions include sandbox agents that work inside a container over long tasks. Despite the name, it is provider-agnostic and works with any Chat Completions-compatible model and “100+ other LLMs”. It is Python (3.10 or later), with a separate TypeScript package, under the <strong>MIT</strong> license, with about 29,300 stars and version <code>v0.22.2</code> released on 2026-09-09 (measured the same day).</p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Useful to us? No</strong></p>
+</div>
+<div class="callout-content">
+<p>This is the OpenAI-side counterpart to Anthropic’s Claude Agent SDK, and it would matter only if we built automation around Codex rather than Claude Code. Its handoff and guardrail design is worth reading as a reference, since it is the simplest statement of those ideas on this list.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-orch-adk" class="slide level2" data-number="6.6">
+<h2><span class="header-section-number">6.6</span> Google Agent Development Kit</h2>
+</section>
+<section class="slide level2">
+
+<p>Google’s <a href="https://github.com/google/adk-python">Agent Development Kit</a> <span class="citation" data-cites="google_adk">(<a href="#/references" role="doc-biblioref" onclick="">Google 2026</a>)</span> (ADK) is a “code-first Python framework for building, evaluating, and deploying” agents. Version 2.0 expresses orchestration two ways: a graph-based <strong>workflow runtime</strong> (routing, fan-out and fan-in, loops, retries, nested workflows, human-in-the-loop) and a <strong>task API</strong> for structured delegation between agents arranged in hierarchies. It is optimized for Gemini but model-agnostic, ships ports for Java, Kotlin, Go, and TypeScript, and deploys to Cloud Run or Vertex AI Agent Engine. It is under the <strong>Apache-2.0</strong> license, has about 21,500 stars, and released <code>v2.8.0</code> on 2026-08-26 on a roughly two-week cadence (measured 2026-09-09).</p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Useful to us? No</strong></p>
+</div>
+<div class="callout-content">
+<p>ADK is the most complete of the vendor frameworks on paper, and the least relevant to us in practice: its strengths are Gemini and Google Cloud deployment, neither of which we use.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-orch-others" class="slide level2" data-number="6.7">
+<h2><span class="header-section-number">6.7</span> Others</h2>
+</section>
+<section class="slide level2">
+
+<p>Several more frameworks come up in the same conversations. None changes the verdicts above, so they get one line each (stars and dates measured 2026-09-09):</p>
+<ul>
+<li><a href="https://github.com/FoundationAgents/MetaGPT"><code>MetaGPT</code></a> <span class="citation" data-cites="metagpt">(<a href="#/references" role="doc-biblioref" onclick="">FoundationAgents 2026</a>)</span>: the most-starred project on this list (about 70,300), simulating a software company of role agents; MIT, Python, but its last release was <code>v0.8.1</code> in April 2024 and its last push was January 2026.</li>
+<li><a href="https://github.com/run-llama/llama_index"><code>LlamaIndex</code></a> <span class="citation" data-cites="llama_index">(<a href="#/references" role="doc-biblioref" onclick="">LlamaIndex 2026</a>)</span>: document-centric agents and event-driven workflows; MIT, Python, about 52,100 stars, actively released.</li>
+<li><a href="https://github.com/huggingface/smolagents"><code>smolagents</code></a> <span class="citation" data-cites="smolagents">(<a href="#/references" role="doc-biblioref" onclick="">Hugging Face 2026</a>)</span>: Hugging Face’s minimal library for agents that act by writing code; Apache-2.0, Python, about 29,300 stars.</li>
+<li><a href="https://github.com/pydantic/pydantic-ai"><code>Pydantic AI</code></a> <span class="citation" data-cites="pydantic_ai">(<a href="#/references" role="doc-biblioref" onclick="">Pydantic 2026</a>)</span>: typed, single-agent-first design from the <code>Pydantic</code> team; MIT, Python, about 19,800 stars, released daily.</li>
+<li><a href="https://github.com/camel-ai/camel"><code>CAMEL</code></a> <span class="citation" data-cites="camel_ai">(<a href="#/references" role="doc-biblioref" onclick="">CAMEL-AI 2026</a>)</span>: a research-oriented multi-agent framework; Apache-2.0, Python, about 17,700 stars.</li>
+<li><code>VoltAgent</code>: a TypeScript framework, tracked separately in issue #45 of this site’s repository.</li>
+</ul>
+</section></section>
+<section>
+<section id="sec-orch-comparison" class="title-slide slide level1 center" data-number="7">
+<h1><span class="header-section-number">7</span> Comparison</h1>
 
 </section>
 <section class="slide level2">
@@ -465,19 +619,21 @@
 </tr>
 </tbody>
 </table>
+<p>The frameworks in <a href="#/sec-orch-frameworks" class="quarto-xref">Section&nbsp;6</a> do not fit this table, because they are libraries rather than tools: each would be a column only after we had built something with it. Measured against the same “Relevance to us” row, they land together at “reference only”, with LangGraph the one to read first if a durable Python pipeline with human sign-off ever becomes a lab need.</p>
 </section></section>
 <section>
-<section id="sec-orch-recommendation" class="title-slide slide level1 center" data-number="7">
-<h1><span class="header-section-number">7</span> Recommendation</h1>
+<section id="sec-orch-recommendation" class="title-slide slide level1 center" data-number="8">
+<h1><span class="header-section-number">8</span> Recommendation</h1>
 
 </section>
 <section class="slide level2">
 
-<p>For the lab, as of August 2026:</p>
+<p>For the lab, as of September 2026:</p>
 <ul>
-<li><strong>Try Agent Teams</strong> on a research or review task where parallel, arguing agents would beat one agent working alone. It is native to our tooling and the cheapest to experiment with, as long as the token cost is watched.</li>
-<li><strong>Evaluate Inflexa</strong> on a real dataset. It is the most domain-aligned option and openly licensed, and even if we do not adopt it, its provenance-and-sandbox design informs our own reproducibility work.</li>
-<li><strong>Pass on TORQCLAW</strong> for adoption. It is unlicensed, off-domain, and centered on governance we already have.</li>
+<li><p><strong>Try Agent Teams</strong> on a research or review task where parallel, arguing agents would beat one agent working alone. It is native to our tooling and the cheapest to experiment with, as long as the token cost is watched.</p></li>
+<li><p><strong>Evaluate Inflexa</strong> on a real dataset. It is the most domain-aligned option and openly licensed, and even if we do not adopt it, its provenance-and-sandbox design informs our own reproducibility work.</p></li>
+<li><p><strong>Pass on TORQCLAW</strong> for adoption. It is unlicensed, off-domain, and centered on governance we already have.</p></li>
+<li><p><strong>Build nothing on the orchestration frameworks</strong> in <a href="#/sec-orch-frameworks" class="quarto-xref">Section&nbsp;6</a> until a concrete need appears that Claude Code cannot meet; read the LangGraph documentation as the reference design if one does.</p></li>
 </ul>
 <p>None of these replaces our current Claude Code and <code>ai-config</code> practice. Agent Teams extends it, Inflexa is a candidate research tool alongside it, and TORQCLAW is, for now, only a reference.</p>
 </section></section>
@@ -492,11 +648,56 @@
 <div id="ref-claude_agent_teams" class="csl-entry" role="listitem">
 Anthropic. 2026. <em>Orchestrate Teams of Claude Code Sessions</em>. Documentation. <a href="https://code.claude.com/docs/en/agent-teams">https://code.claude.com/docs/en/agent-teams</a>.
 </div>
+<div id="ref-camel_ai" class="csl-entry" role="listitem">
+CAMEL-AI. 2026. <em>CAMEL: Finding the Scaling Laws of Agents</em>. Software. <a href="https://github.com/camel-ai/camel">https://github.com/camel-ai/camel</a>.
+</div>
+<div id="ref-crewai_repo" class="csl-entry" role="listitem">
+CrewAI. 2026a. <em>CrewAI</em>. Software. <a href="https://github.com/crewAIInc/crewAI">https://github.com/crewAIInc/crewAI</a>.
+</div>
+<div id="ref-crewai_docs" class="csl-entry" role="listitem">
+CrewAI. 2026b. <em>CrewAI Introduction</em>. Documentation. <a href="https://docs.crewai.com/en/introduction">https://docs.crewai.com/en/introduction</a>.
+</div>
+<div id="ref-metagpt" class="csl-entry" role="listitem">
+FoundationAgents. 2026. <em>MetaGPT: The Multi-Agent Framework</em>. Software. <a href="https://github.com/FoundationAgents/MetaGPT">https://github.com/FoundationAgents/MetaGPT</a>.
+</div>
+<div id="ref-google_adk" class="csl-entry" role="listitem">
+Google. 2026. <em>Agent Development Kit (ADK) for Python</em>. Software. <a href="https://github.com/google/adk-python">https://github.com/google/adk-python</a>.
+</div>
+<div id="ref-smolagents" class="csl-entry" role="listitem">
+Hugging Face. 2026. <em>Smolagents</em>. Software. <a href="https://github.com/huggingface/smolagents">https://github.com/huggingface/smolagents</a>.
+</div>
 <div id="ref-inflexa" class="csl-entry" role="listitem">
 Inflexa. 2026. <em>Inflexa: The Open-Source Orchestrator for Computational Biology</em>. Software. <a href="https://github.com/inflexa-ai/inflexa">https://github.com/inflexa-ai/inflexa</a>.
 </div>
+<div id="ref-langgraph_repo" class="csl-entry" role="listitem">
+LangChain. 2026a. <em>LangGraph</em>. Software. <a href="https://github.com/langchain-ai/langgraph">https://github.com/langchain-ai/langgraph</a>.
+</div>
+<div id="ref-langgraph_docs" class="csl-entry" role="listitem">
+LangChain. 2026b. <em>LangGraph Overview</em>. Documentation. <a href="https://docs.langchain.com/oss/python/langgraph/overview">https://docs.langchain.com/oss/python/langgraph/overview</a>.
+</div>
+<div id="ref-llama_index" class="csl-entry" role="listitem">
+LlamaIndex. 2026. <em>LlamaIndex</em>. Software. <a href="https://github.com/run-llama/llama_index">https://github.com/run-llama/llama_index</a>.
+</div>
+<div id="ref-autogen_teams" class="csl-entry" role="listitem">
+Microsoft. 2026a. <em>AutoGen AgentChat Tutorial: Teams</em>. Documentation. <a href="https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/tutorial/teams.html">https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/tutorial/teams.html</a>.
+</div>
+<div id="ref-autogen_docs" class="csl-entry" role="listitem">
+Microsoft. 2026b. <em>AutoGen Documentation</em>. Documentation. <a href="https://microsoft.github.io/autogen/stable/">https://microsoft.github.io/autogen/stable/</a>.
+</div>
+<div id="ref-autogen_repo" class="csl-entry" role="listitem">
+Microsoft. 2026c. <em>AutoGen: A Framework for Building AI Agents and Applications</em>. Software. <a href="https://github.com/microsoft/autogen">https://github.com/microsoft/autogen</a>.
+</div>
+<div id="ref-microsoft_agent_framework" class="csl-entry" role="listitem">
+Microsoft. 2026d. <em>Microsoft Agent Framework</em>. Software. <a href="https://github.com/microsoft/agent-framework">https://github.com/microsoft/agent-framework</a>.
+</div>
+<div id="ref-openai_agents_sdk" class="csl-entry" role="listitem">
+OpenAI. 2026. <em>OpenAI Agents SDK</em>. Software. <a href="https://github.com/openai/openai-agents-python">https://github.com/openai/openai-agents-python</a>.
+</div>
 <div id="ref-torqclaw" class="csl-entry" role="listitem">
 <span class="nocase">pilotwaffle</span>. 2026. <em>TORQCLAW: A Governed Local and Cloud AI-Agent Control Plane</em>. Software. <a href="https://github.com/pilotwaffle/TORQCLAW">https://github.com/pilotwaffle/TORQCLAW</a>.
+</div>
+<div id="ref-pydantic_ai" class="csl-entry" role="listitem">
+Pydantic. 2026. <em>Pydantic AI</em>. Software. <a href="https://github.com/pydantic/pydantic-ai">https://github.com/pydantic/pydantic-ai</a>.
 </div>
 </div>
 
