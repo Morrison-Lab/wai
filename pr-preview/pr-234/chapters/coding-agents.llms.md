@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-10 00:16:13 (PDT)
+Last modified: 2026-09-10 00:46:22 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3046,9 +3046,9 @@ Google’s own example is a GitHub Actions workflow that runs an Antigravity age
 
 #### What the lab does
 
-The lab already built this once. `Morrison-Lab/ai-config` carries an `agy-review-workflow` skill and a reusable `antigravity-code-review.yml` workflow in `Morrison-Lab/gha` that posted an Antigravity review, security audit, and generated tests on every pull request. That route ran on prepaid API credits, and it was retired on 2026-08-20 after a dispatched run ended with the credits depleted; the skill now documents itself as history and points cross-vendor second opinions at Codex instead (see [Section 34](#sec-ai-codex-github-review)).
+The lab already built this once. `Morrison-Lab/ai-config` carries an `agy-review-workflow` skill and a reusable `antigravity-code-review.yml` workflow in `Morrison-Lab/gha` that posted a review, a security audit, and a set of generated tests on every pull request. That route ran on prepaid API credits, and it was retired on 2026-08-20 after a dispatched run ended with the credits depleted; the skill now documents itself as history and points cross-vendor second opinions at Codex instead (see [Section 34](#sec-ai-codex-github-review)).
 
-The Antigravity command-line program, `agy`, is a separate lane and still works. Its headless form, `agy --print "<prompt>"`, answers a single prompt on standard output under the subscription’s own quota (measured 2026-09-09; the prompt must be the token immediately after `--print`). The lab uses it as a local adversarial reviewer before a push: pipe the branch diff into a prompt that asks for factual errors, unsupported claims, broken cross-references, and style violations, and ends with a one-word verdict. Because `agy --print` cannot read files or the network in that mode, the diff has to be pasted into the prompt text itself. That is a pre-push check, not a PR bot, so the PR-side review stays with the Claude and Copilot reviewers the repositories already run.
+The Antigravity command-line program, `agy`, is a separate lane and still works. Its headless form, `agy --print "<prompt>"`, answers a single prompt on standard output under the subscription’s own quota (measured 2026-09-09). Quote the prompt so the shell passes it as one argument, and put it directly after `--print`: on this machine, placing another flag between the two made `agy` treat that flag as the prompt. The lab uses it as a local adversarial reviewer before a push: pipe the branch diff into a prompt that asks for factual errors, unsupported claims, broken cross-references, and style violations, and ends with a one-word verdict. Because `agy --print` cannot read files or the network in that mode, the diff has to be pasted into the prompt text itself. That is a pre-push check, not a PR bot, so the PR-side review stays with the Claude and Copilot reviewers the repositories already run.
 
 #### Useful to us? Yes, as a local second opinion
 
