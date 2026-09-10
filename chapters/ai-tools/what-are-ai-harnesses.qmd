@@ -66,4 +66,4 @@ share a similar set of layers:
   fetched web pages,
   and other tool output can contain text that looks like a command;
   a harness that acts on it uncritically is vulnerable to
-  [prompt injection](https://owasp.org/www-project-top-10-for-large-language-model-applications/).
+  [prompt injection](https://genai.owasp.org/llm-top-10/).
