@@ -69,12 +69,24 @@ How it works, per the README:
   a short summary per file,
   grouped into a few dozen Markdown "nodes" (one per subsystem or concept)
   with typed links between them and a "crux" excerpt of the lines that carry the logic.
-  The model runs under your own key
-  through OpenAI, Anthropic, OpenRouter, a LiteLLM proxy, or a local server.
+  The model runs under your own key through one of:
+
+  - OpenAI
+  - Anthropic
+  - OpenRouter
+  - a LiteLLM proxy
+  - a local server
 - `graft init` wires the graph into an agent.
-  For Claude Code it writes a skill file, hooks, and a status line;
-  for Codex, OpenCode, Gemini CLI, Copilot, Cursor, and others
-  it adds a fenced section to `AGENTS.md`, `GEMINI.md`, or `.github/copilot-instructions.md`.
+  For Claude Code it writes a skill file, hooks, and a status line.
+  For the other hosts it adds a fenced section to `AGENTS.md`, `GEMINI.md`, or `.github/copilot-instructions.md`:
+
+  - Codex
+  - OpenCode
+  - Gemini CLI
+  - Copilot
+  - Cursor
+  - others that read those files
+
   It also registers an MCP server exposing six tools
   (find code, file API, trace callers, regex search, repo map, freshness check).
 - The graph is a git-ignored local cache, rebuilt incrementally and refreshed before each query;
