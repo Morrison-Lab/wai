@@ -78,7 +78,7 @@ The Windsurf editor is a naming trap of the same kind:
 `windsurf.com` now redirects to Devin Desktop,
 Cognition's rebranding of that editor (measured 2026-09-09; see @sec-ai-harness-landscape).
 
-For licensing, token-cost character, and a decision table for choosing among these tools,
+For licensing, token-cost characteristics, and a decision table for choosing among these tools,
 see @sec-ai-harness-landscape;
 for the open-weight and fully local end of the spectrum,
 see @sec-ai-catalog-coding-agents.
