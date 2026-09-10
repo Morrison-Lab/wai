@@ -110,7 +110,7 @@ The project's threat model [@citadel_threat_model] is equally plain about what i
 Citadel runs with whatever permissions the host runtime has;
 it is not a sandbox, it does not make an untrusted repository safe to run,
 and it does not claim to stop prompt injection.
-It "does not replace `CLAUDE.md`, `AGENTS.md`, branch protection, or human review."
+Its README says it "does not replace `CLAUDE.md`, `AGENTS.md`, branch protection, or human review" [@citadel_repo].
 
 #### What the evidence does and does not show
 
@@ -133,7 +133,7 @@ The public claim is stated as deliberately narrow:
 Citadel can make agent evaluations inspectable, reproducible, and honest about failure.
 Whether it makes a real user faster or cheaper is left open.
 For a lab deciding whether to adopt it,
-that candour is itself a reason to trust the rest of the documentation,
+that candor is itself a reason to trust the rest of the documentation,
 and also the answer:
 the case for Citadel is governance and recoverability, not throughput.
 

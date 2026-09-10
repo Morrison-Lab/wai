@@ -13,6 +13,7 @@ Anthropic's
 Antigravity
 Apache
 Apikey
+Archon
 Armin
 ArtificialInteligence
 Asimov
@@ -68,6 +69,7 @@ Daytona
 DeepSeek
 DeepSeek-R1
 DeepSeekMath
+Dependabot
 Devstral
 Docker
 E2B
@@ -369,11 +371,13 @@ honouring
 honours
 hotspot
 iMessage
+inspectable
 instantiation
 integrations
 invariants
 io
 iteratively
+journaled
 js
 keyless
 launchd
@@ -447,6 +451,7 @@ rStar
 reachability
 rebase
 rebranded
+recoverability
 reflow
 refspec
 renderer
@@ -458,6 +463,7 @@ repro
 reproducibility
 repurposing
 reraise
+resumable
 resyncing
 retryable
 reviewable
@@ -466,6 +472,7 @@ roxygen
 rsync
 rulesets
 runnable
+runtime's
 sandboxed
 sandboxing
 schemas
