@@ -86,6 +86,8 @@ GDScript's
 GLM
 GPT
 GPUs
+GSD
+GSD's
 Galactica
 Gemini
 Gemma
@@ -99,13 +101,17 @@ Graphile
 Grok
 GummySearch
 HIPAA
+HKUDS
 HPC
 HTTPS
+HUD
 Handoff
 Hephaestus
 Herbert
 Hermes
 Homebrew
+Hoyeon
+Hoyeon's
 IAM
 IDEs
 IPC
@@ -171,6 +177,8 @@ OAI
 OAICopilot
 OAuth
 OIDC
+OMC
+OMC's
 OSS
 OTPM
 Ollama
@@ -184,6 +192,7 @@ OpenClaw
 OpenCode
 OpenDevin
 OpenHands
+OpenHarness
 OpenID
 OpenRouter
 PATs
@@ -226,6 +235,8 @@ RevealJS
 Ronacher
 Roo
 RubyGems
+Runkle
+Runkle's
 SDK
 SDKs
 SERG
@@ -401,6 +412,7 @@ md
 merge's
 mergeability
 mergeable
+middleware
 minimap
 mistyped
 modelcontextprotocol
