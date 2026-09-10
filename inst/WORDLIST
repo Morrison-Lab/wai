@@ -41,6 +41,7 @@ Celonis
 ChatGPT
 ChatGPTCoding
 Chatbots
+ChromaDB
 Claude
 ClaudeAI
 ClaudeCode
@@ -73,6 +74,7 @@ DeepSeek-R1
 DeepSeekMath
 Devstral
 Docker
+DuckDB
 E2B
 ECR
 ESP32
@@ -207,6 +209,7 @@ OpenHarness
 OpenID
 OpenRouter
 PATs
+PBC
 PEFT
 PID
 PR's
