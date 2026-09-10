@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-09 09:10:00 (PDT)
+Last modified: 2026-09-09 23:58:26 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3952,9 +3952,9 @@ VoltAgent. 2026e. *VoltAgent Documentation: VoltOps Developer Console*. Document
 
 VoltAgent. 2026f. *VoltAgent Documentation: Workflows Overview*. Documentation. <https://voltagent.dev/docs/workflows/overview/>.
 
-VoltAgent. 2026g. *VoltAgent: AI Agent Engineering Platform Built on an Open Source TypeScript AI Agent Framework*. GitHub repository. <https://github.com/VoltAgent/voltagent>.
+VoltAgent. 2026g. *VoltAgent: AI Agent Engineering Platform Built on an Open Source TypeScript AI Agent Framework*. Software. <https://github.com/VoltAgent/voltagent>.
 
-VoltAgent. 2026h. *VoltOps Pricing*. Web page. <https://voltagent.dev/pricing/>.
+VoltAgent. 2026h. *VoltOps Pricing*. Documentation. <https://voltagent.dev/pricing/>.
 
 *WarGames*. 1983. Film. <https://en.wikipedia.org/wiki/WarGames>.
 
