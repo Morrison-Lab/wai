@@ -3,8 +3,8 @@
 and @sec-ai-harness-landscape maps the vendor harnesses.
 This section covers the layer that sits on top of those:
 the **custom harnesses** that individuals and small teams build for themselves,
-and what building one would mean for this lab.
-Every figure and version below was measured on 2026-09-09 unless stated otherwise.
+and what building one would mean for this lab
+(measured 2026-09-09 unless stated otherwise).
 
 #### Two things people mean by "custom harness"
 
@@ -44,7 +44,7 @@ which is the only reason to pay for it.
 
 #### `oh-my-claudecode` (OMC)
 
-The README's own line is "Multi-agent orchestration for Claude Code. Zero learning curve." [@oh_my_claudecode].
+The `README` states: "Multi-agent orchestration for Claude Code. Zero learning curve." [@oh_my_claudecode].
 It installs as a Claude Code plugin
 (`/plugin marketplace add`, then `/plugin install oh-my-claudecode`)
 or as an npm CLI,
@@ -221,7 +221,7 @@ One small repository of the same kind,
 [`my-claude-code-harness`](https://github.com/code-yeongyu/my-claude-code-harness) [@my_claude_code_harness]
 (12 stars, no license, last pushed 2025-11-28),
 shows the shape such personal setups take:
-planner, plan-reviewer, executor, and librarian agents;
+plan-reviewer, executor, and librarian agents;
 hooks that inject language guidelines and run a linter;
 and `/planner`, `/execute`, `/commit`, and `/create-pr` commands.
 @sec-ai-guidance-sources lists the communities where these setups are discussed.
