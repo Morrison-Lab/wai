@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-09 20:59:30 (PDT)
+Last modified: 2026-09-09 23:53:05 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -2812,7 +2812,7 @@ The common thread is that the install layer is a real surface, distinct from the
 
 Anthropic publishes its code under the [`anthropics`](https://github.com/anthropics) GitHub organization. The organization held 108 repositories when surveyed (measured 2026-09-09). Claude Code itself is not open source, but its public repository is still useful, and so are several others. This section inventories the repositories that matter to us, says what the two headline repositories actually contain, and ends with a verdict on each.
 
-All counts below come from the GitHub API on the survey date (measured 2026-09-09); stars and push dates drift daily, and the license column reports what the API detected. `none` means the API found no license; for `claude-code` and `claude-agent-sdk-typescript` that is because `LICENSE.md` is a proprietary notice rather than a recognized open-source license, marked `none (proprietary)`, and for the other `none` rows there is no license file at all. `not detected` means a license file exists that the API could not classify (it reports `NOASSERTION`). A single identifier can also hide a split: `skills` reports Apache-2.0, while its README says four of its skills are source-available.
+All counts below come from the GitHub API on the survey date (measured 2026-09-09); stars and push dates drift daily, and the license column reports what the API detected. `none` means the API found no license; for `claude-code` and `claude-agent-sdk-typescript` that is because `LICENSE.md` is a proprietary notice rather than a recognized open-source license, marked `none (proprietary)`, and for the other `none` rows there is no license file at all. `not detected` means a license file exists that the API could not classify (it reports `NOASSERTION`). A single row can also hide a split: `skills` has no root license file, so the API reports none, while its README says four of its skills are source-available.
 
 #### Which repositories matter to us
 
@@ -2828,7 +2828,7 @@ Forks and archived repositories together are 38 of the 108 (measured 2026-09-09)
 | `claude-agent-sdk-typescript` | Issue tracker and changelog for the TypeScript agent SDK | Shell | 1.7k | 2026-09-08 | none (proprietary) | Track issues only |
 | `anthropic-sdk-python` | Raw Messages API client | Python | 3.9k | 2026-09-04 | MIT | Useful for direct API calls |
 | `sandbox-runtime` | OS-level sandbox (`srt`) for processes, MCP servers, and agents | TypeScript | 5.2k | 2026-09-07 | Apache-2.0 | Trial on Linux and macOS; alpha on Windows |
-| `skills` | Reference Agent Skills plus the `spec/` for the skill format | Python | 175.4k | 2026-09-03 | Apache-2.0 | Read the spec; borrow document skills |
+| `skills` | Reference Agent Skills plus the `spec/` for the skill format | Python | 175.4k | 2026-09-03 | none | Read the spec; borrow document skills |
 | `claude-plugins-official` | Anthropic-curated plugin marketplace | Python | 36.1k | 2026-09-09 | Apache-2.0 | Install from it; see [Section 30](#sec-ai-useful-plugins) |
 | `claude-plugins-community` | Read-only mirror of the community marketplace | Python | 3.7k | 2026-08-25 | Apache-2.0 | Browse before writing our own |
 | `knowledge-work-plugins` | Role-specific plugins built for Claude Cowork | Python | 23.9k | 2026-09-09 | Apache-2.0 | Templates for a lab-role plugin |
@@ -2838,7 +2838,7 @@ Forks and archived repositories together are 38 of the 108 (measured 2026-09-09)
 | `claude-quickstarts` | Starter apps you can deploy (support agent, computer use) | TypeScript | 17.6k | 2026-09-04 | MIT | Skim only |
 | `devcontainer-features` | Dev Container feature that installs the CLI | Shell | 302 | 2025-12-16 | MIT | Useful for a GitHub Codespaces setup |
 | `claude-code-monitoring-guide` | Telemetry and cost-tracking guide | Markdown | 369 | 2025-07-29 | none | Read once if we meter usage |
-| `claude-ai-mcp` | Issue tracker for MCP inside claude.ai | Markdown | 467 | 2026-06-08 | none | Search before filing an MCP bug |
+| `claude-ai-mcp` | Issue tracker for MCP inside claude.ai | Markdown | 467 | 2026-06-08 | not detected | Search before filing an MCP bug |
 
 The six groups, and what each is for:
 
@@ -2879,7 +2879,7 @@ The `track_progress` input forces tag-mode tracking comments onto `pull_request`
 
 Three other things in the repository are easy to miss:
 
-- **`examples/`** has eleven copy-paste workflows, beyond the three review variants: `ci-failure-auto-fix.yml`, `test-failure-analysis.yml`, `issue-deduplication.yml`, `issue-triage.yml`, and `claude-wif.yml`, the workload-identity-federation variant that avoids storing a long-lived API key.
+- **`examples/`** has eleven copy-paste workflows (measured 2026-09-09): the three review variants, plus `claude.yml` (the general `@claude` mention workflow), `ci-failure-auto-fix.yml`, `test-failure-analysis.yml`, `issue-deduplication.yml`, `issue-triage.yml`, `manual-code-analysis.yml`, `agent-approval-check.yml`, and `claude-wif.yml`, the workload-identity-federation variant that avoids storing a long-lived API key.
 - **`agent-approval-check/`** is a second, smaller action that gates a workflow on whether the actor is a recognized agent identity, with an example identities file.
 - **Authentication inputs** cover a direct API key, a Claude Code OAuth token, federation (`anthropic_federation_rule_id` plus organization, workspace, and service-account IDs), and OIDC to Bedrock, Vertex AI, or Microsoft Foundry.
 
@@ -3938,35 +3938,35 @@ When selecting a collaborative workspace agent for academic and computational re
 
 *2001: A Space Odyssey*. 1968. Film. <https://en.wikipedia.org/wiki/2001:_A_Space_Odyssey_(film)>.
 
-Anthropic. 2026a. *Anthropics/Anthropic-Sdk-Python*. GitHub repository. <https://github.com/anthropics/anthropic-sdk-python>.
+Anthropic. 2026a. *Anthropics/Anthropic-Sdk-Python*. Software. <https://github.com/anthropics/anthropic-sdk-python>.
 
-Anthropic. 2026b. *Anthropics/Claude-Agent-Sdk-Python*. GitHub repository. <https://github.com/anthropics/claude-agent-sdk-python>.
+Anthropic. 2026b. *Anthropics/Claude-Agent-Sdk-Python*. Software. <https://github.com/anthropics/claude-agent-sdk-python>.
 
-Anthropic. 2026c. *Anthropics/Claude-Agent-Sdk-Typescript*. GitHub repository. <https://github.com/anthropics/claude-agent-sdk-typescript>.
+Anthropic. 2026c. *Anthropics/Claude-Agent-Sdk-Typescript*. Software. <https://github.com/anthropics/claude-agent-sdk-typescript>.
 
-Anthropic. 2026d. *Anthropics/Claude-Code*. GitHub repository. <https://github.com/anthropics/claude-code>.
+Anthropic. 2026d. *Anthropics/Claude-Code*. Software. <https://github.com/anthropics/claude-code>.
 
-Anthropic. 2026e. *Anthropics/Claude-Code: CHANGELOG.md*. GitHub repository file. <https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md>.
+Anthropic. 2026e. *Anthropics/Claude-Code: CHANGELOG.md*. Documentation. <https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md>.
 
-Anthropic. 2026f. *Anthropics/Claude-Code-Action*. GitHub repository. <https://github.com/anthropics/claude-code-action>.
+Anthropic. 2026f. *Anthropics/Claude-Code-Action*. Software. <https://github.com/anthropics/claude-code-action>.
 
-Anthropic. 2026g. *Anthropics/Claude-Code-Security-Review*. GitHub repository. <https://github.com/anthropics/claude-code-security-review>.
+Anthropic. 2026g. *Anthropics/Claude-Code-Security-Review*. Software. <https://github.com/anthropics/claude-code-security-review>.
 
-Anthropic. 2026h. *Anthropics/Claude-Plugins-Community*. GitHub repository. <https://github.com/anthropics/claude-plugins-community>.
+Anthropic. 2026h. *Anthropics/Claude-Plugins-Community*. Software. <https://github.com/anthropics/claude-plugins-community>.
 
-Anthropic. 2026i. *Anthropics/Claude-Plugins-Official*. GitHub repository. <https://github.com/anthropics/claude-plugins-official>.
+Anthropic. 2026i. *Anthropics/Claude-Plugins-Official*. Software. <https://github.com/anthropics/claude-plugins-official>.
 
-Anthropic. 2026j. *Anthropics/Knowledge-Work-Plugins*. GitHub repository. <https://github.com/anthropics/knowledge-work-plugins>.
+Anthropic. 2026j. *Anthropics/Knowledge-Work-Plugins*. Software. <https://github.com/anthropics/knowledge-work-plugins>.
 
-Anthropic. 2026k. *Anthropics/Sandbox-Runtime*. GitHub repository. <https://github.com/anthropics/sandbox-runtime>.
+Anthropic. 2026k. *Anthropics/Sandbox-Runtime*. Software. <https://github.com/anthropics/sandbox-runtime>.
 
-Anthropic. 2026l. *Anthropics/Skills*. GitHub repository. <https://github.com/anthropics/skills>.
+Anthropic. 2026l. *Anthropics/Skills*. Software. <https://github.com/anthropics/skills>.
 
-Anthropic. 2026m. *Claude Code Plugins*. README in the anthropics/claude-code repository. <https://github.com/anthropics/claude-code/blob/main/plugins/README.md>.
+Anthropic. 2026m. *Claude Code Plugins*. Documentation. <https://github.com/anthropics/claude-code/blob/main/plugins/README.md>.
 
 Anthropic. 2026n. *Claude Cowork Overview*. Documentation. <https://claude.com/docs/cowork/overview>.
 
-Anthropic. 2026o. *Experimental Features*. Documentation in the anthropics/claude-code-action repository. <https://github.com/anthropics/claude-code-action/blob/main/docs/experimental.md>.
+Anthropic. 2026o. *Experimental Features*. Documentation. <https://github.com/anthropics/claude-code-action/blob/main/docs/experimental.md>.
 
 Asimov, Isaac. 1950. *I, Robot*. Novel; Gnome Press. <https://search.library.ucdavis.edu/permalink/01UCD_INST/9fle3i/alma990000226350403126>.
 
