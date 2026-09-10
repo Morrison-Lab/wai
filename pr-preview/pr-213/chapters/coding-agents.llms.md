@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-10 16:34:23 (PDT)
+Last modified: 2026-09-10 16:42:23 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3657,7 +3657,7 @@ Think Deeper is not a research mode. It is one of the [conversation modes](https
 
 #### Perplexity Research
 
-[Research mode](https://www.perplexity.ai/help-center/en/articles/10738684-what-is-research-mode) ([Perplexity 2026b](#ref-perplexity_research_mode)) runs “dozens of searches, reads hundreds of sources”, completes most tasks in under 3 minutes, and takes around 4 to 5 minutes to deliver the report. Reports export to PDF or a document, or become a shareable Perplexity Page. Free accounts get limited access and Pro subscribers get extended access; the help page gives no counts. You cannot choose the model in Research mode. The [Advanced Deep Research](https://www.perplexity.ai/help-center/en/articles/13600190-what-s-new-in-advanced-deep-research) ([Perplexity 2026c](#ref-perplexity_advanced_deep_research)) update added a code sandbox, uploaded-document input, clarifying questions, follow-up questions while a run is in progress, and reports that stream into an editable file. It also names the underlying models by plan: Max subscribers get Claude Opus 4.6 Thinking and Pro subscribers get Claude 4.5 Thinking.
+[Research mode](https://www.perplexity.ai/help-center/en/articles/10738684-what-is-research-mode) ([Perplexity 2026b](#ref-perplexity_research_mode)) runs “dozens of searches, reads hundreds of sources”, completes most tasks in under 3 minutes, and takes around 4 to 5 minutes to deliver the report. Reports export to PDF or a document, or become a shareable Perplexity Page. Free accounts get limited access and Pro subscribers get extended access; the help page gives no counts. You cannot choose the model in Research mode. The [Advanced Deep Research](https://www.perplexity.ai/help-center/en/articles/13600190-what-s-new-in-advanced-deep-research) ([Perplexity 2026c](#ref-perplexity_advanced_deep_research)) update added a code sandbox, uploaded-document input, clarifying questions, follow-up questions while a run is in progress, and reports that stream into an editable file. It also names the underlying model by plan. Which model each plan gets has changed more than once, and Perplexity’s help-center pages refuse automated requests, so this section does not reproduce the mapping: check the linked page before relying on a particular model being behind your plan.
 
 The API equivalent is the [`sonar-deep-research`](https://docs.perplexity.ai/docs/sonar/models/sonar-deep-research) model ([Perplexity 2026a](#ref-perplexity_sonar_deep_research)), priced at \$2 per million input tokens, \$8 per million output tokens, \$2 per million citation tokens, \$3 per million reasoning tokens, and \$5 per 1,000 searches, with a 128K context window. The docs carry a deprecation notice moving the Sonar chat-completions interface to the Agent API, with the old interface supported until 2026-09-27.
 
