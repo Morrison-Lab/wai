@@ -332,7 +332,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-09-10 02:13:34 (PDT)</p>
+  <p class="date">Last modified: 2026-09-10 02:27:34 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -1012,7 +1012,7 @@ Table&nbsp;4: Custom harnesses surveyed for this section
 <td>174 stars; last push 2026-05-21</td>
 </tr>
 <tr class="odd">
-<td><a href="https://github.com/obra/superpowers">Superpowers</a> <span class="citation" data-cites="superpowers">(<a href="#/references" role="doc-biblioref" onclick="">Vincent 2026</a>)</span></td>
+<td><a href="https://github.com/obra/superpowers">Superpowers</a> <span class="citation" data-cites="superpowers">(<a href="#/references" role="doc-biblioref" onclick="">Vincent 2026b</a>)</span></td>
 <td>layer</td>
 <td>Claude Code, Codex, Cursor, OpenCode, Pi, Hermes, and eight others</td>
 <td>MIT</td>
@@ -1052,13 +1052,13 @@ Table&nbsp;4: Custom harnesses surveyed for this section
 <li><code>/skillify</code>, which extracts a reusable skill from a session into <code>.omc/skills/</code> (project) or <code>~/.omc/skills/</code> (user) and auto-injects matching skills later;</li>
 <li>a HUD status line, cost tracking, Discord/Telegram/Slack notifications, and a <code>tmux</code>-based mode that drives other vendors’ CLIs as workers.</li>
 </ul>
-<p>It is the same family as the Oh My OpenCode project in <a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;53</a> (the npm package is still named <code>oh-my-claude-sisyphus</code>), and by star count the most-used custom harness in this survey after Superpowers.</p>
+<p>It is the same family as the Oh My OpenCode project in <a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;54</a> (the npm package is still named <code>oh-my-claude-sisyphus</code>), and by star count the most-used custom harness in this survey after Superpowers.</p>
 <p><strong>Useful to us?</strong> Partly. Its model routing and skill extraction are things <code>Morrison-Lab/ai-config</code> already does with <code>select-model</code> and <code>ums</code>, so installing OMC on top would double them. Its notification integrations and HUD are the pieces we lack, and they are separable.</p>
 <h4 id="hoyeon">Hoyeon</h4>
 <p>Hoyeon calls itself a “Requirements-first Harness — derive, verify, execute” <span class="citation" data-cites="hoyeon">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">team-attention</span> 2026</a>)</span>. Its idea is that most agent failures are planning failures, so it forces a derivation chain (goal, context, decisions, requirements, tasks, execution) and gates each transition twice: a CLI validates the structure of <code>requirements.md</code> and <code>plan.json</code> before any model reads them, and a reviewer agent checks for scope drift and blind spots. The commands are <code>/specify</code> (a Socratic interview), <code>/blueprint</code> (contract-first planning into a task dependency graph), <code>/execute</code> (parallel workers plus independent verification against sub-requirements), <code>/bugfix</code>, <code>/council</code>, and <code>/tribunal</code> (a three-agent adversarial review: risk, value, feasibility). It ships 22 agents and 29 skills and installs with <code>claude plugin add team-attention/hoyeon</code> plus an npm CLI.</p>
-<p><strong>Useful to us?</strong> The design principle is exactly the lab’s own “deterministic tools over model judgment” rule (<a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;33</a>): a CLI that rejects malformed plans before an LLM sees them is the kind of instrument our hooks already are for pushes and merges. The requirements interview is heavier than most of our tasks need, and it is Claude-Code-only.</p>
+<p><strong>Useful to us?</strong> The design principle is exactly the lab’s own “deterministic tools over model judgment” rule (<a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;34</a>): a CLI that rejects malformed plans before an LLM sees them is the kind of instrument our hooks already are for pushes and merges. The requirements interview is heavier than most of our tasks need, and it is Claude-Code-only.</p>
 <h4 id="superpowers">Superpowers</h4>
-<p>Superpowers is Jesse Vincent’s “agentic skills framework &amp; software development methodology” <span class="citation" data-cites="superpowers">(<a href="#/references" role="doc-biblioref" onclick="">Vincent 2026</a>)</span>. It is the purest example of the layer kind: a set of skills and one bootstrap that makes them mandatory. The <code>using-superpowers</code> meta-skill injects itself at session start so the agent checks for a relevant skill before any task, and the skills encode a workflow: brainstorming, writing and executing plans, test-driven development, systematic debugging, git worktrees, requesting and receiving code review, and subagent-driven development with a two-stage review (spec compliance first, then code quality). It installs from the official Claude plugin marketplace (<code>/plugin install superpowers@claude-plugins-official</code>) and from Codex’s <code>/plugins</code>, and supports fourteen harnesses. Its own README records the cost of the layer approach: Hermes has no post-compaction hook, so a long session that compacts loses the bootstrap.</p>
+<p>Superpowers is Jesse Vincent’s “agentic skills framework &amp; software development methodology” <span class="citation" data-cites="superpowers">(<a href="#/references" role="doc-biblioref" onclick="">Vincent 2026b</a>)</span>. It is the purest example of the layer kind: a set of skills and one bootstrap that makes them mandatory. The <code>using-superpowers</code> meta-skill injects itself at session start so the agent checks for a relevant skill before any task, and the skills encode a workflow: brainstorming, writing and executing plans, test-driven development, systematic debugging, git worktrees, requesting and receiving code review, and subagent-driven development with a two-stage review (spec compliance first, then code quality). It installs from the official Claude plugin marketplace (<code>/plugin install superpowers@claude-plugins-official</code>) and from Codex’s <code>/plugins</code>, and supports fourteen harnesses. Its own README records the cost of the layer approach: Hermes has no post-compaction hook, so a long session that compacts loses the bootstrap.</p>
 <p><strong>Useful to us?</strong> Yes, and the lab’s maintainer already runs it alongside <code>ai-config</code> in Claude Code. The overlap is real (both have a brainstorming skill, both have a code-review workflow), so treat it as a reference implementation of skill design rather than a second source of truth.</p>
 <h4 id="gsd-core">GSD Core</h4>
 <p>GSD (“Git. Ship. Done.”) describes itself as a “context-engineering and spec-driven development framework that drives AI coding agents through a disciplined phase loop” <span class="citation" data-cites="gsd_core">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">open-gsd</span> 2026</a>)</span>. Its target is <strong>context rot</strong>, which it defines as the quality degradation that accumulates as an agent fills its context window. The remedy is a five-step loop per milestone:</p>
@@ -1096,7 +1096,7 @@ Table&nbsp;4: Custom harnesses surveyed for this section
 <li>94 hook scripts, and a <code>hooks/hooks.json</code> with 55 registrations (30 <code>PreToolUse</code>, 10 <code>UserPromptSubmit</code>, and 15 <code>Stop</code>);</li>
 <li>8 subagent definitions (including the <code>adversarial-reviewer</code> that gates every push);</li>
 <li>131 shared prose fragments and 59 memory files;</li>
-<li>a plugin manifest, so Claude Code and Cursor load it as a plugin (<a href="#/sec-ai-config-install" class="quarto-xref">Section&nbsp;34</a> explains how, and <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;33</a> what the corpus contains).</li>
+<li>a plugin manifest, so Claude Code and Cursor load it as a plugin (<a href="#/sec-ai-config-install" class="quarto-xref">Section&nbsp;35</a> explains how, and <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;34</a> what the corpus contains).</li>
 </ul>
 <p>It already implements all five common moves: the bootstrap is <code>CLAUDE.md</code> and <code>AGENTS.md</code>, planning goes through issue-first and <code>st</code>, fresh-context workers are the <code>Agent</code> and <code>Workflow</code> calls, independent verification is the adversarial-reviewer subagent, and the deterministic gates are the hooks. So “building our own” means three concrete things, in order:</p>
 <ol type="1">
@@ -1707,7 +1707,7 @@ Table&nbsp;10: Relative advantages of humans and Agents
 </div>
 </div>
 </div>
-<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;41</a> for more guidance.</p>
+<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;42</a> for more guidance.</p>
 <h4 id="scenario-3-uncertain-which-scenario-applies">Scenario 3: Uncertain Which Scenario Applies</h4>
 <p><strong>When to use:</strong> You’re not sure whether the failure is due to code issues or workflow configuration problems.</p>
 <p><strong>Recommended approach:</strong></p>
@@ -1735,7 +1735,7 @@ Table&nbsp;10: Relative advantages of humans and Agents
 <ul>
 <li>See the <a href="https://ucd-serg.github.io/lab-manual/continuous-integration.html">UCD-SERG Lab Manual’s continuous integration chapter</a> for setting up GitHub Actions workflows</li>
 <li>See <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;19</a> and <a href="#/sec-ai-benefits-hazards" class="quarto-xref">Section&nbsp;18</a> for security considerations with workflow files</li>
-<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;41</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
+<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;42</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
 <li>See the <a href="https://docs.github.com/en/actions">GitHub Actions documentation</a> for workflow syntax and troubleshooting</li>
 </ul>
 </section></section>
@@ -3650,7 +3650,7 @@ while the selected main agent model is BYOK.</code></pre>
 </ul>
 <h4 id="further-reading-2">Further Reading</h4>
 <p>For the complete specification and more details, see <a href="https://agentskills.io/home">agentskills.io</a>.</p>
-<p>A skill is one of several ways to customize an agent, and not always the right one. <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;33</a> compares it against:</p>
+<p>A skill is one of several ways to customize an agent, and not always the right one. <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;34</a> compares it against:</p>
 <ul>
 <li>instruction files</li>
 <li>subagents</li>
@@ -3704,7 +3704,7 @@ while the selected main agent model is BYOK.</code></pre>
 <li><code>release-post</code></li>
 <li><code>testing-r-packages</code></li>
 </ul>
-<p>Copying the skills in rather than installing the marketplace plugin lets them follow the lab’s own review and hook conventions, at the cost of tracking upstream changes by hand. Four categories are not adopted. Three of them have the least overlap with lab work: Shiny app development, <code>ggsql</code>, and Posit Connect deployment. The fourth, <code>posit-dev</code>, overlaps with practices the lab already has: its <code>critical-code-reviewer</code> parallels the adversarial self-review subagent that the lab’s agent configuration dispatches before every push, and <code>new-work</code> / <code>working-on</code> keep a per-task tracking document where the lab uses the issue tracker and a session notebook. The <code>github</code> skills likewise overlap with the lab’s own <a href="../chapters/pr-workflow-with-agents.html">pull-request workflow</a> and with the review setup in <a href="#/sec-ai-claude-code-action-review" class="quarto-xref">Section&nbsp;37</a>, so both categories are worth reading for ideas rather than installing alongside that tooling. The contribution guidance in the repository recommends Anthropic’s <code>skill-creator</code> skill for authoring new skills.</p>
+<p>Copying the skills in rather than installing the marketplace plugin lets them follow the lab’s own review and hook conventions, at the cost of tracking upstream changes by hand. Four categories are not adopted. Three of them have the least overlap with lab work: Shiny app development, <code>ggsql</code>, and Posit Connect deployment. The fourth, <code>posit-dev</code>, overlaps with practices the lab already has: its <code>critical-code-reviewer</code> parallels the adversarial self-review subagent that the lab’s agent configuration dispatches before every push, and <code>new-work</code> / <code>working-on</code> keep a per-task tracking document where the lab uses the issue tracker and a session notebook. The <code>github</code> skills likewise overlap with the lab’s own <a href="../chapters/pr-workflow-with-agents.html">pull-request workflow</a> and with the review setup in <a href="#/sec-ai-claude-code-action-review" class="quarto-xref">Section&nbsp;38</a>, so both categories are worth reading for ideas rather than installing alongside that tooling. The contribution guidance in the repository recommends Anthropic’s <code>skill-creator</code> skill for authoring new skills.</p>
 </section></section>
 <section>
 <section id="sec-ai-posit-dev-ai-repos" class="title-slide slide level1 center" data-number="31">
@@ -3862,7 +3862,7 @@ while the selected main agent model is BYOK.</code></pre>
 <h4 id="useful-to-us-yes-three-tools-and-one-reference">Useful to us? Yes, three tools and one reference</h4>
 <p>The lab’s workflow is R and Quarto driven by Claude Code and Copilot, so the question is which of these repositories connect that workflow to an R session.</p>
 <ul>
-<li><strong><code>btw</code></strong> is the direct fit. Its clipboard mode pastes the structure of the objects in an R session into whatever chat is open, and its MCP server route (through <code>mcptools</code>) lets Claude Code read package documentation and inspect the global environment instead of guessing at column names. The MCP route follows the setup pattern in <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;48</a>.</li>
+<li><strong><code>btw</code></strong> is the direct fit. Its clipboard mode pastes the structure of the objects in an R session into whatever chat is open, and its MCP server route (through <code>mcptools</code>) lets Claude Code read package documentation and inspect the global environment instead of guessing at column names. The MCP route follows the setup pattern in <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;49</a>.</li>
 <li><strong><code>mcptools</code></strong> is the layer underneath <code>btw</code>, and the package to use directly when a lab package wants to expose one of its own functions to an agent as a tool.</li>
 <li><strong><code>mcp-repl</code></strong> addresses a cost the lab already pays: each <code>Rscript -e</code> call an agent makes starts a fresh process, so data and packages are reloaded on every check. A persistent, sandboxed session with inline plots is a better fit for iterating on an analysis with an agent, at the cost of a Rust binary to install. It has not yet been tried in the lab.</li>
 <li><strong><code>bluffbench2</code></strong> is a reference rather than a dependency. It is an evaluation written in R with <a href="https://github.com/tidyverse/vitals"><code>vitals</code></a> that measures whether an agent notices data-quality problems, which is the kind of judgment the lab expects a human reviewer to keep. Anyone building an eval of the lab’s own agent configuration can start from its harness.</li>
@@ -3897,11 +3897,156 @@ while the selected main agent model is BYOK.</code></pre>
 </ol>
 <p>The agent reads the touched code first and is lazy about the solution, never about reading, and never cuts validation, error handling, security, or accessibility. Measured on twelve real Claude Code tasks in a FastAPI + React repo (Haiku 4.5, n=4), it averages about 54 percent less code (up to 94 percent where the agent would otherwise overbuild, for example a date picker) with about 20 percent lower cost and 27 percent faster, while staying fully safe. It installs as a plugin or skill for more than twenty agents (Claude Code, Codex, Copilot, Cursor, OpenCode, Gemini, and others) and works from a checkout via <code>AGENTS.md</code> where a plugin is not needed.</p>
 <p><a href="https://contextify.sh/">Contextify</a> keeps your Claude Code and Codex history forever in a private, searchable timeline. Claude Code deletes history after 30 days; Contextify watches both tools, summarizes each message (on-device via Apple Intelligence on macOS 26, or Lite Mode on macOS 15), and lets you search every conversation you ever had. It runs local-first with no account required, and optionally syncs across devices via Cloud Sync or a self-hosted instance you operate. The ambient timeline lets you follow sessions in real time or skim what happened while you were away.</p>
-<p>The lab’s portable agent config lives in <a href="https://github.com/Morrison-Lab/ai-config"><code>Morrison-Lab/ai-config</code></a>. It is a plugin-or-symlink install of skills, hooks, and memories — not a third marketplace next to SemBr. How that config actually reaches a machine, and how a doubled plugin install fails, is <a href="#/sec-ai-config-install" class="quarto-xref">Section&nbsp;34</a>. <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;33</a> is the worked example of what the corpus contains.</p>
+<p>The lab’s portable agent config lives in <a href="https://github.com/Morrison-Lab/ai-config"><code>Morrison-Lab/ai-config</code></a>. It is a plugin-or-symlink install of skills, hooks, and memories — not a third marketplace next to SemBr. How that config actually reaches a machine, and how a doubled plugin install fails, is <a href="#/sec-ai-config-install" class="quarto-xref">Section&nbsp;35</a>. <a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;34</a> is the worked example of what the corpus contains. <a href="#/sec-ai-plugin-catalog" class="quarto-xref">Section&nbsp;33</a> maps the official and community marketplaces these four sit in and sets each against <code>ai-config</code>.</p>
 </section></section>
 <section>
-<section id="sec-ai-customization" class="title-slide slide level1 center" data-number="33">
-<h1><span class="header-section-number">33</span> Customizing an Agent</h1>
+<section id="sec-ai-plugin-catalog" class="title-slide slide level1 center" data-number="33">
+<h1><span class="header-section-number">33</span> The plugin catalog</h1>
+
+</section>
+<section class="slide level2">
+
+<p><a href="#/sec-ai-useful-plugins" class="quarto-xref">Section&nbsp;32</a> names four plugins the lab already uses. This section is the map they sit on: what Anthropic’s official marketplace contains, which community plugins are worth knowing about, and how each of them relates to the lab’s own <a href="https://github.com/Morrison-Lab/ai-config"><code>Morrison-Lab/ai-config</code></a> <span class="citation" data-cites="ai_config_readme">(<a href="#/references" role="doc-biblioref" onclick="">Morrison Lab 2026</a>)</span>. It closes with the question that prompted it: what the <code>ralph-loop</code> plugin is, and whether it is the same thing as <code>ai-config</code>’s <code>ardi</code>.</p>
+<p>Plugin counts and names change weekly, so every figure below is stamped with the date it was read. The anatomy of a plugin bundle (skills, hooks, MCP servers, agents, commands) is <a href="#/sec-ai-plugins-deep-dive" class="quarto-xref">Section&nbsp;53</a>; this section assumes it.</p>
+<h4 id="the-three-anthropic-marketplaces">The three Anthropic marketplaces</h4>
+<p>Anthropic runs three plugin catalogs for Claude Code, and they differ in who curates them <span class="citation" data-cites="claude_code_discover_plugins">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026e</a>)</span>:</p>
+<ul>
+<li><strong><code>claude-plugins-official</code></strong> (<a href="https://github.com/anthropics/claude-plugins-official"><code>anthropics/claude-plugins-official</code></a> <span class="citation" data-cites="claude_plugins_official">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026b</a>)</span>). Curated by Anthropic at its discretion; there is no application process. Claude Code registers it automatically the first time it starts interactively, so <code>/plugin install &lt;name&gt;@claude-plugins-official</code> works with no setup. Browse it with <code>/plugin</code> (the <strong>Discover</strong> tab) or at <a href="https://claude.com/plugins">claude.com/plugins</a>.</li>
+<li><strong><code>claude-community</code></strong> (<a href="https://github.com/anthropics/claude-plugins-community"><code>anthropics/claude-plugins-community</code></a> <span class="citation" data-cites="claude_plugins_community">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026d</a>)</span>). Third-party submissions that passed Anthropic’s automated validation and safety screening, each pinned to a commit SHA and synced nightly from the review pipeline. Added by hand: <code>/plugin marketplace add anthropics/claude-plugins-community</code>, then <code>/plugin install &lt;name&gt;@claude-community</code>. Pull requests against the mirror are closed automatically; submissions go through a form.</li>
+<li><strong><code>claude-code-plugins</code></strong> (<a href="https://github.com/anthropics/claude-code/tree/main/plugins"><code>anthropics/claude-code</code>, <code>plugins/</code></a> <span class="citation" data-cites="claude_code_demo_plugins">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026a</a>)</span>). The demo marketplace: thirteen example plugins (<code>commit-commands</code>, <code>code-review</code>, <code>feature-dev</code>, <code>hookify</code>, <code>ralph-wiggum</code>, and others) that show what the plugin system can do. Most of them also ship in the official marketplace under the same or a renamed entry (<code>ralph-wiggum</code> there is <code>ralph-loop</code> here).</li>
+</ul>
+<p>The official README carries the warning that governs all three: Anthropic does not control what MCP servers, files, or other software a plugin includes, and cannot verify that it works as intended or will not change <span class="citation" data-cites="claude_plugins_official">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026b</a>)</span>. A plugin runs arbitrary code with your user privileges, so the trust decision is yours, per plugin, every time.</p>
+<h4 id="what-the-official-marketplace-contains">What the official marketplace contains</h4>
+<p>The official catalog’s <code>marketplace.json</code> lists 287 plugins (measured 2026-09-09 from the copy Claude Code caches locally; <span class="citation" data-cites="claude_plugins_official">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026b</a>)</span>). Only 38 of them live in the repository’s own <code>plugins/</code> directory, which the README describes as the plugins Anthropic develops and maintains. Another 15 sit in <code>external_plugins/</code>, and the remaining 234 are pointers to third-party repositories (Amazon, Microsoft, Google’s <code>gemini-cli-extensions</code>, Databricks, Hugging Face, Sentry, and many vendors), each pinned to a commit SHA. So “official” mostly means “listed and pinned by Anthropic”, not “written by Anthropic”. By declared category the catalog is:</p>
+<ul>
+<li>development (119)</li>
+<li>productivity (49)</li>
+<li>database (38)</li>
+<li>monitoring (20)</li>
+<li>security (18)</li>
+<li>a long tail of deployment, design, automation, learning, location, testing, migration, and math</li>
+</ul>
+<p>The 38 Anthropic-maintained plugins fall into five groups. The verdicts are for this lab’s work (R packages, Quarto sites, Python and shell tooling, GitHub pull requests), not for software teams in general.</p>
+<h5 id="code-intelligence">Code intelligence</h5>
+<p>Twelve <code>*-lsp</code> plugins (<code>clangd</code>, <code>csharp</code>, <code>gopls</code>, <code>jdtls</code>, <code>kotlin</code>, <code>lua</code>, <code>php</code>, <code>pyright</code>, <code>ruby</code>, <code>rust-analyzer</code>, <code>swift</code>, <code>typescript</code>) connect a Language Server Protocol server so that Claude sees type errors and missing imports after every edit and can jump to definitions instead of grepping <span class="citation" data-cites="claude_code_discover_plugins">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026e</a>)</span>. The plugin does not install the language server binary; you do, and cloud sessions never start it.</p>
+<p>Verdict: <code>pyright-lsp</code> is worth installing wherever the lab writes Python. There is no R entry in the catalog (measured 2026-09-09), so R work gets no diagnostics from this route; the docs describe an <code>.lsp.json</code> for writing your own LSP plugin, which is the path if anyone wants to wire up R’s <code>languageserver</code>.</p>
+<h5 id="development-workflows">Development workflows</h5>
+<ul>
+<li><code>commit-commands</code>: commit, push, and open a PR from slash commands.</li>
+<li><code>code-review</code>: multi-agent PR review with confidence-based scoring.</li>
+<li><code>pr-review-toolkit</code>: reviewer agents specialized by concern (comments, tests, error handling, type design).</li>
+<li><code>feature-dev</code>: a phased explore-design-implement workflow with dedicated agents.</li>
+<li><code>code-simplifier</code>: an agent that refines code for clarity without changing behaviour.</li>
+<li><code>code-modernization</code>: a preflight-assess-transform workflow for legacy codebases.</li>
+<li><code>security-guidance</code>: pattern warnings on every edit plus an LLM diff review at <code>Stop</code>, with fixes applied in the same session.</li>
+<li><code>claude-security</code>: deeper vulnerability scanning of your own code, at a chosen effort level.</li>
+<li><code>ralph-loop</code>: the self-referential iteration loop, treated on its own below.</li>
+</ul>
+<p>Verdict: <code>security-guidance</code> fills a gap <code>ai-config</code> does not cover and costs little, so install it. <code>commit-commands</code>, <code>code-review</code>, and <code>pr-review-toolkit</code> overlap the lab’s forge workflow (claim, PR-on-claim, <code>ardi</code>, the <code>@claude</code> review action) and would run beside it rather than replace it; skip them unless you are working outside a lab repository. <code>feature-dev</code> and <code>code-modernization</code> are aimed at application codebases and have not earned a place here.</p>
+<h5 id="building-your-own-extensions">Building your own extensions</h5>
+<ul>
+<li><code>plugin-dev</code>: seven skills covering hooks, MCP integration, and plugin structure.</li>
+<li><code>skill-creator</code>: create, improve, and benchmark skills.</li>
+<li><code>hookify</code>: write a hook from a conversation pattern or an explicit instruction.</li>
+<li><code>mcp-server-dev</code> and <code>agent-sdk-dev</code>: building MCP servers and Claude Agent SDK programs.</li>
+<li><code>mcp-tunnels</code>: reach a private MCP server through an Anthropic tunnel.</li>
+<li><code>claude-md-management</code>: audit <code>CLAUDE.md</code>, capture session learnings, keep project memory tidy.</li>
+<li><code>claude-code-setup</code>: analyze a codebase and recommend hooks, skills, and MCP servers for it.</li>
+</ul>
+<p>Verdict: <code>skill-creator</code> and <code>plugin-dev</code> are the ones to reach for when adding to <code>ai-config</code>, since the corpus is itself a plugin. <code>claude-md-management</code> duplicates <code>ai-config</code>’s <code>ums</code> and <code>memorize</code> skills and its <code>MEMORY.md</code> conventions; skip it in lab repositories. <code>hookify</code> generates a hook from a description; <code>ai-config</code>’s hooks are hand-written Python with a test per hook, so use <code>hookify</code> for a personal one-off and the corpus for anything shared.</p>
+<h5 id="output-styles-and-reports">Output styles and reports</h5>
+<p><code>explanatory-output-style</code> recreates the deprecated built-in Explanatory style (commentary on implementation choices), and <code>learning-output-style</code> implements a Learning style that never shipped (prompts for you to write key pieces yourself). <code>receipts</code>, <code>session-report</code>, and <code>project-artifact</code> generate HTML reports of what you shipped, what a session cost, and a project status page. <code>playground</code> builds single-file interactive HTML explorers; <code>frontend-design</code> targets distinctive web interfaces; <code>math-olympiad</code> solves competition mathematics with adversarial verification; <code>cwc-makers</code> sets up a hardware kit.</p>
+<p>Verdict: <code>learning-output-style</code> is a reasonable choice for a student who wants to learn a codebase rather than delegate it, per <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;42</a>. <code>session-report</code> is useful when a quota question comes up. The rest are not relevant to lab work.</p>
+<h5 id="external-integrations">External integrations</h5>
+<p>The <code>external_plugins/</code> directory and many third-party entries bundle a pre-configured MCP server: <code>github</code>, <code>gitlab</code>, <code>atlassian</code>, <code>asana</code>, <code>linear</code>, <code>notion</code>, <code>figma</code>, <code>slack</code>, <code>sentry</code>, <code>vercel</code>, <code>firebase</code>, <code>supabase</code>, <code>context7</code>, <code>playwright</code>, <code>serena</code>, <code>terraform</code>, and messaging bridges for Discord, Telegram, and iMessage <span class="citation" data-cites="claude_code_discover_plugins">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026e</a>)</span>.</p>
+<p>Verdict: <code>github</code> is the one that matters here; <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;49</a> covers configuring it, and <a href="#/sec-ai-pr-activity-notifications" class="quarto-xref">Section&nbsp;41</a> what it adds. <code>context7</code> (live library documentation lookup) is worth a try for Python and JavaScript work. Everything else depends on whether the lab uses the service.</p>
+<h4 id="community-plugins-worth-knowing">Community plugins worth knowing</h4>
+<p>Beyond the three Anthropic catalogs, any GitHub repository with a <code>.claude-plugin/marketplace.json</code> is a marketplace (<code>/plugin marketplace add owner/repo</code>), and the four plugins in <a href="#/sec-ai-useful-plugins" class="quarto-xref">Section&nbsp;32</a> (<code>sembr/skills</code>, <code>ponytail</code>, Contextify, and <code>ai-config</code> itself) all reach you that way. One more is widely enough used to describe here.</p>
+<p><strong>Superpowers</strong> (<a href="https://github.com/obra/superpowers"><code>obra/superpowers</code></a> <span class="citation" data-cites="obra_superpowers">(<a href="#/references" role="doc-biblioref" onclick="">Vincent 2026a</a>)</span>) calls itself “a complete software development methodology for your coding agents, built on top of a set of composable skills”. The 6.3.0 build installed on one lab machine carries fourteen skills (measured 2026-09-09):</p>
+<ul>
+<li><code>brainstorming</code></li>
+<li><code>writing-plans</code> and <code>executing-plans</code></li>
+<li><code>test-driven-development</code></li>
+<li><code>systematic-debugging</code></li>
+<li><code>subagent-driven-development</code> and <code>dispatching-parallel-agents</code></li>
+<li><code>requesting-code-review</code> and <code>receiving-code-review</code></li>
+<li><code>using-git-worktrees</code></li>
+<li><code>finishing-a-development-branch</code></li>
+<li><code>verification-before-completion</code></li>
+<li><code>using-superpowers</code> and <code>writing-skills</code>, the two meta-skills</li>
+</ul>
+<p>The <code>using-superpowers</code> skill loads at session start so the others trigger on their own. It is MIT-licensed and installs into more than a dozen agents, among them:</p>
+<ul>
+<li>Claude Code, via <code>/plugin install superpowers@claude-plugins-official</code></li>
+<li>Cursor, Codex, and Copilot CLI</li>
+<li>Gemini CLI, OpenCode, and Antigravity</li>
+<li>Pi and Hermes</li>
+</ul>
+<p>Verdict: install it if you want an opinionated end-to-end process and are not already running <code>ai-config</code>. Running both means two session-start bootstraps competing to set the workflow, and <code>ai-config</code> already covers the same ground in its own vocabulary (<code>brainstorm</code>, <code>st</code>, <code>ardi</code>, <code>adversarial-reviewer</code>, <code>clean-worktrees</code>, <code>wrap-up</code>). The skills that do not overlap (<code>systematic-debugging</code>, <code>test-driven-development</code>) are worth reading even if you do not install the plugin.</p>
+<p>The community marketplace itself is small so far (four plugin directories visible on 2026-09-09: <code>eli5</code>, <code>quickdesign</code>, <code>testdino</code>, <code>tres-finance-plugin</code>; <span class="citation" data-cites="claude_plugins_community">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026d</a>)</span>), so “branching out” today means the official catalog’s third-party entries and independent repositories, not that mirror.</p>
+<h4 id="compared-with-ai-config">Compared with <code>ai-config</code></h4>
+<p><a href="https://github.com/Morrison-Lab/ai-config"><code>Morrison-Lab/ai-config</code></a> <span class="citation" data-cites="ai_config_readme">(<a href="#/references" role="doc-biblioref" onclick="">Morrison Lab 2026</a>)</span> is the lab’s own plugin. The copy Claude Code caches on one lab machine holds 198 skills and 90 hook scripts (measured 2026-09-09), plus memories and the <code>shared/</code> fragments this site vendors into <strong>?@sec-fully-clean</strong> and its neighbours. It installs as a Claude Code plugin (<code>/plugin marketplace add Morrison-Lab/ai-config</code>), as a Cursor plugin, and via <code>bootstrap.sh</code> for Codex, Gemini CLI and Antigravity, VS Code Copilot, and OpenCode (<a href="#/sec-ai-config-install" class="quarto-xref">Section&nbsp;35</a>).</p>
+<p>Set beside the marketplaces above, four differences decide what to install:</p>
+<ul>
+<li><strong>Scope.</strong> A marketplace plugin does one thing: one language server, one MCP server, one workflow. <code>ai-config</code> is a whole working style: forge etiquette (claim, PR-on-claim, <code>ardi</code>, <code>mwc</code>), lab coding and writing conventions, quota management, and the memory that carries lessons between sessions. Nothing in the official catalog is shaped like that; <code>superpowers</code> is the closest, and it stops at the software-methodology layer.</li>
+<li><strong>Enforcement.</strong> The official workflow plugins are mostly skills and agents, which advise. <code>ai-config</code> pairs its skills with hooks that block: an unauthorized merge, a force push, a reply that promises without a mechanism. The one official plugin with a comparable <code>Stop</code>-hook design is <code>security-guidance</code>, which is why it is the clearest addition.</li>
+<li><strong>Cross-agent reach.</strong> Both <code>ai-config</code> and <code>superpowers</code> install into several agents from one repository; the official plugins are Claude Code only. If a lab member works in Codex or Antigravity as well, that decides it.</li>
+<li><strong>Ownership.</strong> A finding in an official plugin is a bug report to Anthropic; a finding in <code>ai-config</code> is a PR you can open today, and the corpus’s UMS discipline expects exactly that.</li>
+</ul>
+<p>The practical composition, as of 2026-09-09: <code>ai-config</code> as the base, <code>pyright-lsp</code> and <code>security-guidance</code> from the official marketplace, <code>github</code> where the MCP server is not already configured by hand, and <code>sembr/skills</code> for prose repositories. Everything else is a per-person choice.</p>
+<h4 id="what-is-ralph-loop-and-is-it-ardi">What is <code>ralph-loop</code>, and is it <code>ardi</code>?</h4>
+<p><code>ralph-loop</code> (official marketplace; <code>ralph-wiggum</code> in the demo marketplace) packages Geoffrey Huntley’s “Ralph” technique <span class="citation" data-cites="ralph_loop_plugin ghuntley_ralph">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026f</a>; <a href="#/references" role="doc-biblioref" onclick="">Huntley 2025</a>)</span>. Ralph, in Huntley’s words, “is a Bash loop”:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb59-1"><a aria-label="1"></a><span class="cf">while</span> <span class="bu">:</span><span class="kw">;</span> <span class="cf">do</span> <span class="fu">cat</span> PROMPT.md <span class="kw">|</span> <span class="ex">claude-code</span> <span class="kw">;</span> <span class="cf">done</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The same prompt file is fed to a fresh agent run, over and over. Nothing changes between iterations except the repository: the previous run’s files, commits, and test results are what the next run reads. Tests supply the backpressure that keeps each pass honest, and the operator “tunes Ralph by adding a sign” to the prompt when a failure pattern shows up <span class="citation" data-cites="ghuntley_ralph">(<a href="#/references" role="doc-biblioref" onclick="">Huntley 2025</a>)</span>. Huntley says it works best on greenfield projects, one task per loop <span class="citation" data-cites="ghuntley_ralph">(<a href="#/references" role="doc-biblioref" onclick="">Huntley 2025</a>)</span>.</p>
+<p>The plugin moves that loop inside a single Claude Code session. <code>/ralph-loop "&lt;prompt&gt;" --max-iterations &lt;n&gt; --completion-promise "&lt;text&gt;"</code> installs a <code>Stop</code> hook that intercepts the agent’s attempt to end the turn and feeds the same prompt back, until the agent’s output contains the completion-promise string exactly, or the iteration cap is hit, or you run <code>/cancel-ralph</code> <span class="citation" data-cites="ralph_loop_plugin">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026f</a>)</span>. The caveats in the README are the important part: the promise is an exact-string match, so it cannot distinguish “done” from “blocked”, and <code>--max-iterations</code> (unlimited by default) is the only real safety net. It lists tasks needing human judgment, one-shot operations, unclear success criteria, and production debugging as cases where not to use it.</p>
+<p>So: is it like <code>ardi</code>? Both are loops that refuse to let the agent stop early, and both rely on a <code>Stop</code>-time mechanism (<code>ai-config</code>’s own <code>Stop</code> hooks are what block a placeholder reply or an empty promise). Past that they answer different questions.</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><code>ralph-loop</code></th>
+<th><code>ardi</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>What it loops over</td>
+<td>one prompt, re-fed to the same session</td>
+<td>one pull request, across review rounds and sessions</td>
+</tr>
+<tr class="even">
+<td>Who decides “done”</td>
+<td>the agent, by emitting an agreed string</td>
+<td>an independent reviewer’s verdict plus green CI on the current head</td>
+</tr>
+<tr class="odd">
+<td>What changes each round</td>
+<td>nothing but the repository state</td>
+<td>the reviewer’s new findings, each Addressed, Rebutted, or Deferred</td>
+</tr>
+<tr class="even">
+<td>Safety valve</td>
+<td>an iteration cap you set</td>
+<td>a human merge gate; the loop reports ready and never merges</td>
+</tr>
+<tr class="odd">
+<td>Where it fits</td>
+<td>before a PR exists: grind an implementation against tests</td>
+<td>after a PR exists: drive it to fully clean</td>
+</tr>
+</tbody>
+</table>
+<p><code>ardi</code> is not self-referential. Each iteration is triggered by something outside the agent (a review landing, a check turning red), it re-arms itself with a timer rather than a <code>Stop</code> hook, and its terminal condition is <strong>?@sec-fully-clean</strong>, which an agent cannot declare about itself. <code>ralph-loop</code> has no reviewer in the loop at all; its judge is whichever tests the prompt tells it to run.</p>
+<p>The two compose rather than compete. A Ralph loop is a reasonable way to get a well-specified, well-tested change to the point of opening a PR; <code>ardi</code> takes over from there. What the lab should not do is use <code>ralph-loop</code> as a substitute for review: a loop whose exit is a string the agent writes will exit whether or not the work is right.</p>
+</section></section>
+<section>
+<section id="sec-ai-customization" class="title-slide slide level1 center" data-number="34">
+<h1><span class="header-section-number">34</span> Customizing an Agent</h1>
 
 </section>
 <section class="slide level2">
@@ -3997,7 +4142,7 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Rules are written as <code>Tool(specifier)</code> — for example <code>Bash(npm run test *)</code>, <code>Read(./.env)</code>, or <code>Skill(commit)</code> — and sorted into <code>allow</code>, <code>ask</code>, and <code>deny</code>. Because a project’s rules merge with yours rather than replacing them, a repository can tighten what you allow, and cannot quietly loosen it.</p>
 <h4 id="mcp-servers-are-a-different-axis-entirely">MCP Servers Are a Different Axis Entirely</h4>
 <p>Everything above changes what the agent <em>knows or must do</em>. An <a href="https://modelcontextprotocol.io/">MCP</a> server changes what it <em>can reach</em>: typed tools, data resources, and reusable templates exposed over a standard protocol. The specification is explicit that it “does not dictate how AI applications use LLMs or manage the provided context.”</p>
-<p>So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;48</a> covers configuration and its failure modes.</p>
+<p>So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;49</a> covers configuration and its failure modes.</p>
 <h4 id="choosing-1">Choosing</h4>
 <table class="caption-top">
 <colgroup>
@@ -4120,13 +4265,13 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This repository is a smaller example of the same idea: it carries a <code>.github/copilot-instructions.md</code> for conventions that apply everywhere, plus path-scoped files under <code>.github/instructions/</code> whose <code>applyTo</code> globs attach them only when you edit a matching file.</p>
 </section></section>
 <section>
-<section id="sec-ai-config-install" class="title-slide slide level1 center" data-number="34">
-<h1><span class="header-section-number">34</span> How the Config Reaches a Machine</h1>
+<section id="sec-ai-config-install" class="title-slide slide level1 center" data-number="35">
+<h1><span class="header-section-number">35</span> How the Config Reaches a Machine</h1>
 
 </section>
 <section class="slide level2">
 
-<p><a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;33</a> describes <em>which</em> mechanism a customization should use. This section is about the step after that decision: how a config like a shared instruction repository actually reaches a machine, and how a broken install fails.</p>
+<p><a href="#/sec-ai-customization" class="quarto-xref">Section&nbsp;34</a> describes <em>which</em> mechanism a customization should use. This section is about the step after that decision: how a config like a shared instruction repository actually reaches a machine, and how a broken install fails.</p>
 <p>Two agents can load the identical instruction corpus and still behave differently, because behavior depends not only on what the config says but on how it is installed where the agent runs. An install problem is quiet by construction — nothing errors, the work still gets done, and a capability simply goes missing with no message that it existed.</p>
 <h4 id="two-ways-the-same-config-reaches-a-machine">Two Ways the Same Config Reaches a Machine</h4>
 <p>A repository of skills, hooks, and instruction files can be delivered two ways, and they are alternatives rather than layers.</p>
@@ -4155,8 +4300,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>The common thread is that the install layer is a real surface, distinct from the content of the config, with its own failure modes and its own checks. When an agent behaves as though a rule or skill you wrote does not exist, suspect the install before you suspect the rule.</p>
 </section></section>
 <section>
-<section id="sec-ai-claude-cloud-env" class="title-slide slide level1 center" data-number="35">
-<h1><span class="header-section-number">35</span> Claude Code Cloud Environments</h1>
+<section id="sec-ai-claude-cloud-env" class="title-slide slide level1 center" data-number="36">
+<h1><span class="header-section-number">36</span> Claude Code Cloud Environments</h1>
 
 </section>
 <section class="slide level2">
@@ -4191,8 +4336,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>For details, see the <a href="https://code.claude.com/docs/en/claude-code-on-the-web">Claude Code on the web documentation</a> and the <a href="https://code.claude.com/docs/en/commands">slash command reference</a>.</p>
 </section></section>
 <section>
-<section id="sec-ai-codex-github-review" class="title-slide slide level1 center" data-number="36">
-<h1><span class="header-section-number">36</span> Using a ChatGPT Account for Codex Pull-Request Reviews</h1>
+<section id="sec-ai-codex-github-review" class="title-slide slide level1 center" data-number="37">
+<h1><span class="header-section-number">37</span> Using a ChatGPT Account for Codex Pull-Request Reviews</h1>
 
 </section>
 <section class="slide level2">
@@ -4209,9 +4354,9 @@ while the selected main agent model is BYOK.</code></pre>
 <p>An <code>AGENTS.md</code> file is optional, but it lets the reviewer follow repository-specific guidance.</p>
 <h4 id="requesting-and-automating-reviews">Requesting and automating reviews</h4>
 <p>After an administrator or repository owner connects the repository and enables code review in Codex settings, request a review by adding this comment to a pull request:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb59-1"><a aria-label="1"></a>@codex review</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb60-1"><a aria-label="1"></a>@codex review</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>You can add a one-off focus to the same comment, for example:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb60-1"><a aria-label="1"></a>@codex review for security regressions and missing tests</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb61-1"><a aria-label="1"></a>@codex review for security regressions and missing tests</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Where the workspace configuration permits it, Codex can also review new pull requests automatically. In GitHub, the general code review reports only high-priority P0 and P1 findings to keep its comments focused.</p>
 <p>A separate <strong>Security Review</strong> (research preview) is a deeper pass on security-specific risks. Request it with <code>@codex security review</code>. It can overlap with the general review’s security findings.</p>
 <h4 id="when-an-administrator-has-disabled-codex-cloud">When an administrator has disabled Codex Cloud</h4>
@@ -4239,11 +4384,11 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Do not copy personal ChatGPT or Codex login credentials into CI secrets.</p>
 <h4 id="adding-repository-specific-review-rules">Adding repository-specific review rules</h4>
 <p>Codex reads applicable <code>AGENTS.md</code> files. Put broad guidance in the repository root and narrower guidance in a file closer to the code it governs. Review-only guidance belongs under a <code>## Code Review Rules</code> heading:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb61-1"><a aria-label="1"></a><span class="fu">## Code Review Rules</span></span>
-<span id="cb61-2"><a aria-label="2"></a></span>
-<span id="cb61-3"><a aria-label="3"></a><span class="ss">- </span>Flag schema changes that are not backward compatible.</span>
-<span id="cb61-4"><a aria-label="4"></a>  A safe migration must support both deployed application versions.</span>
-<span id="cb61-5"><a aria-label="5"></a><span class="ss">- </span>Flag behavior changes without a regression test.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb62-1"><a aria-label="1"></a><span class="fu">## Code Review Rules</span></span>
+<span id="cb62-2"><a aria-label="2"></a></span>
+<span id="cb62-3"><a aria-label="3"></a><span class="ss">- </span>Flag schema changes that are not backward compatible.</span>
+<span id="cb62-4"><a aria-label="4"></a>  A safe migration must support both deployed application versions.</span>
+<span id="cb62-5"><a aria-label="5"></a><span class="ss">- </span>Flag behavior changes without a regression test.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Keep deterministic formatting and lint checks in continuous integration. Code-review guidance should:</p>
 <ul>
 <li>focus on consequential behavior</li>
@@ -4259,8 +4404,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>For current setup details, see OpenAI’s <a href="https://learn.chatgpt.com/docs/third-party/github">GitHub code-review documentation</a>.</p>
 </section></section>
 <section>
-<section id="sec-ai-claude-code-action-review" class="title-slide slide level1 center" data-number="37">
-<h1><span class="header-section-number">37</span> Where Pull-Request Review Lives in Claude Code Action</h1>
+<section id="sec-ai-claude-code-action-review" class="title-slide slide level1 center" data-number="38">
+<h1><span class="header-section-number">38</span> Where Pull-Request Review Lives in Claude Code Action</h1>
 
 </section>
 <section class="slide level2">
@@ -4331,8 +4476,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This is the Claude-side counterpart to <a href="#/sec-ai-codex-github-review">using a ChatGPT account for Codex pull-request reviews</a>. Codex ships a hosted native reviewer configured through the ChatGPT workspace, with no workflow file. Claude Code’s reviewer is the opposite trade: you own a workflow file and supply API credentials, but the prompt, tools, model, and triggering events are all visible and editable in your repository.</p>
 </section></section>
 <section>
-<section id="sec-ai-gemini-review-action" class="title-slide slide level1 center" data-number="38">
-<h1><span class="header-section-number">38</span> Gemini Review Action for GitHub Pull Requests</h1>
+<section id="sec-ai-gemini-review-action" class="title-slide slide level1 center" data-number="39">
+<h1><span class="header-section-number">39</span> Gemini Review Action for GitHub Pull Requests</h1>
 
 </section>
 <section class="slide level2">
@@ -4350,37 +4495,37 @@ while the selected main agent model is BYOK.</code></pre>
 </ul>
 <h4 id="basic-workflow-configuration">Basic workflow configuration</h4>
 <p>To add Gemini code review to a repository, create <code>.github/workflows/gemini-review.yml</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb62-1"><a aria-label="1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> Gemini Code Review</span></span>
-<span id="cb62-2"><a aria-label="2"></a></span>
-<span id="cb62-3"><a aria-label="3"></a><span class="fu">on</span><span class="kw">:</span></span>
-<span id="cb62-4"><a aria-label="4"></a><span class="at">  </span><span class="fu">pull_request</span><span class="kw">:</span></span>
-<span id="cb62-5"><a aria-label="5"></a><span class="at">    </span><span class="fu">types</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">opened</span><span class="kw">,</span><span class="at"> synchronize</span><span class="kw">,</span><span class="at"> reopened</span><span class="kw">]</span></span>
-<span id="cb62-6"><a aria-label="6"></a></span>
-<span id="cb62-7"><a aria-label="7"></a><span class="fu">jobs</span><span class="kw">:</span></span>
-<span id="cb62-8"><a aria-label="8"></a><span class="at">  </span><span class="fu">review</span><span class="kw">:</span></span>
-<span id="cb62-9"><a aria-label="9"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
-<span id="cb62-10"><a aria-label="10"></a><span class="at">    </span><span class="fu">permissions</span><span class="kw">:</span></span>
-<span id="cb62-11"><a aria-label="11"></a><span class="at">      </span><span class="fu">contents</span><span class="kw">:</span><span class="at"> read</span></span>
-<span id="cb62-12"><a aria-label="12"></a><span class="at">      </span><span class="fu">pull-requests</span><span class="kw">:</span><span class="at"> write</span></span>
-<span id="cb62-13"><a aria-label="13"></a><span class="at">      </span><span class="fu">issues</span><span class="kw">:</span><span class="at"> write</span></span>
-<span id="cb62-14"><a aria-label="14"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
-<span id="cb62-15"><a aria-label="15"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Checkout repository</span></span>
-<span id="cb62-16"><a aria-label="16"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span>
-<span id="cb62-17"><a aria-label="17"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb62-18"><a aria-label="18"></a><span class="at">          </span><span class="fu">fetch-depth</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
-<span id="cb62-19"><a aria-label="19"></a></span>
-<span id="cb62-20"><a aria-label="20"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Run Gemini Code Review</span></span>
-<span id="cb62-21"><a aria-label="21"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> derailed-dash/gemini-review-action@v1</span></span>
-<span id="cb62-22"><a aria-label="22"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb62-23"><a aria-label="23"></a><span class="at">          </span><span class="fu">gemini_api_key</span><span class="kw">:</span><span class="at"> ${{ secrets.GEMINI_API_KEY }}</span></span>
-<span id="cb62-24"><a aria-label="24"></a><span class="at">          </span><span class="fu">github_token</span><span class="kw">:</span><span class="at"> ${{ secrets.GITHUB_TOKEN }}</span></span>
-<span id="cb62-25"><a aria-label="25"></a><span class="at">          </span><span class="fu">gemini_model</span><span class="kw">:</span><span class="at"> gemini-3.7-flash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb63-1"><a aria-label="1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> Gemini Code Review</span></span>
+<span id="cb63-2"><a aria-label="2"></a></span>
+<span id="cb63-3"><a aria-label="3"></a><span class="fu">on</span><span class="kw">:</span></span>
+<span id="cb63-4"><a aria-label="4"></a><span class="at">  </span><span class="fu">pull_request</span><span class="kw">:</span></span>
+<span id="cb63-5"><a aria-label="5"></a><span class="at">    </span><span class="fu">types</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">opened</span><span class="kw">,</span><span class="at"> synchronize</span><span class="kw">,</span><span class="at"> reopened</span><span class="kw">]</span></span>
+<span id="cb63-6"><a aria-label="6"></a></span>
+<span id="cb63-7"><a aria-label="7"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb63-8"><a aria-label="8"></a><span class="at">  </span><span class="fu">review</span><span class="kw">:</span></span>
+<span id="cb63-9"><a aria-label="9"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
+<span id="cb63-10"><a aria-label="10"></a><span class="at">    </span><span class="fu">permissions</span><span class="kw">:</span></span>
+<span id="cb63-11"><a aria-label="11"></a><span class="at">      </span><span class="fu">contents</span><span class="kw">:</span><span class="at"> read</span></span>
+<span id="cb63-12"><a aria-label="12"></a><span class="at">      </span><span class="fu">pull-requests</span><span class="kw">:</span><span class="at"> write</span></span>
+<span id="cb63-13"><a aria-label="13"></a><span class="at">      </span><span class="fu">issues</span><span class="kw">:</span><span class="at"> write</span></span>
+<span id="cb63-14"><a aria-label="14"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb63-15"><a aria-label="15"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Checkout repository</span></span>
+<span id="cb63-16"><a aria-label="16"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span>
+<span id="cb63-17"><a aria-label="17"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb63-18"><a aria-label="18"></a><span class="at">          </span><span class="fu">fetch-depth</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
+<span id="cb63-19"><a aria-label="19"></a></span>
+<span id="cb63-20"><a aria-label="20"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Run Gemini Code Review</span></span>
+<span id="cb63-21"><a aria-label="21"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> derailed-dash/gemini-review-action@v1</span></span>
+<span id="cb63-22"><a aria-label="22"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb63-23"><a aria-label="23"></a><span class="at">          </span><span class="fu">gemini_api_key</span><span class="kw">:</span><span class="at"> ${{ secrets.GEMINI_API_KEY }}</span></span>
+<span id="cb63-24"><a aria-label="24"></a><span class="at">          </span><span class="fu">github_token</span><span class="kw">:</span><span class="at"> ${{ secrets.GITHUB_TOKEN }}</span></span>
+<span id="cb63-25"><a aria-label="25"></a><span class="at">          </span><span class="fu">gemini_model</span><span class="kw">:</span><span class="at"> gemini-3.7-flash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <h4 id="comparison-with-native-review-integrations">Comparison with native review integrations</h4>
 <p>Like <a href="#/sec-ai-claude-code-action-review">Claude Code Action</a>, <code>derailed-dash/gemini-review-action</code> gives the repository owner full visibility over workflow triggers, authentication methods, and review prompts. In contrast to hosted review offerings that require platform-level permissions across an entire organization, this GitHub Action operates per-repository with credentials scoped to GitHub Actions secrets or Google Cloud IAM roles.</p>
 </section></section>
 <section>
-<section id="sec-ai-gemini-code-assist-review" class="title-slide slide level1 center" data-number="39">
-<h1><span class="header-section-number">39</span> Gemini Code Assist for Repository Code Review</h1>
+<section id="sec-ai-gemini-code-assist-review" class="title-slide slide level1 center" data-number="40">
+<h1><span class="header-section-number">40</span> Gemini Code Assist for Repository Code Review</h1>
 
 </section>
 <section class="slide level2">
@@ -4440,8 +4585,8 @@ while the selected main agent model is BYOK.</code></pre>
 </table>
 </section></section>
 <section>
-<section id="sec-ai-pr-activity-notifications" class="title-slide slide level1 center" data-number="40">
-<h1><span class="header-section-number">40</span> How a Session Learns a PR Changed</h1>
+<section id="sec-ai-pr-activity-notifications" class="title-slide slide level1 center" data-number="41">
+<h1><span class="header-section-number">41</span> How a Session Learns a PR Changed</h1>
 
 </section>
 <section class="slide level2">
@@ -4489,7 +4634,7 @@ while the selected main agent model is BYOK.</code></pre>
 <p><code>subscribe_pr_activity</code> and <code>unsubscribe_pr_activity</code> are ordinary tool calls, taking an owner, a repository, and a pull-request number. Subscribing delivers that pull request’s activity into the conversation as <code>&lt;github-webhook-activity&gt;</code> messages until the session unsubscribes, or the pull request merges or closes.</p>
 <p>Two caveats are worth knowing before relying on it.</p>
 <p><strong>A successful subscribe does not guarantee delivery.</strong> If a PR Steward agent already holds the watch on that pull request, the call still succeeds — but this session receives nothing. The tool result says so in as many words, so read the result rather than the exit status. Taking over the watch requires opting the steward out first, by removing its watching label on the pull request.</p>
-<p><strong>The tool does not exist on a locally-run GitHub MCP server.</strong> Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;48</a> covers the local analogues to reach for instead.</p>
+<p><strong>The tool does not exist on a locally-run GitHub MCP server.</strong> Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. <a href="#/sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;49</a> covers the local analogues to reach for instead.</p>
 <p><strong>Webhook delivery is also not exhaustive</strong>, which is the failure mode most likely to be mistaken for “nothing has happened”. CI <em>successes</em>, new pushes, and merge-conflict transitions can arrive late or not at all. A session that treats silence as “still green” will sit indefinitely on a pull request that has gone stale or conflicted, so a subscription is a supplement to periodically re-reading the pull request’s real state, not a replacement for it.</p>
 <h4 id="the-channel-only-a-human-controls">The channel only a human controls</h4>
 <p>Claude Code on the web shows a per-pull-request <strong>CI monitoring</strong> panel in the session sidebar, with two checkboxes: <strong>Auto-fix CI &amp; address comments</strong> and <strong>Auto-merge when ready</strong>.</p>
@@ -4500,7 +4645,7 @@ while the selected main agent model is BYOK.</code></pre>
 <li><strong>No agent-side tool can reach it.</strong> It is client-UI state, not something an agent’s configuration surface touches, so asking an agent to enable it cannot work. If the checkbox changes, a human changed it.</li>
 <li><strong>One of the two has a shortcut, and the other does not.</strong> Running <code>/autofix-pr</code> from the command line on a pull request’s branch spawns a web session with <strong>Auto-fix CI &amp; address comments</strong> already on. There is no equivalent shortcut for <strong>Auto-merge when ready</strong>.</li>
 </ul>
-<p>See <a href="#/sec-ai-claude-cloud-env" class="quarto-xref">Section&nbsp;35</a> for the web-session context these run in.</p>
+<p>See <a href="#/sec-ai-claude-cloud-env" class="quarto-xref">Section&nbsp;36</a> for the web-session context these run in.</p>
 <h4 id="the-instruction-template-is-boilerplate">The instruction template is boilerplate</h4>
 <p>Each <code>&lt;ci-monitor-event&gt;</code> quotes the triggering comment verbatim and then appends a <strong>fixed instruction template</strong>:</p>
 <ul>
@@ -4557,8 +4702,8 @@ while the selected main agent model is BYOK.</code></pre>
 </div>
 </section></section>
 <section>
-<section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="41">
-<h1><span class="header-section-number">41</span> When to use a coding agent</h1>
+<section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="42">
+<h1><span class="header-section-number">42</span> When to use a coding agent</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -4567,8 +4712,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.</p>
 <aside><ol class="aside-footnotes"><li id="fn1"><p>2026-01-10</p></li></ol></aside></section></section>
 <section>
-<section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="42">
-<h1><span class="header-section-number">42</span> Editing with <code>.docx</code> files</h1>
+<section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="43">
+<h1><span class="header-section-number">43</span> Editing with <code>.docx</code> files</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -4604,8 +4749,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.</p>
 </section></section>
 <section>
-<section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="43">
-<h1><span class="header-section-number">43</span> Copilot Instructions for this Repository</h1>
+<section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="44">
+<h1><span class="header-section-number">44</span> Copilot Instructions for this Repository</h1>
 
 </section>
 <section class="slide level2">
@@ -4624,8 +4769,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>See this repository’s own <a href="https://github.com/Morrison-Lab/wai/blob/main/.github/copilot-instructions.md"><code>.github/copilot-instructions.md</code></a> for a working example.</p>
 </section></section>
 <section>
-<section id="using-copilot-review-before-human-review" class="title-slide slide level1 center" data-number="44">
-<h1><span class="header-section-number">44</span> Using Copilot Review Before Human Review</h1>
+<section id="using-copilot-review-before-human-review" class="title-slide slide level1 center" data-number="45">
+<h1><span class="header-section-number">45</span> Using Copilot Review Before Human Review</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -4665,8 +4810,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.</p>
 </section></section>
 <section>
-<section id="reviewing-a-copilot-pr-you-didnt-create" class="title-slide slide level1 center" data-number="45">
-<h1><span class="header-section-number">45</span> Reviewing a Copilot PR You Didn’t Create</h1>
+<section id="reviewing-a-copilot-pr-you-didnt-create" class="title-slide slide level1 center" data-number="46">
+<h1><span class="header-section-number">46</span> Reviewing a Copilot PR You Didn’t Create</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -4752,8 +4897,8 @@ while the selected main agent model is BYOK.</code></pre>
 <p>This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.</p>
 </section></section>
 <section>
-<section id="sec-ai-vscode-agent-sessions" class="title-slide slide level1 center" data-number="46">
-<h1><span class="header-section-number">46</span> Agent Sessions and Handoff in Visual Studio Code</h1>
+<section id="sec-ai-vscode-agent-sessions" class="title-slide slide level1 center" data-number="47">
+<h1><span class="header-section-number">47</span> Agent Sessions and Handoff in Visual Studio Code</h1>
 
 </section>
 <section class="slide level2">
@@ -4783,8 +4928,8 @@ while the selected main agent model is BYOK.</code></pre>
 </ul>
 </section></section>
 <section>
-<section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="47">
-<h1><span class="header-section-number">47</span> Installing Claude Code on Windows</h1>
+<section id="sec-ai-claude-code-windows" class="title-slide slide level1 center" data-number="48">
+<h1><span class="header-section-number">48</span> Installing Claude Code on Windows</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -4815,10 +4960,10 @@ while the selected main agent model is BYOK.</code></pre>
 <p>There are two common routes:</p>
 <ol type="1">
 <li><p><strong>Native installer</strong> (recommended):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb63-1"><a aria-label="1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb64-1"><a aria-label="1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This installs the binary to <code>~/.local/bin</code>. If your organization’s policy requires it, download and inspect the script before running it rather than piping it straight to <code>bash</code>.</p></li>
 <li><p><strong>npm</strong> (requires <a href="https://nodejs.org/">Node.js</a>):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb64-1"><a aria-label="1"></a><span class="ex">npm</span> install <span class="at">-g</span> @anthropic-ai/claude-code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb65"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb65-1"><a aria-label="1"></a><span class="ex">npm</span> install <span class="at">-g</span> @anthropic-ai/claude-code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 </ol>
 <div class="callout callout-important callout-titled callout-style-default">
 <div class="callout-body">
@@ -4837,11 +4982,11 @@ while the selected main agent model is BYOK.</code></pre>
 <h4 id="make-sure-your-shell-can-find-claude">Make sure your shell can find <code>claude</code></h4>
 <p>The native binary lives in <code>~/.local/bin</code>. The installer adds this directory to <code>PATH</code> for ordinary shells, but on Windows two things commonly break that.</p>
 <p><strong>MSYS2 does not inherit the Windows <code>PATH</code> by default.</strong> It starts in a “minimal” path mode, so tools installed elsewhere on Windows are invisible to it. Add the binary’s directory explicitly in your <code>~/.zshrc</code> (or <code>~/.bashrc</code>). Because MSYS2’s <code>$HOME</code> is <code>/home/&lt;you&gt;</code> (its own home, not the Windows profile where the installer puts the binary), point <code>PATH</code> at the absolute Windows path:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb65"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb65-1"><a aria-label="1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"/c/Users/&lt;you&gt;/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># MSYS2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb66"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb66-1"><a aria-label="1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"/c/Users/&lt;you&gt;/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># MSYS2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>In <strong>Git Bash</strong>, <code>$HOME</code> already is <code>/c/Users/&lt;you&gt;</code> (your Windows user profile), so the shorthand works there:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb66"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb66-1"><a aria-label="1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"</span><span class="va">$HOME</span><span class="st">/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># Git Bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb67"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb67-1"><a aria-label="1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"</span><span class="va">$HOME</span><span class="st">/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span>     <span class="co"># Git Bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Rehash after changing <code>PATH</code>.</strong> <code>zsh</code> and <code>bash</code> cache the locations of executables. If you add a directory to <code>PATH</code> in your shell config, the shell may still report <code>command not found</code> <em>even though the directory is on <code>PATH</code></em>, because its command table is stale. Force a rebuild in the same shell right after editing <code>PATH</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb67"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb67-1"><a aria-label="1"></a><span class="ex">rehash</span>        <span class="co"># zsh; use 'hash -r' in bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb68"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb68-1"><a aria-label="1"></a><span class="ex">rehash</span>        <span class="co"># zsh; use 'hash -r' in bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This bites hardest with <a href="https://ohmyz.sh/">oh-my-zsh</a>, which builds zsh’s command table <em>before</em> your custom <code>PATH</code> line runs, so opening a fresh window may not clear the stale <code>command not found</code> on its own until you <code>rehash</code> (or move the <code>PATH</code> line before oh-my-zsh initializes).</p>
 <h4 id="do-not-edit-dotfiles-with-powershell-redirection">Do not edit dotfiles with PowerShell redirection</h4>
 <div class="callout callout-warning callout-titled callout-style-default">
@@ -4863,16 +5008,16 @@ while the selected main agent model is BYOK.</code></pre>
 <p>If you also use the <a href="https://cli.github.com/">GitHub CLI</a> (<code>gh</code>) to push code or open pull requests, <code>gh auth login</code> may fail with:</p>
 <pre><code>could not prompt: … running in MinTTY without pseudo terminal support</code></pre>
 <p>Git Bash and MSYS2 both default to the MinTTY terminal, which can’t host the interactive prompt. Wrap the command with <code>winpty</code>, or run it from PowerShell / Windows Terminal instead:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb70"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb70-1"><a aria-label="1"></a><span class="ex">winpty</span> gh auth login</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb71"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb71-1"><a aria-label="1"></a><span class="ex">winpty</span> gh auth login</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>winpty</code> ships with Git Bash, but in MSYS2 it’s a separate package — install it first with <code>pacman -S winpty</code> if you get <code>command not found</code>.</p>
 <h4 id="verify-the-install">Verify the install</h4>
 <p>Open a <strong>new</strong> terminal window (so it picks up your updated config) and run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb71"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb71-1"><a aria-label="1"></a><span class="ex">claude</span> <span class="at">--version</span>      <span class="co"># prints the installed version number</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb72"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb72-1"><a aria-label="1"></a><span class="ex">claude</span> <span class="at">--version</span>      <span class="co"># prints the installed version number</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If you get a version number, you’re ready to run <code>claude</code> in your project directory. If you get <code>command not found</code>, re-check the two <code>PATH</code> issues above: the directory must be on <code>PATH</code>, and you must <code>rehash</code> (or open a fresh window) after changing it.</p>
 </section></section>
 <section>
-<section id="sec-ai-mcp-server-setup" class="title-slide slide level1 center" data-number="48">
-<h1><span class="header-section-number">48</span> Setting up MCP servers</h1>
+<section id="sec-ai-mcp-server-setup" class="title-slide slide level1 center" data-number="49">
+<h1><span class="header-section-number">49</span> Setting up MCP servers</h1>
 
 </section>
 <section class="slide level2">
@@ -4894,7 +5039,7 @@ while the selected main agent model is BYOK.</code></pre>
 <h4 id="installed-is-not-registered">Installed is not registered</h4>
 <p>A server binary sitting on disk is not available to your agent. The harness knows only what its configuration declares, so installing <a href="https://github.com/github/github-mcp-server"><code>github-mcp-server</code></a> and <em>registering</em> it are two separate acts. Skipping the second is easy to miss, because the first one felt like the hard part.</p>
 <p>The check is one command:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb72"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb72-1"><a aria-label="1"></a><span class="ex">claude</span> mcp list</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb73"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb73-1"><a aria-label="1"></a><span class="ex">claude</span> mcp list</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <h4 id="a-broken-server-can-occupy-the-name-your-working-one-wanted">A broken server can occupy the name your working one wanted</h4>
 <p>This is the failure worth knowing about, and it is nastier than a missing entry, because <code>claude mcp list</code> shows you something that looks right.</p>
 <p>Plugin marketplaces can register servers of their own. An official GitHub plugin may install a <strong>remote</strong> server under exactly the name you meant to give your <strong>local</strong> one. The listing then reports a <code>github</code> server that is not your setup at all, and the local binary you installed goes unregistered and unnoticed.</p>
@@ -4905,7 +5050,7 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <h4 id="and-401-mean-different-things">400 and 401 mean different things</h4>
 <p>The status code is the whole diagnosis here, and it is easy to skim past.</p>
 <p>The configuration a plugin ships may hardcode a credential placeholder:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb74"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb74-1"><a aria-label="1"></a><span class="fu">{</span><span class="dt">"headers"</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">"Authorization"</span><span class="fu">:</span> <span class="st">"Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}"</span><span class="fu">}}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb75"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb75-1"><a aria-label="1"></a><span class="fu">{</span><span class="dt">"headers"</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">"Authorization"</span><span class="fu">:</span> <span class="st">"Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}"</span><span class="fu">}}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If that variable has no value when the harness starts, the header goes out as a bare <code>Bearer</code> with nothing after it. That is <strong>malformed</strong>, not <strong>unauthorized</strong>:</p>
 <ul>
 <li><strong>401</strong> means the server read your token and rejected it — a real credential problem: expired, wrong scopes, wrong account.</li>
@@ -4914,42 +5059,42 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <p>Chasing a 400 as though it were a 401 sends you to the token-minting page for a problem that lives in a config file.</p>
 <h4 id="install-the-binary-the-platforms-own-way">Install the binary the platform’s own way</h4>
 <p>These notes started from a Linux install, where the binary lands under <code>$HOME/.local/bin</code>. On macOS the same server is a Homebrew formula, and getting it is one command:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb75"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb75-1"><a aria-label="1"></a><span class="ex">brew</span> install github-mcp-server</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb76"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb76-1"><a aria-label="1"></a><span class="ex">brew</span> install github-mcp-server</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>That installs to <code>/opt/homebrew/bin</code> on Apple silicon (<code>/usr/local/bin</code> under Intel Homebrew), so no manual download is needed.</p>
 <p>The official install guide leads with a Docker recipe instead, and it has a catch worth knowing before you follow it: <code>docker</code> being on <code>PATH</code> does not mean the daemon is running. With Docker Desktop stopped, the server fails to connect to the Docker API, and that failure surfaces at <em>server start</em>, not at registration — so <code>claude mcp add</code> succeeds, and the break only shows up later, as a silent absence of tools. That is one more reason to prefer the binary path above.</p>
 <p>Because the binary’s location differs by platform and by installer, a launch wrapper should resolve it from <code>PATH</code> rather than hardcode it, with an override for the case where it isn’t on one.</p>
 <h4 id="supply-credentials-without-storing-a-token">Supply credentials without storing a token</h4>
 <p>The obvious registration bakes a token straight into harness config:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb76"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb76-1"><a aria-label="1"></a><span class="ex">claude</span> mcp add github <span class="at">-e</span> GITHUB_PERSONAL_ACCESS_TOKEN=<span class="op">&lt;</span>pat<span class="op">&gt;</span> -- <span class="op">&lt;</span>server<span class="op">&gt;</span> stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb77"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb77-1"><a aria-label="1"></a><span class="ex">claude</span> mcp add github <span class="at">-e</span> GITHUB_PERSONAL_ACCESS_TOKEN=<span class="op">&lt;</span>pat<span class="op">&gt;</span> -- <span class="op">&lt;</span>server<span class="op">&gt;</span> stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>That writes a live credential to a config file in plain text, and pins you to one token that will eventually expire.</p>
 <p>A launch wrapper avoids both. It reads the credential at start time from a tool that already holds one, so nothing is stored and the server follows whatever account you are currently logged in as:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb77"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb77-1"><a aria-label="1"></a><span class="co">#!/bin/sh</span></span>
-<span id="cb77-2"><a aria-label="2"></a><span class="bu">set</span> <span class="at">-eu</span></span>
-<span id="cb77-3"><a aria-label="3"></a></span>
-<span id="cb77-4"><a aria-label="4"></a><span class="va">SERVER</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_MCP_SERVER_BIN</span><span class="op">:-</span><span class="va">$(</span><span class="bu">command</span> <span class="at">-v</span> github-mcp-server <span class="kw">||</span> <span class="fu">true</span><span class="va">)}</span><span class="st">"</span></span>
-<span id="cb77-5"><a aria-label="5"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$SERVER</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
-<span id="cb77-6"><a aria-label="6"></a>  <span class="bu">echo</span> <span class="st">"github-mcp-server not on PATH; install it or set GITHUB_MCP_SERVER_BIN"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
-<span id="cb77-7"><a aria-label="7"></a>  <span class="bu">exit</span> 1</span>
-<span id="cb77-8"><a aria-label="8"></a><span class="cf">fi</span></span>
-<span id="cb77-9"><a aria-label="9"></a></span>
-<span id="cb77-10"><a aria-label="10"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_TOOLSETS</span><span class="op">:-</span>default,actions<span class="va">}</span><span class="st">"</span></span>
-<span id="cb77-11"><a aria-label="11"></a><span class="bu">export</span> <span class="va">GITHUB_TOOLSETS</span></span>
-<span id="cb77-12"><a aria-label="12"></a></span>
-<span id="cb77-13"><a aria-label="13"></a><span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="op">=</span><span class="st">"</span><span class="va">$(</span><span class="ex">gh</span> auth token<span class="va">)</span><span class="st">"</span></span>
-<span id="cb77-14"><a aria-label="14"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
-<span id="cb77-15"><a aria-label="15"></a>  <span class="bu">echo</span> <span class="st">"empty token; run 'gh auth login'"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
-<span id="cb77-16"><a aria-label="16"></a>  <span class="bu">exit</span> 1</span>
-<span id="cb77-17"><a aria-label="17"></a><span class="cf">fi</span></span>
-<span id="cb77-18"><a aria-label="18"></a><span class="bu">export</span> <span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span></span>
-<span id="cb77-19"><a aria-label="19"></a></span>
-<span id="cb77-20"><a aria-label="20"></a><span class="bu">exec</span> <span class="st">"</span><span class="va">$SERVER</span><span class="st">"</span> stdio <span class="st">"</span><span class="va">$@</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb78"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb78-1"><a aria-label="1"></a><span class="co">#!/bin/sh</span></span>
+<span id="cb78-2"><a aria-label="2"></a><span class="bu">set</span> <span class="at">-eu</span></span>
+<span id="cb78-3"><a aria-label="3"></a></span>
+<span id="cb78-4"><a aria-label="4"></a><span class="va">SERVER</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_MCP_SERVER_BIN</span><span class="op">:-</span><span class="va">$(</span><span class="bu">command</span> <span class="at">-v</span> github-mcp-server <span class="kw">||</span> <span class="fu">true</span><span class="va">)}</span><span class="st">"</span></span>
+<span id="cb78-5"><a aria-label="5"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$SERVER</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb78-6"><a aria-label="6"></a>  <span class="bu">echo</span> <span class="st">"github-mcp-server not on PATH; install it or set GITHUB_MCP_SERVER_BIN"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb78-7"><a aria-label="7"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb78-8"><a aria-label="8"></a><span class="cf">fi</span></span>
+<span id="cb78-9"><a aria-label="9"></a></span>
+<span id="cb78-10"><a aria-label="10"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span><span class="st">"</span><span class="va">${GITHUB_TOOLSETS</span><span class="op">:-</span>default,actions<span class="va">}</span><span class="st">"</span></span>
+<span id="cb78-11"><a aria-label="11"></a><span class="bu">export</span> <span class="va">GITHUB_TOOLSETS</span></span>
+<span id="cb78-12"><a aria-label="12"></a></span>
+<span id="cb78-13"><a aria-label="13"></a><span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="op">=</span><span class="st">"</span><span class="va">$(</span><span class="ex">gh</span> auth token<span class="va">)</span><span class="st">"</span></span>
+<span id="cb78-14"><a aria-label="14"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$GITHUB_PERSONAL_ACCESS_TOKEN</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb78-15"><a aria-label="15"></a>  <span class="bu">echo</span> <span class="st">"empty token; run 'gh auth login'"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb78-16"><a aria-label="16"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb78-17"><a aria-label="17"></a><span class="cf">fi</span></span>
+<span id="cb78-18"><a aria-label="18"></a><span class="bu">export</span> <span class="va">GITHUB_PERSONAL_ACCESS_TOKEN</span></span>
+<span id="cb78-19"><a aria-label="19"></a></span>
+<span id="cb78-20"><a aria-label="20"></a><span class="bu">exec</span> <span class="st">"</span><span class="va">$SERVER</span><span class="st">"</span> stdio <span class="st">"</span><span class="va">$@</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Register the wrapper rather than the binary:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb78"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb78-1"><a aria-label="1"></a><span class="ex">claude</span> mcp add <span class="at">--scope</span> user github <span class="at">--</span> ~/.local/bin/github-mcp-server-stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb79"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb79-1"><a aria-label="1"></a><span class="ex">claude</span> mcp add <span class="at">--scope</span> user github <span class="at">--</span> ~/.local/bin/github-mcp-server-stdio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Note the explicit failure when the token comes back empty. A wrapper that silently exports an empty string reproduces the bare-<code>Bearer</code> bug you just finished diagnosing.</p>
 <h4 id="toolsets-are-opt-in-and-the-default-may-omit-what-you-need">Toolsets are opt-in, and the default may omit what you need</h4>
 <p>A server does not necessarily expose everything it can do. GitHub’s server exposes a default group, and that default carries <strong>no continuous-integration access at all</strong> — no workflow runs, no job logs, no re-run trigger. As of this writing (server v1.7.0) the actions toolset’s four tools are <code>actions_get</code>, <code>actions_list</code>, <code>actions_run_trigger</code>, and <code>get_job_logs</code> — the exact names have moved around across releases, so treat this list as a snapshot rather than a promise.</p>
 <p>If your workflow involves driving pull requests to a clean state, that omission matters, because reading check status is most of the job. Request the extra group explicitly:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb79"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb79-1"><a aria-label="1"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span>default,actions</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb80"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb80-1"><a aria-label="1"></a><span class="va">GITHUB_TOOLSETS</span><span class="op">=</span>default,actions</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Note that the selection <strong>replaces</strong> the default rather than extending it, which is why the value above names <code>default</code> explicitly. Writing <code>actions</code> alone would silently trade away every default tool for the four you asked for — a net <em>loss</em> that looks like a successful configuration change.</p>
 <p>So compare the tool list before and after, and confirm the count went up rather than sideways. On the same v1.7.0 server, the default group carries 44 tools, and <code>default,actions,discussions,dependabot,labels,notifications</code> carries 63 — the count moving the right direction, as the check above expects.</p>
 <h4 id="subscribe_pr_activity-isnt-a-local-server-tool"><code>subscribe_pr_activity</code> isn’t a local-server tool</h4>
@@ -4978,8 +5123,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <p>It connects through the standard <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> (MCP) as a remote server at <code>https://mcp.granola.ai/mcp</code>. For Claude or ChatGPT, enable it from the app’s connector/app settings and authenticate; for Cursor, Claude Code, or any other MCP client that supports a manual URL, register that URL directly (see <a href="https://www.granola.ai/blog/granola-mcp">the announcement</a> for per-client steps). On an Enterprise plan it is an early-access beta, off by default until an admin enables it.</p>
 </section></section>
 <section>
-<section id="sec-ai-antigravity-python-sdk" class="title-slide slide level1 center" data-number="49">
-<h1><span class="header-section-number">49</span> Google Antigravity Python SDK</h1>
+<section id="sec-ai-antigravity-python-sdk" class="title-slide slide level1 center" data-number="50">
+<h1><span class="header-section-number">50</span> Google Antigravity Python SDK</h1>
 
 </section>
 <section class="slide level2">
@@ -5038,8 +5183,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </table>
 </section></section>
 <section>
-<section id="sec-ai-magic-context" class="title-slide slide level1 center" data-number="50">
-<h1><span class="header-section-number">50</span> Unbounded Context with Magic Context</h1>
+<section id="sec-ai-magic-context" class="title-slide slide level1 center" data-number="51">
+<h1><span class="header-section-number">51</span> Unbounded Context with Magic Context</h1>
 
 </section>
 <section class="slide level2">
@@ -5061,8 +5206,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </ul>
 </section></section>
 <section>
-<section id="sec-ai-conductor-extension" class="title-slide slide level1 center" data-number="51">
-<h1><span class="header-section-number">51</span> Spec-Driven Development with Conductor</h1>
+<section id="sec-ai-conductor-extension" class="title-slide slide level1 center" data-number="52">
+<h1><span class="header-section-number">52</span> Spec-Driven Development with Conductor</h1>
 
 </section>
 <section class="slide level2">
@@ -5115,8 +5260,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </table>
 </section></section>
 <section>
-<section id="sec-ai-plugins-deep-dive" class="title-slide slide level1 center" data-number="52">
-<h1><span class="header-section-number">52</span> Anatomy of Agent Plugins</h1>
+<section id="sec-ai-plugins-deep-dive" class="title-slide slide level1 center" data-number="53">
+<h1><span class="header-section-number">53</span> Anatomy of Agent Plugins</h1>
 
 </section>
 <section class="slide level2">
@@ -5183,8 +5328,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </ul>
 </section></section>
 <section>
-<section id="sec-ai-oh-my-opencode" class="title-slide slide level1 center" data-number="53">
-<h1><span class="header-section-number">53</span> Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent</h1>
+<section id="sec-ai-oh-my-opencode" class="title-slide slide level1 center" data-number="54">
+<h1><span class="header-section-number">54</span> Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent</h1>
 
 </section>
 <section class="slide level2">
@@ -5249,13 +5394,13 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </table>
 </section></section>
 <section>
-<section id="sec-ai-opencode-ecosystem" class="title-slide slide level1 center" data-number="54">
-<h1><span class="header-section-number">54</span> The OpenCode Ecosystem</h1>
+<section id="sec-ai-opencode-ecosystem" class="title-slide slide level1 center" data-number="55">
+<h1><span class="header-section-number">55</span> The OpenCode Ecosystem</h1>
 
 </section>
 <section class="slide level2">
 
-<p><a href="https://opencode.ai">OpenCode</a> <span class="citation" data-cites="opencode_repo">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">anomalyco</span> 2026</a>)</span> is the open-source coding agent harness (MIT-licensed, about 206,000 GitHub stars, measured 2026-09-09) that the earlier OpenCode sections of this chapter build on: running it against local models (<a href="#/sec-ai-opencode-ollama" class="quarto-xref">Section&nbsp;22</a>), against OpenRouter (<a href="#/sec-ai-opencode-openrouter" class="quarto-xref">Section&nbsp;23</a>), and under the Oh My OpenCode multi-agent framework (<a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;53</a>). Around the harness itself sits a community ecosystem of plugins, clients, and agent bundles, which the OpenCode maintainers index on a single documentation page <span class="citation" data-cites="opencode_ecosystem">(<a href="#/references" role="doc-biblioref" onclick="">OpenCode 2026a</a>)</span>. This section maps that page (as of 2026-09-09) and calls out the entries most relevant to us. Where the site already covers a project, this section points there instead of repeating it.</p>
+<p><a href="https://opencode.ai">OpenCode</a> <span class="citation" data-cites="opencode_repo">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">anomalyco</span> 2026</a>)</span> is the open-source coding agent harness (MIT-licensed, about 206,000 GitHub stars, measured 2026-09-09) that the earlier OpenCode sections of this chapter build on: running it against local models (<a href="#/sec-ai-opencode-ollama" class="quarto-xref">Section&nbsp;22</a>), against OpenRouter (<a href="#/sec-ai-opencode-openrouter" class="quarto-xref">Section&nbsp;23</a>), and under the Oh My OpenCode multi-agent framework (<a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;54</a>). Around the harness itself sits a community ecosystem of plugins, clients, and agent bundles, which the OpenCode maintainers index on a single documentation page <span class="citation" data-cites="opencode_ecosystem">(<a href="#/references" role="doc-biblioref" onclick="">OpenCode 2026a</a>)</span>. This section maps that page (as of 2026-09-09) and calls out the entries most relevant to us. Where the site already covers a project, this section points there instead of repeating it.</p>
 <h4 id="how-the-ecosystem-is-organized">How the ecosystem is organized</h4>
 <p>The ecosystem page groups its entries into three lists <span class="citation" data-cites="opencode_ecosystem">(<a href="#/references" role="doc-biblioref" onclick="">OpenCode 2026a</a>)</span>:</p>
 <ul>
@@ -5288,10 +5433,10 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </ul>
 <p><strong>Orchestration and workflow bundles</strong></p>
 <ul>
-<li><a href="https://github.com/code-yeongyu/oh-my-openagent"><code>oh-my-opencode</code></a> (now <code>oh-my-openagent</code>; about 68,800 stars; release <code>v5.0.0-beta.51</code> on 2026-09-09). Covered in <a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;53</a>.</li>
+<li><a href="https://github.com/code-yeongyu/oh-my-openagent"><code>oh-my-opencode</code></a> (now <code>oh-my-openagent</code>; about 68,800 stars; release <code>v5.0.0-beta.51</code> on 2026-09-09). Covered in <a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;54</a>.</li>
 <li><a href="https://github.com/kdcokenny/opencode-workspace"><code>opencode-workspace</code></a> <span class="citation" data-cites="opencode_workspace">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">kdcokenny</span> 2026c</a>)</span> (MIT; 586 stars; no tagged release). A one-install bundle of 16 components: four plugins (workspace management, async delegation, notifications, git isolation), two npm plugins, three MCP servers (documentation, web search, code search), four specialist agents (researcher, coder, scribe, reviewer), four skill modules, and one command interface. Its sibling <a href="https://github.com/kdcokenny/opencode-background-agents"><code>opencode-background-agents</code></a> <span class="citation" data-cites="opencode_background_agents">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">kdcokenny</span> 2026b</a>)</span> (MIT; 382 stars) provides <code>delegate()</code>, <code>delegation_read()</code>, and <code>delegation_list()</code> tools whose results persist to disk under <code>~/.local/share/opencode/delegations/</code>, so they survive context compaction; only read-only sub-agents may run in the background, because background sessions sit outside OpenCode’s undo and branching system. <em>Useful to us?</em> Worth a trial as a lighter alternative to Oh My OpenCode; the disk-persisted delegation results address the same loss-on-compaction problem our lab notebook convention exists for.</li>
 <li><a href="https://github.com/vtemian/micode"><code>micode</code></a> (MIT; 483 stars) and <a href="https://github.com/vtemian/octto"><code>octto</code></a> (MIT; 493 stars), from the same author: a brainstorm-plan-implement workflow with session continuity, and a browser UI that turns an agent’s clarifying questions into multi-question forms. <em>Useful to us?</em> Possibly <code>octto</code>, which does for OpenCode what <code>AskUserQuestion</code> does in Claude Code.</li>
-<li><a href="https://github.com/derekbar90/opencode-conductor"><code>opencode-conductor</code></a> (Apache-2.0; 129 stars; last push 2026-03-02) ports the Context, Spec, Plan, Implement lifecycle described in <a href="#/sec-ai-conductor-extension" class="quarto-xref">Section&nbsp;51</a> to OpenCode. <em>Useful to us?</em> Only if that lifecycle is adopted; the port looks dormant.</li>
+<li><a href="https://github.com/derekbar90/opencode-conductor"><code>opencode-conductor</code></a> (Apache-2.0; 129 stars; last push 2026-03-02) ports the Context, Spec, Plan, Implement lifecycle described in <a href="#/sec-ai-conductor-extension" class="quarto-xref">Section&nbsp;52</a> to OpenCode. <em>Useful to us?</em> Only if that lifecycle is adopted; the port looks dormant.</li>
 <li><a href="https://github.com/backnotprop/plannotator"><code>plannotator</code></a> (Apache-2.0; about 8,600 stars; release <code>v0.27.12</code> on 2026-09-03) is a visual plan-and-diff annotation tool with an OpenCode plugin; it is agent-agnostic and also targets Claude Code. <em>Useful to us?</em> Yes, for reviewing agent plans before implementation; it addresses the plan-review step directly.</li>
 <li><a href="https://github.com/willytop8/OpenCode-goal-plugin"><code>opencode-goal-plugin</code></a> (MIT; 252 stars; release <code>v0.10.0</code> on 2026-09-07) adds a session-scoped <code>/goal</code> that keeps an objective in context and auto-continues until “evidence-gated completion”. <em>Useful to us?</em> Maybe, for unattended ARDI-style loops.</li>
 </ul>
@@ -5307,11 +5452,11 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <ul>
 <li><a href="https://github.com/NeuralNomadsAI/CodeNomad"><code>CodeNomad</code></a> <span class="citation" data-cites="codenomad">(<a href="#/references" role="doc-biblioref" onclick="">Neural Nomads AI 2026</a>)</span> (Neural Nomads AI; MIT; about 2,600 stars; release <code>v0.19.0</code> on 2026-08-24; pushed 2026-09-09). Describes itself as “The AI Coding Cockpit for OpenCode”: a SolidJS front end with a Node.js server that wraps an OpenCode CLI already on your <code>PATH</code>. It ships as Electron and Tauri desktop builds for macOS, Windows (x64 and ARM64), and Linux, and as a password-protected local web server (<code>npx @neuralnomads/codenomad --password &lt;password&gt; --launch</code>) for remote or browser access. Features include multi-instance workspaces, session management, git worktrees, voice input, a file browser, a command palette, and “SideCars” that embed local web tools as tabs. Despite the ecosystem page’s “Desktop, Web, Mobile and Remote” description, the README documents no native mobile app; mobile access is through the web server. <em>Useful to us?</em> Yes, as the most complete graphical front end for OpenCode and a plausible answer to “I want several OpenCode sessions side by side without <code>tmux</code>”.</li>
 <li><a href="https://github.com/openchamber/openchamber"><code>OpenChamber</code></a> <span class="citation" data-cites="openchamber">(<a href="#/references" role="doc-biblioref" onclick="">OpenChamber 2026</a>)</span> (now under its own organization; MIT; about 9,700 stars; release <code>v1.22.2</code> on 2026-09-05). A workspace for running and reviewing agent work on desktop, web, VS Code, iOS, and Android, with session goals, a “multi-run” mode that runs the same task across up to five models, a guided changes walkthrough for large diffs, scheduled tasks, and an end-to-end encrypted “Private Relay” for remote connections. Like CodeNomad it uses OpenCode as the engine and is not affiliated with the OpenCode team. <em>Useful to us?</em> Yes; the multi-model run is a direct fit for our habit of getting a second model’s review.</li>
-<li><a href="https://github.com/different-ai/openwork"><code>OpenWork</code></a> <span class="citation" data-cites="openwork">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">different-ai</span> 2026</a>)</span> (different-ai; about 23,400 stars; release <code>v0.18.44</code> on 2026-09-09). Positions itself as “an open-source alternative to Claude Cowork and Codex” for macOS, Windows, and Linux, sharing skills, MCP servers, and connected services across tools and machines. Code outside <code>ee/</code> is MIT; the organizational control plane under <code>ee/</code> uses a separate license that is free for up to five users. <em>Useful to us?</em> Compare against the collaborative workspaces in <a href="#/sec-ai-collaborative-workspaces" class="quarto-xref">Section&nbsp;56</a>; the five-user free tier fits a lab, and the open core makes it auditable.</li>
+<li><a href="https://github.com/different-ai/openwork"><code>OpenWork</code></a> <span class="citation" data-cites="openwork">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">different-ai</span> 2026</a>)</span> (different-ai; about 23,400 stars; release <code>v0.18.44</code> on 2026-09-09). Positions itself as “an open-source alternative to Claude Cowork and Codex” for macOS, Windows, and Linux, sharing skills, MCP servers, and connected services across tools and machines. Code outside <code>ee/</code> is MIT; the organizational control plane under <code>ee/</code> uses a separate license that is free for up to five users. <em>Useful to us?</em> Compare against the collaborative workspaces in <a href="#/sec-ai-collaborative-workspaces" class="quarto-xref">Section&nbsp;57</a>; the five-user free tier fits a lab, and the open core makes it auditable.</li>
 <li><a href="https://github.com/nickjvandyke/opencode.nvim"><code>opencode.nvim</code></a> <span class="citation" data-cites="opencode_nvim">(<a href="#/references" role="doc-biblioref" onclick="">Dyke 2026</a>)</span> (Nick van Dyke; MIT; about 3,800 stars; release <code>v1.0.0</code> on 2026-08-20) connects Neovim to a running OpenCode server (<code>opencode --port</code>), injects editor context (cursor, selection, diagnostics) into prompts, surfaces OpenCode’s server-sent events as Neovim autocommands, and reloads buffers when the agent edits files. A second, unrelated <a href="https://github.com/sudo-tee/opencode.nvim"><code>sudo-tee/opencode.nvim</code></a> (Apache-2.0; 937 stars) is a full Neovim front end rather than a bridge. <em>Useful to us?</em> For the Neovim users in the lab, yes.</li>
 <li><a href="https://github.com/remorses/kimaki"><code>kimaki</code></a> <span class="citation" data-cites="kimaki">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">remorses</span> 2026</a>)</span> (MIT; about 1,400 stars; release <code>kimaki@0.27.0</code> on 2026-09-01). A Discord bot in which each project is a channel and each session a thread; it queues messages, forks sessions, transcribes voice messages, shows diffs, and maps Discord roles to permission controls. <em>Useful to us?</em> No for now; our coordination runs through GitHub, not Discord.</li>
 <li><a href="https://github.com/hosenur/portal"><code>portal</code></a> <span class="citation" data-cites="opencode_portal">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">hosenur</span> 2026</a>)</span> (MIT; 798 stars; last push 2026-05-12) is a mobile-first web UI meant to be reached over Tailscale. <a href="https://github.com/mtymek/opencode-obsidian"><code>OpenCode-Obsidian</code></a> (MIT; about 1,100 stars) embeds OpenCode in Obsidian’s sidebar. <em>Useful to us?</em> Niche; CodeNomad and OpenChamber cover the remote-access case with more activity.</li>
-<li><a href="https://github.com/kdcokenny/ocx"><code>ocx</code></a> <span class="citation" data-cites="ocx">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">kdcokenny</span> 2026a</a>)</span> (MIT; 942 stars; release <code>v2.0.15</code> on 2026-08-17). An extension manager with portable, isolated profiles: <code>ocx profile add</code> installs a profile from a registry, <code>ocx oc -p &lt;name&gt;</code> launches OpenCode with it, and components are copied into <code>.opencode/</code> (the shadcn model) rather than hidden in dependencies, with SHA verification of what is installed. <em>Useful to us?</em> Yes, if we standardize an OpenCode profile for the lab; it is the closest thing to the plugin marketplace we use for Claude Code (<a href="#/sec-ai-plugins-deep-dive" class="quarto-xref">Section&nbsp;52</a>).</li>
+<li><a href="https://github.com/kdcokenny/ocx"><code>ocx</code></a> <span class="citation" data-cites="ocx">(<a href="#/references" role="doc-biblioref" onclick=""><span class="nocase">kdcokenny</span> 2026a</a>)</span> (MIT; 942 stars; release <code>v2.0.15</code> on 2026-08-17). An extension manager with portable, isolated profiles: <code>ocx profile add</code> installs a profile from a registry, <code>ocx oc -p &lt;name&gt;</code> launches OpenCode with it, and components are copied into <code>.opencode/</code> (the shadcn model) rather than hidden in dependencies, with SHA verification of what is installed. <em>Useful to us?</em> Yes, if we standardize an OpenCode profile for the lab; it is the closest thing to the plugin marketplace we use for Claude Code (<a href="#/sec-ai-plugins-deep-dive" class="quarto-xref">Section&nbsp;53</a>).</li>
 <li><a href="https://github.com/ben-vargas/ai-sdk-provider-opencode-sdk"><code>ai-sdk-provider-opencode-sdk</code></a> (MIT; 116 stars) exposes OpenCode’s configured providers to the Vercel AI SDK, and <a href="https://github.com/zenobi-us/opencode-plugin-template"><code>opencode-plugin-template</code></a> (archived) was the scaffold for writing plugins. <em>Useful to us?</em> Only when building on the SDK.</li>
 </ul>
 <h4 id="agent-bundles">Agent bundles</h4>
@@ -5319,7 +5464,7 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <li><a href="https://github.com/darrenhinde/OpenAgentsControl"><code>OpenAgentsControl</code></a> (listed as <code>opencode-agents</code>; MIT; about 4,800 stars; release <code>v0.7.1</code> on 2026-01-30) is a plan-first framework with approval-gated execution and built-in test, review, and validation steps.</li>
 <li><a href="https://github.com/Cluster444/agentic"><code>agentic</code></a> (MIT; 638 stars; last push 2025-09-02) is a context-engineering toolkit that appears dormant.</li>
 </ul>
-<p><em>Useful to us?</em> <code>OpenAgentsControl</code> overlaps heavily with Oh My OpenCode (<a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;53</a>) and <code>opencode-workspace</code>; pick one such harness rather than layering them.</p>
+<p><em>Useful to us?</em> <code>OpenAgentsControl</code> overlaps heavily with Oh My OpenCode (<a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;54</a>) and <code>opencode-workspace</code>; pick one such harness rather than layering them.</p>
 <h4 id="opencode-zen-and-opencode-go">OpenCode Zen and OpenCode Go</h4>
 <p>The ecosystem page does not describe them, but two first-party paid services sit alongside the community projects:</p>
 <ul>
@@ -5349,7 +5494,7 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </tr>
 <tr class="even">
 <td>Multi-agent orchestration</td>
-<td>Oh My OpenCode (<a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;53</a>)</td>
+<td>Oh My OpenCode (<a href="#/sec-ai-oh-my-opencode" class="quarto-xref">Section&nbsp;54</a>)</td>
 <td><code>opencode-workspace</code>, <code>OpenAgentsControl</code></td>
 </tr>
 <tr class="odd">
@@ -5382,8 +5527,8 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <p>Skip the subscription-bridge plugins.</p>
 </section></section>
 <section>
-<section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="55">
-<h1><span class="header-section-number">55</span> Managing Gemini API Spend and Cost Optimization</h1>
+<section id="sec-ai-gemini-spend-management" class="title-slide slide level1 center" data-number="56">
+<h1><span class="header-section-number">56</span> Managing Gemini API Spend and Cost Optimization</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -5426,15 +5571,15 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </ul>
 </section></section>
 <section>
-<section id="sec-ai-collaborative-workspaces" class="title-slide slide level1 center" data-number="56">
-<h1><span class="header-section-number">56</span> Collaborative AI Workspaces: Claude Cowork and Gemini Spark</h1>
+<section id="sec-ai-collaborative-workspaces" class="title-slide slide level1 center" data-number="57">
+<h1><span class="header-section-number">57</span> Collaborative AI Workspaces: Claude Cowork and Gemini Spark</h1>
 
 </section>
 <section class="slide level2 scrollable">
 
 <p>The 2026 AI ecosystem has expanded beyond reactive chat windows and command-line coding orchestrators into collaborative workspace agents (measured 2026-09-01). These systems operate directly on multi-file workspaces, desktop applications, and cloud productivity suites to automate complex, multi-step analytical and administrative workflows.</p>
 <h4 id="claude-cowork">Claude Cowork</h4>
-<p><a href="https://claude.com/docs/cowork/overview">Claude Cowork</a> <span class="citation" data-cites="claude_cowork">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026</a>)</span> (also discussed in <strong>?@sec-claude-cowork</strong>) is Anthropic’s desktop-native agent architecture designed to collaborate directly within local folders and desktop application environments:</p>
+<p><a href="https://claude.com/docs/cowork/overview">Claude Cowork</a> <span class="citation" data-cites="claude_cowork">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026c</a>)</span> (also discussed in <strong>?@sec-claude-cowork</strong>) is Anthropic’s desktop-native agent architecture designed to collaborate directly within local folders and desktop application environments:</p>
 <ul>
 <li><strong>Local Sandboxed Execution</strong>: Cowork runs in a sandboxed virtual environment on the host machine, reading, modifying, and creating local files (spreadsheets, markdown manuscripts, datasets) without requiring manual file uploads or cloud synchronizations.</li>
 <li><strong>Desktop Application and Browser Interaction</strong>: Beyond static file manipulation, Cowork interfaces with local applications and browser sessions (via <a href="https://claude.com/claude-in-chrome">Claude in Chrome</a>) to execute multi-application workflows.</li>
@@ -5453,7 +5598,7 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 <p>Similar collaborative workspace paradigms have emerged across other frontier ecosystems:</p>
 <ul>
 <li><strong>ChatGPT Work and OpenAI Canvas</strong>: <a href="https://learn.chatgpt.com/docs/get-started-with-work">ChatGPT Work</a> <span class="citation" data-cites="chatgpt_work">(<a href="#/references" role="doc-biblioref" onclick="">OpenAI 2026</a>)</span> (see <strong>?@sec-chatgpt-work</strong>) and Canvas provide side-by-side document and code editing with inline line-level revisions, interactive targeted edits, and multi-file artifact tracking.</li>
-<li><strong>Cursor and Google Antigravity Agent Workspaces</strong>: Developer-centric workspace agents providing multi-agent delegation, worktree isolation, and structured planning workflows (such as Conductor extension spec-driven development, <a href="#/sec-ai-conductor-extension" class="quarto-xref">Section&nbsp;51</a>).</li>
+<li><strong>Cursor and Google Antigravity Agent Workspaces</strong>: Developer-centric workspace agents providing multi-agent delegation, worktree isolation, and structured planning workflows (such as Conductor extension spec-driven development, <a href="#/sec-ai-conductor-extension" class="quarto-xref">Section&nbsp;52</a>).</li>
 <li><strong>Notion AI and Microsoft Copilot Studio</strong>: Enterprise knowledge graph agents designed for querying organizational wikis and automating business process workflows.</li>
 </ul>
 <h4 id="comparative-taxonomy-of-workspace-agents">Comparative Taxonomy of Workspace Agents</h4>
@@ -5537,8 +5682,23 @@ Ali, Numman. 2026. <em>Opencode-Openai-Codex-Auth: Use Your ChatGPT Plus/Pro Sub
 <div id="ref-opencode_repo" class="csl-entry" role="listitem">
 <span class="nocase">anomalyco</span>. 2026. <em>OpenCode: The Open Source Coding Agent</em>. GitHub repository. <a href="https://github.com/anomalyco/opencode">https://github.com/anomalyco/opencode</a>.
 </div>
+<div id="ref-claude_code_demo_plugins" class="csl-entry" role="listitem">
+Anthropic. 2026a. <em>Claude Code Plugins Directory</em>. Software. <a href="https://github.com/anthropics/claude-code/tree/main/plugins">https://github.com/anthropics/claude-code/tree/main/plugins</a>.
+</div>
+<div id="ref-claude_plugins_official" class="csl-entry" role="listitem">
+Anthropic. 2026b. <em>Claude Code Plugins Official Marketplace</em>. Software. <a href="https://github.com/anthropics/claude-plugins-official">https://github.com/anthropics/claude-plugins-official</a>.
+</div>
 <div id="ref-claude_cowork" class="csl-entry" role="listitem">
-Anthropic. 2026. <em>Claude Cowork Overview</em>. Documentation. <a href="https://claude.com/docs/cowork/overview">https://claude.com/docs/cowork/overview</a>.
+Anthropic. 2026c. <em>Claude Cowork Overview</em>. Documentation. <a href="https://claude.com/docs/cowork/overview">https://claude.com/docs/cowork/overview</a>.
+</div>
+<div id="ref-claude_plugins_community" class="csl-entry" role="listitem">
+Anthropic. 2026d. <em>Claude Plugins Community Marketplace</em>. Software. <a href="https://github.com/anthropics/claude-plugins-community">https://github.com/anthropics/claude-plugins-community</a>.
+</div>
+<div id="ref-claude_code_discover_plugins" class="csl-entry" role="listitem">
+Anthropic. 2026e. <em>Discover and Install Prebuilt Plugins Through Marketplaces</em>. Documentation. <a href="https://code.claude.com/docs/en/discover-plugins">https://code.claude.com/docs/en/discover-plugins</a>.
+</div>
+<div id="ref-ralph_loop_plugin" class="csl-entry" role="listitem">
+Anthropic. 2026f. <em>Ralph Loop Plugin</em>. Documentation. <a href="https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/plugins/ralph-loop/README.md">https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/plugins/ralph-loop/README.md</a>.
 </div>
 <div id="ref-i_robot" class="csl-entry" role="listitem">
 Asimov, Isaac. 1950. <em>I, Robot</em>. Novel; Gnome Press. <a href="https://search.library.ucdavis.edu/permalink/01UCD_INST/9fle3i/alma990000226350403126">https://search.library.ucdavis.edu/permalink/01UCD_INST/9fle3i/alma990000226350403126</a>.
@@ -5591,6 +5751,9 @@ HKUDS. 2026. <em>OpenHarness: Open Agent Harness with a Built-in Personal Agent<
 <div id="ref-lora" class="csl-entry" role="listitem">
 Hu, Edward J., Yelong Shen, Phillip Wallis, et al. 2021. <em>LoRA: Low-Rank Adaptation of Large Language Models</em>. arXiv preprint. <a href="https://arxiv.org/abs/2106.09685">https://arxiv.org/abs/2106.09685</a>.
 </div>
+<div id="ref-ghuntley_ralph" class="csl-entry" role="listitem">
+Huntley, Geoffrey. 2025. <em>Ralph</em>. Blog post. <a href="https://ghuntley.com/ralph/">https://ghuntley.com/ralph/</a>.
+</div>
 <div id="ref-opencode_vibeguard" class="csl-entry" role="listitem">
 <span class="nocase">inkdust2021</span>. 2026. <em>Opencode-Vibeguard: Redact Secrets and PII Before LLM Calls</em>. GitHub repository. <a href="https://github.com/inkdust2021/opencode-vibeguard">https://github.com/inkdust2021/opencode-vibeguard</a>.
 </div>
@@ -5608,6 +5771,9 @@ Hu, Edward J., Yelong Shen, Phillip Wallis, et al. 2021. <em>LoRA: Low-Rank Adap
 </div>
 <div id="ref-lecun_world_models" class="csl-entry" role="listitem">
 LeCun, Yann. 2022. <em>A Path Towards Autonomous Machine Intelligence</em>. Meta AI Research; New York University; Technical Report. <a href="https://openreview.net/forum?id=BZ5a1r-kVsf">https://openreview.net/forum?id=BZ5a1r-kVsf</a>.
+</div>
+<div id="ref-ai_config_readme" class="csl-entry" role="listitem">
+Morrison Lab. 2026. <em>Ai-Config: Portable AI Agent Config</em>. Software. <a href="https://github.com/Morrison-Lab/ai-config">https://github.com/Morrison-Lab/ai-config</a>.
 </div>
 <div id="ref-codenomad" class="csl-entry" role="listitem">
 Neural Nomads AI. 2026. <em>CodeNomad: The AI Coding Cockpit for OpenCode</em>. GitHub repository. <a href="https://github.com/NeuralNomadsAI/CodeNomad">https://github.com/NeuralNomadsAI/CodeNomad</a>.
@@ -5702,8 +5868,11 @@ Runkle, Sydney. 2026. <em>How to Build a Custom Agent Harness</em>. Documentatio
 <div id="ref-matrix" class="csl-entry" role="listitem">
 <em>The Matrix</em>. 1999. Film. <a href="https://en.wikipedia.org/wiki/The_Matrix">https://en.wikipedia.org/wiki/The_Matrix</a>.
 </div>
+<div id="ref-obra_superpowers" class="csl-entry" role="listitem">
+Vincent, Jesse. 2026a. <em>Superpowers</em>. Software. <a href="https://github.com/obra/superpowers">https://github.com/obra/superpowers</a>.
+</div>
 <div id="ref-superpowers" class="csl-entry" role="listitem">
-Vincent, Jesse. 2026. <em>Superpowers: An Agentic Skills Framework and Software Development Methodology</em>. Software. <a href="https://github.com/obra/superpowers">https://github.com/obra/superpowers</a>.
+Vincent, Jesse. 2026b. <em>Superpowers: An Agentic Skills Framework and Software Development Methodology</em>. Software. <a href="https://github.com/obra/superpowers">https://github.com/obra/superpowers</a>.
 </div>
 <div id="ref-wargames" class="csl-entry" role="listitem">
 <em>WarGames</em>. 1983. Film. <a href="https://en.wikipedia.org/wiki/WarGames">https://en.wikipedia.org/wiki/WarGames</a>.
