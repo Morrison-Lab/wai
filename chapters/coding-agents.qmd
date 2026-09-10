@@ -229,6 +229,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/plugins-deep-dive.qmd >}}
 
+# Running Codex Inside Claude Code: the codex-plugin-cc Plugin {#sec-ai-codex-plugin-cc}
+
+{{< include ai-tools/codex-plugin-cc.qmd >}}
+
 # Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent {#sec-ai-oh-my-opencode}
 
 {{< include ai-tools/oh-my-opencode.qmd >}}
