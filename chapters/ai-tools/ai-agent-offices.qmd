@@ -161,7 +161,7 @@ and triggers from CRM events, email, calendar, webhooks, and cron.
 - **Agent and API access.**
   The strongest developer surface of the five: API, MCP, webhooks, and cron.
 
-## Useful to us?
+## Useful to us? Not for research work
 
 For an epidemiology lab whose work is code, data, and manuscripts,
 these products solve a problem we mostly do not have.
