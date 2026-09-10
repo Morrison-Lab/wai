@@ -31,7 +31,7 @@ The plugin is installed through Claude Code's plugin marketplace mechanism
 the repository's `marketplace.json` names the marketplace `openai-codex`,
 which is why the install command does not repeat the repository name:
 
-```bash
+```text
 /plugin marketplace add openai/codex-plugin-cc
 /plugin install codex@openai-codex
 /reload-plugins
