@@ -1,0 +1,292 @@
+@sec-ai-harnesses defines a harness,
+@sec-ai-harness-construction explains which of its layers are code and which are prose,
+and @sec-ai-harness-landscape maps the vendor harnesses.
+This section covers the layer that sits on top of those:
+the **custom harnesses** that individuals and small teams build for themselves,
+and what building one would mean for this lab
+(measured 2026-09-09 unless stated otherwise).
+
+#### Two things people mean by "custom harness"
+
+The projects surveyed here split into two kinds,
+and the distinction decides how much work a custom harness is:
+
+- **A configuration layer on a vendor harness.**
+  The execution engine stays Claude Code, Codex, or OpenCode,
+  and the "harness" is a plugin:
+  skills, hooks, subagent definitions, slash commands, and memory files
+  that the vendor harness reads at runtime
+  (the markdown-plus-front-matter layer of @sec-ai-harness-construction).
+  `oh-my-claudecode`, Hoyeon, Superpowers, and GSD Core are all this kind.
+- **A standalone runtime.**
+  The tool-calling loop, permission model, and tool handlers are your own code,
+  and the model is called through an API.
+  `OpenHarness` and the LangChain guide are this kind.
+
+The first kind is days of work and inherits every vendor upgrade for free.
+The second is months of work and gives you control over the loop itself,
+which is the only reason to pay for it.
+
+#### Surveyed projects
+
+@tbl-custom-harnesses lists the projects surveyed.
+
+| Project | Kind | Runs on | License | Size (2026-09-09) |
+|---|---|---|---|---|
+| [`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode) [@oh_my_claudecode] | layer | Claude Code (plus CLI workers for Codex, Gemini, Antigravity, Grok, Cursor) | MIT | 39.1k stars |
+| [Hoyeon](https://github.com/team-attention/hoyeon) [@hoyeon] | layer | Claude Code | MIT | 174 stars; last push 2026-05-21 |
+| [Superpowers](https://github.com/obra/superpowers) [@superpowers] | layer | Claude Code, Codex, Cursor, OpenCode, Pi, Hermes, and eight others | MIT | 283.8k stars; on the official Claude plugin marketplace |
+| [GSD Core](https://github.com/open-gsd/gsd-core) [@gsd_core] | layer | Claude Code, OpenCode, Codex, Copilot, Cursor, and four others | MIT | 9.3k stars |
+| [`OpenHarness`](https://github.com/HKUDS/OpenHarness) [@openharness] | runtime | any Anthropic- or OpenAI-compatible endpoint | MIT | 15.7k stars; last push 2026-06-04 |
+| [LangChain `create_agent`](https://www.langchain.com/blog/how-to-build-a-custom-agent-harness) [@langchain_custom_harness] | runtime | any LangChain model | MIT (library) | guide, not a product |
+
+: Custom harnesses surveyed for this section {#tbl-custom-harnesses}
+
+#### `oh-my-claudecode` (OMC)
+
+The `README` states: "Multi-agent orchestration for Claude Code. Zero learning curve." [@oh_my_claudecode].
+It installs as a Claude Code plugin
+(`/plugin marketplace add`, then `/plugin install oh-my-claudecode`)
+or as an npm CLI,
+and adds:
+
+- execution modes: a staged `team` pipeline
+  (`team-plan`, `team-prd`, `team-exec`, `team-verify`, `team-fix` in a loop),
+  `autopilot` for single-agent autonomy,
+  and `ralph` for persistence until a task verifies;
+- 19 specialized subagents with a model-by-agent compatibility matrix
+  and routing that sends simple tasks to Haiku and reasoning to Opus,
+  which the README says "saves 30-50% on tokens" without a stated methodology;
+- `/skillify`, which extracts a reusable skill from a session
+  into `.omc/skills/` (project) or `~/.omc/skills/` (user)
+  and auto-injects matching skills later;
+- a HUD status line, cost tracking, Discord/Telegram/Slack notifications,
+  and a `tmux`-based mode that drives other vendors' CLIs as workers.
+
+It is the same family as the Oh My OpenCode project in @sec-ai-oh-my-opencode
+(the npm package is still named `oh-my-claude-sisyphus`),
+and by star count the most-used custom harness in this survey after Superpowers.
+
+**Useful to us?**
+Partly.
+Its model routing and skill extraction are things `Morrison-Lab/ai-config` already does
+with `select-model` and `ums`,
+so installing OMC on top would double them.
+Its notification integrations and HUD are the pieces we lack,
+and they are separable.
+
+#### Hoyeon
+
+Hoyeon calls itself a "Requirements-first Harness --- derive, verify, execute" [@hoyeon].
+Its idea is that most agent failures are planning failures,
+so it forces a derivation chain
+(goal, context, decisions, requirements, tasks, execution)
+and gates each transition twice:
+a CLI validates the structure of `requirements.md` and `plan.json`
+before any model reads them,
+and a reviewer agent checks for scope drift and blind spots.
+The commands are `/specify` (a Socratic interview),
+`/blueprint` (contract-first planning into a task dependency graph),
+`/execute` (parallel workers plus independent verification against sub-requirements),
+`/bugfix`, `/council`, and `/tribunal`
+(a three-agent adversarial review: risk, value, feasibility).
+It ships 22 agents and 29 skills and installs with `claude plugin add team-attention/hoyeon`
+plus an npm CLI.
+
+**Useful to us?**
+The design principle is exactly the lab's own
+"deterministic tools over model judgment" rule
+(@sec-ai-customization):
+a CLI that rejects malformed plans before an LLM sees them
+is the kind of instrument our hooks already are for pushes and merges.
+The requirements interview is heavier than most of our tasks need,
+and it is Claude-Code-only.
+
+#### Superpowers
+
+Superpowers is Jesse Vincent's
+"agentic skills framework & software development methodology" [@superpowers].
+It is the purest example of the layer kind:
+a set of skills and one bootstrap that makes them mandatory.
+The `using-superpowers` meta-skill injects itself at session start
+so the agent checks for a relevant skill before any task,
+and the skills encode a workflow:
+brainstorming, writing and executing plans, test-driven development,
+systematic debugging, git worktrees, requesting and receiving code review,
+and subagent-driven development with a two-stage review
+(spec compliance first, then code quality).
+It installs from the official Claude plugin marketplace
+(`/plugin install superpowers@claude-plugins-official`)
+and from Codex's `/plugins`,
+and supports fourteen harnesses.
+Its own README records the cost of the layer approach:
+Hermes has no post-compaction hook,
+so a long session that compacts loses the bootstrap.
+
+**Useful to us?**
+Yes, and the lab's maintainer already runs it alongside `ai-config`
+in Claude Code.
+The overlap is real
+(both have a brainstorming skill, both have a code-review workflow),
+so treat it as a reference implementation of skill design
+rather than a second source of truth.
+
+#### GSD Core
+
+GSD ("Git. Ship. Done.") describes itself as a
+"context-engineering and spec-driven development framework
+that drives AI coding agents through a disciplined phase loop" [@gsd_core].
+Its target is **context rot**,
+which it defines as the quality degradation that accumulates as an agent fills its context window.
+The remedy is a five-step loop per milestone:
+
+1. discuss (capture decisions);
+2. plan (research and decompose in a subagent);
+3. execute (parallel executors, each starting with a fresh context);
+4. verify (walk through the built work before declaring done);
+5. ship (open the PR, archive the phase).
+
+State lives in `STATE.md` and `CONTEXT.md` so it survives session boundaries.
+It installs with `npx @opengsd/gsd-core@latest`,
+which asks which of nine runtimes to target.
+
+**Useful to us?**
+The fresh-context-executor pattern is the same one
+@sec-orch-when recommends,
+and `ai-config`'s `compress-session` and `handoff` skills
+play the role of `STATE.md`.
+GSD's contribution is having made the loop the default rather than an option.
+
+#### `OpenHarness`
+
+`OpenHarness`, from the HKUDS group at the University of Hong Kong,
+is an "Open Agent Harness with a Built-in Personal Agent" [@openharness]
+and the one standalone runtime in this survey that targets coding-agent use.
+It is Python with a React terminal UI,
+installs from a shell script in the repository (the command is `oh`),
+and rebuilds the whole stack from @sec-ai-harnesses:
+an agent loop with streaming tool use and retries,
+a registry of more than forty tools,
+Markdown skills loaded on demand,
+plugins that follow Claude Code's conventions
+(the README reports testing against twelve official plugins),
+three permission modes (ask, auto, plan) plus path and command rules,
+lifecycle hooks, MCP, persistent memory, background tasks,
+and subagent coordination.
+It talks to Anthropic, OpenAI, Copilot, Codex, Kimi, GLM, MiniMax, and NVIDIA endpoints.
+
+**Useful to us?**
+As an escape hatch.
+Because it reads Claude Code skills and plugins,
+`ai-config` would largely carry over,
+so it is the cheapest way to run our configuration
+on a model or endpoint Claude Code cannot use
+(@sec-ai-claude-code-other-models covers the subscription restrictions that motivate this).
+It is not a reason to leave Claude Code while Claude Code does what we need.
+
+#### The LangChain guide
+
+Sydney Runkle's "How to build a custom agent harness" (2026-06-03) [@langchain_custom_harness]
+is the runtime kind described from the library side.
+It defines the harness as "the scaffolding around the model that connects it to the real world,"
+starts from `create_agent` with three inputs (a model, tools, a system prompt),
+and adds everything else as **middleware** at fixed points in the loop
+(before and after each model call and tool call).
+Its table maps eight production needs to middleware:
+context overflow to summarization and context editing;
+memory to filesystem, memory, and skills middleware;
+environment actions to shell, filesystem, and code-interpreter middleware;
+delegation to subagent and to-do-list middleware;
+transient failures to retry and model-fallback middleware;
+policy to personal-data and human-in-the-loop middleware;
+steering to human-in-the-loop;
+and cost to call limits and prompt caching.
+It positions the Claude Agent SDK and its own Deep Agents as pre-assembled alternatives.
+
+**Useful to us?**
+As a checklist.
+Every row of that table has a counterpart in the layer approach
+(a hook, a skill, a permission rule),
+so it is a good audit of what a harness must cover
+whichever kind you build.
+
+#### The community thread
+
+The r/ClaudeCode thread "Show off your own harness setups here"
+collects personal setups of the layer kind.
+Reddit blocks automated fetches,
+so the thread is not summarized here
+and is worth reading directly.
+One small repository of the same kind,
+[`my-claude-code-harness`](https://github.com/code-yeongyu/my-claude-code-harness) [@my_claude_code_harness]
+(12 stars, no license, last pushed 2025-11-28),
+shows the shape such personal setups take:
+plan-reviewer, executor, and librarian agents;
+hooks that inject language guidelines and run a linter;
+and `/planner`, `/execute`, `/commit`, and `/create-pr` commands.
+@sec-ai-guidance-sources lists the communities where these setups are discussed.
+
+#### What the projects have in common
+
+Across the layer-kind harnesses the same five moves recur:
+
+- a **mandatory workflow** injected at session start
+  (Superpowers' bootstrap, OMC's prompt triggers, GSD's loop);
+- **planning before execution**, with the plan written to a file
+  (`plan.json`, `STATE.md`, a writing-plans skill);
+- **fresh-context workers** for execution, with the main session kept lean;
+- **independent verification** by a different agent than the one that did the work;
+- **deterministic gates** where a check can be decided without a model
+  (Hoyeon's CLI validation, `my-claude-code-harness`'s linter hooks).
+
+The runtime-kind projects add the loop itself,
+the permission model,
+and provider independence;
+nothing else in the surveyed runtimes is missing from the layer kind.
+
+#### How we would build our own
+
+`Morrison-Lab/ai-config` is already a custom harness of the layer kind,
+and a large one.
+On 2026-09-09 a local checkout held:
+
+- 191 skills;
+- 94 hook scripts,
+  and a `hooks/hooks.json` with 55 registrations
+  (30 `PreToolUse`, 10 `UserPromptSubmit`, and 15 `Stop`);
+- 8 subagent definitions (including the `adversarial-reviewer` that gates every push);
+- 131 shared prose fragments and 59 memory files;
+- a plugin manifest, so Claude Code and Cursor load it as a plugin
+  (@sec-ai-config-install explains how, and @sec-ai-customization what the corpus contains).
+
+It already implements all five common moves:
+the bootstrap is `CLAUDE.md` and `AGENTS.md`,
+planning goes through issue-first and `st`,
+fresh-context workers are the `Agent` and `Workflow` calls,
+independent verification is the adversarial-reviewer subagent,
+and the deterministic gates are the hooks.
+So "building our own" means three concrete things,
+in order:
+
+1. **Keep the layer approach.**
+   Nothing in the survey justifies a standalone runtime for us yet:
+   every vendor upgrade to Claude Code arrives for free,
+   and the layer is portable to Codex, OpenCode, and `OpenHarness`
+   because all of them read the same `SKILL.md` and plugin conventions.
+2. **Borrow the pieces we lack.**
+   Superpowers' two-stage review (spec compliance, then code quality)
+   is a sharper split than our single adversarial pass;
+   Hoyeon's structural validation of a plan file before a model reads it
+   is a hook we do not have;
+   OMC's notification integrations would replace our scheduled-poll check-ins.
+   Each is one skill or one hook,
+   and each should land as its own `ai-config` issue and PR.
+3. **Decide the runtime question by a measured need, not by ambition.**
+   The trigger for the runtime kind is a feature the vendor loop cannot give us:
+   a model Claude Code will not call under our subscription,
+   a permission mode it does not offer,
+   or a loop change (a retry policy, a cost ceiling) that hooks cannot express.
+   When that day comes,
+   `OpenHarness` is the cheaper route,
+   because it already loads our plugin,
+   and the LangChain middleware table is the checklist for anything it lacks.
