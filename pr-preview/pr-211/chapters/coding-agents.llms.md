@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-09 20:55:49 (PDT)
+Last modified: 2026-09-09 23:59:18 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3905,39 +3905,39 @@ LeCun, Yann. 2022. *A Path Towards Autonomous Machine Intelligence*. Meta AI Res
 
 OpenAI. 2026. *Get Started with ChatGPT Work*. Documentation. <https://learn.chatgpt.com/docs/get-started-with-work>.
 
-Posit PBC. 2026a. *Ai-Lib: LLM Provider Infrastructure for Posit Assistant*. GitHub repository. <https://github.com/posit-dev/ai-lib>.
+Posit PBC. 2026a. *Ai-Lib: LLM Provider Infrastructure for Posit Assistant*. Software. <https://github.com/posit-dev/ai-lib>.
 
-Posit PBC. 2026b. *Assistant-Feedback: Repository for Feedback on Posit Assistant*. GitHub repository. <https://github.com/posit-dev/assistant-feedback>.
+Posit PBC. 2026b. *Assistant-Feedback: Repository for Feedback on Posit Assistant*. Software. <https://github.com/posit-dev/assistant-feedback>.
 
-Posit PBC. 2026c. *Bluffbench2: A Visual Reasoning LLM Benchmark*. GitHub repository. <https://github.com/posit-dev/bluffbench2>.
+Posit PBC. 2026c. *Bluffbench2: A Visual Reasoning LLM Benchmark*. Software. <https://github.com/posit-dev/bluffbench2>.
 
-Posit PBC. 2026d. *Btw: A Complete Toolkit for Connecting r and LLMs*. GitHub repository. <https://github.com/posit-dev/btw>.
+Posit PBC. 2026d. *Btw: A Complete Toolkit for Connecting r and LLMs*. Software. <https://github.com/posit-dev/btw>.
 
-Posit PBC. 2026e. *Chatlas: Your Friendly Guide to Building LLM Chat Apps in Python*. GitHub repository. <https://github.com/posit-dev/chatlas>.
+Posit PBC. 2026e. *Chatlas: Your Friendly Guide to Building LLM Chat Apps in Python*. Software. <https://github.com/posit-dev/chatlas>.
 
-Posit PBC. 2026f. *Code-Index: Semantic Code Search for AI Coding Assistants*. GitHub repository. <https://github.com/posit-dev/code-index>.
+Posit PBC. 2026f. *Code-Index: Semantic Code Search for AI Coding Assistants*. Software. <https://github.com/posit-dev/code-index>.
 
-Posit PBC. 2026g. *Commons: AI Agents for Data Analysis*. GitHub repository. <https://github.com/posit-dev/commons>.
+Posit PBC. 2026g. *Commons: AI Agents for Data Analysis*. Software. <https://github.com/posit-dev/commons>.
 
-Posit PBC. 2026h. *Mcp-Repl: A Persistent, Sandboxed r or Python Session for MCP Agents*. GitHub repository. <https://github.com/posit-dev/mcp-repl>.
+Posit PBC. 2026h. *Mcp-Repl: A Persistent, Sandboxed r or Python Session for MCP Agents*. Software. <https://github.com/posit-dev/mcp-repl>.
 
-Posit PBC. 2026i. *Mcptools: Model Context Protocol for r*. GitHub repository. <https://github.com/posit-dev/mcptools>.
+Posit PBC. 2026i. *Mcptools: Model Context Protocol for r*. Software. <https://github.com/posit-dev/mcptools>.
 
-Posit PBC. 2026j. *Nesevals: Evaluate Next Edit Suggestion Scaffolds*. GitHub repository. <https://github.com/posit-dev/nesevals>.
+Posit PBC. 2026j. *Nesevals: Evaluate Next Edit Suggestion Scaffolds*. Software. <https://github.com/posit-dev/nesevals>.
 
-Posit PBC. 2026k. *Positron, a Next-Generation Data Science IDE*. GitHub repository. <https://github.com/posit-dev/positron>.
+Posit PBC. 2026k. *Positron, a Next-Generation Data Science IDE*. Software. <https://github.com/posit-dev/positron>.
 
-Posit PBC. 2026l. *Positron-Copilot-Chat: Copilot Chat Extension for Positron*. GitHub repository. <https://github.com/posit-dev/positron-copilot-chat>.
+Posit PBC. 2026l. *Positron-Copilot-Chat: Copilot Chat Extension for Positron*. Software. <https://github.com/posit-dev/positron-copilot-chat>.
 
-Posit PBC. 2026m. *Querychat: Chat with Your Data in r and Python*. GitHub repository. <https://github.com/posit-dev/querychat>.
+Posit PBC. 2026m. *Querychat: Chat with Your Data in r and Python*. Software. <https://github.com/posit-dev/querychat>.
 
-Posit PBC. 2026n. *Raghilda: RAG Made Simple*. GitHub repository. <https://github.com/posit-dev/raghilda>.
+Posit PBC. 2026n. *Raghilda: RAG Made Simple*. Software. <https://github.com/posit-dev/raghilda>.
 
-Posit PBC. 2026o. *Shiny-Assistant: Chat Assistant for Shiny*. GitHub repository. <https://github.com/posit-dev/shiny-assistant>.
+Posit PBC. 2026o. *Shiny-Assistant: Chat Assistant for Shiny*. Software. <https://github.com/posit-dev/shiny-assistant>.
 
-Posit PBC. 2026p. *Shinychat: Chat UI Component for Shiny*. GitHub repository. <https://github.com/posit-dev/shinychat>.
+Posit PBC. 2026p. *Shinychat: Chat UI Component for Shiny*. Software. <https://github.com/posit-dev/shinychat>.
 
-Posit PBC. 2026q. *Shinyrealtime: OpenAI Realtime API for Shiny*. GitHub repository. <https://github.com/posit-dev/shinyrealtime>.
+Posit PBC. 2026q. *Shinyrealtime: OpenAI Realtime API for Shiny*. Software. <https://github.com/posit-dev/shinyrealtime>.
 
 *Terminator 3: Rise of the Machines*. 2003. Film. <https://en.wikipedia.org/wiki/Terminator_3:_Rise_of_the_Machines>.
 
