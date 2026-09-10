@@ -22,7 +22,7 @@ The following catalog is a starting point rather than an endorsement:
 | [Kiro](https://kiro.dev/) [@kiro_docs] (AWS) | IDE, CLI, web, and mobile | Spec-driven tasks locally, or delegate a web task that opens a pull request |
 | [Warp](https://docs.warp.dev/) [@warp_docs] | Terminal app, standalone CLI, and cloud agents | Approve actions locally, or trigger cloud agents from Slack, Linear, or GitHub webhooks |
 | [OpenHands](https://docs.openhands.dev/) [@openhands_docs] | Browser client, managed cloud, self-hosted backend, and CLI | Run headless or hosted; self-host when code must stay on your infrastructure |
-| [Devin](https://devin.ai/) (Cognition) | Cloud agent and desktop editor | Delegate a task to an isolated cloud machine and review the pull request (see @sec-ai-harness-landscape) |
+| [Devin](https://devin.ai/) [@devin_docs] (Cognition) | Cloud agent and desktop editor | Delegate a task to an isolated cloud machine and review the pull request (see @sec-ai-harness-landscape) |
 | [Ollama](https://ollama.com/) [@ollama_site] | Local model runner (not an agent) | Serve open-weight models to any of the harnesses above (see @sec-ai-ollama-agents) |
 
 Kepler is not an agent itself but an orchestration layer.
