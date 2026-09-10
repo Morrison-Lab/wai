@@ -40,16 +40,26 @@ and the platform routes each task to a model it picks from several providers
 unless you pin one.
 
 - **Target user.**
-  The use-case pages are for founders, sales, marketing, support,
-  finance, recruiting, operations, and research/strategy teams;
-  press coverage aims it at non-technical domain experts and small teams.
+  The use-case pages address:
+
+  - founders
+  - sales and marketing
+  - support
+  - finance
+  - recruiting
+  - operations
+  - research and strategy teams
+
+  Press coverage aims it at non-technical domain experts and small teams.
   The site describes a private beta.
 - **Pricing** [@vestra_pricing].
   Four self-serve tiers, all "entire office, all features":
-  Lite at USD 19/month for 2,000 credits on a 4 GB machine,
-  Pro at USD 97 for 10,000 credits,
-  Max at USD 197 for 20,000,
-  and Ultra at USD 497 for 50,000 credits on a 32 GB machine.
+
+  - Lite at USD 19/month for 2,000 credits on a 4 GB machine
+  - Pro at USD 97 for 10,000 credits
+  - Max at USD 197 for 20,000 credits
+  - Ultra at USD 497 for 50,000 credits on a 32 GB machine
+
   A credit is "the unit of work" and the cost per task varies.
   The first 1,000 credits are free,
   and custom engagements with forward-deployed engineers start at USD 4,000/month.
