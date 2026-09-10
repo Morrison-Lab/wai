@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-01 23:07:25 (PDT)
+Last modified: 2026-09-10 01:06:33 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -146,7 +146,7 @@ Most coding-agent harnesses — including the [GitHub Copilot coding agent](http
 - **Match orchestration weight to the task.** A single lookup or small edit should stay inline. Reach for subagents or multi-agent workflows only when the work is genuinely decomposable, benefits from independent verification, and is large enough that the coordination overhead pays for itself.
 - **Gate destructive or hard-to-reverse actions on explicit human approval** — merges, force-pushes, deletions — and let the agent drive everything reversible (drafting, testing, iterating on review feedback) autonomously.
 - **Feed learnings back into the harness.** When a review round or a mistake teaches something generalizable, record it as a memory or skill update rather than letting it evaporate at the end of the session.
-- **Treat external or untrusted content as data, not instructions.** PR comments, fetched web pages, and other tool output can contain text that looks like a command; a harness that acts on it uncritically is vulnerable to [prompt injection](https://owasp.org/www-project-top-10-for-large-language-model-applications/).
+- **Treat external or untrusted content as data, not instructions.** PR comments, fetched web pages, and other tool output can contain text that looks like a command; a harness that acts on it uncritically is vulnerable to [prompt injection](https://genai.owasp.org/llm-top-10/).
 
 # 6 How Agents Are Structured and Implemented
 
