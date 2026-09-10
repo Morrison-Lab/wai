@@ -20,8 +20,8 @@ marked `none (proprietary)`,
 and for the other `none` rows there is no license file at all.
 `not detected` means a license file exists that the API could not classify
 (it reports `NOASSERTION`).
-A single identifier can also hide a split:
-`skills` reports Apache-2.0,
+A single row can also hide a split:
+`skills` has no root license file, so the API reports none,
 while its README says four of its skills are source-available.
 
 #### Which repositories matter to us
@@ -45,7 +45,7 @@ The rest sorts into six groups.
 | `claude-agent-sdk-typescript` | Issue tracker and changelog for the TypeScript agent SDK | Shell | 1.7k | 2026-09-08 | none (proprietary) | Track issues only |
 | `anthropic-sdk-python` | Raw Messages API client | Python | 3.9k | 2026-09-04 | MIT | Useful for direct API calls |
 | `sandbox-runtime` | OS-level sandbox (`srt`) for processes, MCP servers, and agents | TypeScript | 5.2k | 2026-09-07 | Apache-2.0 | Trial on Linux and macOS; alpha on Windows |
-| `skills` | Reference Agent Skills plus the `spec/` for the skill format | Python | 175.4k | 2026-09-03 | Apache-2.0 | Read the spec; borrow document skills |
+| `skills` | Reference Agent Skills plus the `spec/` for the skill format | Python | 175.4k | 2026-09-03 | none | Read the spec; borrow document skills |
 | `claude-plugins-official` | Anthropic-curated plugin marketplace | Python | 36.1k | 2026-09-09 | Apache-2.0 | Install from it; see @sec-ai-useful-plugins |
 | `claude-plugins-community` | Read-only mirror of the community marketplace | Python | 3.7k | 2026-08-25 | Apache-2.0 | Browse before writing our own |
 | `knowledge-work-plugins` | Role-specific plugins built for Claude Cowork | Python | 23.9k | 2026-09-09 | Apache-2.0 | Templates for a lab-role plugin |
@@ -55,7 +55,7 @@ The rest sorts into six groups.
 | `claude-quickstarts` | Starter apps you can deploy (support agent, computer use) | TypeScript | 17.6k | 2026-09-04 | MIT | Skim only |
 | `devcontainer-features` | Dev Container feature that installs the CLI | Shell | 302 | 2025-12-16 | MIT | Useful for a GitHub Codespaces setup |
 | `claude-code-monitoring-guide` | Telemetry and cost-tracking guide | Markdown | 369 | 2025-07-29 | none | Read once if we meter usage |
-| `claude-ai-mcp` | Issue tracker for MCP inside claude.ai | Markdown | 467 | 2026-06-08 | none | Search before filing an MCP bug |
+| `claude-ai-mcp` | Issue tracker for MCP inside claude.ai | Markdown | 467 | 2026-06-08 | not detected | Search before filing an MCP bug |
 
 The six groups, and what each is for:
 
@@ -198,10 +198,12 @@ which installs named marketplace plugins before the run.
 
 Three other things in the repository are easy to miss:
 
-- **`examples/`** has eleven copy-paste workflows,
-  beyond the three review variants:
+- **`examples/`** has eleven copy-paste workflows (measured 2026-09-09):
+  the three review variants,
+  plus `claude.yml` (the general `@claude` mention workflow),
   `ci-failure-auto-fix.yml`, `test-failure-analysis.yml`,
   `issue-deduplication.yml`, `issue-triage.yml`,
+  `manual-code-analysis.yml`, `agent-approval-check.yml`,
   and `claude-wif.yml`,
   the workload-identity-federation variant
   that avoids storing a long-lived API key.
