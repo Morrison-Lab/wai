@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-09 23:54:59 (PDT)
+Last modified: 2026-09-10 00:02:21 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -3200,9 +3200,29 @@ The category sits between two things this site already covers. [Make](../chapter
 
 Vestra’s marketing describes two named agents. “Bash” is the executor: you describe “outcomes, not instructions”, it “plans it, in the open, before anything runs”, and it can split work across specialist sub-agents, running up to ten tasks in parallel. “Nami” is the memory layer, which the handbook says builds a company memory by “watching everything: every task Bash finishes, every document, every decision” plus whatever is in the connected tools ([Vestra AI 2026a](#ref-vestra_handbook)). Each task runs on “a real cloud machine with files, a browser, and a terminal”, and the platform routes each task to a model it picks from several providers unless you pin one.
 
-- **Target user.** The use-case pages are for founders, sales, marketing, support, finance, recruiting, operations, and research/strategy teams; press coverage aims it at non-technical domain experts and small teams. The site describes a private beta.
-- **Pricing** ([Vestra AI 2026b](#ref-vestra_pricing)). Four self-serve tiers, all “entire office, all features”: Lite at USD 19/month for 2,000 credits on a 4 GB machine, Pro at USD 97 for 10,000 credits, Max at USD 197 for 20,000, and Ultra at USD 497 for 50,000 credits on a 32 GB machine. A credit is “the unit of work” and the cost per task varies. The first 1,000 credits are free, and custom engagements with forward-deployed engineers start at USD 4,000/month.
+- **Target user.** The use-case pages address:
+
+  - founders
+  - sales and marketing
+  - support
+  - finance
+  - recruiting
+  - operations
+  - research and strategy teams
+
+  Press coverage aims it at non-technical domain experts and small teams. The site describes a private beta.
+
+- **Pricing** ([Vestra AI 2026b](#ref-vestra_pricing)). Four self-serve tiers, all “entire office, all features”:
+
+  - Lite at USD 19/month for 2,000 credits on a 4 GB machine
+  - Pro at USD 97 for 10,000 credits
+  - Max at USD 197 for 20,000 credits
+  - Ultra at USD 497 for 50,000 credits on a 32 GB machine
+
+  A credit is “the unit of work” and the cost per task varies. The first 1,000 credits are free, and custom engagements with forward-deployed engineers start at USD 4,000/month.
+
 - **Data handling** ([Vestra AI 2026c](#ref-vestra_privacy)). The privacy policy (effective 2026-09-04) says content is not used for training by default, but task content is sent to whichever model provider handles the task, and one listed model tier (Meta’s Muse Spark 1.3) permits that provider to train on it. OAuth flows and access tokens are handled by a subprocessor, Composio, Inc. Deleting the account removes stored data within 30 days. User-created agents may be indexed by search engines by default, with opt-out by email.
+
 - **Agent and API access.** Chat channels are Slack, Telegram, WhatsApp, iMessage, Gmail, and a desktop overlay on the Mac app. “Abilities” package skills, specialist agents, connectors, and guardrails into installable bundles. We found no public API documentation. The memory store can be exported as plain Markdown.
 
 ## 41.2 Manus
