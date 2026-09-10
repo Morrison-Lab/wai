@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-09 23:48:28 (PDT)
+Last modified: 2026-09-10 00:09:19 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -970,13 +970,13 @@ The part of Citadel most relevant to the lab’s own practice is how much of its
 
 Verification reports one of four outcomes: passed, failed, blocked, or unknown. Missing evidence is never promoted to success. That is the same instinct as the first rule in [Section 18](#sec-ai-best-practices), never to assume an agent’s output is correct: an unknown that reads as a pass is worse than a failure you can see.
 
-The project’s threat model ([Gammon 2026c](#ref-citadel_threat_model)) is equally plain about what it does not do. Citadel runs with whatever permissions the host runtime has; it is not a sandbox, it does not make an untrusted repository safe to run, and it does not claim to stop prompt injection. It “does not replace `CLAUDE.md`, `AGENTS.md`, branch protection, or human review.”
+The project’s threat model ([Gammon 2026c](#ref-citadel_threat_model)) is equally plain about what it does not do. Citadel runs with whatever permissions the host runtime has; it is not a sandbox, it does not make an untrusted repository safe to run, and it does not claim to stop prompt injection. Its README says it “does not replace `CLAUDE.md`, `AGENTS.md`, branch protection, or human review” ([Gammon 2026d](#ref-citadel_repo)).
 
 #### What the evidence does and does not show
 
 Citadel is unusual among agent-tooling projects in publishing negative results beside positive ones ([Gammon 2026b](#ref-citadel_experiments)). Its README states that the first experiment “does not support a savings claim”: one baseline timeout drove the aggregate advantage, and removing that pair reversed the economic direction. An outside-authored holdout across 24 repositories verified 3 of 16 tasks for Citadel against 2 of 16 for direct Claude, at similar cost, and the author calls that a diagnostic rather than proof, because a 12.5% baseline is too weak to compare against. The deterministic results are stronger but narrower: journaled recovery produced zero duplicate side effects where a naive restart produced three, and a leased “deploy steward” eliminated every stale-head merge race that independent loops produced across 45 pull requests, under a generated workload in disposable repositories.
 
-The public claim is stated as deliberately narrow: Citadel can make agent evaluations inspectable, reproducible, and honest about failure. Whether it makes a real user faster or cheaper is left open. For a lab deciding whether to adopt it, that candour is itself a reason to trust the rest of the documentation, and also the answer: the case for Citadel is governance and recoverability, not throughput.
+The public claim is stated as deliberately narrow: Citadel can make agent evaluations inspectable, reproducible, and honest about failure. Whether it makes a real user faster or cheaper is left open. For a lab deciding whether to adopt it, that candor is itself a reason to trust the rest of the documentation, and also the answer: the case for Citadel is governance and recoverability, not throughput.
 
 #### Where the lab sits and what the next level would take
 
