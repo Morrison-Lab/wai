@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-09 21:31:16 (PDT)
+Last modified: 2026-09-09 23:57:44 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -2643,7 +2643,14 @@ The official README carries the warning that governs all three: Anthropic does n
 
 #### What the official marketplace contains
 
-The official catalog’s `marketplace.json` lists 287 plugins (measured 2026-09-09 from the copy Claude Code caches locally; ([Anthropic 2026b](#ref-claude_plugins_official))). Only 38 of them live in the repository’s own `plugins/` directory, which the README describes as the plugins Anthropic develops and maintains. Another 15 sit in `external_plugins/`, and the remaining 234 are pointers to third-party repositories (Amazon, Microsoft, Google’s `gemini-cli-extensions`, Databricks, Hugging Face, Sentry, and many vendors), each pinned to a commit SHA. So “official” mostly means “listed and pinned by Anthropic”, not “written by Anthropic”. By declared category the catalog is development (119), productivity (49), database (38), monitoring (20), security (18), and a long tail of deployment, design, automation, learning, location, testing, migration, and math.
+The official catalog’s `marketplace.json` lists 287 plugins (measured 2026-09-09 from the copy Claude Code caches locally; ([Anthropic 2026b](#ref-claude_plugins_official))). Only 38 of them live in the repository’s own `plugins/` directory, which the README describes as the plugins Anthropic develops and maintains. Another 15 sit in `external_plugins/`, and the remaining 234 are pointers to third-party repositories (Amazon, Microsoft, Google’s `gemini-cli-extensions`, Databricks, Hugging Face, Sentry, and many vendors), each pinned to a commit SHA. So “official” mostly means “listed and pinned by Anthropic”, not “written by Anthropic”. By declared category the catalog is:
+
+- development (119)
+- productivity (49)
+- database (38)
+- monitoring (20)
+- security (18)
+- a long tail of deployment, design, automation, learning, location, testing, migration, and math
 
 The 38 Anthropic-maintained plugins fall into five groups. The verdicts are for this lab’s work (R packages, Quarto sites, Python and shell tooling, GitHub pull requests), not for software teams in general.
 
@@ -2695,7 +2702,25 @@ Verdict: `github` is the one that matters here; [Section 47](#sec-ai-mcp-server
 
 Beyond the three Anthropic catalogs, any GitHub repository with a `.claude-plugin/marketplace.json` is a marketplace (`/plugin marketplace add owner/repo`), and the four plugins in [Section 30](#sec-ai-useful-plugins) (`sembr/skills`, `ponytail`, Contextify, and `ai-config` itself) all reach you that way. One more is widely enough used to describe here.
 
-**Superpowers** ([`obra/superpowers`](https://github.com/obra/superpowers) ([Vincent 2026](#ref-obra_superpowers))) calls itself “a complete software development methodology for your coding agents, built on top of a set of composable skills”. The 6.3.0 build installed on one lab machine carries fourteen skills (measured 2026-09-09): brainstorming, writing and executing plans, test-driven development, systematic debugging, subagent-driven development, requesting and receiving code review, git worktrees, finishing a development branch, verification before completion, dispatching parallel agents, and two meta-skills for using and writing skills. A `using-superpowers` skill loads at session start so the others trigger on their own. It installs into more than a dozen agents (Claude Code via `/plugin install superpowers@claude-plugins-official`, Cursor, Codex, Copilot CLI, Gemini CLI, OpenCode, Antigravity, Pi, Hermes, and others) and is MIT-licensed.
+**Superpowers** ([`obra/superpowers`](https://github.com/obra/superpowers) ([Vincent 2026](#ref-obra_superpowers))) calls itself “a complete software development methodology for your coding agents, built on top of a set of composable skills”. The 6.3.0 build installed on one lab machine carries fourteen skills (measured 2026-09-09):
+
+- `brainstorming`
+- `writing-plans` and `executing-plans`
+- `test-driven-development`
+- `systematic-debugging`
+- `subagent-driven-development` and `dispatching-parallel-agents`
+- `requesting-code-review` and `receiving-code-review`
+- `using-git-worktrees`
+- `finishing-a-development-branch`
+- `verification-before-completion`
+- `using-superpowers` and `writing-skills`, the two meta-skills
+
+The `using-superpowers` skill loads at session start so the others trigger on their own. It is MIT-licensed and installs into more than a dozen agents, among them:
+
+- Claude Code, via `/plugin install superpowers@claude-plugins-official`
+- Cursor, Codex, and Copilot CLI
+- Gemini CLI, OpenCode, and Antigravity
+- Pi and Hermes
 
 Verdict: install it if you want an opinionated end-to-end process and are not already running `ai-config`. Running both means two session-start bootstraps competing to set the workflow, and `ai-config` already covers the same ground in its own vocabulary (`brainstorm`, `st`, `ardi`, `adversarial-reviewer`, `clean-worktrees`, `wrap-up`). The skills that do not overlap (`systematic-debugging`, `test-driven-development`) are worth reading even if you do not install the plugin.
 
@@ -3956,17 +3981,17 @@ When selecting a collaborative workspace agent for academic and computational re
 
 *2001: A Space Odyssey*. 1968. Film. <https://en.wikipedia.org/wiki/2001:_A_Space_Odyssey_(film)>.
 
-Anthropic. 2026a. *Claude Code Plugins Directory*. GitHub repository. <https://github.com/anthropics/claude-code/tree/main/plugins>.
+Anthropic. 2026a. *Claude Code Plugins Directory*. Software. <https://github.com/anthropics/claude-code/tree/main/plugins>.
 
-Anthropic. 2026b. *Claude Code Plugins Official Marketplace*. GitHub repository. <https://github.com/anthropics/claude-plugins-official>.
+Anthropic. 2026b. *Claude Code Plugins Official Marketplace*. Software. <https://github.com/anthropics/claude-plugins-official>.
 
 Anthropic. 2026c. *Claude Cowork Overview*. Documentation. <https://claude.com/docs/cowork/overview>.
 
-Anthropic. 2026d. *Claude Plugins Community Marketplace*. GitHub repository. <https://github.com/anthropics/claude-plugins-community>.
+Anthropic. 2026d. *Claude Plugins Community Marketplace*. Software. <https://github.com/anthropics/claude-plugins-community>.
 
 Anthropic. 2026e. *Discover and Install Prebuilt Plugins Through Marketplaces*. Documentation. <https://code.claude.com/docs/en/discover-plugins>.
 
-Anthropic. 2026f. *Ralph Loop Plugin*. README in the Claude Code Plugins Official Marketplace. <https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/plugins/ralph-loop/README.md>.
+Anthropic. 2026f. *Ralph Loop Plugin*. Documentation. <https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/plugins/ralph-loop/README.md>.
 
 Asimov, Isaac. 1950. *I, Robot*. Novel; Gnome Press. <https://search.library.ucdavis.edu/permalink/01UCD_INST/9fle3i/alma990000226350403126>.
 
@@ -3990,7 +4015,7 @@ Huntley, Geoffrey. 2025. *Ralph*. Blog post. <https://ghuntley.com/ralph/>.
 
 LeCun, Yann. 2022. *A Path Towards Autonomous Machine Intelligence*. Meta AI Research; New York University; Technical Report. <https://openreview.net/forum?id=BZ5a1r-kVsf>.
 
-Morrison Lab. 2026. *Ai-Config: Portable AI Agent Config*. GitHub repository. <https://github.com/Morrison-Lab/ai-config>.
+Morrison Lab. 2026. *Ai-Config: Portable AI Agent Config*. Software. <https://github.com/Morrison-Lab/ai-config>.
 
 OpenAI. 2026. *Get Started with ChatGPT Work*. Documentation. <https://learn.chatgpt.com/docs/get-started-with-work>.
 
@@ -3998,7 +4023,7 @@ OpenAI. 2026. *Get Started with ChatGPT Work*. Documentation. <https://learn.cha
 
 *The Matrix*. 1999. Film. <https://en.wikipedia.org/wiki/The_Matrix>.
 
-Vincent, Jesse. 2026. *Superpowers*. GitHub repository. <https://github.com/obra/superpowers>.
+Vincent, Jesse. 2026. *Superpowers*. Software. <https://github.com/obra/superpowers>.
 
 *WarGames*. 1983. Film. <https://en.wikipedia.org/wiki/WarGames>.
 
