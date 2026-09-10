@@ -1,4 +1,4 @@
-Issue #207 asked for a summary of a YouTube video,
+[Issue #207](https://github.com/Morrison-Lab/wai/issues/207) asked for a summary of a YouTube video,
 "Never Hit a Claude Limit Again: 12 Fixes Ranked by How Much Window They Buy",
 from the channel Hyperautomation Labs [@hyperautomation_claude_limits].
 The video is ten and a half minutes long and was published on 2026-08-16;
