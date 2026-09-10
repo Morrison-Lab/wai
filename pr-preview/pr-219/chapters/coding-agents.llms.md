@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-09 04:07:12 (PDT)
+Last modified: 2026-09-09 20:59:30 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -801,7 +801,7 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 >
 > See [Section 18](#sec-ai-best-practices) for more details on workflow file security.
 
-**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 39](#sec-ai-when-to-use) for more guidance.
+**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 40](#sec-ai-when-to-use) for more guidance.
 
 #### Scenario 3: Uncertain Which Scenario Applies
 
@@ -832,7 +832,7 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 
 - See the [UCD-SERG Lab Manual’s continuous integration chapter](https://ucd-serg.github.io/lab-manual/continuous-integration.html) for setting up GitHub Actions workflows
 - See [Section 18](#sec-ai-best-practices) and [Section 17](#sec-ai-benefits-hazards) for security considerations with workflow files
-- See [Section 39](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
+- See [Section 40](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
 - See the [GitHub Actions documentation](https://docs.github.com/en/actions) for workflow syntax and troubleshooting
 
 # 17 Benefits and Hazards
@@ -2594,7 +2594,7 @@ The R and Quarto skills match this lab’s daily work, and nine of them are alre
 - `release-post`
 - `testing-r-packages`
 
-Copying the skills in rather than installing the marketplace plugin lets them follow the lab’s own review and hook conventions, at the cost of tracking upstream changes by hand. Four categories are not adopted. Three of them have the least overlap with lab work: Shiny app development, `ggsql`, and Posit Connect deployment. The fourth, `posit-dev`, overlaps with practices the lab already has: its `critical-code-reviewer` parallels the adversarial self-review subagent that the lab’s agent configuration dispatches before every push, and `new-work` / `working-on` keep a per-task tracking document where the lab uses the issue tracker and a session notebook. The `github` skills likewise overlap with the lab’s own [pull-request workflow](../chapters/pr-workflow-with-agents.llms.md) and with the review setup in [Section 35](#sec-ai-claude-code-action-review), so both categories are worth reading for ideas rather than installing alongside that tooling. The contribution guidance in the repository recommends Anthropic’s `skill-creator` skill for authoring new skills.
+Copying the skills in rather than installing the marketplace plugin lets them follow the lab’s own review and hook conventions, at the cost of tracking upstream changes by hand. Four categories are not adopted. Three of them have the least overlap with lab work: Shiny app development, `ggsql`, and Posit Connect deployment. The fourth, `posit-dev`, overlaps with practices the lab already has: its `critical-code-reviewer` parallels the adversarial self-review subagent that the lab’s agent configuration dispatches before every push, and `new-work` / `working-on` keep a per-task tracking document where the lab uses the issue tracker and a session notebook. The `github` skills likewise overlap with the lab’s own [pull-request workflow](../chapters/pr-workflow-with-agents.llms.md) and with the review setup in [Section 36](#sec-ai-claude-code-action-review), so both categories are worth reading for ideas rather than installing alongside that tooling. The contribution guidance in the repository recommends Anthropic’s `skill-creator` skill for authoring new skills.
 
 # 30 Useful plugins
 
@@ -2725,7 +2725,7 @@ Rules are written as `Tool(specifier)` — for example `Bash(npm run test *)`, `
 
 Everything above changes what the agent *knows or must do*. An [MCP](https://modelcontextprotocol.io/) server changes what it *can reach*: typed tools, data resources, and reusable templates exposed over a standard protocol. The specification is explicit that it “does not dictate how AI applications use LLMs or manage the provided context.”
 
-So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. [Section 46](#sec-ai-mcp-server-setup) covers configuration and its failure modes.
+So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. [Section 47](#sec-ai-mcp-server-setup) covers configuration and its failure modes.
 
 #### Choosing
 
@@ -2808,7 +2808,104 @@ A broken install rarely announces itself; you read it backward from a symptom.
 
 The common thread is that the install layer is a real surface, distinct from the content of the config, with its own failure modes and its own checks. When an agent behaves as though a rule or skill you wrote does not exist, suspect the install before you suspect the rule.
 
-# 33 Claude Code Cloud Environments
+# 33 Anthropic’s Public Repositories
+
+Anthropic publishes its code under the [`anthropics`](https://github.com/anthropics) GitHub organization. The organization held 108 repositories when surveyed (measured 2026-09-09). Claude Code itself is not open source, but its public repository is still useful, and so are several others. This section inventories the repositories that matter to us, says what the two headline repositories actually contain, and ends with a verdict on each.
+
+All counts below come from the GitHub API on the survey date (measured 2026-09-09); stars and push dates drift daily, and the license column reports what the API detected. `none` means the API found no license; for `claude-code` and `claude-agent-sdk-typescript` that is because `LICENSE.md` is a proprietary notice rather than a recognized open-source license, marked `none (proprietary)`, and for the other `none` rows there is no license file at all. `not detected` means a license file exists that the API could not classify (it reports `NOASSERTION`). A single identifier can also hide a split: `skills` reports Apache-2.0, while its README says four of its skills are source-available.
+
+#### Which repositories matter to us
+
+Forks and archived repositories together are 38 of the 108 (measured 2026-09-09): forks of infrastructure projects that Anthropic contributes patches to (`tokio`, `rayon`, `argo-cd`, `httpcore`, `orjson`, `beam`), and archived companions to research papers (`hh-rlhf`, `toy-models-of-superposition`, `sleeper-agents-paper`). Neither group concerns a lab that consumes Claude as a product. The rest sorts into six groups.
+
+| Repository | Purpose | Language | Stars | Last push | License | Verdict |
+|----|----|----|----|----|----|----|
+| `claude-code` | Issue tracker, changelog, and bundled plugins for the Claude Code CLI | Python (plugin scripts) | 144.5k | 2026-09-08 | none (proprietary) | Track issues and read the plugins |
+| `claude-code-action` | GitHub Action that runs Claude Code on PRs and issues | TypeScript | 8.8k | 2026-09-08 | MIT | Already in use; read its `examples/` |
+| `claude-code-base-action` | Read-only mirror of `base-action/` from the repository above | TypeScript | 974 | 2026-09-08 | MIT | Reference only; do not pin to it |
+| `claude-code-security-review` | Security-focused PR review action | Python | 6.2k | 2026-02-11 | MIT | Low priority; superseded by a review prompt |
+| `claude-agent-sdk-python` | Python SDK wrapping the Claude Code agent loop | Python | 8.1k | 2026-09-08 | MIT | Useful for scripted agents |
+| `claude-agent-sdk-typescript` | Issue tracker and changelog for the TypeScript agent SDK | Shell | 1.7k | 2026-09-08 | none (proprietary) | Track issues only |
+| `anthropic-sdk-python` | Raw Messages API client | Python | 3.9k | 2026-09-04 | MIT | Useful for direct API calls |
+| `sandbox-runtime` | OS-level sandbox (`srt`) for processes, MCP servers, and agents | TypeScript | 5.2k | 2026-09-07 | Apache-2.0 | Trial on Linux and macOS; alpha on Windows |
+| `skills` | Reference Agent Skills plus the `spec/` for the skill format | Python | 175.4k | 2026-09-03 | Apache-2.0 | Read the spec; borrow document skills |
+| `claude-plugins-official` | Anthropic-curated plugin marketplace | Python | 36.1k | 2026-09-09 | Apache-2.0 | Install from it; see [Section 30](#sec-ai-useful-plugins) |
+| `claude-plugins-community` | Read-only mirror of the community marketplace | Python | 3.7k | 2026-08-25 | Apache-2.0 | Browse before writing our own |
+| `knowledge-work-plugins` | Role-specific plugins built for Claude Cowork | Python | 23.9k | 2026-09-09 | Apache-2.0 | Templates for a lab-role plugin |
+| `claude-cookbooks` | Notebook recipes for the Claude API | Jupyter Notebook | 52.6k | 2026-09-03 | MIT | Reference when scripting the API |
+| `courses` | Five API and prompting courses | Jupyter Notebook | 22.8k | 2026-08-28 | not detected | Introductory material |
+| `prompt-eng-interactive-tutorial` | Nine-chapter prompting tutorial | Jupyter Notebook | 38.1k | 2026-08-28 | none | Introductory material; dated model names |
+| `claude-quickstarts` | Starter apps you can deploy (support agent, computer use) | TypeScript | 17.6k | 2026-09-04 | MIT | Skim only |
+| `devcontainer-features` | Dev Container feature that installs the CLI | Shell | 302 | 2025-12-16 | MIT | Useful for a GitHub Codespaces setup |
+| `claude-code-monitoring-guide` | Telemetry and cost-tracking guide | Markdown | 369 | 2025-07-29 | none | Read once if we meter usage |
+| `claude-ai-mcp` | Issue tracker for MCP inside claude.ai | Markdown | 467 | 2026-06-08 | none | Search before filing an MCP bug |
+
+The six groups, and what each is for:
+
+- **Product trackers.** `claude-code`, `claude-agent-sdk-typescript`, and `claude-ai-mcp` exist mainly so users can file issues against a closed product.
+- **Automation.** `claude-code-action`, its mirror, and `claude-code-security-review` run Claude inside GitHub Actions.
+- **Programmatic access.** The `anthropic-sdk-*` clients (Python, TypeScript, Go, Java, Ruby, C#, PHP) speak the raw API; `claude-agent-sdk-python` wraps the whole Claude Code agent loop and bundles the CLI, and the TypeScript package does the same from npm, though its repository here is only a tracker.
+- **Extensions.** `skills`, the two plugin marketplaces, and `knowledge-work-plugins` hold the skills and plugins the harness loads.
+- **Infrastructure.** `sandbox-runtime`, `devcontainer-features`, and `claude-code-monitoring-guide` are about where the CLI runs and what it costs.
+- **Learning material.** `claude-cookbooks`, `courses`, `prompt-eng-interactive-tutorial`, and `claude-quickstarts` teach the API rather than the CLI.
+
+Two repositories one might look for are not in the organization. There is no `mcp` repository, because the Model Context Protocol lives under its own `modelcontextprotocol` organization, and the former `dxt` repository (Desktop Extensions) now redirects to `modelcontextprotocol/mcpb`, the renamed MCP Bundles format (measured 2026-09-09).
+
+#### What the public `claude-code` repository actually contains
+
+The repository named after Claude Code, second in the table only to `skills` by stars, does not contain Claude Code. The tree at `main` has 333 paths and no `src/` directory (measured 2026-09-09) ([Anthropic 2026d](#ref-anthropics_claude_code_repo)). `LICENSE.md` is a one-line proprietary notice pointing at Anthropic’s commercial terms, which is why the API reports no license. The CLI itself ships as a compiled npm package (and, since the README marked npm installation deprecated, as a native installer, a Homebrew cask, and a `winget` package; read 2026-09-09) ([Anthropic 2026d](#ref-anthropics_claude_code_repo)), and this repository is the public face of that closed product.
+
+The repository holds five things the lab can use:
+
+- **`CHANGELOG.md`** is the only authoritative per-release changelog. It is the file to read when a behavior changes between versions, and its entries are detailed enough to diagnose regressions (the entry for 2.1.266, for example, names the gateway environment variable, `CLAUDE_CODE_USE_GATEWAY`, that 2.1.265 had started honoring on its own, and says no configuration change is needed; read 2026-09-09) ([Anthropic 2026e](#ref-anthropics_claude_code_changelog)).
+- **`plugins/`** holds thirteen first-party plugins and a `.claude-plugin/marketplace.json` that publishes them as the `claude-code-plugins` marketplace ([Anthropic 2026m](#ref-anthropics_claude_code_plugins_readme)). Several map directly onto lab workflows: `code-review` (five parallel review agents with confidence scoring), `pr-review-toolkit` (six specialist review agents, including a `silent-failure-hunter`), `commit-commands`, `hookify` (generates hooks from observed misbehavior), `ralph-wiggum` (a `Stop`-hook loop that keeps re-running one task), and `security-guidance` (a `PreToolUse` hook watching nine patterns). `plugin-dev` is the toolkit for writing more.
+- **`examples/`** holds the reference configurations that the documentation describes in prose: `settings/` (strict, lax, and bash-sandbox profiles), `hooks/` (a Bash command validation hook), `mdm/` (managed settings for macOS and Windows fleets), and `gateway/` (AWS and GCP gateway setups).
+- **`.devcontainer/`** is the container Anthropic uses for its own sandboxed sessions, including `init-firewall.sh`, the allowlist firewall that [Section 19](#sec-ai-firewall) discusses.
+- **`.github/workflows/`** is a live example of running the action against a very large issue tracker: `claude.yml` (the `@claude` agent), `claude-issue-triage.yml`, `claude-dedupe-issues.yml`, and `auto-close-duplicates.yml`, with the TypeScript behind them in `scripts/`. The repository had 12,563 open issues (measured 2026-09-09), which is why that automation exists.
+
+So the honest description is “issue tracker plus plugins plus example configs”. The harness internals are described from the outside in [Section 7](#sec-ai-harness-construction); nothing in this repository lets you read them.
+
+#### `claude-code-action`: modes and what ships with it
+
+`claude-code-action` is genuinely open source (MIT), and the whole action is readable: `src/` holds the entry points, the GitHub client, an in-process MCP server for file operations, and the two execution modes; `test/` has a test file per concern (comment sanitizing, branch validation, permissions, public-comment redaction, SSH signing) ([Anthropic 2026f](#ref-anthropics_claude_code_action_repo)).
+
+[Section 36](#sec-ai-claude-code-action-review) already explains that review is a prompt, not a separate action. The general form of that observation is the mode detector in `src/modes/detector.ts`, documented in `docs/experimental.md` ([Anthropic 2026o](#ref-anthropics_claude_code_action_experimental)):
+
+1.  If the workflow supplies a `prompt` input, the action runs in **agent mode**: it executes the prompt directly on whatever event fired, which is how scheduled maintenance, issue triage, and one-shot review work.
+2.  If there is no `prompt` but the event carries an `@claude` mention, an assignment, or the trigger label, it runs in **tag mode**: it posts a tracking comment with progress checkboxes and runs an open-ended session that can push code.
+3.  If neither, it does nothing.
+
+The `track_progress` input forces tag-mode tracking comments onto `pull_request` and `issues` events that would otherwise run in agent mode. Everything else about behavior is set through `claude_args`, which passes flags straight to the CLI (`--max-turns`, `--system-prompt`, and so on), and through `plugins`, which installs named marketplace plugins before the run.
+
+Three other things in the repository are easy to miss:
+
+- **`examples/`** has eleven copy-paste workflows, beyond the three review variants: `ci-failure-auto-fix.yml`, `test-failure-analysis.yml`, `issue-deduplication.yml`, `issue-triage.yml`, and `claude-wif.yml`, the workload-identity-federation variant that avoids storing a long-lived API key.
+- **`agent-approval-check/`** is a second, smaller action that gates a workflow on whether the actor is a recognized agent identity, with an example identities file.
+- **Authentication inputs** cover a direct API key, a Claude Code OAuth token, federation (`anthropic_federation_rule_id` plus organization, workspace, and service-account IDs), and OIDC to Bedrock, Vertex AI, or Microsoft Foundry.
+
+The `allowed_non_write_users` input carries its own warning in `action.yml`: letting users without write access trigger the action exposes the run to prompt injection, and the secret scrubbing it performs is best-effort. `claude-code-security-review` says the same of itself in its README and recommends requiring approval for fork PRs ([Anthropic 2026g](#ref-anthropics_claude_code_security_review)). Both are the upstream statement of the caution in [Section 17](#sec-ai-benefits-hazards).
+
+#### The extension and SDK repositories, briefly
+
+`skills` is the reference implementation of the Agent Skills format that [Section 28](#sec-ai-agent-skills) describes. Its `spec/` directory is the format definition, `template/` is a starting skill, and `skills/` holds the examples. The README states the licensing split plainly: most skills are Apache-2.0, while the `docx`, `pdf`, `pptx`, and `xlsx` skills that power Claude’s own document features are source-available rather than open source ([Anthropic 2026l](#ref-anthropics_skills_repo)). Read a license header before copying one.
+
+`claude-plugins-official` is the marketplace behind `/plugin install <name>@claude-plugins-official`, split into Anthropic-maintained `plugins/` and partner-submitted `external_plugins/` ([Anthropic 2026i](#ref-anthropics_claude_plugins_official)). Its README states a rule that applies to any marketplace we publish: a plugin’s `name` is an immutable slug, since renaming it breaks every existing install, and a `renames` map exists for the unavoidable case. `claude-plugins-community` is a nightly, read-only mirror of the community submissions that passed security scanning ([Anthropic 2026h](#ref-anthropics_claude_plugins_community)), and `knowledge-work-plugins` holds eleven role-specific bundles built for Claude Cowork ([Section 54](#sec-ai-collaborative-workspaces)) that also load in Claude Code ([Anthropic 2026j](#ref-anthropics_knowledge_work_plugins)).
+
+Of the two agent SDKs, only the Python one is open source. `claude-agent-sdk-python` bundles the CLI inside the wheel and exposes `query()` and `ClaudeAgentOptions` for driving a full agent session from a script ([Anthropic 2026b](#ref-anthropics_claude_agent_sdk_python)). `claude-agent-sdk-typescript` has the same shape as `claude-code`: a proprietary `LICENSE.md`, a changelog, examples, and an issue tracker for the npm package ([Anthropic 2026c](#ref-anthropics_claude_agent_sdk_typescript)). The lower-level `anthropic-sdk-python` is the raw API client (MIT) for anyone who wants the model without the agent loop ([Anthropic 2026a](#ref-anthropics_anthropic_sdk_python)).
+
+`sandbox-runtime` (`srt`) is the sandbox Claude Code uses internally, released as a beta research preview. It wraps `sandbox-exec` on macOS and `bubblewrap` on Linux with a proxy-based network allowlist, and the headline use case in its README is wrapping a local MCP server so it can read only the directories you name ([Anthropic 2026k](#ref-anthropics_sandbox_runtime)). Windows support is marked alpha, through a bundled `srt-win.exe` helper that runs the process under a dedicated local user account (measured 2026-09-09), so Windows users in the lab should treat it as experimental.
+
+#### Useful to us?
+
+Yes, selectively, and less for code than for reference.
+
+- **Adopt now.** `claude-code-action` is already how our repositories run `@claude` and review ([Section 36](#sec-ai-claude-code-action-review)); the `examples/` directory and `claude-wif.yml` are the upgrade path when we move off static API keys. `claude-plugins-official` is the safe default source for plugins.
+- **Read, then borrow.** The `plugins/` directory in `claude-code` duplicates several things our own instruction repository does by hand — a multi-agent review command, a silent-failure hunter, a hook generator — and a `hookify`-style rule is a lighter way to encode a “never do X again” correction than a hand-written hook. `skills/spec/` is the authority when a skill fails to load.
+- **Track, do not depend on.** `claude-code` and `claude-agent-sdk-typescript` are trackers. Search their issues before filing; read `CHANGELOG.md` before blaming a regression on your config. Pin workflows to `claude-code-action@v1`, never to the base-action mirror.
+- **Trial on Linux and macOS.** `sandbox-runtime` could replace part of the firewall configuration in [Section 19](#sec-ai-firewall) for macOS and Linux users; its Windows path is alpha.
+- **Skip.** `claude-code-security-review` has not been pushed since February 2026 and its job is now a review prompt; the quickstarts and courses are for API programming, which is not the lab’s main use of Claude.
+
+# 34 Claude Code Cloud Environments
 
 [Claude Code](https://www.anthropic.com/claude-code) is a CLI coding agent that can also run tasks on Anthropic-managed cloud infrastructure— either from the web at [claude.ai/code](https://claude.ai/code) (“Claude Code on the web”), or from the terminal by adding the `--remote` flag to move a session into the cloud.
 
@@ -2833,7 +2930,7 @@ The `/remote-env` slash command sets **which configured environment is the defau
 
 For details, see the [Claude Code on the web documentation](https://code.claude.com/docs/en/claude-code-on-the-web) and the [slash command reference](https://code.claude.com/docs/en/commands).
 
-# 34 Using a ChatGPT Account for Codex Pull-Request Reviews
+# 35 Using a ChatGPT Account for Codex Pull-Request Reviews
 
 OpenAI Codex can act as a reviewer on GitHub pull requests. The native integration uses the Codex service connected to a ChatGPT workspace and posts a standard GitHub review through the Codex connector bot. It does not require you to build a separate GitHub Action.
 
@@ -2920,7 +3017,7 @@ Codex review is an additional signal; it does not replace:
 
 For current setup details, see OpenAI’s [GitHub code-review documentation](https://learn.chatgpt.com/docs/third-party/github).
 
-# 35 Where Pull-Request Review Lives in Claude Code Action
+# 36 Where Pull-Request Review Lives in Claude Code Action
 
 A common question about [`anthropics/claude-code-action`](https://github.com/anthropics/claude-code-action) is where its pull-request review lives. The answer is surprising: **there is no dedicated review action.** The repository publishes one general-purpose top-level action, and “review” is a *prompt* you pass it, not a separate artifact.
 
@@ -2976,7 +3073,7 @@ This distinction explains a common debugging dead end: “`@claude` answered my 
 
 This is the Claude-side counterpart to [using a ChatGPT account for Codex pull-request reviews](#sec-ai-codex-github-review). Codex ships a hosted native reviewer configured through the ChatGPT workspace, with no workflow file. Claude Code’s reviewer is the opposite trade: you own a workflow file and supply API credentials, but the prompt, tools, model, and triggering events are all visible and editable in your repository.
 
-# 36 Gemini Review Action for GitHub Pull Requests
+# 37 Gemini Review Action for GitHub Pull Requests
 
 [`derailed-dash/gemini-review-action`](https://github.com/derailed-dash/gemini-review-action) is an open-source GitHub Action that provides automated code reviews on pull requests and automated triage on issues using Google’s Gemini models (measured 2026-08-31; repository at `v1.6.6`).
 
@@ -3027,7 +3124,7 @@ jobs:
 
 Like [Claude Code Action](#sec-ai-claude-code-action-review), `derailed-dash/gemini-review-action` gives the repository owner full visibility over workflow triggers, authentication methods, and review prompts. In contrast to hosted review offerings that require platform-level permissions across an entire organization, this GitHub Action operates per-repository with credentials scoped to GitHub Actions secrets or Google Cloud IAM roles.
 
-# 37 Gemini Code Assist for Repository Code Review
+# 38 Gemini Code Assist for Repository Code Review
 
 Google Cloud provides a native code-review capability through [Gemini Code Assist](https://docs.cloud.google.com/gemini/docs/code-review/review-repo-code) (measured 2026-08-31; documentation in Enterprise preview). Unlike GitHub Actions that run inside individual repository workflows, Gemini Code Assist operates as a managed service connected at the organization or repository level.
 
@@ -3058,7 +3155,7 @@ Gemini Code Assist enforces several deliberate boundaries on review scope:
 | **Interactive mode** | Built-in `/gemini` comment tags | Configurable via `@claude` or Action triggers |
 | **Credential location** | Google Cloud IAM & Developer Connect token | GitHub Secrets or Workload Identity Federation |
 
-# 38 How a Session Learns a PR Changed
+# 39 How a Session Learns a PR Changed
 
 A coding-agent session that is watching a pull request does not poll it. Something wakes the session when the pull request changes, and in Claude Code that “something” is one of **two separate channels**.
 
@@ -3081,7 +3178,7 @@ Two caveats are worth knowing before relying on it.
 
 **A successful subscribe does not guarantee delivery.** If a PR Steward agent already holds the watch on that pull request, the call still succeeds — but this session receives nothing. The tool result says so in as many words, so read the result rather than the exit status. Taking over the watch requires opting the steward out first, by removing its watching label on the pull request.
 
-**The tool does not exist on a locally-run GitHub MCP server.** Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. [Section 46](#sec-ai-mcp-server-setup) covers the local analogues to reach for instead.
+**The tool does not exist on a locally-run GitHub MCP server.** Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. [Section 47](#sec-ai-mcp-server-setup) covers the local analogues to reach for instead.
 
 **Webhook delivery is also not exhaustive**, which is the failure mode most likely to be mistaken for “nothing has happened”. CI *successes*, new pushes, and merge-conflict transitions can arrive late or not at all. A session that treats silence as “still green” will sit indefinitely on a pull request that has gone stale or conflicted, so a subscription is a supplement to periodically re-reading the pull request’s real state, not a replacement for it.
 
@@ -3097,7 +3194,7 @@ Three properties of that panel surprise people:
 - **No agent-side tool can reach it.** It is client-UI state, not something an agent’s configuration surface touches, so asking an agent to enable it cannot work. If the checkbox changes, a human changed it.
 - **One of the two has a shortcut, and the other does not.** Running `/autofix-pr` from the command line on a pull request’s branch spawns a web session with **Auto-fix CI & address comments** already on. There is no equivalent shortcut for **Auto-merge when ready**.
 
-See [Section 33](#sec-ai-claude-cloud-env) for the web-session context these run in.
+See [Section 34](#sec-ai-claude-cloud-env) for the web-session context these run in.
 
 #### The instruction template is boilerplate
 
@@ -3144,13 +3241,13 @@ So treat a footer as a strong hint and a missing footer as near-conclusive, and 
 >
 > The delivery mechanics and the wording of the instruction template above were established by observation during agent sessions in mid-2026, not from a published specification. Claude Code on the web is a research-preview feature, so treat the specifics as liable to change and re-check them against current behavior before depending on any one detail.
 
-# 39 When to use a coding agent
+# 40 When to use a coding agent
 
 Coding agent sessions are currently[^1] considered “premium requests”, which are limited resources; see <https://github.com/features/copilot/plans> for details. So, use coding agents sparingly. Use them for complex changes that would be difficult or time-consuming for you to complete by hand. Coding agents also take time to get configured for work, every time you make a request. See <https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment#preinstalling-tools-or-dependencies-in-copilots-environment> for ways to reduce that startup time, but it will never be 0. If you can complete the task faster than the coding agent can, you should probably do it yourself. For example, when you have errors in the spell-check or lint workflows, you can often fix them faster than Copilot can. Similarly, when reviewing Copilot’s PRs, you can often make direct changes to the branch faster than you could write clear review comments and get Copilot to address them.
 
 Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.
 
-# 40 Editing with `.docx` files
+# 41 Editing with `.docx` files
 
 GitHub Copilot coding agents can read Microsoft Word (`.docx`) files, including tracked changes and comments. This enables a hybrid editing workflow where:
 
@@ -3185,7 +3282,7 @@ When opening DOCX files generated by Quarto (including this site), Microsoft Wor
 
 This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.
 
-# 41 Copilot Instructions for this Repository
+# 42 Copilot Instructions for this Repository
 
 A `.github/copilot-instructions.md` file contains repository-specific instructions and guidelines for GitHub Copilot coding agents. This file helps ensure that AI-generated contributions follow the project’s formatting standards, coding conventions, and documentation practices.
 
@@ -3202,7 +3299,7 @@ By having these instructions in `.github/copilot-instructions.md`, you ensure th
 
 See this repository’s own [`.github/copilot-instructions.md`](https://github.com/Morrison-Lab/wai/blob/main/.github/copilot-instructions.md) for a working example.
 
-# 42 Using Copilot Review Before Human Review
+# 43 Using Copilot Review Before Human Review
 
 Before requesting review from other humans, **always have Copilot review your pull request first**—even if Copilot created the PR itself. AI review provides fast, thorough feedback that helps catch issues before involving human reviewers, saving everyone time and improving code quality.
 
@@ -3245,7 +3342,7 @@ Even if you’re highly experienced, treating Copilot review as a required pre-r
 
 When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.
 
-# 43 Reviewing a Copilot PR You Didn’t Create
+# 44 Reviewing a Copilot PR You Didn’t Create
 
 When reviewing a pull request where someone else prompted Copilot to make changes, follow these guidelines to avoid confusion and ensure smooth collaboration:
 
@@ -3318,7 +3415,7 @@ To transfer the PR manager role:
 
 This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.
 
-# 44 Agent Sessions and Handoff in Visual Studio Code
+# 45 Agent Sessions and Handoff in Visual Studio Code
 
 In Visual Studio Code, interactions with AI coding assistants are structured around [Agent Sessions and Handoff](https://code.visualstudio.com/docs/agents/concepts/sessions?referrer=in-product) (measured 2026-08-31). Understanding how sessions organize work and transfer state across tools is essential for managing multi-step agent workflows.
 
@@ -3347,7 +3444,7 @@ Session handoff transfers context and intent from an active session to a special
 - **Plan to implementation**: Hand off a high-level architectural plan or task specification directly to an implementation session to generate code.
 - **Continue in the cloud**: Hand off a local session to run in a cloud-hosted agent environment (such as background tasks leading to pull requests), freeing local editor resources while the agent executes in the background.
 
-# 45 Installing Claude Code on Windows
+# 46 Installing Claude Code on Windows
 
 [Claude Code](https://www.anthropic.com/claude-code) is Anthropic’s command-line coding agent. Installing it on Windows works well, but a few platform-specific pitfalls can cost you hours if you don’t know about them. These notes capture a setup that works, and the gotchas to watch for.
 
@@ -3447,7 +3544,7 @@ claude --version      # prints the installed version number
 
 If you get a version number, you’re ready to run `claude` in your project directory. If you get `command not found`, re-check the two `PATH` issues above: the directory must be on `PATH`, and you must `rehash` (or open a fresh window) after changing it.
 
-# 46 Setting up MCP servers
+# 47 Setting up MCP servers
 
 The [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) is how a harness gains typed access to external systems. Configuring a server is usually a one-line command. Diagnosing one that *silently* isn’t working is the part worth writing down, because the common failure mode produces no error at all — only a quiet absence of tools you assumed were there.
 
@@ -3605,7 +3702,7 @@ The gap it closes is the copy-paste loop: without it, using something you discus
 
 It connects through the standard [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) as a remote server at `https://mcp.granola.ai/mcp`. For Claude or ChatGPT, enable it from the app’s connector/app settings and authenticate; for Cursor, Claude Code, or any other MCP client that supports a manual URL, register that URL directly (see [the announcement](https://www.granola.ai/blog/granola-mcp) for per-client steps). On an Enterprise plan it is an early-access beta, off by default until an admin enables it.
 
-# 47 Google Antigravity Python SDK
+# 48 Google Antigravity Python SDK
 
 The [`google-antigravity/antigravity-sdk-python`](https://github.com/google-antigravity/antigravity-sdk-python) repository provides the official Python SDK for building and automating agents on the Google Antigravity agent runtime (measured 2026-08-31; distributed via PyPI as `google-antigravity`).
 
@@ -3634,7 +3731,7 @@ Developers can customize agent behavior and enforce safety policies:
 | **Tool definitions** | In-process Python callables & MCP | JSON manifests, plugins, and CLI scripts |
 | **Runtime engine** | Embedded native binary | Managed local service |
 
-# 48 Unbounded Context with Magic Context
+# 49 Unbounded Context with Magic Context
 
 [`cortexkit/magic-context`](https://github.com/cortexkit/magic-context) is an open-source self-managing memory engine designed to provide unbounded context for AI coding agents (measured 2026-08-31). It operates as a background memory subsystem—often described as a “hippocampus for coding agents”—that extracts, consolidates, and retrieves long-term repository state without pausing the active coding turn.
 
@@ -3654,7 +3751,7 @@ A key challenge with dynamic prompt injection is preserving prompt caching effic
 - **Deferred background extraction**: Memory analysis and summarization tasks are deferred to idle windows or subagent threads, preventing token churn and latency spikes during high-tempo coding loops.
 - **Cross-session persistence**: Extracted knowledge persists in lightweight local stores across IDE restarts, enabling coding agents to resume work with full institutional memory of past decisions.
 
-# 49 Spec-Driven Development with Conductor
+# 50 Spec-Driven Development with Conductor
 
 [`gemini-cli-extensions/conductor`](https://github.com/gemini-cli-extensions/conductor) is an open-source plugin for AI coding agents (including Google Antigravity and Claude Code) that implements **Spec-Driven Development** (measured 2026-08-31). Rather than relying on conversational chat history that degrades over extended sessions, Conductor anchors agent behavior in structured, version-controlled Markdown artifacts stored directly in the repository, providing persistent context across multi-session workflows.
 
@@ -3676,7 +3773,7 @@ Conductor structures development into four distinct, sequential phases:
 | **Verification loop** | Manual spot-checking | Milestone-level automated tests and `/conductor:conductor-review` |
 | **Handoff & resumption** | Requires re-prompting or context replay | Any agent resumes from the checked-in track state |
 
-# 50 Anatomy of Agent Plugins
+# 51 Anatomy of Agent Plugins
 
 In modern AI coding assistants (such as Google Antigravity and Claude Code; see [Section 10](#sec-ai-harness-landscape) on the sunset of legacy Gemini CLI and its folding into Antigravity CLI), **plugins** serve as the top-level packaging and distribution layer for agent capabilities (measured 2026-09-01). While individual skills or Model Context Protocol (MCP) servers extend specific tasks, a plugin aggregates multiple extensibility primitives into a unified, version-controlled bundle.
 
@@ -3708,7 +3805,7 @@ Effective plugin architectures mitigate this through several strategies:
 - **On-demand skill activation**: Agents search skill catalogs dynamically when relevant keywords appear, rather than loading the entire skill directory into the initial system prompt.
 - **Prefix caching preservation**: Static plugin definitions are placed at the root of prompt structures so provider-level prompt caching remains undisturbed during multi-turn sessions.
 
-# 51 Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent
+# 52 Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent
 
 [`code-yeongyu/oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent) (originally published as **Oh My OpenCode** or `omo`, with community forks such as [`opensoft/oh-my-opencode`](https://github.com/opensoft/oh-my-opencode)) is an open-source multi-agent orchestration framework and plugin for AI coding agent harnesses (including OpenCode and OpenAI Codex CLI) with over 65,000 GitHub stars (measured 2026-09-01). Inspired by modular terminal configuration frameworks (such as [Oh My Zsh](https://ohmyz.sh/)), it expands single-agent coding into a specialized multi-agent system with automated model routing and background task execution.
 
@@ -3743,7 +3840,7 @@ A central capability of the framework is decoupling agent roles from a single mo
 | **Execution monitoring** | Standard terminal output | Interactive `tmux`-backed session management |
 | **Extensibility** | Individual plugins and MCPs | Curated bundle of tools, agents, and MCP integrations |
 
-# 52 Managing Gemini API Spend and Cost Optimization
+# 53 Managing Gemini API Spend and Cost Optimization
 
 This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.
 
@@ -3789,13 +3886,13 @@ To maximize the efficiency of your API spend across local CLI sessions, subagent
 - **Use the Batch API for Non-Realtime Tasks**: For offline batch processing, evaluation suites, or background doc updates, submit requests via the Gemini Batch API to receive a 50% discount on input and output tokens.
 - **GitHub UI Diff Collapsing**: Mark dependency lockfiles (`*.lock`, `package-lock.json`, `yarn.lock`, `renv.lock`) and generated build artifacts as `linguist-generated=true` in `.gitattributes` to collapse them in GitHub’s web diff view and exclude them from repository language statistics.
 
-# 53 Collaborative AI Workspaces: Claude Cowork and Gemini Spark
+# 54 Collaborative AI Workspaces: Claude Cowork and Gemini Spark
 
 The 2026 AI ecosystem has expanded beyond reactive chat windows and command-line coding orchestrators into collaborative workspace agents (measured 2026-09-01). These systems operate directly on multi-file workspaces, desktop applications, and cloud productivity suites to automate complex, multi-step analytical and administrative workflows.
 
 #### Claude Cowork
 
-[Claude Cowork](https://claude.com/docs/cowork/overview) ([Anthropic 2026](#ref-claude_cowork)) (also discussed in **?@sec-claude-cowork**) is Anthropic’s desktop-native agent architecture designed to collaborate directly within local folders and desktop application environments:
+[Claude Cowork](https://claude.com/docs/cowork/overview) ([Anthropic 2026n](#ref-claude_cowork)) (also discussed in **?@sec-claude-cowork**) is Anthropic’s desktop-native agent architecture designed to collaborate directly within local folders and desktop application environments:
 
 - **Local Sandboxed Execution**: Cowork runs in a sandboxed virtual environment on the host machine, reading, modifying, and creating local files (spreadsheets, markdown manuscripts, datasets) without requiring manual file uploads or cloud synchronizations.
 - **Desktop Application and Browser Interaction**: Beyond static file manipulation, Cowork interfaces with local applications and browser sessions (via [Claude in Chrome](https://claude.com/claude-in-chrome)) to execute multi-application workflows.
@@ -3816,7 +3913,7 @@ The 2026 AI ecosystem has expanded beyond reactive chat windows and command-line
 Similar collaborative workspace paradigms have emerged across other frontier ecosystems:
 
 - **ChatGPT Work and OpenAI Canvas**: [ChatGPT Work](https://learn.chatgpt.com/docs/get-started-with-work) ([OpenAI 2026](#ref-chatgpt_work)) (see **?@sec-chatgpt-work**) and Canvas provide side-by-side document and code editing with inline line-level revisions, interactive targeted edits, and multi-file artifact tracking.
-- **Cursor and Google Antigravity Agent Workspaces**: Developer-centric workspace agents providing multi-agent delegation, worktree isolation, and structured planning workflows (such as Conductor extension spec-driven development, [Section 49](#sec-ai-conductor-extension)).
+- **Cursor and Google Antigravity Agent Workspaces**: Developer-centric workspace agents providing multi-agent delegation, worktree isolation, and structured planning workflows (such as Conductor extension spec-driven development, [Section 50](#sec-ai-conductor-extension)).
 - **Notion AI and Microsoft Copilot Studio**: Enterprise knowledge graph agents designed for querying organizational wikis and automating business process workflows.
 
 #### Comparative Taxonomy of Workspace Agents
@@ -3841,7 +3938,35 @@ When selecting a collaborative workspace agent for academic and computational re
 
 *2001: A Space Odyssey*. 1968. Film. <https://en.wikipedia.org/wiki/2001:_A_Space_Odyssey_(film)>.
 
-Anthropic. 2026. *Claude Cowork Overview*. Documentation. <https://claude.com/docs/cowork/overview>.
+Anthropic. 2026a. *Anthropics/Anthropic-Sdk-Python*. GitHub repository. <https://github.com/anthropics/anthropic-sdk-python>.
+
+Anthropic. 2026b. *Anthropics/Claude-Agent-Sdk-Python*. GitHub repository. <https://github.com/anthropics/claude-agent-sdk-python>.
+
+Anthropic. 2026c. *Anthropics/Claude-Agent-Sdk-Typescript*. GitHub repository. <https://github.com/anthropics/claude-agent-sdk-typescript>.
+
+Anthropic. 2026d. *Anthropics/Claude-Code*. GitHub repository. <https://github.com/anthropics/claude-code>.
+
+Anthropic. 2026e. *Anthropics/Claude-Code: CHANGELOG.md*. GitHub repository file. <https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md>.
+
+Anthropic. 2026f. *Anthropics/Claude-Code-Action*. GitHub repository. <https://github.com/anthropics/claude-code-action>.
+
+Anthropic. 2026g. *Anthropics/Claude-Code-Security-Review*. GitHub repository. <https://github.com/anthropics/claude-code-security-review>.
+
+Anthropic. 2026h. *Anthropics/Claude-Plugins-Community*. GitHub repository. <https://github.com/anthropics/claude-plugins-community>.
+
+Anthropic. 2026i. *Anthropics/Claude-Plugins-Official*. GitHub repository. <https://github.com/anthropics/claude-plugins-official>.
+
+Anthropic. 2026j. *Anthropics/Knowledge-Work-Plugins*. GitHub repository. <https://github.com/anthropics/knowledge-work-plugins>.
+
+Anthropic. 2026k. *Anthropics/Sandbox-Runtime*. GitHub repository. <https://github.com/anthropics/sandbox-runtime>.
+
+Anthropic. 2026l. *Anthropics/Skills*. GitHub repository. <https://github.com/anthropics/skills>.
+
+Anthropic. 2026m. *Claude Code Plugins*. README in the anthropics/claude-code repository. <https://github.com/anthropics/claude-code/blob/main/plugins/README.md>.
+
+Anthropic. 2026n. *Claude Cowork Overview*. Documentation. <https://claude.com/docs/cowork/overview>.
+
+Anthropic. 2026o. *Experimental Features*. Documentation in the anthropics/claude-code-action repository. <https://github.com/anthropics/claude-code-action/blob/main/docs/experimental.md>.
 
 Asimov, Isaac. 1950. *I, Robot*. Novel; Gnome Press. <https://search.library.ucdavis.edu/permalink/01UCD_INST/9fle3i/alma990000226350403126>.
 
