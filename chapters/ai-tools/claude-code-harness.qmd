@@ -9,7 +9,7 @@ and what remains unknown
 Anthropic's own description is short:
 Claude Code is the "agentic harness" around the model,
 supplying "the tools, context management, and execution environment that turn a language model into a capable coding agent" [@claude_code_how_it_works].
-Everything below is a closer look at those three things.
+The sections below take those three things in turn.
 
 The distinction between documented and inferred matters here more than usual.
 Claude Code is proprietary,
@@ -143,11 +143,10 @@ the section fires only for models whose registry entry carries the `opus_5_promp
 (in the builds examined, only `claude-opus-5`, not the Fable, Sonnet, or Haiku families),
 and only while a kill-switch flag, `tengu_fennel_godwit`, is false, which is its default.
 A thread in the r/ClaudeCode community on Reddit carried the finding to a wider audience [@reddit_claude_code_hardcoded_instruction].
-(That thread could not be fetched when this section was written;
-Reddit returns an error to unauthenticated requests,
-so its content is characterized here only by its title.)
+(Reddit blocks unauthenticated fetches,
+so the thread is cited by title only.)
 
-The consequences reported across that issue and its siblings are the part worth remembering:
+Four consequences are reported across that issue and its siblings:
 
 - **It overrides user configuration silently.**
   Users whose `CLAUDE.md` *requires* delegation --- including several with mandatory review-by-subagent gates ---
@@ -221,7 +220,7 @@ Rules and the mode live in settings files that layer from managed policy through
 with `permissions.deny` in managed settings as the enforcement an organization cannot have overridden [@claude_code_memory].
 One inferred caveat belongs here:
 the `heron_brook` thread cites a separate report that GrowthBook flags can override `permissions.defaultMode` from the server [@claude_code_issue_80988],
-so even this layer has a remotely controlled input.
+so even this layer may have a remotely controlled input.
 That report is cited second-hand and was not verified for this section.
 
 #### Hooks (documented)
@@ -303,10 +302,11 @@ The "delivered as a user message" detail above applies to all of it.
 
 #### Compaction (documented)
 
-When the context window nears its limit the harness summarizes the conversation and replaces it;
+When the context window nears its limit,
+the harness summarizes the conversation and replaces it;
 `/compact` does the same on demand, optionally with a focus instruction,
 and `/autocompact <tokens>` moves the threshold [@claude_code_context_window].
-What survives is specific, and worth knowing before a long session:
+What survives is specific:
 
 - the system prompt and output style are unchanged, because they were never in message history;
 - project-root `CLAUDE.md`, rules without a `paths:` field, auto memory, and a plan-mode plan are re-injected from disk;
@@ -314,7 +314,7 @@ What survives is specific, and worth knowing before a long session:
 - up to five recently modified files are re-read;
 - invoked skill bodies are re-injected, capped at 5,000 tokens each and 25,000 total;
 - context that hooks added earlier is summarized away, unless a `SessionStart` hook matching the `compact` source re-adds it;
-- the skill *listing* is not reloaded.
+- the skill *listing* is not reloaded [@claude_code_context_window].
 
 The lab's `compress-session` practice exists because the automatic summary guesses what matters;
 running `/compact` with a focus before it triggers keeps that choice with you.
@@ -328,7 +328,7 @@ and it loads `.claude/` and `~/.claude/` configuration "same as Claude Code".
 Anthropic distinguishes it from the Client SDK (raw API access, where you write the loop yourself),
 from the CLI (interactive use),
 and from Managed Agents (a hosted product where Anthropic runs the sandbox).
-Other languages drive the same loop by running the CLI as a subprocess with `-p` and `--output-format json`.
+Other languages drive the same loop by running the CLI as a subprocess with `-p` and `--output-format json` [@claude_agent_sdk_overview].
 The corollary for this section is that everything above, including the modular and conditional system prompt, is what an SDK-built agent inherits.
 The SDK documents a way to replace or extend the system prompt,
 which is the supported route where the CLI offers only `--append-system-prompt`.
