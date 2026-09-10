@@ -78,7 +78,10 @@ and either way writes the skill into the agent's skills directory.
 The CLI installs natively (`curl -fsSL https://get.tessl.io | sh`),
 through Homebrew, or on Windows through `winget install tessl.tessl`;
 the `npm` package is deprecated [@tessl_docs_installation].
-It needs Node.js 22.17 or later,
+If your organization's policy requires it,
+download and inspect the script before running it
+rather than piping it straight to `sh`.
+It needs Node.js 22.17 or later [@tessl_docs_supported_platforms],
 and by default it checks for updates every three hours
 and installs them silently [@tessl_docs_installation].
 Logging in (`tessl login`) uses a GitHub or Google account
