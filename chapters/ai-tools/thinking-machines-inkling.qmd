@@ -1,7 +1,7 @@
 [Inkling](https://thinkingmachines.ai/inkling/) [@inkling_page] is a pair of
 open-weight, multimodal foundation models from Thinking Machines Lab
 (measured 2026-09-09).
-It is a model release, not a coding agent or a chat product:
+This is a model release, not a coding agent or a chat product:
 the weights are downloadable,
 and the company's own hosted surfaces for it are a fine-tuning API
 and a playground rather than an end-user assistant.
@@ -51,13 +51,13 @@ Its claims, and the evidence offered for them:
 
 - **Breadth**: reported scores of 77.6% on SWE-Bench Verified,
   63.8% on Terminal Bench 2.1, 87.2% on GPQA Diamond,
-  and 73.5% on MMMU Pro, all at the highest effort setting.
+  and 73.5% on MMMU Pro, all at the highest effort setting [@inkling_announcement].
 - **Efficiency**: the company reports that Inkling matches
   NVIDIA's Nemotron 3 Ultra on Terminal Bench 2.1
-  using roughly a third of the tokens.
+  using roughly a third of the tokens [@inkling_announcement].
 - **Training**: 45 trillion tokens of text, image, audio, and video,
   then supervised fine-tuning on synthetic data
-  and reinforcement learning with more than 30 million rollouts.
+  and reinforcement learning with more than 30 million rollouts [@inkling_announcement].
 
 These are the vendor's own numbers on the vendor's own runs;
 we have not reproduced any of them.
