@@ -1,0 +1,129 @@
+[Inkling](https://thinkingmachines.ai/inkling/) [@inkling_page] is a pair of
+open-weight, multimodal foundation models from Thinking Machines Lab
+(measured 2026-09-09).
+This is a model release, not a coding agent or a chat product:
+the weights are downloadable,
+and the company's own hosted surfaces for it are a fine-tuning API
+and a playground rather than an end-user assistant.
+This section summarizes the release and asks whether it matters for our workflow.
+
+#### Who Thinking Machines Lab is
+
+Thinking Machines Lab is a San Francisco AI startup founded in February 2025
+by Mira Murati, formerly OpenAI's chief technology officer,
+with John Schulman, an OpenAI co-founder, as chief scientist
+[@wikipedia_thinking_machines].
+It raised $2 billion at a $12 billion valuation in July 2025,
+and two founding members left for OpenAI in January 2026
+[@wikipedia_thinking_machines].
+Its first product, [Tinker](https://thinkingmachines.ai/tinker/) [@tinker_page],
+released in October 2025,
+is a LoRA fine-tuning API for open-weight models
+where the customer writes the training loop in Python
+and Thinking Machines runs the GPUs [@wikipedia_thinking_machines].
+Inkling is the company's first in-house model,
+released on 2026-07-15 [@inkling_announcement].
+
+#### What Inkling is
+
+Two models share the name (measured 2026-09-09) [@inkling_page]:
+
+- **Inkling**: a mixture-of-experts transformer with 975 billion total parameters,
+  41 billion of them active per token,
+  and a context window of up to one million tokens
+  [@inkling_announcement].
+- **Inkling-Small**: 276 billion total parameters, 12 billion active,
+  released 2026-07-30 and post-trained by on-policy distillation
+  with Inkling as the teacher [@inkling_small_announcement].
+  The product page says it matches the larger model on many benchmarks
+  at a quarter of the size [@inkling_page].
+
+Both accept text, image, and audio input and produce text only
+[@inkling_model_card; @inkling_small_model_card].
+Both are released under the Apache 2.0 license
+[@inkling_model_card; @inkling_small_model_card],
+and both expose an effort setting that trades reasoning tokens for score;
+the reported evaluations are run at `effort=0.99` [@inkling_announcement].
+
+The announcement positions Inkling as a broad base for customization
+rather than a leaderboard winner [@inkling_announcement].
+Its claims, and the evidence offered for them:
+
+- **Breadth**: reported scores of 77.6% on SWE-Bench Verified,
+  63.8% on Terminal Bench 2.1, 87.2% on GPQA Diamond,
+  and 73.5% on MMMU Pro, all at the highest effort setting [@inkling_announcement].
+- **Efficiency**: the company reports that Inkling matches
+  NVIDIA's Nemotron 3 Ultra on Terminal Bench 2.1
+  using roughly a third of the tokens [@inkling_announcement].
+- **Training**: 45 trillion tokens of text, image, audio, and video,
+  then supervised fine-tuning on synthetic data
+  and reinforcement learning with more than 30 million rollouts [@inkling_announcement].
+
+These are the vendor's own numbers on the vendor's own runs;
+we have not reproduced any of them.
+Inkling-Small's announcement reports 80.2% on SWE-Bench Verified
+and 31.6% on Humanity's Last Exam,
+against Inkling's 77.6% and 29.7% [@inkling_small_announcement].
+
+#### How it is accessed and priced
+
+Access routes (measured 2026-09-09):
+
+- **Weights**: on Hugging Face, in BF16 and `NVFP4` checkpoints
+  [@inkling_model_card; @inkling_small_model_card].
+  Even the smaller model has 276 billion parameters,
+  so neither fits any hardware the lab owns.
+- **Tinker**: LoRA fine-tuning at 64K or 256K context,
+  and a beta serverless inference endpoint,
+  both billed per million tokens [@tinker_models_pricing].
+  Under a limited-time 50% discount,
+  fine-tuning Inkling at 64K context costs $1.87 per million prefill tokens,
+  $4.68 per million sampled tokens, and $5.61 per million training tokens,
+  roughly doubling at 256K;
+  Inkling-Small is about a third of that.
+  Serverless inference is $1.00 input and $4.05 output per million tokens
+  for Inkling, and $0.30 and $1.20 for Inkling-Small.
+  Checkpoint storage adds $0.10 per GB per month [@tinker_page].
+- **Third-party hosts**: the announcement lists Together AI, Fireworks, Modal,
+  Databricks, and Baseten as hosts,
+  and vLLM, SGLang, and `llama.cpp` among supported inference engines
+  [@inkling_announcement].
+  Our quota-aware defaults for the Databricks endpoint are already in
+  @tbl-databricks-oaicopilot-defaults.
+
+#### What it is for
+
+Thinking Machines' stated bet is that organizations will want to
+fine-tune a capable open model on their own data
+rather than rent a closed frontier model,
+and Inkling exists to give Tinker a strong first-party base
+[@inkling_announcement].
+Tinker's own pitch lists specialized agents, forecasting,
+continual learning, and AI research as the intended uses [@tinker_page].
+The audio and image inputs make it a candidate
+for transcription-plus-reasoning pipelines as well as coding.
+
+#### Useful to us? Marginally, and only through a host
+
+As a coding-agent backend,
+Inkling is one more open-weight option alongside the models
+in @sec-ai-catalog-coding-agents,
+reachable through Databricks (@sec-ai-byok-vscode)
+or, when a host lists it there, OpenRouter (@sec-ai-opencode-openrouter).
+Its reported SWE-Bench and Terminal Bench scores are competitive
+but not ahead of the closed models we already pay for,
+and the 8,192-token output cap on the Databricks endpoint
+is a real constraint for agentic edits.
+Self-hosting is out: the lab has no machine
+within an order of magnitude of the memory required.
+
+The more interesting angle is research.
+Tinker lets a student run a fine-tuning or reinforcement-learning experiment
+on a frontier-class open model
+with a Python training loop and no cluster administration,
+and universities can ask for wider access [@tinker_page].
+If a project ever needs to adapt a model
+to epidemiological text or lab-specific coding conventions,
+Tinker with Inkling-Small is a cheap place to try it.
+Until such a project appears,
+no action is needed beyond keeping the Databricks endpoint in our defaults table.

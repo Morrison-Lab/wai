@@ -33,6 +33,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/what-are-ai-harnesses.qmd >}}
 
+# Inside the Claude Code Harness {#sec-ai-claude-code-harness}
+
+{{< include ai-tools/claude-code-harness.qmd >}}
+
 # How Agents Are Structured and Implemented {#sec-ai-agent-implementation}
 
 {{< include ai-tools/how-agents-are-implemented.qmd >}}
@@ -60,6 +64,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 # Where Current Practice Is Discussed: Reddit Communities {#sec-ai-guidance-sources}
 
 {{< include ai-tools/ai-guidance-sources.qmd >}}
+
+# Thinking Machines Lab's Inkling Models {#sec-ai-thinking-machines-inkling}
+
+{{< include ai-tools/thinking-machines-inkling.qmd >}}
 
 # AI Agents and the Technological Singularity
 
@@ -97,6 +105,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/running-agents-offline.qmd >}}
 
+# Assessing Aeris and Graft {#sec-ai-aeris-and-graft}
+
+{{< include ai-tools/aeris-and-graft.qmd >}}
+
 # Connecting OpenCode to Local Models {#sec-ai-opencode-ollama}
 
 {{< include ai-tools/opencode-ollama.qmd >}}
@@ -113,6 +125,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/small-local-models-agentic.qmd >}}
 
+# VoltAgent: TypeScript Agent Framework {#sec-ai-voltagent}
+
+{{< include ai-tools/voltagent.qmd >}}
+
 # Configuring GitHub Copilot Settings {#sec-ai-copilot-settings}
 
 {{< include ai-tools/copilot-settings.qmd >}}
@@ -128,6 +144,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 # Agent Skills {#sec-ai-agent-skills}
 
 {{< include ai-tools/agent-skills.qmd >}}
+
+# Tessl: Skills Registry and CLI {#sec-ai-tessl}
+
+{{< include ai-tools/tessl.qmd >}}
 
 # The Posit Skill Collection {#sec-ai-posit-skills}
 
@@ -177,6 +197,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/gemini-code-assist-review.qmd >}}
 
+# PR-Agent: Open-Source Pull-Request Review Bot {#sec-ai-pr-agent}
+
+{{< include ai-tools/pr-agent.qmd >}}
+
 # How a Session Learns a PR Changed {#sec-ai-pr-activity-notifications}
 
 {{< include ai-tools/pr-activity-notifications.qmd >}}
@@ -185,9 +209,17 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/when-to-use-coding-agent.qmd >}}
 
+# Deep Research Modes {#sec-ai-research-modes}
+
+{{< include ai-tools/research-modes.qmd >}}
+
 # Editing with `.docx` files
 
 {{< include ai-tools/editing-with-docx-files.qmd >}}
+
+# Hosted AI Agent Offices: Vestra and Similar {#sec-ai-agent-offices}
+
+{{< include ai-tools/ai-agent-offices.qmd >}}
 
 # Copilot Instructions for this Repository
 
@@ -204,6 +236,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 # Agent Sessions and Handoff in Visual Studio Code {#sec-ai-vscode-agent-sessions}
 
 {{< include ai-tools/vscode-agent-sessions.qmd >}}
+
+# Herdr: A Terminal Multiplexer for Coding Agents {#sec-ai-herdr}
+
+{{< include ai-tools/herdr.qmd >}}
 
 # Installing Claude Code on Windows {#sec-ai-claude-code-windows}
 
@@ -248,6 +284,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 # Collaborative AI Workspaces: Claude Cowork and Gemini Spark {#sec-ai-collaborative-workspaces}
 
 {{< include ai-tools/collaborative-workspaces.qmd >}}
+
+# AI-Enabled Knowledge Workspaces: Notion and Alternatives {#sec-ai-knowledge-workspaces}
+
+{{< include ai-tools/ai-knowledge-workspaces.qmd >}}
 
 # References {.unnumbered}
 
