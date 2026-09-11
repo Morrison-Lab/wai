@@ -1,0 +1,218 @@
+[PR-Agent](https://github.com/The-PR-Agent/pr-agent) [@pr_agent_repo]
+is an open-source pull-request review bot.
+It runs one large-language-model call per command,
+posts the result as a pull-request comment or review,
+and works against several git forges with any model that LiteLLM can reach.
+All claims below were checked against the repository at `main`,
+its release list, and the documentation site at <https://docs.pr-agent.ai/>
+(measured 2026-09-09; the latest release was `v0.45.0`, published 2026-09-05).
+
+#### History and ownership
+
+PR-Agent began at CodiumAI, later renamed Qodo,
+and its hosted enterprise edition was sold as Qodo Merge.
+In 2026 Qodo donated the open-source project to the community.
+The repository now lives in the `The-PR-Agent` GitHub organization,
+has an external maintainer,
+and its README says it "is currently in the process of being donated to an open-source foundation" [@pr_agent_repo].
+Qodo Merge was rebranded as Qodo 2.0, a separate hosted product.
+
+The README is emphatic that the two are not the same thing:
+the repository "is not the Qodo offering for open-source projects",
+and PR-Agent is "a community-maintained legacy project of Qodo" [@pr_agent_repo].
+Qodo remains the project's gold sponsor.
+Read the documentation with that split in mind:
+pages that describe a hosted app or a free tier for open-source projects
+are describing Qodo's product,
+while PR-Agent itself is software you run.
+
+The Docker images moved with the ownership.
+Releases `0.34.2` and later are published under `pragent/pr-agent`;
+the older `codiumai/pr-agent` namespace is a frozen archive [@pr_agent_repo].
+
+#### Commands
+
+Every command is a slash comment on the pull request
+or a subcommand of the `pr-agent` command-line tool.
+The four core commands [@pr_agent_docs]:
+
+- `/describe` generates a title, type, summary, code walk-through, and labels.
+- `/review` generates a review covering possible issues, security concerns,
+  tests, and an estimate of review effort.
+  The review can also rate risk, recommend whether to merge,
+  list the files a human should read first,
+  and check the change against a linked GitHub or Jira ticket [@pr_agent_review].
+- `/improve` posts actionable code suggestions,
+  which the forge can render as one-click suggestion blocks.
+- `/ask "..."` answers a free-text question about the whole PR
+  or about specific lines.
+
+Six further commands (`/add_docs`, `/generate_labels`, `/similar_issue`,
+`/help`, `/help_docs`, and `/update_changelog`) round out the set.
+`/help_docs` is disabled as of `v0.36.1`
+pending a fix for a credential-exposure issue [@pr_agent_repo].
+
+Each command is a single model call,
+which the README describes as "~30 seconds, low cost" [@pr_agent_repo].
+Large diffs are handled by a compression strategy
+rather than by a multi-step agent loop:
+deletion-only hunks are dropped,
+deleted files are collapsed into a list,
+and remaining files are added in order of size
+until the prompt approaches the model's token limit [@pr_agent_compression].
+Files that do not fit are named but not shown to the model.
+`v0.45.0` adds an opt-in large-diff chunking mode for `/review`
+that splits a diff across several calls and merges the results.
+
+Behavior is configured in a `.pr_agent.toml` file at the repository root,
+or by environment variables using dotted keys such as
+`pr_reviewer.extra_instructions` and `config.model` [@pr_agent_automation].
+Each tool has an `extra_instructions` field for free-text review guidance,
+and `/review` has `require_*` switches
+(`require_security_review`, `require_tests_review`, and so on)
+that turn individual sections on or off [@pr_agent_review].
+
+#### Supported forges and models
+
+PR-Agent supports five forges:
+
+- GitHub
+- GitLab
+- Bitbucket
+- Azure DevOps
+- Gitea
+
+Most commands work on all five;
+the documentation keeps a per-forge feature matrix,
+and a few commands (such as `/similar_issue`) are GitHub-only [@pr_agent_docs].
+
+Models are bring-your-own.
+PR-Agent calls models through LiteLLM,
+so any provider LiteLLM supports can be selected by setting `config.model` [@pr_agent_models].
+Named providers include OpenAI, Azure OpenAI, Anthropic, Google (AI Studio and Vertex AI),
+Amazon Bedrock, DeepSeek, Mistral, Groq, xAI, OpenRouter,
+and local servers such as Ollama and vLLM.
+Further keys let you route work to different models:
+`config.model_weak` for lighter commands
+(`/describe`, `/ask`, `/update_changelog`),
+`config.fallback_models` for retries,
+and a `[model_routing]` table that picks a model by diff size [@pr_agent_models].
+
+Local models work but come with a warning.
+The model-configuration page says that
+"most open-source models currently available (as of January 2025)
+face challenges with these complex tasks"
+and recommends them for "experimentation and learning purposes (mainly for the ask command)" [@pr_agent_models].
+That note predates the current generation of open-weight coding models,
+so treat it as a prompt to test rather than as a verdict;
+@sec-ai-small-local-models covers what we have found local models can and cannot do.
+
+#### Deployment
+
+There is no hosted PR-Agent service.
+Every route runs the software on infrastructure you control [@pr_agent_github_install]:
+
+- **GitHub Action** (the README's recommended route).
+  A workflow that `uses: the-pr-agent/pr-agent@main`
+  with `OPENAI_KEY` (or another provider's key) and `GITHUB_TOKEN` in `env`,
+  triggered on `pull_request` and `issue_comment` events.
+  `github_action_config.auto_review`, `auto_describe`, and `auto_improve`
+  choose which commands run automatically when a PR opens,
+  and the `issue_comment` trigger enables slash commands.
+- **Self-hosted GitHub App**.
+  A webhook server (the `pr-agent:github_app` Docker target)
+  registered as a GitHub App with pull-request, issue-comment, and metadata permissions.
+  The documentation covers running it as an AWS Lambda function
+  and sizing the `gunicorn` workers.
+  Equivalent webhook servers exist for GitLab and Gitea.
+- **Command line**.
+  `pip install pr-agent`, then
+  `pr-agent --pr_url <url> review`
+  runs a command against an existing PR from your own machine.
+- **Docker**.
+  Versioned images under `pragent/pr-agent` back all of the above.
+
+The README's data-privacy section says only that
+a self-hosted PR-Agent with your own OpenAI key
+"is between you and OpenAI" [@pr_agent_repo].
+That is the whole privacy story:
+no third party sees the diff except the model provider you chose.
+
+#### License and the hosted-versus-open split
+
+The code is MIT-licensed,
+with the 2026 copyright held by "The PR Agent" [@pr_agent_license].
+The current documentation no longer marks individual commands
+as open-source or hosted-only:
+after the donation, everything at `docs.pr-agent.ai` describes the open-source tool,
+and the hosted features moved to Qodo's own product and documentation.
+Older blog posts and third-party guides still refer to
+"PR-Agent Pro" or "Qodo Merge" feature tiers;
+those describe the product that became Qodo 2.0,
+not the repository reviewed here.
+
+#### Useful to us?
+
+The lab already runs four pull-request reviewers,
+so the question is what PR-Agent adds.
+The comparison uses the same axes as the other review sections:
+
+| Dimension | PR-Agent | [Claude Code Action](#sec-ai-claude-code-action-review) | [Codex review](#sec-ai-codex-github-review) | [Gemini Review Action](#sec-ai-gemini-review-action) | [Gemini Code Assist](#sec-ai-gemini-code-assist-review) |
+|---|---|---|---|---|---|
+| **Source** | Open (MIT) | Open action, closed model | Closed | Open | Closed |
+| **Hosting** | Actions runner or your own webhook server | Actions runner | OpenAI-hosted | Actions runner | Google-hosted |
+| **Model** | Any via LiteLLM, including local | Claude only | OpenAI only | Gemini only | Gemini only |
+| **Forges** | GitHub, GitLab, Bitbucket, Azure DevOps, Gitea | GitHub | GitHub | GitHub | GitHub |
+| **Billing** | Your API key (or free with a local model) | Anthropic API key or federation | ChatGPT workspace | Gemini API key or Google Cloud | Google Cloud |
+| **Review depth** | One model call per command over a compressed diff | Agentic; five reviewer subagents with repository access | Hosted agent | One call with repository context indexing | Managed service |
+| **Interactive** | `/ask`, `/review`, and other slash comments | `@claude` mention (separate workflow) | `@codex review` | Triggered by workflow events | `/gemini` comments |
+| **Customization** | `.pr_agent.toml`, `extra_instructions`, prompts in repo | Review prompt in the workflow file | `AGENTS.md` review rules | Skills directory | Google Cloud Console |
+
+What PR-Agent offers that none of the others do:
+
+- **Model independence.**
+  It is the only reviewer here that can be pointed at
+  whichever provider currently has spare quota,
+  or at an Ollama model for a zero-cost pass on a private repository.
+  For the lab's quota juggling
+  (@sec-ai-gemini-spend-management and @sec-ai-claude-code-other-models),
+  a reviewer whose model is a one-line config change is attractive.
+- **Structured output.**
+  `/review` reports effort, risk, and a merge recommendation in a fixed format,
+  which a script can parse.
+  The other reviewers produce prose.
+- **GitLab and other forges.**
+  Only PR-Agent covers repositories outside GitHub,
+  which matters if a collaborator hosts code elsewhere.
+
+What it lacks:
+
+- **Depth.**
+  A single call over a pruned diff cannot follow a symbol
+  into a file the diff did not touch.
+  The Claude Code Action reviewer runs as an agent with the repository checked out,
+  so it can.
+  For the review standard the lab's ARDI loop expects
+  (see @sec-ai-claude-code-action-review),
+  PR-Agent is a first pass, not a replacement.
+- **A stable maintainer story.**
+  The project changed hands in 2026,
+  its README says a foundation transfer is still in progress,
+  and one command is disabled pending a security fix.
+  Release cadence remains weekly (five releases between 2026-08-01 and 2026-09-05),
+  so the project is active,
+  but the governance is newer than the code.
+- **Another bot in the thread.**
+  Each added reviewer costs a review round per push
+  and a comment the ARDI loop has to triage.
+  Adding a fifth reviewer only pays off
+  if it catches something the other four miss.
+
+A reasonable trial is one repository,
+the GitHub Action route,
+`auto_review` on and `auto_describe` and `auto_improve` off,
+with `config.model` set to whichever provider has spare quota that month.
+If its `/review` findings overlap the Claude reviewer's after a few weeks,
+turn it off;
+if it catches something distinct,
+keep it as the cheap first pass.

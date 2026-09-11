@@ -1,0 +1,140 @@
+Issue [#46](https://github.com/Morrison-Lab/wai/issues/46) asked whether two GitHub projects,
+Aeris and Graft,
+have a place in the lab's AI workflow.
+The notes below reflect each repository's README and metadata
+as read on 2026-09-09.
+
+#### Aeris
+
+[`Cedrick-Coto/Aeris`](https://github.com/Cedrick-Coto/Aeris) [@aeris]
+describes itself as a deterministic cognitive simulation engine
+with emergent narrative,
+whose README describes an entity-component-system (ECS) architecture in C# (.NET 10).
+Its design premise is that the language model "verbalizes, never thinks":
+a deterministic simulation core computes perception, attention, memory, affect, and goals each tick,
+and the LLM only turns that state into narrative or dialogue,
+never modifying it.
+The target application is a simulated character in a Pokemon world.
+
+Repository facts (measured 2026-09-09):
+
+- GPL-3.0 license
+- 2 stars, 1 fork, 2 contributors, 80 commits since creation on 2026-07-26
+- 2 commits in the month before the reading date
+- 87 Markdown files and three `.csproj` project files on `main`, but no `.cs` source files,
+  so the "complete" engine and "210 tests" that the README roadmap reports
+  are not present in the public repository
+
+The project is a research design document for LLM-backed simulated agents,
+not a tool for working with AI coding assistants.
+Nothing in it targets writing, reviewing, or running code.
+
+##### Useful to us? No
+
+Aeris does not overlap with any lab workflow.
+Its one transferable idea,
+keeping the LLM out of state changes and confining it to presentation,
+is already how this site recommends treating agents:
+the [responsibility-for-validation policy](ai-use-policies.qmd#responsibility-for-validation) and the [review guidance](pr-workflow-with-agents.qmd#sec-invalidate-ai-review)
+put the deterministic checks and the accountability with the human and the CI pipeline,
+not the model.
+The GPL-3.0 license would also complicate reuse of any code in lab packages,
+though at the reading date there was no code to reuse.
+No further action is warranted.
+
+#### Graft
+
+[`trailhq/Graft`](https://github.com/trailhq/Graft) [@graft]
+(formerly `NanoNets/Graft`; the old URL redirected at the reading date)
+is an open-source "context layer" for coding agents.
+Its aim is to stop an agent re-exploring a repository at the start of every task
+by building a persistent map of the codebase once
+and feeding the relevant parts of that map into each prompt.
+
+Repository facts (measured 2026-09-09):
+
+- MIT license
+- TypeScript, published on npm as `@nanonets/graft`
+  (0.16.0 on npm; `package.json` on `main` reads 0.17.0), requiring Node 20 or later
+- 6,788 stars, 613 forks, 34 contributors
+- 174 commits in the 30 days before the reading date, and 43 open issues (excluding pull requests)
+
+How it works, per the README:
+
+- `graft build` parses the repository with tree-sitter into a per-symbol code graph
+  (functions, classes, call and import edges).
+  This layer is deterministic, runs locally, and never calls a model,
+  so it needs no API key.
+- `graft build --deep` adds an LLM layer:
+  a short summary per file,
+  grouped into a few dozen Markdown "nodes" (one per subsystem or concept)
+  with typed links between them and a "crux" excerpt of the lines that carry the logic.
+  The model runs under your own key through one of:
+
+  - OpenAI
+  - Anthropic
+  - OpenRouter
+  - a LiteLLM proxy
+  - a local server
+- `graft init` wires the graph into an agent.
+  For Claude Code it writes a skill file, hooks, and a status line.
+  For the other hosts it adds a fenced section to `AGENTS.md`, `GEMINI.md`, or `.github/copilot-instructions.md`:
+
+  - Codex
+  - OpenCode
+  - Gemini CLI
+  - Copilot
+  - Cursor
+  - others that read those files
+
+  It also registers an MCP server exposing six tools
+  (find code, file API, trace callers, regex search, repo map, freshness check).
+- The graph is a git-ignored local cache, rebuilt incrementally and refreshed before each query;
+  only the small wiring is committed.
+- R is one of the "full-fidelity" languages,
+  with support for plain functions, S3, S4, and R6 classes and methods,
+  roxygen `@export` tags, and `library()` and `source()` imports.
+
+The README reports benchmarks from the project's own harness
+(42% fewer tokens and 60% less latency with equal correctness on 162 runs across two repositories)
+and a 50-instance SWE-bench Verified run,
+Claude Code with Claude Sonnet 5 on both arms
+(33 of 50 resolved with Graft against 27 without, using 23% fewer tokens).
+These are vendor-run measurements on the vendor's chosen tasks,
+so treat them as an upper bound until reproduced.
+The package sends an anonymous batched usage ping by default;
+the README states the ping carries no code, paths, or queries,
+and that `graft telemetry disable` or `DO_NOT_TRACK=1` turns it off.
+
+##### Useful to us? Yes, trial it on one R package
+
+Graft addresses a cost the lab pays constantly:
+each new agent session re-reads an R package to rebuild the same picture of its structure.
+Three things make it a good fit for a trial:
+
+- The structural layer is free and local,
+  so it can run on a package without spending model tokens
+  or sending code anywhere,
+  which matches the constraints in @sec-ai-offline.
+- R is a first-class language in its parser,
+  including S3, S4, and R6 dispatch and roxygen tags.
+- It wires into the agents the lab already uses
+  (Claude Code, Codex, OpenCode, Gemini CLI, and Copilot)
+  through their existing instruction files and an MCP server,
+  the mechanism @sec-ai-mcp-server-setup covers,
+  so a trial adds no new harness.
+
+Check two things before adopting it lab-wide.
+First, the benchmark claims are vendor-run,
+so measure the token and tool-call counts on one of our own packages
+before and after `graft init`.
+Second, the `--deep` layer spends model tokens on every changed file
+and the `init` step for Codex writes to user-level config outside the repository
+(`~/.codex/`; skip with `--no-global`),
+so start with the structural layer only and the Claude Code wiring only.
+The `graft init --dry-run` flag lists every file it would touch,
+which is the right first command.
+Graft is complementary to the memory tooling in @sec-ai-magic-context:
+that section covers remembering what happened across sessions,
+whereas Graft covers what the code is,
+and the two do not overlap.

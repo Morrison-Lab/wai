@@ -1,0 +1,217 @@
+[Vestra](https://vestra.ai/) [@vestra]
+sells what it calls an "AI agent office":
+a hosted, always-on general-purpose agent
+that you reach from the tools you already use
+and that runs on a cloud machine the vendor operates.
+This section reviews Vestra and four products in the same category
+(measured 2026-09-09):
+
+- [Manus](https://manus.im/) [@manus]
+- [Lindy](https://www.lindy.ai/) [@lindy]
+- [Zapier Agents](https://zapier.com/agents) [@zapier_agents]
+- [Relevance AI](https://relevanceai.com/agents) [@relevanceai_agents]
+
+The category sits between two things this site already covers.
+[Make](make.qmd) and Zapier's core product are visual automation builders:
+you draw the workflow, and the AI parts are modules inside it.
+The collaborative workspace agents in @sec-ai-collaborative-workspaces
+(Claude Cowork, Gemini Spark) work on files and documents you own.
+An agent office is closer to a hired assistant than to either:
+you describe an outcome in chat,
+the vendor's agent plans and executes it on the vendor's infrastructure,
+connects to your accounts through OAuth,
+and keeps a memory of your organization between tasks.
+@sec-openclaw describes the self-hosted, open-source version of the same idea.
+
+## Vestra
+
+Vestra's marketing describes two named agents.
+"Bash" is the executor:
+you describe "outcomes, not instructions",
+it "plans it, in the open, before anything runs",
+and it can split work across specialist sub-agents,
+running up to ten tasks in parallel.
+"Nami" is the memory layer,
+which the handbook says builds a company memory by
+"watching everything: every task Bash finishes, every document, every decision"
+plus whatever is in the connected tools [@vestra_handbook].
+Each task runs on "a real cloud machine with files, a browser, and a terminal",
+and the platform routes each task to a model it picks from several providers
+unless you pin one.
+
+- **Target user.**
+  The use-case pages address:
+
+  - founders
+  - sales and marketing
+  - support
+  - finance
+  - recruiting
+  - operations
+  - research and strategy teams
+
+  Press coverage aims it at non-technical domain experts and small teams.
+  The site describes a private beta.
+- **Pricing** [@vestra_pricing].
+  Four self-serve tiers, all "entire office, all features":
+
+  - Lite at USD 19/month for 2,000 credits on a 4 GB machine
+  - Pro at USD 97 for 10,000 credits
+  - Max at USD 197 for 20,000 credits
+  - Ultra at USD 497 for 50,000 credits on a 32 GB machine
+
+  A credit is "the unit of work" and the cost per task varies.
+  The first 1,000 credits are free,
+  and custom engagements with forward-deployed engineers start at USD 4,000/month.
+- **Data handling** [@vestra_privacy].
+  The privacy policy (effective 2026-09-04) says content is not used for training by default,
+  but task content is sent to whichever model provider handles the task,
+  and one listed model tier (Meta's Muse Spark 1.3) permits that provider to train on it.
+  OAuth flows and access tokens are handled by a subprocessor, Composio, Inc.
+  Deleting the account removes stored data within 30 days.
+  User-created agents may be indexed by search engines by default,
+  with opt-out by email.
+- **Agent and API access.**
+  Chat channels are Slack, Telegram, WhatsApp, iMessage, Gmail,
+  and a desktop overlay on the Mac app.
+  "Abilities" package skills, specialist agents, connectors, and guardrails
+  into installable bundles.
+  We found no public API documentation.
+  The memory store can be exported as plain Markdown.
+
+## Manus
+
+Manus [@manus] is the best-known product in the category.
+Its home page lists a browser operator,
+a web app builder,
+"Wide Research" for parallel research tasks,
+slide and image generators,
+email ("Mail Manus") and Slack integrations,
+a team plan with SSO,
+and an API for developers.
+Its pricing page renders client-side and its privacy policy returned only a title
+when we fetched them,
+so we could not verify plan prices or the training policy from the vendor
+(measured 2026-09-09);
+check `manus.im/pricing` and `trust.manus.im` directly before relying on either.
+
+## Lindy
+
+Lindy [@lindy] is a "Slack-native teammate":
+everyone on a team gets a private assistant in Slack DMs
+and a shared one in channels.
+It runs scheduled routines,
+connects to over 1,000 apps,
+supports MCP and computer use,
+and ships with "40+ skills: research, data analysis, decks, dashboards"
+that a team can extend by saving a completed task as a new skill.
+
+- **Pricing** [@lindy_pricing].
+  Plus at USD 29.99/month for 3,000 credits per user,
+  Pro at USD 99.99 for 15,000,
+  Max at USD 199.99 for 35,000,
+  and an Enterprise tier with HIPAA, a BAA, SSO, and audit logs.
+  Credits do not roll over.
+- **Data handling.**
+  "Your data is encrypted, never sold, and never used to train models",
+  with SOC 2 Type II, GDPR, HIPAA, and PIPEDA compliance claimed.
+  "Nothing irreversible happens without your approval."
+- **Agent and API access.**
+  MCP support is the extension route; the pricing page lists no public API.
+
+## Zapier Agents
+
+Zapier Agents [@zapier_agents] are "superhuman teammates" layered on Zapier's
+9,000-app integration catalog.
+You describe the agent, attach knowledge sources
+(FAQs, documentation, public links),
+and it acts across those apps, with real-time activity monitoring.
+Templates cover lead enrichment, content, support, candidate ranking,
+and expense classification.
+
+- **Pricing** [@zapier_pricing].
+  Agents bill in *activities*, separate from Zap tasks:
+  "any billable action an agent takes: using a trigger,
+  answering from a knowledge source, running an action,
+  web browsing or scraping, a web search, or a message sent via the Chrome extension."
+  The Free plan includes 400 activities/month with a 10-activity cap per run;
+  paid plans start at about 1,500 activities/month with a 40-activity cap.
+  Zapier's paid plans start at USD 19.99/month billed annually;
+  nonprofits get 15% off.
+- **Data handling.**
+  Neither the Agents page nor the pricing page states how AI features handle data,
+  so read Zapier's separate privacy and security documents.
+- **Agent and API access.**
+  Agents inherit Zapier's triggers, webhooks, and Chrome extension;
+  this is the most "automation builder" of the five.
+
+## Relevance AI
+
+Relevance AI [@relevanceai_agents] calls itself "the home of the AI Workforce".
+Agents are built three ways:
+a drag-and-drop canvas,
+plain-language description,
+or programmatically through MCP and an API.
+Each agent "owns one narrow task",
+and a workforce nests them with parallel streams,
+human-in-the-loop approvals,
+evaluation pass-rate tracking,
+audit trails,
+and triggers from CRM events, email, calendar, webhooks, and cron.
+
+- **Pricing.**
+  The public pricing page lists only an Enterprise tier with custom pricing
+  [@relevanceai_pricing];
+  a case study on the agents page quotes USD 0.01 to 0.11 per task.
+- **Data handling** [@relevanceai_security].
+  The data security policy covers AES-256 encryption in transit,
+  need-to-know staff access, and background checks,
+  but does not address model training on customer data,
+  data residency regions, or certifications.
+- **Agent and API access.**
+  The strongest developer surface of the five: API, MCP, webhooks, and cron.
+
+## Useful to us? Not for research work
+
+For an epidemiology lab whose work is code, data, and manuscripts,
+these products solve a problem we mostly do not have.
+Their value is in gluing SaaS business tools together
+(CRM, inbox, calendar, Slack) for people who do not write code.
+Our work lives in Git repositories, R and Python environments,
+and Quarto documents,
+where the coding agents in @sec-ai-catalog-coding-agents
+and the collaborative workspace agents in @sec-ai-collaborative-workspaces
+already reach the files directly.
+
+Three concerns weigh against adopting any of them for lab work:
+
+- **Data.**
+  An agent office works by connecting to your accounts
+  and remembering what it sees.
+  Vestra's memory layer is designed to watch "every document, every decision";
+  its policy names one model tier that trains on task content;
+  and Manus's policy could not be read at all.
+  Human-subjects data, unpublished results, and grant drafts
+  should not flow through a vendor whose training and residency terms
+  we cannot verify.
+  Lindy's explicit no-training statement and HIPAA/BAA tier
+  is the exception, and it costs enterprise pricing.
+- **Reproducibility.**
+  A task that ran on a vendor's cloud machine with an auto-selected model
+  leaves no script we can re-run.
+  For analysis, that is disqualifying.
+- **Cost.**
+  Credit-metered plans at USD 19 to 497 per person per month
+  buy less than a coding-agent subscription for our use,
+  because the expensive part (a hosted VM with a browser) is what we least need.
+
+Where they could earn a place is in lab administration:
+a scheduled routine that drafts a weekly summary from a shared inbox,
+triages a calendar,
+or files reminders.
+Zapier Agents is the cheapest way to try that,
+because the free tier covers 400 activities a month
+and the integration catalog is the largest.
+If a member wants to try Vestra or Manus,
+use a throwaway account connected only to non-sensitive tools,
+and treat @sec-openclaw as the option that keeps the data on our own machine.
