@@ -141,6 +141,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/agent-skills.qmd >}}
 
+# Tessl: Skills Registry and CLI {#sec-ai-tessl}
+
+{{< include ai-tools/tessl.qmd >}}
+
 # The Posit Skill Collection {#sec-ai-posit-skills}
 
 {{< include ai-tools/posit-skills.qmd >}}
