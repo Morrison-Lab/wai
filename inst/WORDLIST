@@ -53,6 +53,7 @@ Claude
 ClaudeAI
 ClaudeCode
 Cline
+Cloudflare
 Cmd
 CodeCompanion
 CodeNomad
@@ -136,6 +137,7 @@ Herbert
 Herdr
 Hermes
 Homebrew
+Hono
 Hoyeon
 Hoyeon's
 Huntley
@@ -174,7 +176,9 @@ LSP
 LangChain
 LangGraph
 LangSmith
+Langfuse
 LeCun
+LibSQL
 Lifecycle
 Lindy
 LiteLLM
@@ -184,6 +188,7 @@ LocalLLM
 LocalLLaMA
 MCP
 MCTS
+MLflow
 MSYS
 MWC
 MachineLearning
@@ -240,6 +245,7 @@ OpenHarness
 OpenID
 OpenRouter
 OpenSSH
+OpenTelemetry
 PATs
 PBC
 PEFT
@@ -310,6 +316,7 @@ Sleev
 SolidJS
 Sourcegraph
 Stanford
+Supabase
 SuperGrok
 Supermemory
 SymPy
@@ -341,6 +348,9 @@ Vestra
 Vestra's
 VibeCodeDevs
 Vinge
+VoltAgent
+VoltAgent's
+VoltOps
 WIF
 WSL
 Wachowskis
@@ -357,6 +367,7 @@ Zapier
 Zapier's
 Zechner
 Zellij
+Zod
 Zsh
 agentic
 agentskills
@@ -434,6 +445,7 @@ emplate
 enablement
 errored
 erroring
+evals
 exfiltration
 extensibility
 fallbacks
@@ -550,6 +562,7 @@ repro
 reproducibility
 repurposing
 reraise
+resumable
 resyncing
 retryable
 reviewable
