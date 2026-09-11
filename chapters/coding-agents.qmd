@@ -33,6 +33,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/what-are-ai-harnesses.qmd >}}
 
+# Inside the Claude Code Harness {#sec-ai-claude-code-harness}
+
+{{< include ai-tools/claude-code-harness.qmd >}}
+
 # How Agents Are Structured and Implemented {#sec-ai-agent-implementation}
 
 {{< include ai-tools/how-agents-are-implemented.qmd >}}
