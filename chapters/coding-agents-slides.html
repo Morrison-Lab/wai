@@ -332,7 +332,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-09-10 18:34:02 (PDT)</p>
+  <p class="date">Last modified: 2026-09-10 18:52:58 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -415,7 +415,7 @@
 <td>Delegate a task in an isolated environment or work locally</td>
 </tr>
 <tr class="odd">
-<td><a href="https://jules.google.com/">Google Jules</a> <span class="citation" data-cites="jules_docs">(<a href="#/references" role="doc-biblioref" onclick="">Google 2026d</a>)</span></td>
+<td><a href="https://jules.google.com/">Google Jules</a> <span class="citation" data-cites="jules_docs">(<a href="#/references" role="doc-biblioref" onclick="">Google 2026e</a>)</span></td>
 <td>Cloud coding agent</td>
 <td>Connect a repository and review the proposed changes</td>
 </tr>
@@ -490,7 +490,7 @@
 <h4 id="sec-ai-platform-execution-models">Where the agent runs</h4>
 <p>The platforms above sort into three execution models (measured 2026-09-09). The model decides where your code is copied, what the agent can reach, and how its work comes back to you.</p>
 <ul>
-<li><strong>Hosted sandbox.</strong> The vendor provisions an isolated machine, clones the repository into it, and returns a branch or pull request. Jules clones the repository into a virtual machine and submits a pull request after you approve its plan <span class="citation" data-cites="jules_docs">(<a href="#/references" role="doc-biblioref" onclick="">Google 2026d</a>)</span>; Cursor cloud agents clone from GitHub, GitLab, Azure DevOps, or Bitbucket, work on a separate branch, and push it back <span class="citation" data-cites="cursor_cloud_agents">(<a href="#/references" role="doc-biblioref" onclick="">Cursor 2026</a>)</span>; Kiro web tasks and Warp cloud agents follow the same shape <span class="citation" data-cites="kiro_docs warp_docs">(<a href="#/references" role="doc-biblioref" onclick="">Amazon Web Services 2026</a>; <a href="#/references" role="doc-biblioref" onclick="">Warp 2026</a>)</span>, as do the Copilot coding agent, Codex cloud tasks, Devin, and OpenHands Cloud. Nothing runs on your machine, so the questions are what the sandbox can reach and whether the vendor’s retention terms suit the repository.</li>
+<li><strong>Hosted sandbox.</strong> The vendor provisions an isolated machine, clones the repository into it, and returns a branch or pull request. Jules clones the repository into a virtual machine and submits a pull request after you approve its plan <span class="citation" data-cites="jules_docs">(<a href="#/references" role="doc-biblioref" onclick="">Google 2026e</a>)</span>; Cursor cloud agents clone from GitHub, GitLab, Azure DevOps, or Bitbucket, work on a separate branch, and push it back <span class="citation" data-cites="cursor_cloud_agents">(<a href="#/references" role="doc-biblioref" onclick="">Cursor 2026</a>)</span>; Kiro web tasks and Warp cloud agents follow the same shape <span class="citation" data-cites="kiro_docs warp_docs">(<a href="#/references" role="doc-biblioref" onclick="">Amazon Web Services 2026</a>; <a href="#/references" role="doc-biblioref" onclick="">Warp 2026</a>)</span>, as do the Copilot coding agent, Codex cloud tasks, Devin, and OpenHands Cloud. Nothing runs on your machine, so the questions are what the sandbox can reach and whether the vendor’s retention terms suit the repository.</li>
 <li><strong>Local checkout.</strong> The agent runs on your workstation against the files already there, in a terminal (Claude Code, Codex CLI, OpenCode, Aider, Gemini CLI, Warp) or inside an editor (Cursor, Cline, Kiro, Copilot in VS Code). Code stays put, and the agent inherits whatever credentials and network access your shell has, which is why <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;19</a> asks for approval gates and a sandbox. Pairing one of these with Ollama keeps the model local too <span class="citation" data-cites="ollama_site">(<a href="#/references" role="doc-biblioref" onclick="">Ollama 2026</a>)</span>, at the cost of the hardware described in <a href="#/sec-ai-offline" class="quarto-xref">Section&nbsp;21</a>.</li>
 <li><strong>Orchestration layer.</strong> Kepler, Kiro Crew, and the Cline Kanban surface do not add a model of their own; they run several of the agents above in parallel worktrees or sessions and present the results for review. Reach for one only once a single agent is no longer the bottleneck (<a href="../chapters/agent-orchestration.html#sec-orch-when">when orchestration helps</a>).</li>
 </ul>
@@ -5299,17 +5299,17 @@ while the selected main agent model is BYOK.</code></pre>
 <p>Research draws on the same connectors as the rest of the app: when Gmail, Google Calendar, and Google Docs are connected, it searches those alongside the web <span class="citation" data-cites="claude_research_help">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026u</a>)</span>. There is no separate Research quota; runs count against the plan’s ordinary conversation limits, and the help page warns that a run “may consume limits faster” because it retrieves many sources.</p>
 <p>The Claude API has no Research endpoint. What it exposes is the <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool">web search tool</a> <span class="citation" data-cites="claude_web_search_tool">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026v</a>)</span>: a server-side tool that searches, returns results with citations, and can be capped with <code>max_uses</code> or restricted to <code>allowed_domains</code>. It is billed at $10 per 1,000 searches plus token costs. A multi-search research loop over that tool is something you build, not something you call.</p>
 <h4 id="gemini-deep-research">Gemini Deep Research</h4>
-<p><a href="https://support.google.com/gemini/answer/15719111">Deep Research in the Gemini app</a> <span class="citation" data-cites="gemini_deep_research_help">(<a href="#/references" role="doc-biblioref" onclick="">Google 2026e</a>)</span> searches Google by default, and you can add Gmail, Drive, uploaded files, and NotebookLM notebooks as sources. A report “usually takes about 5-10 minutes to generate”, longer for complex topics. The report can be exported to Google Docs or turned into an Audio Overview. All users can run reports; Google AI Pro and Ultra subscribers can generate them with the Pro model, and Ultra reports may include charts, diagrams, and interactive simulators.</p>
-<p>Limits are compute-based rather than a per-report count <span class="citation" data-cites="gemini_apps_limits">(<a href="#/references" role="doc-biblioref" onclick="">Google 2026b</a>)</span>: the allowance refreshes every 5 hours up to a weekly cap, with AI Plus at 2x the free allowance, AI Pro at 4x, and AI Ultra at 5x or 20x the Pro allowance depending on the subscription. Deep Research is listed as available on every tier, but the same page notes that for accounts without a paid plan compute-heavy features like Deep Research “may be unavailable during periods of high demand”.</p>
-<p>Google is the one vendor here that sells the app feature and the API feature under the same name. The <a href="https://ai.google.dev/gemini-api/docs/deep-research">Gemini Deep Research agent</a> <span class="citation" data-cites="gemini_deep_research_api">(<a href="#/references" role="doc-biblioref" onclick="">Google 2026c</a>)</span> runs only through the Interactions API, must be launched with <code>background=true</code>, and ships as two agents: <code>deep-research-preview-04-2026</code> and <code>deep-research-max-preview-04-2026</code>. The Max variant, built on Gemini 3.1 Pro, is positioned for exhaustive batch work such as a nightly job that writes due-diligence reports <span class="citation" data-cites="gemini_deep_research_max">(<a href="#/references" role="doc-biblioref" onclick="">Google 2026a</a>)</span>. By default the agent gets Google Search, URL context, and code execution; it accepts documents as input and can call remote MCP servers. A run is capped at 60 minutes, and the docs estimate $1-3 per standard task and $3-7 per Max task.</p>
+<p><a href="https://support.google.com/gemini/answer/15719111">Deep Research in the Gemini app</a> <span class="citation" data-cites="gemini_deep_research_help">(<a href="#/references" role="doc-biblioref" onclick="">Google 2026h</a>)</span> searches Google by default, and you can add Gmail, Drive, uploaded files, and NotebookLM notebooks as sources. A report “usually takes about 5-10 minutes to generate”, longer for complex topics. The report can be exported to Google Docs or turned into an Audio Overview. All users can run reports; Google AI Pro and Ultra subscribers can generate them with the Pro model, and Ultra reports may include charts, diagrams, and interactive simulators.</p>
+<p>Limits are compute-based rather than a per-report count <span class="citation" data-cites="gemini_apps_limits">(<a href="#/references" role="doc-biblioref" onclick="">Google 2026c</a>)</span>: the allowance refreshes every 5 hours up to a weekly cap, with AI Plus at 2x the free allowance, AI Pro at 4x, and AI Ultra at 5x or 20x the Pro allowance depending on the subscription. Deep Research is listed as available on every tier, but the same page notes that for accounts without a paid plan compute-heavy features like Deep Research “may be unavailable during periods of high demand”.</p>
+<p>Google is the one vendor here that sells the app feature and the API feature under the same name. The <a href="https://ai.google.dev/gemini-api/docs/deep-research">Gemini Deep Research agent</a> <span class="citation" data-cites="gemini_deep_research_api">(<a href="#/references" role="doc-biblioref" onclick="">Google 2026d</a>)</span> runs only through the Interactions API, must be launched with <code>background=true</code>, and ships as two agents: <code>deep-research-preview-04-2026</code> and <code>deep-research-max-preview-04-2026</code>. The Max variant, built on Gemini 3.1 Pro, is positioned for exhaustive batch work such as a nightly job that writes due-diligence reports <span class="citation" data-cites="gemini_deep_research_max">(<a href="#/references" role="doc-biblioref" onclick="">Google 2026b</a>)</span>. By default the agent gets Google Search, URL context, and code execution; it accepts documents as input and can call remote MCP servers. A run is capped at 60 minutes, and the docs estimate $1-3 per standard task and $3-7 per Max task.</p>
 <h4 id="chatgpt-deep-research">ChatGPT deep research</h4>
 <p><a href="https://help.openai.com/en/articles/10500283-deep-research-faq">Deep research in ChatGPT</a> <span class="citation" data-cites="openai_deep_research_help">(<a href="#/references" role="doc-biblioref" onclick="">OpenAI 2026d</a>)</span> is the one mode here that puts a plan in front of you before it starts. ChatGPT may ask clarifying questions, drafts a research plan you can edit, lets you watch and interrupt the run to redirect it, and finishes with a full-screen report carrying a table of contents, a sources section, and an activity history. Reports download as Markdown, Word, or PDF.</p>
 <p>Sources are the public web, files you upload, and connected apps such as Google Drive or SharePoint where your plan and workspace allow them; deep research uses only an app’s read actions. You can also restrict a run to named sites, or prioritize them while still allowing full-web search. Usage “varies by plan” and shows in an in-product counter; plans with a fixed monthly allowance reset 30 days from first use, and availability depends on country. Enterprise and Edu admins gate access by role.</p>
 <p>The <a href="https://developers.openai.com/api/docs/guides/deep-research">API version</a> <span class="citation" data-cites="openai_deep_research_api">(<a href="#/references" role="doc-biblioref" onclick="">OpenAI 2026c</a>)</span> runs through the Responses API with model <code>o3-deep-research</code> or <code>o4-mini-deep-research</code>. OpenAI recommends background mode because runs “can take tens of minutes”, and background mode is incompatible with zero-data-retention agreements. Available tools are web search, file search over at most two vector stores, remote MCP servers exposing a search/fetch interface, and the code interpreter. Output carries inline citations as annotations with a URL, title, and character offsets.</p>
 <h4 id="microsoft-365-copilot-researcher-and-think-deeper">Microsoft 365 Copilot Researcher and Think Deeper</h4>
-<p>Microsoft has consolidated its offerings into one agent. The consumer “Deep Research” mode was retired from the Copilot app on 2026-08-18, and Microsoft 365 Premium subscribers are directed to <a href="https://support.microsoft.com/en-us/microsoft-365-copilot/get-started-with-researcher-in-microsoft-365-copilot">Researcher</a> <span class="citation" data-cites="ms_researcher_help ms_copilot_deep_research_retired">(<a href="#/references" role="doc-biblioref" onclick="">Microsoft 2026c</a>, <a href="#/references" role="doc-biblioref" onclick="">2026b</a>)</span> instead. Researcher is also included for business and enterprise tenants with a Copilot add-on license, and admins can block it in the Microsoft 365 admin center.</p>
-<p>Researcher’s distinguishing source is your work graph: it reads files, emails, meetings, and Teams chats you already have access to, plus Microsoft Graph connectors, and uses the Bing index for the web <span class="citation" data-cites="ms_researcher_faq">(<a href="#/references" role="doc-biblioref" onclick="">Microsoft 2026d</a>)</span>. Web search can be disabled tenant-wide, but there is no allow-list or block-list of sites below that. It asks clarifying questions before running, and the FAQ gives run times of “under five minutes for simple queries” and “10 to 45 minutes for highly complex ones”. Output is a report with headings, visuals, and cited sources; PowerPoint and PDF export are listed as “to be released soon”. The hard limit is 25 queries per user per month. Tenants can enable Anthropic’s Claude models inside Researcher, and the model picker is available when Researcher is opened as its own agent. The FAQ states that Researcher cannot be customized or extended through Copilot Studio, and none of the pages we read describe a programmatic route to it <span class="citation" data-cites="ms_researcher_overview">(<a href="#/references" role="doc-biblioref" onclick="">Microsoft 2026e</a>)</span>.</p>
-<p>Think Deeper is not a research mode. It is one of the <a href="https://support.microsoft.com/en-us/microsoft-copilot/conversation-modes-in-microsoft-copilot">conversation modes</a> <span class="citation" data-cites="ms_copilot_conversation_modes">(<a href="#/references" role="doc-biblioref" onclick="">Microsoft 2026a</a>)</span> in the consumer Copilot app: a reasoning pass that “takes up to 10 seconds” and does no extra retrieval, available to all users with priority for Microsoft 365 subscribers when capacity is short. Treat it as the counterpart of Claude’s extended thinking, not of Researcher.</p>
+<p>Microsoft has consolidated its offerings into one agent. The consumer “Deep Research” mode was retired from the Copilot app on 2026-08-18, and Microsoft 365 Premium subscribers are directed to <a href="https://support.microsoft.com/en-us/microsoft-365-copilot/get-started-with-researcher-in-microsoft-365-copilot">Researcher</a> <span class="citation" data-cites="ms_researcher_help ms_copilot_deep_research_retired">(<a href="#/references" role="doc-biblioref" onclick="">Microsoft 2026e</a>, <a href="#/references" role="doc-biblioref" onclick="">2026c</a>)</span> instead. Researcher is also included for business and enterprise tenants with a Copilot add-on license, and admins can block it in the Microsoft 365 admin center.</p>
+<p>Researcher’s distinguishing source is your work graph: it reads files, emails, meetings, and Teams chats you already have access to, plus Microsoft Graph connectors, and uses the Bing index for the web <span class="citation" data-cites="ms_researcher_faq">(<a href="#/references" role="doc-biblioref" onclick="">Microsoft 2026h</a>)</span>. Web search can be disabled tenant-wide, but there is no allow-list or block-list of sites below that. It asks clarifying questions before running, and the FAQ gives run times of “under five minutes for simple queries” and “10 to 45 minutes for highly complex ones”. Output is a report with headings, visuals, and cited sources; PowerPoint and PDF export are listed as “to be released soon”. The hard limit is 25 queries per user per month. Tenants can enable Anthropic’s Claude models inside Researcher, and the model picker is available when Researcher is opened as its own agent. The FAQ states that Researcher cannot be customized or extended through Copilot Studio, and none of the pages we read describe a programmatic route to it <span class="citation" data-cites="ms_researcher_overview">(<a href="#/references" role="doc-biblioref" onclick="">Microsoft 2026i</a>)</span>.</p>
+<p>Think Deeper is not a research mode. It is one of the <a href="https://support.microsoft.com/en-us/microsoft-copilot/conversation-modes-in-microsoft-copilot">conversation modes</a> <span class="citation" data-cites="ms_copilot_conversation_modes">(<a href="#/references" role="doc-biblioref" onclick="">Microsoft 2026b</a>)</span> in the consumer Copilot app: a reasoning pass that “takes up to 10 seconds” and does no extra retrieval, available to all users with priority for Microsoft 365 subscribers when capacity is short. Treat it as the counterpart of Claude’s extended thinking, not of Researcher.</p>
 <h4 id="perplexity-research">Perplexity Research</h4>
 <p><a href="https://www.perplexity.ai/help-center/en/articles/10738684-what-is-research-mode">Research mode</a> <span class="citation" data-cites="perplexity_research_mode">(<a href="#/references" role="doc-biblioref" onclick="">Perplexity 2026b</a>)</span> runs “dozens of searches, reads hundreds of sources”, completes most tasks in under 3 minutes, and takes around 4 to 5 minutes to deliver the report. Reports export to PDF or a document, or become a shareable Perplexity Page. Free accounts get limited access and Pro subscribers get extended access; the help page gives no counts. You cannot choose the model in Research mode. The <a href="https://www.perplexity.ai/help-center/en/articles/13600190-what-s-new-in-advanced-deep-research">Advanced Deep Research</a> <span class="citation" data-cites="perplexity_advanced_deep_research">(<a href="#/references" role="doc-biblioref" onclick="">Perplexity 2026c</a>)</span> update added a code sandbox, uploaded-document input, clarifying questions, follow-up questions while a run is in progress, and reports that stream into an editable file. It also names the underlying model by plan. Which model each plan gets has changed more than once, and Perplexity’s help-center pages refuse automated requests, so this section does not reproduce the mapping: check the linked page before relying on a particular model being behind your plan.</p>
 <p>The API equivalent is the <a href="https://docs.perplexity.ai/docs/sonar/models/sonar-deep-research"><code>sonar-deep-research</code></a> model <span class="citation" data-cites="perplexity_sonar_deep_research">(<a href="#/references" role="doc-biblioref" onclick="">Perplexity 2026a</a>)</span>, priced at $2 per million input tokens, $8 per million output tokens, $2 per million citation tokens, $3 per million reasoning tokens, and $5 per 1,000 searches, with a 128K context window. The docs carry a deprecation notice moving the Sonar chat-completions interface to the Agent API, with the old interface supported until 2026-09-27.</p>
@@ -6560,6 +6560,144 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </ol>
 </section></section>
 <section>
+<section id="sec-ai-knowledge-workspaces" class="title-slide slide level1 center" data-number="66">
+<h1><span class="header-section-number">66</span> AI-Enabled Knowledge Workspaces: Notion and Alternatives</h1>
+
+</section>
+<section class="slide level2">
+
+<p>Notion and its competitors sell a hosted wiki, database, and document editor with an AI layer on top. This section reviews Notion’s AI features and the closest alternatives from the perspective of a lab that already keeps its notes in git-backed Quarto and Markdown (this site, and the <a href="../chapters/benchbook.html">Benchbook</a> pattern). The question is not whether these products are good — most are polished — but whether any of them beats a plain-text wiki that a coding agent can already read, write, and version. Prices and feature lists below were read from each vendor’s own pages and are volatile (measured 2026-09-09).</p>
+<h4 id="notion">Notion</h4>
+<p>Notion’s AI surface has three layers <span class="citation" data-cites="notion_ai">(<a href="#/references" role="doc-biblioref" onclick="">Notion Labs 2026b</a>)</span>:</p>
+<ul>
+<li><strong>Notion AI</strong> in the editor: drafting, rewriting, summarizing, and auto-filling database properties.</li>
+<li><strong>Notion Agent</strong> and <strong>Custom Agents</strong>: a chat agent that runs multi-step tasks across the workspace and connected apps (Slack, Google Drive, GitHub), plus scheduled or triggered agents that run without a user present. Custom Agents were free through 2026-05-03 and now bill by credit, at $10 per 1,000 credits, on Business and Enterprise plans.</li>
+<li><strong>AI Meeting Notes</strong> and <strong>Enterprise Search</strong> across connected sources.</li>
+</ul>
+<p>For agent access from outside Notion there are two routes. The public REST API exposes pages, databases, blocks, users, and search under internal, OAuth, or personal access tokens (API version <code>2026-03-11</code>) <span class="citation" data-cites="notion_api">(<a href="#/references" role="doc-biblioref" onclick="">Notion Labs 2026c</a>)</span>. The Notion MCP server is a remote server hosted by Notion, authorized by OAuth and scoped to what the user can already see, that Claude Code, Cursor, and Codex can connect to <span class="citation" data-cites="notion_mcp">(<a href="#/references" role="doc-biblioref" onclick="">Notion Labs 2026e</a>)</span>. It exposes tools for search, fetch, page and database creation and update, comments, file uploads, and custom-agent sessions, rate-limited to 180 requests per minute per user (30 for keyword search), with some tools gated behind Business or Enterprise plans <span class="citation" data-cites="notion_mcp_tools">(<a href="#/references" role="doc-biblioref" onclick="">Notion Labs 2026f</a>)</span>.</p>
+<p>Pricing: Free, Plus at $10 per member per month, Business at $20, Enterprise on request. Full Notion Agent, Custom Agents, and Meeting Notes require Business or above; Free and Plus get a limited AI trial <span class="citation" data-cites="notion_pricing">(<a href="#/references" role="doc-biblioref" onclick="">Notion Labs 2026g</a>)</span>. Students and educators at accredited universities get the Plus plan free for a one-member workspace, re-verified annually <span class="citation" data-cites="notion_education">(<a href="#/references" role="doc-biblioref" onclick="">Notion Labs 2026d</a>)</span>. That is a personal plan: a shared lab workspace with AI would be Business at $20 per member per month.</p>
+<p>Export: pages export as Markdown, databases as CSV plus Markdown subpages, and whole pages or workspaces as HTML or PDF. Comments survive only in HTML; only the current database view exports; “include subpages” for full exports is a Business or Enterprise feature; a workspace export can take up to 30 hours; and workspace owners can disable export entirely <span class="citation" data-cites="notion_export">(<a href="#/references" role="doc-biblioref" onclick="">Notion Labs 2026a</a>)</span>.</p>
+<h4 id="obsidian">Obsidian</h4>
+<p>Obsidian is the opposite design: a local Markdown folder with an editor on top. Notes are plain files on disk, so any coding agent can already read and write them with no API at all, and a vault can live in a git repository. Obsidian has no first-party AI features (measured 2026-09-09); the AI plugins are community-maintained <span class="citation" data-cites="obsidian_home">(<a href="#/references" role="doc-biblioref" onclick="">Obsidian 2026c</a>)</span>. The official Obsidian CLI (Obsidian 1.12 or later, enabled in Settings, with the app running) exposes search, note creation, tasks, and developer commands, and the documentation names “agentic coding tools” as an intended user <span class="citation" data-cites="obsidian_cli">(<a href="#/references" role="doc-biblioref" onclick="">Obsidian 2026a</a>)</span>. MCP servers for Obsidian are community projects, several of which wrap that CLI.</p>
+<p>Pricing: the app is free for personal and commercial use; a $50 per user per year commercial license is optional. Sync ($4 per month annual) and Publish ($8 per month annual) are optional subscriptions, with a 40% discount for students, faculty, and nonprofit staff <span class="citation" data-cites="obsidian_pricing">(<a href="#/references" role="doc-biblioref" onclick="">Obsidian 2026b</a>)</span>. Export is a non-question: the vault is the export.</p>
+<h4 id="coda-now-superhuman-docs">Coda, now Superhuman Docs</h4>
+<p>Coda has been renamed Superhuman Docs; <code>coda.io/pricing</code> now redirects to <code>superhuman.com/plans/docs</code> <span class="citation" data-cites="superhuman_docs_pricing">(<a href="#/references" role="doc-biblioref" onclick="">Superhuman 2026</a>)</span>. The vendor pages are rendered client-side and could not be read in full for this review, so the numbers below come from a third-party summary <span class="citation" data-cites="breeze_coda_superhuman">(<a href="#/references" role="doc-biblioref" onclick="">Breeze 2026</a>)</span>: Pro at $15 per Doc Maker per month ($12 annual), Business at $40 ($33 annual), Free and Enterprise unchanged, with a rename date of 2026-07-08. The billing unit is the “Doc Maker”, so viewers and editors of existing docs are free. Treat the product as in transition: a rename and a price increase in one quarter is a lock-in signal in itself.</p>
+<h4 id="google-workspace-with-gemini">Google Workspace with Gemini</h4>
+<p>Gemini is bundled into every Google Workspace plan rather than sold as an add-on: Starter ($7 per user per month list) has limited Gemini in Gmail, Standard ($14) and above have Gemini across Docs, Sheets, Meet, and Gemini Notebook <span class="citation" data-cites="google_workspace_pricing">(<a href="#/references" role="doc-biblioref" onclick="">Google 2026g</a>)</span>. For universities, Education Fundamentals is free and includes Gemini for Education and Gemini Notebook, though in-app Gemini in Docs and Sheets needs Education Plus ($6 per user per year); the Google AI Pro for Education add-on is $15 per user per month on an annual commitment <span class="citation" data-cites="google_workspace_education">(<a href="#/references" role="doc-biblioref" onclick="">Google 2026a</a>)</span>. Agent access is through the Docs, Sheets, and Drive APIs, which let a program create and edit document structure <span class="citation" data-cites="google_docs_api">(<a href="#/references" role="doc-biblioref" onclick="">Google 2026f</a>)</span>; Google’s pricing and API pages reviewed here mention no hosted MCP server for Docs (measured 2026-09-09). Google’s always-on Gemini Spark agent is covered in <a href="#/sec-ai-collaborative-workspaces" class="quarto-xref">Section&nbsp;65</a>. Lock-in is moderate: a Doc exports as a file, but comments, suggestions, and version history stay in Google’s copy. Where the campus already licenses Workspace, the marginal cost to the lab is whatever that contract allows.</p>
+<h4 id="microsoft-loop-and-onenote-with-copilot">Microsoft Loop and OneNote with Copilot</h4>
+<p>Copilot in Loop offers preset prompts (Create, Brainstorm, Blueprint, Describe) and page summaries inside Loop workspaces <span class="citation" data-cites="microsoft_copilot_loop_faq">(<a href="#/references" role="doc-biblioref" onclick="">Microsoft 2026d</a>)</span>, and Microsoft positions Loop alongside Copilot Pages (canvases for saving AI output) and Copilot Notebooks (grounded research spaces) <span class="citation" data-cites="microsoft_loop_compare">(<a href="#/references" role="doc-biblioref" onclick="">Microsoft 2026a</a>)</span>. All of it requires a Microsoft 365 Copilot license on top of a qualifying base plan. Copilot Business is $18 per user per month (annual, reduced from $21) for small-business plans; the enterprise add-on is listed separately <span class="citation" data-cites="microsoft_copilot_pricing">(<a href="#/references" role="doc-biblioref" onclick="">Microsoft 2026g</a>)</span>. Academic Copilot licenses exist for A1, A3, and A5 plans through volume licensing <span class="citation" data-cites="microsoft_copilot_licensing">(<a href="#/references" role="doc-biblioref" onclick="">Microsoft 2026f</a>)</span>. None of the Microsoft pages reviewed here offers an MCP server for Loop or OneNote, and neither page describes a Markdown export, which makes this the weakest export story in this table. The <code>.docx</code> route for reviewer edits, described earlier in this chapter, remains the practical bridge to Word users.</p>
+<h4 id="confluence-with-rovo">Confluence with Rovo</h4>
+<p>Confluence Cloud is free for up to 10 users; Standard and Premium are per-user and include Rovo (search, chat, and agents) with 25 and 70 Rovo credits per user per month respectively <span class="citation" data-cites="confluence_plans rovo_credits">(<a href="#/references" role="doc-biblioref" onclick="">Atlassian 2026e</a>, <a href="#/references" role="doc-biblioref" onclick="">2026d</a>)</span>. Credits are pooled at the organization level, reset monthly, and overage billing at $0.01 per credit starts 2026-12-03 <span class="citation" data-cites="rovo_credits">(<a href="#/references" role="doc-biblioref" onclick="">Atlassian 2026d</a>)</span>. Atlassian’s academic licensing gives qualifying institutions 50% off cloud list price <span class="citation" data-cites="atlassian_cloud_licensing">(<a href="#/references" role="doc-biblioref" onclick="">Atlassian 2026a</a>)</span>. The Atlassian Rovo MCP Server is hosted at <code>mcp.atlassian.com</code>, authorizes by OAuth 2.1 or API token, and lets Claude, ChatGPT, GitHub Copilot CLI, and Gemini search, summarize, create, and update Confluence pages and Jira work items within the user’s existing permissions <span class="citation" data-cites="rovo_mcp_server">(<a href="#/references" role="doc-biblioref" onclick="">Atlassian 2026c</a>)</span>. Export is per page to Word or PDF, and per space to PDF, CSV, HTML, or XML <span class="citation" data-cites="confluence_export">(<a href="#/references" role="doc-biblioref" onclick="">Atlassian 2026b</a>)</span>; there is no Markdown export, so leaving Confluence means converting HTML.</p>
+<h4 id="anytype">Anytype</h4>
+<p>Anytype is a local-first, source-available (Any Source Available License 1.0) knowledge base with zero-knowledge encrypted peer-to-peer sync <span class="citation" data-cites="anytype_ts_github">(<a href="#/references" role="doc-biblioref" onclick="">Any Association 2026b</a>)</span>. It has no built-in AI. Instead it ships a Local API on <code>localhost</code>, authenticated by an API key generated from a challenge in the desktop app <span class="citation" data-cites="anytype_local_api">(<a href="#/references" role="doc-biblioref" onclick="">Any Association 2026d</a>)</span>, and an “Agents’ Skill” that lets Claude Code, Cursor, Gemini CLI, or GitHub Copilot run sandboxed JavaScript against that API to read, search, create, and bulk-edit objects <span class="citation" data-cites="anytype_agents_skill">(<a href="#/references" role="doc-biblioref" onclick="">Any Association 2026a</a>)</span>. Community MCP servers wrap the same API. Membership is a free tier plus paid storage tiers, with a 50% student discount <span class="citation" data-cites="anytype_memberships">(<a href="#/references" role="doc-biblioref" onclick="">Any Association 2026e</a>)</span>. Export is Markdown, PDF, HTML, or Anytype’s own Any-Block format, in JSON or Protobuf <span class="citation" data-cites="anytype_export">(<a href="#/references" role="doc-biblioref" onclick="">Any Association 2026c</a>)</span>.</p>
+<h4 id="craft">Craft</h4>
+<p>Craft is a native document editor (macOS, iOS, Windows, web) with a credit-metered AI assistant: 15 credits on Free, 50 per month on Plus ($6.40 per month annual), with a Team plan at $50 per month for up to 10 seats <span class="citation" data-cites="craft_pricing">(<a href="#/references" role="doc-biblioref" onclick="">Craft Docs 2026a</a>)</span>. It offers a hosted MCP endpoint per connection with user-defined scope, which Claude Desktop, Claude Code, ChatGPT, Cursor, VS Code, and other clients can attach to, and which since version 3.3.5 can create and update documents, not only read them <span class="citation" data-cites="craft_mcp">(<a href="#/references" role="doc-biblioref" onclick="">Craft Docs 2026c</a>)</span>. Export is Markdown, <code>TextBundle</code>, PDF, and image on every platform, plus <code>.docx</code> on macOS, iOS, and web <span class="citation" data-cites="craft_export">(<a href="#/references" role="doc-biblioref" onclick="">Craft Docs 2026b</a>)</span>. No education discount is listed.</p>
+<h4 id="comparison-1">Comparison</h4>
+<table class="caption-top" style="width:100%;">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Product</th>
+<th>AI features</th>
+<th>Agent / MCP access</th>
+<th>Export and lock-in</th>
+<th>Academic pricing</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Notion</td>
+<td>Notion AI, Notion Agent, Custom Agents (credits), meeting notes, enterprise search</td>
+<td>Hosted MCP server (OAuth); REST API</td>
+<td>Markdown/CSV/HTML/PDF; comments and views partly lost; export can be disabled by admins</td>
+<td>Plus free for one student/educator; shared AI workspace is $20 per member per month</td>
+<td>Best hosted option; still a walled garden</td>
+</tr>
+<tr class="even">
+<td>Obsidian</td>
+<td>None first-party; community plugins</td>
+<td>Local files; official CLI; community MCP servers</td>
+<td>Vault is plain Markdown on disk</td>
+<td>Free app; 40% off Sync/Publish</td>
+<td>Closest to what we already do</td>
+</tr>
+<tr class="odd">
+<td>Superhuman Docs (Coda)</td>
+<td>Coda AI, in transition</td>
+<td>Packs and API</td>
+<td>Per-doc export; rebrand and repricing in 2026</td>
+<td>None listed</td>
+<td>Avoid until it settles</td>
+</tr>
+<tr class="even">
+<td>Google Workspace + Gemini</td>
+<td>Gemini in Docs/Sheets/Gmail, Gemini Notebook, Spark agent</td>
+<td>Docs/Drive APIs; no hosted MCP documented</td>
+<td>File export; comments and history stay behind</td>
+<td>Fundamentals free; Plus $6 per user per year; AI Pro add-on $15 per month</td>
+<td>Use what the campus already licenses</td>
+</tr>
+<tr class="odd">
+<td>Microsoft Loop / OneNote + Copilot</td>
+<td>Copilot prompts and summaries; Copilot Pages and Notebooks</td>
+<td>No MCP server documented</td>
+<td>No Markdown export documented; weakest export</td>
+<td>Academic Copilot via A3/A5 volume licensing</td>
+<td>Only if the collaborators live in Teams</td>
+</tr>
+<tr class="even">
+<td>Confluence + Rovo</td>
+<td>Rovo search, chat, agents (credit-metered, overage from 2026-12)</td>
+<td>Hosted MCP server (OAuth 2.1)</td>
+<td>Word/PDF per page, HTML/XML per space; no Markdown</td>
+<td>50% off cloud list</td>
+<td>Fine for Jira shops; poor for prose</td>
+</tr>
+<tr class="odd">
+<td>Anytype</td>
+<td>None built in</td>
+<td>Local API with key; agent skill; community MCP</td>
+<td>Markdown/HTML/PDF/Any-Block; local-first, encrypted</td>
+<td>50% student discount</td>
+<td>Interesting, niche</td>
+</tr>
+<tr class="even">
+<td>Craft</td>
+<td>Credit-metered assistant</td>
+<td>Hosted MCP with scoped connections</td>
+<td>Markdown/<code>TextBundle</code>/PDF/<code>.docx</code></td>
+<td>None listed</td>
+<td>Nice editor, small ecosystem</td>
+</tr>
+</tbody>
+</table>
+<h4 id="useful-to-us-5">Useful to us?</h4>
+<p>Mostly no, and for a structural reason rather than a feature gap. Every product above adds AI by putting a model <em>inside</em> the vendor’s editor and then, more recently, adding an MCP server so outside agents can reach in. A git-backed Quarto or Markdown wiki inverts that: the agent is already a first-class editor of the files, every change is a reviewable diff, CI renders and spell-checks the result, and the wiki is the export. <a href="../chapters/benchbook.html">Benchbook</a> is the same idea with a written contract for the agent; this site is the same idea with a publishing pipeline. Neither needs an MCP server to let Claude Code read the lab’s notes, and neither can be locked, metered, or renamed by a vendor.</p>
+<p>What the hosted products do better, and a plain repository does not:</p>
+<ul>
+<li><strong>Non-technical collaborators.</strong> Notion, Google Docs, and Loop have editors that a clinician or a first-year student can use without learning git. The <code>.docx</code> round-trip described earlier in this chapter covers review comments, but not live co-editing.</li>
+<li><strong>Databases with views.</strong> Notion and Coda tables with filters, rollups, and forms have no clean Markdown equivalent; a CSV in a repo is the honest substitute.</li>
+<li><strong>Meeting capture.</strong> Notion’s AI Meeting Notes and Copilot’s transcription are convenient; the output is text and can be committed afterward.</li>
+<li><strong>Always-on agents.</strong> Notion Custom Agents, Gemini Spark, and Rovo agents run on a schedule without a machine of ours awake. A GitHub Actions cron running a coding agent does the same for a repository.</li>
+</ul>
+<p>Recommendations (measured 2026-09-09):</p>
+<ul>
+<li>Keep lab knowledge in git-backed Markdown or Quarto, and let coding agents edit it directly.</li>
+<li>If a hosted editor is needed for a specific collaborator group, prefer the one the campus already licenses (Google Workspace with Gemini) over a new per-seat subscription, and treat its content as a draft that gets committed.</li>
+<li>Among the standalone products, Obsidian is the only one whose data model is already ours, so a lab member who wants a graphical editor over the same repository should start there.</li>
+<li>Notion is the best of the hosted walled gardens, and the Notion MCP server makes it reachable from Claude Code; but the AI features that distinguish it are Business-plan and credit-metered, and export loses structure, so budget for the exit before entering.</li>
+<li>Re-check prices and plan boundaries before acting on any row of the table; several changed within the last quarter.</li>
+</ul>
+</section></section>
+<section>
 <section id="references" class="title-slide slide level1 unnumbered center">
 <h1>References</h1>
 
@@ -6648,8 +6786,38 @@ Anthropic. 2026v. <em>Web Search Tool</em>. Documentation. <a href="https://plat
 <div id="ref-claude_research_when" class="csl-entry" role="listitem">
 Anthropic. 2026w. <em>When Should i Use Web Search, Extended Thinking, and Research?</em> Help Center. <a href="https://support.claude.com/en/articles/11095361-when-should-i-use-web-search-extended-thinking-and-research">https://support.claude.com/en/articles/11095361-when-should-i-use-web-search-extended-thinking-and-research</a>.
 </div>
+<div id="ref-anytype_agents_skill" class="csl-entry" role="listitem">
+Any Association. 2026a. <em>Anytype Agents’ Skill</em>. Documentation. <a href="https://doc.anytype.io/anytype/features/integrations/anytype-agents-skill">https://doc.anytype.io/anytype/features/integrations/anytype-agents-skill</a>.
+</div>
+<div id="ref-anytype_ts_github" class="csl-entry" role="listitem">
+Any Association. 2026b. <em>Anytype Desktop (Anytype-Ts)</em>. Documentation. <a href="https://github.com/anyproto/anytype-ts">https://github.com/anyproto/anytype-ts</a>.
+</div>
+<div id="ref-anytype_export" class="csl-entry" role="listitem">
+Any Association. 2026c. <em>Anytype Import and Export</em>. Documentation. <a href="https://doc.anytype.io/anytype/data/import-and-export">https://doc.anytype.io/anytype/data/import-and-export</a>.
+</div>
+<div id="ref-anytype_local_api" class="csl-entry" role="listitem">
+Any Association. 2026d. <em>Anytype Local API</em>. Documentation. <a href="https://doc.anytype.io/anytype/features/integrations/local-api">https://doc.anytype.io/anytype/features/integrations/local-api</a>.
+</div>
+<div id="ref-anytype_memberships" class="csl-entry" role="listitem">
+Any Association. 2026e. <em>Anytype Memberships</em>. Documentation. <a href="https://doc.anytype.io/anytype/resources/memberships">https://doc.anytype.io/anytype/resources/memberships</a>.
+</div>
 <div id="ref-i_robot" class="csl-entry" role="listitem">
 Asimov, Isaac. 1950. <em>I, Robot</em>. Novel; Gnome Press. <a href="https://search.library.ucdavis.edu/permalink/01UCD_INST/9fle3i/alma990000226350403126">https://search.library.ucdavis.edu/permalink/01UCD_INST/9fle3i/alma990000226350403126</a>.
+</div>
+<div id="ref-atlassian_cloud_licensing" class="csl-entry" role="listitem">
+Atlassian. 2026a. <em>Atlassian Cloud Licensing</em>. Documentation. <a href="https://www.atlassian.com/licensing/cloud">https://www.atlassian.com/licensing/cloud</a>.
+</div>
+<div id="ref-confluence_export" class="csl-entry" role="listitem">
+Atlassian. 2026b. <em>Export Content to Word, PDF, HTML and XML</em>. Documentation. <a href="https://support.atlassian.com/confluence-cloud/docs/export-content-to-word-pdf-html-and-xml/">https://support.atlassian.com/confluence-cloud/docs/export-content-to-word-pdf-html-and-xml/</a>.
+</div>
+<div id="ref-rovo_mcp_server" class="csl-entry" role="listitem">
+Atlassian. 2026c. <em>Get Started with the Atlassian Rovo MCP Server</em>. Documentation. <a href="https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/">https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/</a>.
+</div>
+<div id="ref-rovo_credits" class="csl-entry" role="listitem">
+Atlassian. 2026d. <em>How Rovo Credits Work</em>. Documentation. <a href="https://support.atlassian.com/rovo/docs/rovo-usage-limits/">https://support.atlassian.com/rovo/docs/rovo-usage-limits/</a>.
+</div>
+<div id="ref-confluence_plans" class="csl-entry" role="listitem">
+Atlassian. 2026e. <em>Learn about the Features of Confluence Cloud Plans</em>. Documentation. <a href="https://support.atlassian.com/confluence-cloud/docs/learn-about-confluence-cloud-plans/">https://support.atlassian.com/confluence-cloud/docs/learn-about-confluence-cloud-plans/</a>.
 </div>
 <div id="ref-battlestar_galactica_2004" class="csl-entry" role="listitem">
 <em>Battlestar Galactica</em>. 2004. Television Series. <a href="https://en.wikipedia.org/wiki/Battlestar_Galactica_(2004_TV_series)">https://en.wikipedia.org/wiki/Battlestar_Galactica_(2004_TV_series)</a>.
@@ -6659,6 +6827,9 @@ Belcak, Peter, Greg Heinrich, Shizhe Diao, et al. 2025. <em>Small Language Model
 </div>
 <div id="ref-blade_runner" class="csl-entry" role="listitem">
 <em>Blade Runner</em>. 1982. Film. <a href="https://en.wikipedia.org/wiki/Blade_Runner">https://en.wikipedia.org/wiki/Blade_Runner</a>.
+</div>
+<div id="ref-breeze_coda_superhuman" class="csl-entry" role="listitem">
+Breeze. 2026. <em>Coda Is Now Superhuman Docs: What Changed for Users</em>. Documentation. <a href="https://www.breeze.pm/articles/coda-is-now-superhuman-docs">https://www.breeze.pm/articles/coda-is-now-superhuman-docs</a>.
 </div>
 <div id="ref-enders_game" class="csl-entry" role="listitem">
 Card, Orson Scott. 1985. <em>Ender’s Game</em>. Novel; Tor Books. <a href="https://en.wikipedia.org/wiki/Ender%27s_Game">https://en.wikipedia.org/wiki/Ender%27s_Game</a>.
@@ -6681,6 +6852,15 @@ Copes, Flavio. 2026. <em>A Deep Dive into Herdr</em>. Blog post. <a href="https:
 <div id="ref-aeris" class="csl-entry" role="listitem">
 Coto, Cedrick. 2026. <em>Aeris: Deterministic Cognitive Simulation Engine with Emergent Narrative</em>. Software. <a href="https://github.com/Cedrick-Coto/Aeris">https://github.com/Cedrick-Coto/Aeris</a>.
 </div>
+<div id="ref-craft_pricing" class="csl-entry" role="listitem">
+Craft Docs. 2026a. <em>Craft Pricing</em>. Documentation. <a href="https://www.craft.do/pricing">https://www.craft.do/pricing</a>.
+</div>
+<div id="ref-craft_export" class="csl-entry" role="listitem">
+Craft Docs. 2026b. <em>Export to PDF, Word, and Markdown</em>. Documentation. <a href="https://support.craft.do/en/import-and-export/export/document">https://support.craft.do/en/import-and-export/export/document</a>.
+</div>
+<div id="ref-craft_mcp" class="csl-entry" role="listitem">
+Craft Docs. 2026c. <em>MCP (Craft Help Center)</em>. Documentation. <a href="https://support.craft.do/en/integrate/mcp">https://support.craft.do/en/integrate/mcp</a>.
+</div>
 <div id="ref-cursor_cloud_agents" class="csl-entry" role="listitem">
 Cursor. 2026. <em>Cloud Agents</em>. Documentation. <a href="https://cursor.com/docs/cloud-agent">https://cursor.com/docs/cloud-agent</a>.
 </div>
@@ -6702,20 +6882,29 @@ Fabris, Noe. 2026. <em>Opencode-Antigravity-Auth (Archived)</em>. GitHub reposit
 <div id="ref-humans_are_dead" class="csl-entry" role="listitem">
 Flight of the Conchords. 2007. <em>The Humans Are Dead</em>. Music Video. <a href="https://www.youtube.com/watch?v=B1BdQcJ2ZYY">https://www.youtube.com/watch?v=B1BdQcJ2ZYY</a>.
 </div>
+<div id="ref-google_workspace_education" class="csl-entry" role="listitem">
+Google. 2026a. <em>Compare Google Workspace for Education Editions</em>. Documentation. <a href="https://edu.google.com/intl/ALL_us/workspace-for-education/editions/compare-editions/">https://edu.google.com/intl/ALL_us/workspace-for-education/editions/compare-editions/</a>.
+</div>
 <div id="ref-gemini_deep_research_max" class="csl-entry" role="listitem">
-Google. 2026a. <em>Deep Research Max: A Step Change for Autonomous Research Agents</em>. The Keyword (blog). <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/next-generation-gemini-deep-research/">https://blog.google/innovation-and-ai/models-and-research/gemini-models/next-generation-gemini-deep-research/</a>.
+Google. 2026b. <em>Deep Research Max: A Step Change for Autonomous Research Agents</em>. The Keyword (blog). <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/next-generation-gemini-deep-research/">https://blog.google/innovation-and-ai/models-and-research/gemini-models/next-generation-gemini-deep-research/</a>.
 </div>
 <div id="ref-gemini_apps_limits" class="csl-entry" role="listitem">
-Google. 2026b. <em>Gemini Apps Limits and Upgrades for Google AI Subscribers</em>. Gemini Apps Help. <a href="https://support.google.com/gemini/answer/16275805">https://support.google.com/gemini/answer/16275805</a>.
+Google. 2026c. <em>Gemini Apps Limits and Upgrades for Google AI Subscribers</em>. Gemini Apps Help. <a href="https://support.google.com/gemini/answer/16275805">https://support.google.com/gemini/answer/16275805</a>.
 </div>
 <div id="ref-gemini_deep_research_api" class="csl-entry" role="listitem">
-Google. 2026c. <em>Gemini Deep Research Agent</em>. Gemini API documentation. <a href="https://ai.google.dev/gemini-api/docs/deep-research">https://ai.google.dev/gemini-api/docs/deep-research</a>.
+Google. 2026d. <em>Gemini Deep Research Agent</em>. Gemini API documentation. <a href="https://ai.google.dev/gemini-api/docs/deep-research">https://ai.google.dev/gemini-api/docs/deep-research</a>.
 </div>
 <div id="ref-jules_docs" class="csl-entry" role="listitem">
-Google. 2026d. <em>Getting Started with Jules</em>. Documentation. <a href="https://jules.google.com/docs/">https://jules.google.com/docs/</a>.
+Google. 2026e. <em>Getting Started with Jules</em>. Documentation. <a href="https://jules.google.com/docs/">https://jules.google.com/docs/</a>.
+</div>
+<div id="ref-google_docs_api" class="csl-entry" role="listitem">
+Google. 2026f. <em>Google Docs API Overview</em>. Documentation. <a href="https://developers.google.com/workspace/docs/api/how-tos/overview">https://developers.google.com/workspace/docs/api/how-tos/overview</a>.
+</div>
+<div id="ref-google_workspace_pricing" class="csl-entry" role="listitem">
+Google. 2026g. <em>Google Workspace Pricing</em>. Documentation. <a href="https://workspace.google.com/pricing">https://workspace.google.com/pricing</a>.
 </div>
 <div id="ref-gemini_deep_research_help" class="csl-entry" role="listitem">
-Google. 2026e. <em>Use Deep Research in Gemini Apps</em>. Gemini Apps Help. <a href="https://support.google.com/gemini/answer/15719111">https://support.google.com/gemini/answer/15719111</a>.
+Google. 2026h. <em>Use Deep Research in Gemini Apps</em>. Gemini Apps Help. <a href="https://support.google.com/gemini/answer/15719111">https://support.google.com/gemini/answer/15719111</a>.
 </div>
 <div id="ref-herdr_hn" class="csl-entry" role="listitem">
 Hacker News. 2026. <em>Herdr: Agent Multiplexer That Lives in Your Terminal</em>. Show HN discussion thread. <a href="https://news.ycombinator.com/item?id=48714802">https://news.ycombinator.com/item?id=48714802</a>.
@@ -6795,20 +6984,32 @@ Lindy. 2026b. <em>Lindy: The AI Teammate That Will 3x Your Output</em>. Product 
 <div id="ref-manus" class="csl-entry" role="listitem">
 Manus AI. 2026. <em>Manus: Hands on AI</em>. Product website. <a href="https://manus.im/">https://manus.im/</a>.
 </div>
+<div id="ref-microsoft_loop_compare" class="csl-entry" role="listitem">
+Microsoft. 2026a. <em>Compare Microsoft Loop, Copilot Pages, and Copilot Notebooks</em>. Documentation. <a href="https://support.microsoft.com/en-us/microsoft-365-copilot/compare-microsoft-loop-copilot-pages-and-copilot-notebooks">https://support.microsoft.com/en-us/microsoft-365-copilot/compare-microsoft-loop-copilot-pages-and-copilot-notebooks</a>.
+</div>
 <div id="ref-ms_copilot_conversation_modes" class="csl-entry" role="listitem">
-Microsoft. 2026a. <em>Conversation Modes in Microsoft Copilot</em>. Microsoft Support. <a href="https://support.microsoft.com/en-us/microsoft-copilot/conversation-modes-in-microsoft-copilot">https://support.microsoft.com/en-us/microsoft-copilot/conversation-modes-in-microsoft-copilot</a>.
+Microsoft. 2026b. <em>Conversation Modes in Microsoft Copilot</em>. Microsoft Support. <a href="https://support.microsoft.com/en-us/microsoft-copilot/conversation-modes-in-microsoft-copilot">https://support.microsoft.com/en-us/microsoft-copilot/conversation-modes-in-microsoft-copilot</a>.
 </div>
 <div id="ref-ms_copilot_deep_research_retired" class="csl-entry" role="listitem">
-Microsoft. 2026b. <em>Deep Research in Microsoft Copilot</em>. Microsoft Support. <a href="https://support.microsoft.com/en-us/microsoft-copilot/deep-research-in-microsoft-copilot">https://support.microsoft.com/en-us/microsoft-copilot/deep-research-in-microsoft-copilot</a>.
+Microsoft. 2026c. <em>Deep Research in Microsoft Copilot</em>. Microsoft Support. <a href="https://support.microsoft.com/en-us/microsoft-copilot/deep-research-in-microsoft-copilot">https://support.microsoft.com/en-us/microsoft-copilot/deep-research-in-microsoft-copilot</a>.
+</div>
+<div id="ref-microsoft_copilot_loop_faq" class="csl-entry" role="listitem">
+Microsoft. 2026d. <em>Frequently Asked Questions about Copilot in Loop</em>. Documentation. <a href="https://support.microsoft.com/en-us/loop/frequently-asked-questions-about-copilot-in-loop">https://support.microsoft.com/en-us/loop/frequently-asked-questions-about-copilot-in-loop</a>.
 </div>
 <div id="ref-ms_researcher_help" class="csl-entry" role="listitem">
-Microsoft. 2026c. <em>Get Started with Researcher in Microsoft 365 Copilot</em>. Microsoft Support. <a href="https://support.microsoft.com/en-us/microsoft-365-copilot/get-started-with-researcher-in-microsoft-365-copilot">https://support.microsoft.com/en-us/microsoft-365-copilot/get-started-with-researcher-in-microsoft-365-copilot</a>.
+Microsoft. 2026e. <em>Get Started with Researcher in Microsoft 365 Copilot</em>. Microsoft Support. <a href="https://support.microsoft.com/en-us/microsoft-365-copilot/get-started-with-researcher-in-microsoft-365-copilot">https://support.microsoft.com/en-us/microsoft-365-copilot/get-started-with-researcher-in-microsoft-365-copilot</a>.
+</div>
+<div id="ref-microsoft_copilot_licensing" class="csl-entry" role="listitem">
+Microsoft. 2026f. <em>License Options for Microsoft Copilot</em>. Documentation. <a href="https://learn.microsoft.com/en-us/copilot/microsoft-365/microsoft-365-copilot-licensing">https://learn.microsoft.com/en-us/copilot/microsoft-365/microsoft-365-copilot-licensing</a>.
+</div>
+<div id="ref-microsoft_copilot_pricing" class="csl-entry" role="listitem">
+Microsoft. 2026g. <em>Microsoft 365 Copilot Plans and Pricing</em>. Documentation. <a href="https://www.microsoft.com/en-us/microsoft-365-copilot/pricing">https://www.microsoft.com/en-us/microsoft-365-copilot/pricing</a>.
 </div>
 <div id="ref-ms_researcher_faq" class="csl-entry" role="listitem">
-Microsoft. 2026d. <em>Microsoft Copilot Researcher Agent Frequently Asked Questions</em>. Microsoft Learn. <a href="https://learn.microsoft.com/en-us/copilot/microsoft-365/faq-researcher">https://learn.microsoft.com/en-us/copilot/microsoft-365/faq-researcher</a>.
+Microsoft. 2026h. <em>Microsoft Copilot Researcher Agent Frequently Asked Questions</em>. Microsoft Learn. <a href="https://learn.microsoft.com/en-us/copilot/microsoft-365/faq-researcher">https://learn.microsoft.com/en-us/copilot/microsoft-365/faq-researcher</a>.
 </div>
 <div id="ref-ms_researcher_overview" class="csl-entry" role="listitem">
-Microsoft. 2026e. <em>What Is Researcher Agent in Microsoft Copilot?</em> Microsoft Learn. <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/researcher-agent">https://learn.microsoft.com/en-us/microsoft-365/copilot/researcher-agent</a>.
+Microsoft. 2026i. <em>What Is Researcher Agent in Microsoft Copilot?</em> Microsoft Learn. <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/researcher-agent">https://learn.microsoft.com/en-us/microsoft-365/copilot/researcher-agent</a>.
 </div>
 <div id="ref-ai_config_readme" class="csl-entry" role="listitem">
 Morrison Lab. 2026a. <em>Ai-Config: Portable AI Agent Config</em>. Software. <a href="https://github.com/Morrison-Lab/ai-config">https://github.com/Morrison-Lab/ai-config</a>.
@@ -6821,6 +7022,36 @@ NanoNets and Trail contributors. 2026. <em>Graft: Open-Source Context Layer for 
 </div>
 <div id="ref-codenomad" class="csl-entry" role="listitem">
 Neural Nomads AI. 2026. <em>CodeNomad: The AI Coding Cockpit for OpenCode</em>. GitHub repository. <a href="https://github.com/NeuralNomadsAI/CodeNomad">https://github.com/NeuralNomadsAI/CodeNomad</a>.
+</div>
+<div id="ref-notion_export" class="csl-entry" role="listitem">
+Notion Labs. 2026a. <em>Export Your Content</em>. Documentation. <a href="https://www.notion.com/help/export-your-content">https://www.notion.com/help/export-your-content</a>.
+</div>
+<div id="ref-notion_ai" class="csl-entry" role="listitem">
+Notion Labs. 2026b. <em>Notion AI</em>. Documentation. <a href="https://www.notion.com/product/ai">https://www.notion.com/product/ai</a>.
+</div>
+<div id="ref-notion_api" class="csl-entry" role="listitem">
+Notion Labs. 2026c. <em>Notion API Introduction</em>. Documentation. <a href="https://developers.notion.com/reference/intro">https://developers.notion.com/reference/intro</a>.
+</div>
+<div id="ref-notion_education" class="csl-entry" role="listitem">
+Notion Labs. 2026d. <em>Notion for Education</em>. Documentation. <a href="https://www.notion.com/help/notion-for-education">https://www.notion.com/help/notion-for-education</a>.
+</div>
+<div id="ref-notion_mcp" class="csl-entry" role="listitem">
+Notion Labs. 2026e. <em>Notion MCP</em>. Documentation. <a href="https://developers.notion.com/docs/mcp">https://developers.notion.com/docs/mcp</a>.
+</div>
+<div id="ref-notion_mcp_tools" class="csl-entry" role="listitem">
+Notion Labs. 2026f. <em>Notion MCP Supported Tools</em>. Documentation. <a href="https://developers.notion.com/guides/mcp/mcp-supported-tools">https://developers.notion.com/guides/mcp/mcp-supported-tools</a>.
+</div>
+<div id="ref-notion_pricing" class="csl-entry" role="listitem">
+Notion Labs. 2026g. <em>Notion Pricing</em>. Documentation. <a href="https://www.notion.com/pricing">https://www.notion.com/pricing</a>.
+</div>
+<div id="ref-obsidian_cli" class="csl-entry" role="listitem">
+Obsidian. 2026a. <em>Obsidian CLI</em>. Documentation. <a href="https://obsidian.md/help/cli">https://obsidian.md/help/cli</a>.
+</div>
+<div id="ref-obsidian_pricing" class="csl-entry" role="listitem">
+Obsidian. 2026b. <em>Obsidian Pricing</em>. Documentation. <a href="https://obsidian.md/pricing">https://obsidian.md/pricing</a>.
+</div>
+<div id="ref-obsidian_home" class="csl-entry" role="listitem">
+Obsidian. 2026c. <em>Obsidian: Sharpen Your Thinking</em>. Documentation. <a href="https://obsidian.md/">https://obsidian.md/</a>.
 </div>
 <div id="ref-ollama_site" class="csl-entry" role="listitem">
 Ollama. 2026. <em>Ollama</em>. Product page. <a href="https://ollama.com/">https://ollama.com/</a>.
@@ -6941,6 +7172,9 @@ Relevance AI. 2026c. <em>Relevance AI Pricing</em>. Product website. <a href="ht
 </div>
 <div id="ref-langchain_custom_harness" class="csl-entry" role="listitem">
 Runkle, Sydney. 2026. <em>How to Build a Custom Agent Harness</em>. Documentation. <a href="https://www.langchain.com/blog/how-to-build-a-custom-agent-harness">https://www.langchain.com/blog/how-to-build-a-custom-agent-harness</a>.
+</div>
+<div id="ref-superhuman_docs_pricing" class="csl-entry" role="listitem">
+Superhuman. 2026. <em>Superhuman Docs Pricing and Plans</em>. Documentation. <a href="https://superhuman.com/plans/docs">https://superhuman.com/plans/docs</a>.
 </div>
 <div id="ref-hoyeon" class="csl-entry" role="listitem">
 <span class="nocase">team-attention</span>. 2026. <em>Hoyeon: Requirements-First Harness</em>. Software. <a href="https://github.com/team-attention/hoyeon">https://github.com/team-attention/hoyeon</a>.

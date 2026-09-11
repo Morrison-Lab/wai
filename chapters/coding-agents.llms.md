@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-10 18:34:02 (PDT)
+Last modified: 2026-09-10 18:52:58 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -63,7 +63,7 @@ The following catalog is a starting point rather than an endorsement:
 |----|----|----|
 | [GitHub Copilot coding agent](https://github.com/features/copilot/agents) | GitHub issues and pull requests | Assign an issue; review the resulting pull request |
 | [OpenAI Codex](https://openai.com/codex/) | Cloud tasks, app, and command line | Delegate a task in an isolated environment or work locally |
-| [Google Jules](https://jules.google.com/) ([Google 2026d](#ref-jules_docs)) | Cloud coding agent | Connect a repository and review the proposed changes |
+| [Google Jules](https://jules.google.com/) ([Google 2026e](#ref-jules_docs)) | Cloud coding agent | Connect a repository and review the proposed changes |
 | [Google Antigravity](https://antigravity.google/) | Agentic development platform | Coordinate coding tasks in a managed development workspace |
 | [Claude Code](https://www.anthropic.com/claude-code) | Terminal, IDE, and cloud | Work interactively or delegate work that returns a pull request |
 | [Gemini CLI](https://github.com/google-gemini/gemini-cli) | Command line | Inspect, edit, and test the current local checkout |
@@ -84,7 +84,7 @@ Kepler is not an agent itself but an orchestration layer. It hosts agents you al
 
 The platforms above sort into three execution models (measured 2026-09-09). The model decides where your code is copied, what the agent can reach, and how its work comes back to you.
 
-- **Hosted sandbox.** The vendor provisions an isolated machine, clones the repository into it, and returns a branch or pull request. Jules clones the repository into a virtual machine and submits a pull request after you approve its plan ([Google 2026d](#ref-jules_docs)); Cursor cloud agents clone from GitHub, GitLab, Azure DevOps, or Bitbucket, work on a separate branch, and push it back ([Cursor 2026](#ref-cursor_cloud_agents)); Kiro web tasks and Warp cloud agents follow the same shape ([Amazon Web Services 2026](#ref-kiro_docs); [Warp 2026](#ref-warp_docs)), as do the Copilot coding agent, Codex cloud tasks, Devin, and OpenHands Cloud. Nothing runs on your machine, so the questions are what the sandbox can reach and whether the vendor’s retention terms suit the repository.
+- **Hosted sandbox.** The vendor provisions an isolated machine, clones the repository into it, and returns a branch or pull request. Jules clones the repository into a virtual machine and submits a pull request after you approve its plan ([Google 2026e](#ref-jules_docs)); Cursor cloud agents clone from GitHub, GitLab, Azure DevOps, or Bitbucket, work on a separate branch, and push it back ([Cursor 2026](#ref-cursor_cloud_agents)); Kiro web tasks and Warp cloud agents follow the same shape ([Amazon Web Services 2026](#ref-kiro_docs); [Warp 2026](#ref-warp_docs)), as do the Copilot coding agent, Codex cloud tasks, Devin, and OpenHands Cloud. Nothing runs on your machine, so the questions are what the sandbox can reach and whether the vendor’s retention terms suit the repository.
 - **Local checkout.** The agent runs on your workstation against the files already there, in a terminal (Claude Code, Codex CLI, OpenCode, Aider, Gemini CLI, Warp) or inside an editor (Cursor, Cline, Kiro, Copilot in VS Code). Code stays put, and the agent inherits whatever credentials and network access your shell has, which is why [Section 19](#sec-ai-best-practices) asks for approval gates and a sandbox. Pairing one of these with Ollama keeps the model local too ([Ollama 2026](#ref-ollama_site)), at the cost of the hardware described in [Section 21](#sec-ai-offline).
 - **Orchestration layer.** Kepler, Kiro Crew, and the Cline Kanban surface do not add a model of their own; they run several of the agents above in parallel worktrees or sessions and present the results for review. Reach for one only once a single agent is no longer the bottleneck ([when orchestration helps](../chapters/agent-orchestration.llms.md#sec-orch-when)).
 
@@ -3810,11 +3810,11 @@ The Claude API has no Research endpoint. What it exposes is the [web search tool
 
 #### Gemini Deep Research
 
-[Deep Research in the Gemini app](https://support.google.com/gemini/answer/15719111) ([Google 2026e](#ref-gemini_deep_research_help)) searches Google by default, and you can add Gmail, Drive, uploaded files, and NotebookLM notebooks as sources. A report “usually takes about 5-10 minutes to generate”, longer for complex topics. The report can be exported to Google Docs or turned into an Audio Overview. All users can run reports; Google AI Pro and Ultra subscribers can generate them with the Pro model, and Ultra reports may include charts, diagrams, and interactive simulators.
+[Deep Research in the Gemini app](https://support.google.com/gemini/answer/15719111) ([Google 2026h](#ref-gemini_deep_research_help)) searches Google by default, and you can add Gmail, Drive, uploaded files, and NotebookLM notebooks as sources. A report “usually takes about 5-10 minutes to generate”, longer for complex topics. The report can be exported to Google Docs or turned into an Audio Overview. All users can run reports; Google AI Pro and Ultra subscribers can generate them with the Pro model, and Ultra reports may include charts, diagrams, and interactive simulators.
 
-Limits are compute-based rather than a per-report count ([Google 2026b](#ref-gemini_apps_limits)): the allowance refreshes every 5 hours up to a weekly cap, with AI Plus at 2x the free allowance, AI Pro at 4x, and AI Ultra at 5x or 20x the Pro allowance depending on the subscription. Deep Research is listed as available on every tier, but the same page notes that for accounts without a paid plan compute-heavy features like Deep Research “may be unavailable during periods of high demand”.
+Limits are compute-based rather than a per-report count ([Google 2026c](#ref-gemini_apps_limits)): the allowance refreshes every 5 hours up to a weekly cap, with AI Plus at 2x the free allowance, AI Pro at 4x, and AI Ultra at 5x or 20x the Pro allowance depending on the subscription. Deep Research is listed as available on every tier, but the same page notes that for accounts without a paid plan compute-heavy features like Deep Research “may be unavailable during periods of high demand”.
 
-Google is the one vendor here that sells the app feature and the API feature under the same name. The [Gemini Deep Research agent](https://ai.google.dev/gemini-api/docs/deep-research) ([Google 2026c](#ref-gemini_deep_research_api)) runs only through the Interactions API, must be launched with `background=true`, and ships as two agents: `deep-research-preview-04-2026` and `deep-research-max-preview-04-2026`. The Max variant, built on Gemini 3.1 Pro, is positioned for exhaustive batch work such as a nightly job that writes due-diligence reports ([Google 2026a](#ref-gemini_deep_research_max)). By default the agent gets Google Search, URL context, and code execution; it accepts documents as input and can call remote MCP servers. A run is capped at 60 minutes, and the docs estimate \$1-3 per standard task and \$3-7 per Max task.
+Google is the one vendor here that sells the app feature and the API feature under the same name. The [Gemini Deep Research agent](https://ai.google.dev/gemini-api/docs/deep-research) ([Google 2026d](#ref-gemini_deep_research_api)) runs only through the Interactions API, must be launched with `background=true`, and ships as two agents: `deep-research-preview-04-2026` and `deep-research-max-preview-04-2026`. The Max variant, built on Gemini 3.1 Pro, is positioned for exhaustive batch work such as a nightly job that writes due-diligence reports ([Google 2026b](#ref-gemini_deep_research_max)). By default the agent gets Google Search, URL context, and code execution; it accepts documents as input and can call remote MCP servers. A run is capped at 60 minutes, and the docs estimate \$1-3 per standard task and \$3-7 per Max task.
 
 #### ChatGPT deep research
 
@@ -3826,11 +3826,11 @@ The [API version](https://developers.openai.com/api/docs/guides/deep-research) (
 
 #### Microsoft 365 Copilot Researcher and Think Deeper
 
-Microsoft has consolidated its offerings into one agent. The consumer “Deep Research” mode was retired from the Copilot app on 2026-08-18, and Microsoft 365 Premium subscribers are directed to [Researcher](https://support.microsoft.com/en-us/microsoft-365-copilot/get-started-with-researcher-in-microsoft-365-copilot) ([Microsoft 2026c](#ref-ms_researcher_help), [2026b](#ref-ms_copilot_deep_research_retired)) instead. Researcher is also included for business and enterprise tenants with a Copilot add-on license, and admins can block it in the Microsoft 365 admin center.
+Microsoft has consolidated its offerings into one agent. The consumer “Deep Research” mode was retired from the Copilot app on 2026-08-18, and Microsoft 365 Premium subscribers are directed to [Researcher](https://support.microsoft.com/en-us/microsoft-365-copilot/get-started-with-researcher-in-microsoft-365-copilot) ([Microsoft 2026e](#ref-ms_researcher_help), [2026c](#ref-ms_copilot_deep_research_retired)) instead. Researcher is also included for business and enterprise tenants with a Copilot add-on license, and admins can block it in the Microsoft 365 admin center.
 
-Researcher’s distinguishing source is your work graph: it reads files, emails, meetings, and Teams chats you already have access to, plus Microsoft Graph connectors, and uses the Bing index for the web ([Microsoft 2026d](#ref-ms_researcher_faq)). Web search can be disabled tenant-wide, but there is no allow-list or block-list of sites below that. It asks clarifying questions before running, and the FAQ gives run times of “under five minutes for simple queries” and “10 to 45 minutes for highly complex ones”. Output is a report with headings, visuals, and cited sources; PowerPoint and PDF export are listed as “to be released soon”. The hard limit is 25 queries per user per month. Tenants can enable Anthropic’s Claude models inside Researcher, and the model picker is available when Researcher is opened as its own agent. The FAQ states that Researcher cannot be customized or extended through Copilot Studio, and none of the pages we read describe a programmatic route to it ([Microsoft 2026e](#ref-ms_researcher_overview)).
+Researcher’s distinguishing source is your work graph: it reads files, emails, meetings, and Teams chats you already have access to, plus Microsoft Graph connectors, and uses the Bing index for the web ([Microsoft 2026h](#ref-ms_researcher_faq)). Web search can be disabled tenant-wide, but there is no allow-list or block-list of sites below that. It asks clarifying questions before running, and the FAQ gives run times of “under five minutes for simple queries” and “10 to 45 minutes for highly complex ones”. Output is a report with headings, visuals, and cited sources; PowerPoint and PDF export are listed as “to be released soon”. The hard limit is 25 queries per user per month. Tenants can enable Anthropic’s Claude models inside Researcher, and the model picker is available when Researcher is opened as its own agent. The FAQ states that Researcher cannot be customized or extended through Copilot Studio, and none of the pages we read describe a programmatic route to it ([Microsoft 2026i](#ref-ms_researcher_overview)).
 
-Think Deeper is not a research mode. It is one of the [conversation modes](https://support.microsoft.com/en-us/microsoft-copilot/conversation-modes-in-microsoft-copilot) ([Microsoft 2026a](#ref-ms_copilot_conversation_modes)) in the consumer Copilot app: a reasoning pass that “takes up to 10 seconds” and does no extra retrieval, available to all users with priority for Microsoft 365 subscribers when capacity is short. Treat it as the counterpart of Claude’s extended thinking, not of Researcher.
+Think Deeper is not a research mode. It is one of the [conversation modes](https://support.microsoft.com/en-us/microsoft-copilot/conversation-modes-in-microsoft-copilot) ([Microsoft 2026b](#ref-ms_copilot_conversation_modes)) in the consumer Copilot app: a reasoning pass that “takes up to 10 seconds” and does no extra retrieval, available to all users with priority for Microsoft 365 subscribers when capacity is short. Treat it as the counterpart of Claude’s extended thinking, not of Researcher.
 
 #### Perplexity Research
 
@@ -4857,6 +4857,86 @@ When selecting a collaborative workspace agent for academic and computational re
 2.  **Use Cloud Agents for Asynchronous Administration**: For non-sensitive scheduling, lab meeting summaries, and routine administrative reminders, always-on cloud agents (like Gemini Spark) reduce cognitive overhead by automating background tasks.
 3.  **Keep Code and Statistical Analyses in Version Control**: While workspace agents are effective for document drafting, statistical pipelines and computational scripts should remain in dedicated git-managed repositories with automated CI validation and code review.
 
+# 66 AI-Enabled Knowledge Workspaces: Notion and Alternatives
+
+Notion and its competitors sell a hosted wiki, database, and document editor with an AI layer on top. This section reviews Notion’s AI features and the closest alternatives from the perspective of a lab that already keeps its notes in git-backed Quarto and Markdown (this site, and the [Benchbook](../chapters/benchbook.llms.md) pattern). The question is not whether these products are good — most are polished — but whether any of them beats a plain-text wiki that a coding agent can already read, write, and version. Prices and feature lists below were read from each vendor’s own pages and are volatile (measured 2026-09-09).
+
+#### Notion
+
+Notion’s AI surface has three layers ([Notion Labs 2026b](#ref-notion_ai)):
+
+- **Notion AI** in the editor: drafting, rewriting, summarizing, and auto-filling database properties.
+- **Notion Agent** and **Custom Agents**: a chat agent that runs multi-step tasks across the workspace and connected apps (Slack, Google Drive, GitHub), plus scheduled or triggered agents that run without a user present. Custom Agents were free through 2026-05-03 and now bill by credit, at \$10 per 1,000 credits, on Business and Enterprise plans.
+- **AI Meeting Notes** and **Enterprise Search** across connected sources.
+
+For agent access from outside Notion there are two routes. The public REST API exposes pages, databases, blocks, users, and search under internal, OAuth, or personal access tokens (API version `2026-03-11`) ([Notion Labs 2026c](#ref-notion_api)). The Notion MCP server is a remote server hosted by Notion, authorized by OAuth and scoped to what the user can already see, that Claude Code, Cursor, and Codex can connect to ([Notion Labs 2026e](#ref-notion_mcp)). It exposes tools for search, fetch, page and database creation and update, comments, file uploads, and custom-agent sessions, rate-limited to 180 requests per minute per user (30 for keyword search), with some tools gated behind Business or Enterprise plans ([Notion Labs 2026f](#ref-notion_mcp_tools)).
+
+Pricing: Free, Plus at \$10 per member per month, Business at \$20, Enterprise on request. Full Notion Agent, Custom Agents, and Meeting Notes require Business or above; Free and Plus get a limited AI trial ([Notion Labs 2026g](#ref-notion_pricing)). Students and educators at accredited universities get the Plus plan free for a one-member workspace, re-verified annually ([Notion Labs 2026d](#ref-notion_education)). That is a personal plan: a shared lab workspace with AI would be Business at \$20 per member per month.
+
+Export: pages export as Markdown, databases as CSV plus Markdown subpages, and whole pages or workspaces as HTML or PDF. Comments survive only in HTML; only the current database view exports; “include subpages” for full exports is a Business or Enterprise feature; a workspace export can take up to 30 hours; and workspace owners can disable export entirely ([Notion Labs 2026a](#ref-notion_export)).
+
+#### Obsidian
+
+Obsidian is the opposite design: a local Markdown folder with an editor on top. Notes are plain files on disk, so any coding agent can already read and write them with no API at all, and a vault can live in a git repository. Obsidian has no first-party AI features (measured 2026-09-09); the AI plugins are community-maintained ([Obsidian 2026c](#ref-obsidian_home)). The official Obsidian CLI (Obsidian 1.12 or later, enabled in Settings, with the app running) exposes search, note creation, tasks, and developer commands, and the documentation names “agentic coding tools” as an intended user ([Obsidian 2026a](#ref-obsidian_cli)). MCP servers for Obsidian are community projects, several of which wrap that CLI.
+
+Pricing: the app is free for personal and commercial use; a \$50 per user per year commercial license is optional. Sync (\$4 per month annual) and Publish (\$8 per month annual) are optional subscriptions, with a 40% discount for students, faculty, and nonprofit staff ([Obsidian 2026b](#ref-obsidian_pricing)). Export is a non-question: the vault is the export.
+
+#### Coda, now Superhuman Docs
+
+Coda has been renamed Superhuman Docs; `coda.io/pricing` now redirects to `superhuman.com/plans/docs` ([Superhuman 2026](#ref-superhuman_docs_pricing)). The vendor pages are rendered client-side and could not be read in full for this review, so the numbers below come from a third-party summary ([Breeze 2026](#ref-breeze_coda_superhuman)): Pro at \$15 per Doc Maker per month (\$12 annual), Business at \$40 (\$33 annual), Free and Enterprise unchanged, with a rename date of 2026-07-08. The billing unit is the “Doc Maker”, so viewers and editors of existing docs are free. Treat the product as in transition: a rename and a price increase in one quarter is a lock-in signal in itself.
+
+#### Google Workspace with Gemini
+
+Gemini is bundled into every Google Workspace plan rather than sold as an add-on: Starter (\$7 per user per month list) has limited Gemini in Gmail, Standard (\$14) and above have Gemini across Docs, Sheets, Meet, and Gemini Notebook ([Google 2026g](#ref-google_workspace_pricing)). For universities, Education Fundamentals is free and includes Gemini for Education and Gemini Notebook, though in-app Gemini in Docs and Sheets needs Education Plus (\$6 per user per year); the Google AI Pro for Education add-on is \$15 per user per month on an annual commitment ([Google 2026a](#ref-google_workspace_education)). Agent access is through the Docs, Sheets, and Drive APIs, which let a program create and edit document structure ([Google 2026f](#ref-google_docs_api)); Google’s pricing and API pages reviewed here mention no hosted MCP server for Docs (measured 2026-09-09). Google’s always-on Gemini Spark agent is covered in [Section 65](#sec-ai-collaborative-workspaces). Lock-in is moderate: a Doc exports as a file, but comments, suggestions, and version history stay in Google’s copy. Where the campus already licenses Workspace, the marginal cost to the lab is whatever that contract allows.
+
+#### Microsoft Loop and OneNote with Copilot
+
+Copilot in Loop offers preset prompts (Create, Brainstorm, Blueprint, Describe) and page summaries inside Loop workspaces ([Microsoft 2026d](#ref-microsoft_copilot_loop_faq)), and Microsoft positions Loop alongside Copilot Pages (canvases for saving AI output) and Copilot Notebooks (grounded research spaces) ([Microsoft 2026a](#ref-microsoft_loop_compare)). All of it requires a Microsoft 365 Copilot license on top of a qualifying base plan. Copilot Business is \$18 per user per month (annual, reduced from \$21) for small-business plans; the enterprise add-on is listed separately ([Microsoft 2026g](#ref-microsoft_copilot_pricing)). Academic Copilot licenses exist for A1, A3, and A5 plans through volume licensing ([Microsoft 2026f](#ref-microsoft_copilot_licensing)). None of the Microsoft pages reviewed here offers an MCP server for Loop or OneNote, and neither page describes a Markdown export, which makes this the weakest export story in this table. The `.docx` route for reviewer edits, described earlier in this chapter, remains the practical bridge to Word users.
+
+#### Confluence with Rovo
+
+Confluence Cloud is free for up to 10 users; Standard and Premium are per-user and include Rovo (search, chat, and agents) with 25 and 70 Rovo credits per user per month respectively ([Atlassian 2026e](#ref-confluence_plans), [2026d](#ref-rovo_credits)). Credits are pooled at the organization level, reset monthly, and overage billing at \$0.01 per credit starts 2026-12-03 ([Atlassian 2026d](#ref-rovo_credits)). Atlassian’s academic licensing gives qualifying institutions 50% off cloud list price ([Atlassian 2026a](#ref-atlassian_cloud_licensing)). The Atlassian Rovo MCP Server is hosted at `mcp.atlassian.com`, authorizes by OAuth 2.1 or API token, and lets Claude, ChatGPT, GitHub Copilot CLI, and Gemini search, summarize, create, and update Confluence pages and Jira work items within the user’s existing permissions ([Atlassian 2026c](#ref-rovo_mcp_server)). Export is per page to Word or PDF, and per space to PDF, CSV, HTML, or XML ([Atlassian 2026b](#ref-confluence_export)); there is no Markdown export, so leaving Confluence means converting HTML.
+
+#### Anytype
+
+Anytype is a local-first, source-available (Any Source Available License 1.0) knowledge base with zero-knowledge encrypted peer-to-peer sync ([Any Association 2026b](#ref-anytype_ts_github)). It has no built-in AI. Instead it ships a Local API on `localhost`, authenticated by an API key generated from a challenge in the desktop app ([Any Association 2026d](#ref-anytype_local_api)), and an “Agents’ Skill” that lets Claude Code, Cursor, Gemini CLI, or GitHub Copilot run sandboxed JavaScript against that API to read, search, create, and bulk-edit objects ([Any Association 2026a](#ref-anytype_agents_skill)). Community MCP servers wrap the same API. Membership is a free tier plus paid storage tiers, with a 50% student discount ([Any Association 2026e](#ref-anytype_memberships)). Export is Markdown, PDF, HTML, or Anytype’s own Any-Block format, in JSON or Protobuf ([Any Association 2026c](#ref-anytype_export)).
+
+#### Craft
+
+Craft is a native document editor (macOS, iOS, Windows, web) with a credit-metered AI assistant: 15 credits on Free, 50 per month on Plus (\$6.40 per month annual), with a Team plan at \$50 per month for up to 10 seats ([Craft Docs 2026a](#ref-craft_pricing)). It offers a hosted MCP endpoint per connection with user-defined scope, which Claude Desktop, Claude Code, ChatGPT, Cursor, VS Code, and other clients can attach to, and which since version 3.3.5 can create and update documents, not only read them ([Craft Docs 2026c](#ref-craft_mcp)). Export is Markdown, `TextBundle`, PDF, and image on every platform, plus `.docx` on macOS, iOS, and web ([Craft Docs 2026b](#ref-craft_export)). No education discount is listed.
+
+#### Comparison
+
+| Product | AI features | Agent / MCP access | Export and lock-in | Academic pricing | Verdict |
+|----|----|----|----|----|----|
+| Notion | Notion AI, Notion Agent, Custom Agents (credits), meeting notes, enterprise search | Hosted MCP server (OAuth); REST API | Markdown/CSV/HTML/PDF; comments and views partly lost; export can be disabled by admins | Plus free for one student/educator; shared AI workspace is \$20 per member per month | Best hosted option; still a walled garden |
+| Obsidian | None first-party; community plugins | Local files; official CLI; community MCP servers | Vault is plain Markdown on disk | Free app; 40% off Sync/Publish | Closest to what we already do |
+| Superhuman Docs (Coda) | Coda AI, in transition | Packs and API | Per-doc export; rebrand and repricing in 2026 | None listed | Avoid until it settles |
+| Google Workspace + Gemini | Gemini in Docs/Sheets/Gmail, Gemini Notebook, Spark agent | Docs/Drive APIs; no hosted MCP documented | File export; comments and history stay behind | Fundamentals free; Plus \$6 per user per year; AI Pro add-on \$15 per month | Use what the campus already licenses |
+| Microsoft Loop / OneNote + Copilot | Copilot prompts and summaries; Copilot Pages and Notebooks | No MCP server documented | No Markdown export documented; weakest export | Academic Copilot via A3/A5 volume licensing | Only if the collaborators live in Teams |
+| Confluence + Rovo | Rovo search, chat, agents (credit-metered, overage from 2026-12) | Hosted MCP server (OAuth 2.1) | Word/PDF per page, HTML/XML per space; no Markdown | 50% off cloud list | Fine for Jira shops; poor for prose |
+| Anytype | None built in | Local API with key; agent skill; community MCP | Markdown/HTML/PDF/Any-Block; local-first, encrypted | 50% student discount | Interesting, niche |
+| Craft | Credit-metered assistant | Hosted MCP with scoped connections | Markdown/`TextBundle`/PDF/`.docx` | None listed | Nice editor, small ecosystem |
+
+#### Useful to us?
+
+Mostly no, and for a structural reason rather than a feature gap. Every product above adds AI by putting a model *inside* the vendor’s editor and then, more recently, adding an MCP server so outside agents can reach in. A git-backed Quarto or Markdown wiki inverts that: the agent is already a first-class editor of the files, every change is a reviewable diff, CI renders and spell-checks the result, and the wiki is the export. [Benchbook](../chapters/benchbook.llms.md) is the same idea with a written contract for the agent; this site is the same idea with a publishing pipeline. Neither needs an MCP server to let Claude Code read the lab’s notes, and neither can be locked, metered, or renamed by a vendor.
+
+What the hosted products do better, and a plain repository does not:
+
+- **Non-technical collaborators.** Notion, Google Docs, and Loop have editors that a clinician or a first-year student can use without learning git. The `.docx` round-trip described earlier in this chapter covers review comments, but not live co-editing.
+- **Databases with views.** Notion and Coda tables with filters, rollups, and forms have no clean Markdown equivalent; a CSV in a repo is the honest substitute.
+- **Meeting capture.** Notion’s AI Meeting Notes and Copilot’s transcription are convenient; the output is text and can be committed afterward.
+- **Always-on agents.** Notion Custom Agents, Gemini Spark, and Rovo agents run on a schedule without a machine of ours awake. A GitHub Actions cron running a coding agent does the same for a repository.
+
+Recommendations (measured 2026-09-09):
+
+- Keep lab knowledge in git-backed Markdown or Quarto, and let coding agents edit it directly.
+- If a hosted editor is needed for a specific collaborator group, prefer the one the campus already licenses (Google Workspace with Gemini) over a new per-seat subscription, and treat its content as a draft that gets committed.
+- Among the standalone products, Obsidian is the only one whose data model is already ours, so a lab member who wants a graphical editor over the same repository should start there.
+- Notion is the best of the hosted walled gardens, and the Notion MCP server makes it reachable from Claude Code; but the AI features that distinguish it are Business-plan and credit-metered, and export loses structure, so budget for the exit before entering.
+- Re-check prices and plan boundaries before acting on any row of the table; several changed within the last quarter.
+
 # References
 
 *2001: A Space Odyssey*. 1968. Film. <https://en.wikipedia.org/wiki/2001:_A_Space_Odyssey_(film)>.
@@ -4913,13 +4993,35 @@ Anthropic. 2026v. *Web Search Tool*. Documentation. <https://platform.claude.com
 
 Anthropic. 2026w. *When Should i Use Web Search, Extended Thinking, and Research?* Help Center. <https://support.claude.com/en/articles/11095361-when-should-i-use-web-search-extended-thinking-and-research>.
 
+Any Association. 2026a. *Anytype Agents’ Skill*. Documentation. <https://doc.anytype.io/anytype/features/integrations/anytype-agents-skill>.
+
+Any Association. 2026b. *Anytype Desktop (Anytype-Ts)*. Documentation. <https://github.com/anyproto/anytype-ts>.
+
+Any Association. 2026c. *Anytype Import and Export*. Documentation. <https://doc.anytype.io/anytype/data/import-and-export>.
+
+Any Association. 2026d. *Anytype Local API*. Documentation. <https://doc.anytype.io/anytype/features/integrations/local-api>.
+
+Any Association. 2026e. *Anytype Memberships*. Documentation. <https://doc.anytype.io/anytype/resources/memberships>.
+
 Asimov, Isaac. 1950. *I, Robot*. Novel; Gnome Press. <https://search.library.ucdavis.edu/permalink/01UCD_INST/9fle3i/alma990000226350403126>.
+
+Atlassian. 2026a. *Atlassian Cloud Licensing*. Documentation. <https://www.atlassian.com/licensing/cloud>.
+
+Atlassian. 2026b. *Export Content to Word, PDF, HTML and XML*. Documentation. <https://support.atlassian.com/confluence-cloud/docs/export-content-to-word-pdf-html-and-xml/>.
+
+Atlassian. 2026c. *Get Started with the Atlassian Rovo MCP Server*. Documentation. <https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/>.
+
+Atlassian. 2026d. *How Rovo Credits Work*. Documentation. <https://support.atlassian.com/rovo/docs/rovo-usage-limits/>.
+
+Atlassian. 2026e. *Learn about the Features of Confluence Cloud Plans*. Documentation. <https://support.atlassian.com/confluence-cloud/docs/learn-about-confluence-cloud-plans/>.
 
 *Battlestar Galactica*. 2004. Television Series. <https://en.wikipedia.org/wiki/Battlestar_Galactica_(2004_TV_series)>.
 
 Belcak, Peter, Greg Heinrich, Shizhe Diao, et al. 2025. *Small Language Models Are the Future of Agentic AI*. NVIDIA Research; arXiv preprint. <https://arxiv.org/abs/2506.02153>.
 
 *Blade Runner*. 1982. Film. <https://en.wikipedia.org/wiki/Blade_Runner>.
+
+Breeze. 2026. *Coda Is Now Superhuman Docs: What Changed for Users*. Documentation. <https://www.breeze.pm/articles/coda-is-now-superhuman-docs>.
 
 Card, Orson Scott. 1985. *Ender’s Game*. Novel; Tor Books. <https://en.wikipedia.org/wiki/Ender%27s_Game>.
 
@@ -4935,6 +5037,12 @@ Copes, Flavio. 2026. *A Deep Dive into Herdr*. Blog post. <https://flaviocopes.c
 
 Coto, Cedrick. 2026. *Aeris: Deterministic Cognitive Simulation Engine with Emergent Narrative*. Software. <https://github.com/Cedrick-Coto/Aeris>.
 
+Craft Docs. 2026a. *Craft Pricing*. Documentation. <https://www.craft.do/pricing>.
+
+Craft Docs. 2026b. *Export to PDF, Word, and Markdown*. Documentation. <https://support.craft.do/en/import-and-export/export/document>.
+
+Craft Docs. 2026c. *MCP (Craft Help Center)*. Documentation. <https://support.craft.do/en/integrate/mcp>.
+
 Cursor. 2026. *Cloud Agents*. Documentation. <https://cursor.com/docs/cloud-agent>.
 
 Daytona. 2026. *Daytona Integrations: OpenCode Plugin*. GitHub repository. <https://github.com/daytona/integrations/tree/main/packages/opencode-plugin>.
@@ -4949,15 +5057,21 @@ Fabris, Noe. 2026. *Opencode-Antigravity-Auth (Archived)*. GitHub repository. <h
 
 Flight of the Conchords. 2007. *The Humans Are Dead*. Music Video. <https://www.youtube.com/watch?v=B1BdQcJ2ZYY>.
 
-Google. 2026a. *Deep Research Max: A Step Change for Autonomous Research Agents*. The Keyword (blog). <https://blog.google/innovation-and-ai/models-and-research/gemini-models/next-generation-gemini-deep-research/>.
+Google. 2026a. *Compare Google Workspace for Education Editions*. Documentation. <https://edu.google.com/intl/ALL_us/workspace-for-education/editions/compare-editions/>.
 
-Google. 2026b. *Gemini Apps Limits and Upgrades for Google AI Subscribers*. Gemini Apps Help. <https://support.google.com/gemini/answer/16275805>.
+Google. 2026b. *Deep Research Max: A Step Change for Autonomous Research Agents*. The Keyword (blog). <https://blog.google/innovation-and-ai/models-and-research/gemini-models/next-generation-gemini-deep-research/>.
 
-Google. 2026c. *Gemini Deep Research Agent*. Gemini API documentation. <https://ai.google.dev/gemini-api/docs/deep-research>.
+Google. 2026c. *Gemini Apps Limits and Upgrades for Google AI Subscribers*. Gemini Apps Help. <https://support.google.com/gemini/answer/16275805>.
 
-Google. 2026d. *Getting Started with Jules*. Documentation. <https://jules.google.com/docs/>.
+Google. 2026d. *Gemini Deep Research Agent*. Gemini API documentation. <https://ai.google.dev/gemini-api/docs/deep-research>.
 
-Google. 2026e. *Use Deep Research in Gemini Apps*. Gemini Apps Help. <https://support.google.com/gemini/answer/15719111>.
+Google. 2026e. *Getting Started with Jules*. Documentation. <https://jules.google.com/docs/>.
+
+Google. 2026f. *Google Docs API Overview*. Documentation. <https://developers.google.com/workspace/docs/api/how-tos/overview>.
+
+Google. 2026g. *Google Workspace Pricing*. Documentation. <https://workspace.google.com/pricing>.
+
+Google. 2026h. *Use Deep Research in Gemini Apps*. Gemini Apps Help. <https://support.google.com/gemini/answer/15719111>.
 
 Hacker News. 2026. *Herdr: Agent Multiplexer That Lives in Your Terminal*. Show HN discussion thread. <https://news.ycombinator.com/item?id=48714802>.
 
@@ -5011,15 +5125,23 @@ Lindy. 2026b. *Lindy: The AI Teammate That Will 3x Your Output*. Product website
 
 Manus AI. 2026. *Manus: Hands on AI*. Product website. <https://manus.im/>.
 
-Microsoft. 2026a. *Conversation Modes in Microsoft Copilot*. Microsoft Support. <https://support.microsoft.com/en-us/microsoft-copilot/conversation-modes-in-microsoft-copilot>.
+Microsoft. 2026a. *Compare Microsoft Loop, Copilot Pages, and Copilot Notebooks*. Documentation. <https://support.microsoft.com/en-us/microsoft-365-copilot/compare-microsoft-loop-copilot-pages-and-copilot-notebooks>.
 
-Microsoft. 2026b. *Deep Research in Microsoft Copilot*. Microsoft Support. <https://support.microsoft.com/en-us/microsoft-copilot/deep-research-in-microsoft-copilot>.
+Microsoft. 2026b. *Conversation Modes in Microsoft Copilot*. Microsoft Support. <https://support.microsoft.com/en-us/microsoft-copilot/conversation-modes-in-microsoft-copilot>.
 
-Microsoft. 2026c. *Get Started with Researcher in Microsoft 365 Copilot*. Microsoft Support. <https://support.microsoft.com/en-us/microsoft-365-copilot/get-started-with-researcher-in-microsoft-365-copilot>.
+Microsoft. 2026c. *Deep Research in Microsoft Copilot*. Microsoft Support. <https://support.microsoft.com/en-us/microsoft-copilot/deep-research-in-microsoft-copilot>.
 
-Microsoft. 2026d. *Microsoft Copilot Researcher Agent Frequently Asked Questions*. Microsoft Learn. <https://learn.microsoft.com/en-us/copilot/microsoft-365/faq-researcher>.
+Microsoft. 2026d. *Frequently Asked Questions about Copilot in Loop*. Documentation. <https://support.microsoft.com/en-us/loop/frequently-asked-questions-about-copilot-in-loop>.
 
-Microsoft. 2026e. *What Is Researcher Agent in Microsoft Copilot?* Microsoft Learn. <https://learn.microsoft.com/en-us/microsoft-365/copilot/researcher-agent>.
+Microsoft. 2026e. *Get Started with Researcher in Microsoft 365 Copilot*. Microsoft Support. <https://support.microsoft.com/en-us/microsoft-365-copilot/get-started-with-researcher-in-microsoft-365-copilot>.
+
+Microsoft. 2026f. *License Options for Microsoft Copilot*. Documentation. <https://learn.microsoft.com/en-us/copilot/microsoft-365/microsoft-365-copilot-licensing>.
+
+Microsoft. 2026g. *Microsoft 365 Copilot Plans and Pricing*. Documentation. <https://www.microsoft.com/en-us/microsoft-365-copilot/pricing>.
+
+Microsoft. 2026h. *Microsoft Copilot Researcher Agent Frequently Asked Questions*. Microsoft Learn. <https://learn.microsoft.com/en-us/copilot/microsoft-365/faq-researcher>.
+
+Microsoft. 2026i. *What Is Researcher Agent in Microsoft Copilot?* Microsoft Learn. <https://learn.microsoft.com/en-us/microsoft-365/copilot/researcher-agent>.
 
 Morrison Lab. 2026a. *Ai-Config: Portable AI Agent Config*. Software. <https://github.com/Morrison-Lab/ai-config>.
 
@@ -5028,6 +5150,26 @@ Morrison Lab. 2026b. *Delegate-to-Codex: Run Heavy Sidecar Work on Codex, Not Cl
 NanoNets and Trail contributors. 2026. *Graft: Open-Source Context Layer for Coding Agents*. Software. <https://github.com/trailhq/Graft>.
 
 Neural Nomads AI. 2026. *CodeNomad: The AI Coding Cockpit for OpenCode*. GitHub repository. <https://github.com/NeuralNomadsAI/CodeNomad>.
+
+Notion Labs. 2026a. *Export Your Content*. Documentation. <https://www.notion.com/help/export-your-content>.
+
+Notion Labs. 2026b. *Notion AI*. Documentation. <https://www.notion.com/product/ai>.
+
+Notion Labs. 2026c. *Notion API Introduction*. Documentation. <https://developers.notion.com/reference/intro>.
+
+Notion Labs. 2026d. *Notion for Education*. Documentation. <https://www.notion.com/help/notion-for-education>.
+
+Notion Labs. 2026e. *Notion MCP*. Documentation. <https://developers.notion.com/docs/mcp>.
+
+Notion Labs. 2026f. *Notion MCP Supported Tools*. Documentation. <https://developers.notion.com/guides/mcp/mcp-supported-tools>.
+
+Notion Labs. 2026g. *Notion Pricing*. Documentation. <https://www.notion.com/pricing>.
+
+Obsidian. 2026a. *Obsidian CLI*. Documentation. <https://obsidian.md/help/cli>.
+
+Obsidian. 2026b. *Obsidian Pricing*. Documentation. <https://obsidian.md/pricing>.
+
+Obsidian. 2026c. *Obsidian: Sharpen Your Thinking*. Documentation. <https://obsidian.md/>.
 
 Ollama. 2026. *Ollama*. Product page. <https://ollama.com/>.
 
@@ -5108,6 +5250,8 @@ Relevance AI. 2026c. *Relevance AI Pricing*. Product website. <https://relevance
 remorses. 2026. *Kimaki: Discord Bot to Control OpenCode Sessions*. GitHub repository. <https://github.com/remorses/kimaki>.
 
 Runkle, Sydney. 2026. *How to Build a Custom Agent Harness*. Documentation. <https://www.langchain.com/blog/how-to-build-a-custom-agent-harness>.
+
+Superhuman. 2026. *Superhuman Docs Pricing and Plans*. Documentation. <https://superhuman.com/plans/docs>.
 
 team-attention. 2026. *Hoyeon: Requirements-First Harness*. Software. <https://github.com/team-attention/hoyeon>.
 
