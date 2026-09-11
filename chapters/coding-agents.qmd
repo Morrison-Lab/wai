@@ -213,6 +213,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/vscode-agent-sessions.qmd >}}
 
+# Herdr: A Terminal Multiplexer for Coding Agents {#sec-ai-herdr}
+
+{{< include ai-tools/herdr.qmd >}}
+
 # Installing Claude Code on Windows {#sec-ai-claude-code-windows}
 
 {{< include ai-tools/installing-claude-code-windows.qmd >}}
