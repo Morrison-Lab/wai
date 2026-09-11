@@ -33,6 +33,7 @@ BAA
 BOM
 BYOK
 Badham
+Baseten
 Battlestar
 Belcak
 BenchLM
@@ -113,6 +114,7 @@ GCP
 GDPR
 GDScript's
 GLM
+GPQA
 GPT
 GPUs
 GSD
@@ -199,6 +201,7 @@ LocalLLaMA
 MCP
 MCTS
 MLflow
+MMMU
 MSYS
 MWC
 MachineLearning
@@ -220,10 +223,12 @@ Momus
 Moonshot
 Morph's
 Mostow
+Murati
 NLP
 NVIDIA
 NYU
 Nami
+Nemotron
 Neovim
 NotebookLM
 Notion
@@ -313,6 +318,7 @@ SAML
 SDK
 SDKs
 SERG
+SGLang
 SHA
 SHA's
 SHAs
@@ -324,6 +330,7 @@ SSO
 SVAMP
 SWE
 SaaS
+Schulman
 SciPy
 SemBr
 SideCars
@@ -555,6 +562,7 @@ poller
 ponytail
 positionals
 pre
+prefill
 preflight
 preinstalls
 preloaded
@@ -589,6 +597,7 @@ resyncing
 retryable
 reviewable
 roadmap
+rollouts
 rollup
 rollups
 roxygen
@@ -600,6 +609,7 @@ sandboxing
 schemas
 sembr
 serology
+serverless
 shadcn
 shigella
 signups
