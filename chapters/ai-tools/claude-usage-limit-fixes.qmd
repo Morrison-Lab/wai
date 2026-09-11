@@ -1,0 +1,111 @@
+[Issue #207](https://github.com/Morrison-Lab/wai/issues/207) asked for a summary of a YouTube video,
+"Never Hit a Claude Limit Again --- 12 Fixes Ranked by How Much Window They Buy",
+from the channel Hyperautomation Labs [@hyperautomation_claude_limits].
+The video is ten and a half minutes long and was published on 2026-08-16;
+this summary works from its auto-generated English transcript,
+fetched with `yt-dlp` on 2026-09-10,
+so wording attributed to the presenter below may carry speech-to-text errors.
+The first draft of the summary was produced by the Antigravity command-line program from that transcript
+and then checked against it by hand.
+
+#### What the video claims
+
+The presenter's claim is that a developer can work all day on the entry-level Claude plan
+without hitting the rolling five-hour usage wall,
+by managing where the tokens go rather than by buying a bigger plan.
+The video describes the limits as three layers that draw on one shared pool
+across the web app, the mobile app, Claude Code, and parallel sessions:
+a rolling five-hour window,
+an overall weekly cap,
+and a separate weekly cap for the flagship model tier.
+Anthropic does not publish the token arithmetic behind those limits,
+so everything in the video is inferred from the product's own usage displays.
+
+#### The twelve fixes, in the video's order
+
+The video counts down from the fix that buys the least window to the one that buys the most.
+
+- **12. Read the meter.**
+  Run the usage and context commands in Claude Code to watch the five-hour window,
+  the weekly bars, and the per-category token split,
+  so an active leak is visible while it is happening.
+- **11. Kill the all-day session.**
+  Clear the session between unrelated tasks;
+  every prompt otherwise re-carries the whole conversation history.
+- **10. Scope your asks.**
+  Ask for the section that needs changing rather than a full regeneration;
+  the presenter puts output tokens at about five times the cost of input tokens.
+- **9. Reference file paths instead of pasting.**
+  Point the agent at a file so it is read once on demand
+  instead of sitting in the conversation permanently.
+- **8. Compact on schedule.**
+  Compact at task boundaries while the cache is warm,
+  rather than resuming a stale session and paying for a cold, full-context compaction.
+- **7. Shrink standing overhead.**
+  Keep `CLAUDE.md` under about 200 lines and move workflows into skills.
+  The presenter measured that toggling MCP servers off changed the startup cost by about 45 tokens,
+  and concludes that the older advice to disable them no longer matters
+  because tool definitions now load on demand.
+- **6. Stop breaking the prompt cache.**
+  Choose the model tier, effort level, and MCP connections at session start
+  and change them only at task boundaries,
+  so each request pays full price only for new tokens.
+- **5. Use subagents as context firewalls.**
+  Send noisy searches, file reads, and dead ends to subagents
+  so only a short summary returns to the main session.
+- **4. Configure cheaper models for subagents.**
+  Put grunt-work subagents on a cheaper, faster tier.
+  The transcript does not make the exact setting clear.
+- **3. Route the main model deliberately.**
+  Default to a workhorse tier and reserve the flagship tier for hard problems,
+  because the flagship tier has its own weekly cap.
+  The transcript is ambiguous about which model names map to which tier.
+- **2. Schedule work around reset windows.**
+  Batch heavy work into an active five-hour window
+  and queue sessions rather than running four or more at once.
+- **1. Install a prompt-discipline block.**
+  Put standing instructions in `CLAUDE.md` that demand terse answers,
+  minimal file reading, narrow tests, and no echoing of files back.
+  The presenter offers the block itself as a download rather than reading it out,
+  so its full text is not in the transcript.
+
+#### The evidence, and its limits
+
+The video's evidence is the presenter's own telemetry on one machine.
+Its headline measurement is that a fresh two-token prompt in Claude Code
+consumed more than 36,000 tokens of system prompt, tool definitions, and standing instructions
+before any work began.
+It also reports, from the local usage panel,
+that about 66 percent of one period's burn came from subagent sessions
+and about 18 percent from running four sessions in parallel.
+Those are single-user, single-day readings of a product whose accounting the vendor does not publish,
+taken from an auto-generated transcript;
+they are worth testing, not worth citing as fact.
+
+#### Useful to us? Yes, and the lab has already paid for the lesson
+
+The lab's own measurement agrees with the video's ranking.
+On 2026-09-09 a documentation sprint on this site fanned out roughly twenty Claude Code subagents at once
+and tripped the five-hour limit three times in one day,
+each time losing every worker mid-task;
+the fix that ended it was the video's number two,
+queuing sessions instead of running them in parallel,
+followed by routing work to a second vendor's quota
+through the Antigravity command-line program's headless `agy --print` lane.
+Three of the fixes map directly onto rules the lab already keeps in `Morrison-Lab/ai-config`:
+
+- Fix 5 (subagents as context firewalls) is the standing "use subagents when helpful" rule,
+  and fix 4 (cheaper subagent models) is its model-routing section.
+- Fix 7 (short `CLAUDE.md`, workflows in skills) is what the corpus's skills directory is for,
+  and the corpus has an instrument, `check-context-closure.py`,
+  that measures the always-loaded pool the presenter is warning about.
+- Fix 2 (queue rather than parallelize) is what the sprint above settled on:
+  after the third exhaustion the concurrency was capped at two Claude subagents at once,
+  and the remaining work was routed to a second vendor's quota.
+
+Two of the fixes are not worth adopting as stated.
+The prompt-discipline block (fix 1) is a promotional download whose text the video withholds,
+and "terse answers, minimal file reading" conflicts with the lab's review rules,
+which pay tokens for verification on purpose.
+And the MCP finding (fix 7) is one measurement on one build;
+re-measure it on your own setup before removing servers you rely on.
