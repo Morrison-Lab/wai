@@ -1,5 +1,5 @@
 [Issue #207](https://github.com/Morrison-Lab/wai/issues/207) asked for a summary of a YouTube video,
-"Never Hit a Claude Limit Again: 12 Fixes Ranked by How Much Window They Buy",
+"Never Hit a Claude Limit Again --- 12 Fixes Ranked by How Much Window They Buy",
 from the channel Hyperautomation Labs [@hyperautomation_claude_limits].
 The video is ten and a half minutes long and was published on 2026-08-16;
 this summary works from its auto-generated English transcript,
@@ -99,8 +99,9 @@ Three of the fixes map directly onto rules the lab already keeps in `Morrison-La
 - Fix 7 (short `CLAUDE.md`, workflows in skills) is what the corpus's skills directory is for,
   and the corpus has an instrument, `check-context-closure.py`,
   that measures the always-loaded pool the presenter is warning about.
-- Fix 2 (queue rather than parallelize) is now a recorded lab directive:
-  at most two Claude subagents run at once on a shared Max plan.
+- Fix 2 (queue rather than parallelize) is what the sprint above settled on:
+  after the third exhaustion the concurrency was capped at two Claude subagents at once,
+  and the remaining work was routed to a second vendor's quota.
 
 Two of the fixes are not worth adopting as stated.
 The prompt-discipline block (fix 1) is a promotional download whose text the video withholds,
