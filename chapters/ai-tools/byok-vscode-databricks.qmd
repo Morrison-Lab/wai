@@ -61,9 +61,14 @@ The extension sends `id` as the OpenAI `model` field,
 and Databricks routes the request to the endpoint of that name.
 Most entries use `POST /serving-endpoints/chat/completions`.
 Models marked as Responses-API-only in the
-[Databricks model catalog](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models),
-including GPT-5.3 Codex,
+[Databricks model catalog](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models)
 instead require `apiMode: "openai-responses"`.
+That set is GPT-5.5 Pro, GPT-5.5, and GPT-5.3 Codex (measured 2026-09-09).
+It is not a Codex-family property:
+GPT-5.5 and GPT-5.5 Pro are in the set and are not Codex models.
+The older `gpt-5-2-codex`, `gpt-5-1-codex-max`, and `gpt-5-1-codex-mini`
+endpoints that earlier configurations also set to `openai-responses`
+no longer appear in the catalog (measured 2026-09-09).
 An `id` that names no real endpoint fails (see the 404 below).
 
 To store your token,
@@ -113,21 +118,60 @@ not the model's maximum capability.
 |---|---:|---:|---:|---:|
 | GPT-5.6 Sol/Terra/Luna | 2,000,000 / 200,000 | 400,000 | 16,000 | 0 ms |
 | Claude Opus/Sonnet/Haiku | 200,000 / 20,000 | 64,000 | 16,000 | 15,000 ms |
-| GPT-5.5 through GPT-5 | 200,000 / 20,000 | 64,000 | 16,000 | 15,000 ms |
+| GPT-6 Astra and GPT-5.5 through GPT-5 | 200,000 / 20,000 | 64,000 | 16,000 | 15,000 ms |
 | Gemini | 200,000 / 20,000 | 64,000 | 16,000 | 15,000 ms |
-| Inkling | 200,000 / 10,000 | 64,000 | 8,192 | 15,000 ms |
+| GLM 5.3/5.3 Flash/5.2 | 200,000 / 20,000 | 64,000 | 16,000 | 15,000 ms |
+| Grok 4.6 | 200,000 / 20,000 | 64,000 | 16,000 | 15,000 ms |
+| Inkling | 200,000 / 10,000 | 56,000 | 8,192 | 15,000 ms |
+| Kimi K3 | 200,000 / 10,000 | 56,000 | 8,192 | 15,000 ms |
+| DeepSeek V4 Flash | 200,000 / 10,000 | 56,000 | 8,192 | 15,000 ms |
+| DeepSeek V4 Pro | 200,000 / 4,000 | 64,000 | 2,000 | 30,000 ms |
 | GPT OSS 120B/20B | 1,000,000 / 100,000 | 131,072 | 25,000 | 0 ms |
+| Qwen3.5 122B | 1,000,000 / 100,000 | 131,072 | 25,000 | 0 ms |
 | Llama 4 Maverick | 1,000,000 / 100,000 | 128,000 | 8,192 | 0 ms |
 | Llama 3.3/3.1 and Gemma 3 | 1,000,000 / 100,000 | 128,000 | 8,192 | 0 ms |
 
 : Lab defaults for Databricks-hosted models {#tbl-databricks-oaicopilot-defaults}
 
-Use `openai-responses` for any endpoint that the current catalog marks as
-requiring the Responses API,
+The ITPM / OTPM column is the Enterprise-tier pay-per-token limit from
+the Databricks limits page [@databricks_fmapi_limits],
+and the endpoint names are from the model catalog
+[@databricks_supported_models],
+both measured 2026-09-09.
+The endpoint ids for the rows added on that date are
+`databricks-gpt-6-astra`,
+`databricks-glm-5-3`, `databricks-glm-5-3-flash`, `databricks-glm-5-2`,
+`databricks-grok-4-6`, `databricks-kimi-k3`,
+`databricks-deepseek-v4-flash-0731`, `databricks-deepseek-v4-pro-0813`,
+and `databricks-qwen35-122b-a10b`.
+The context column is a quota-derived working value,
+not a provider window.
+The catalog gives 1 million tokens of context for GLM, Kimi K3, and Inkling,
+and no window at all for either DeepSeek endpoint (measured 2026-09-09);
+on a 200,000 ITPM tier a 1 million-token `context_length` overruns
+every budget in @tbl-databricks-itpm-pacing.
+Qwen3.5's 256K window and 25K output cap (measured 2026-09-09)
+sit on the 1,000,000 tier,
+so its row copies the GPT OSS values,
+and its 25,000 output cap is the provider figure,
+which that tier's 100,000 OTPM admits.
+`databricks-inkling` is a real catalog endpoint,
+listed under Thinking Machine Labs as a Public Preview model
+that always reasons (measured 2026-09-09),
+so its row documents a live deployment rather than a local alias.
+The output cap is a per-request ceiling that most turns never reach,
+which is why the 20,000 OTPM rows carry a 16,000 cap
+at four requests per minute.
+A 4,000 OTPM tier has no such slack:
+DeepSeek V4 Pro's 2,000 cap and 30,000 ms delay keep two requests
+inside the allowance,
+and 2,000 tokens is too little for an agent-mode edit,
+so treat that row as a chat-only default
+and prefer DeepSeek V4 Flash for agent work.
+
+Use `openai-responses` for the endpoints named in the wiring section above,
 and `openai` for the rest.
-Checked 2026-08-26,
-the catalog gives that instruction for GPT-5.5 Pro, GPT-5.5, and GPT-5.3 Codex.
-Read the catalog rather than the list,
+Read the catalog rather than that list,
 since an endpoint can change API mode without any model being added.
 Add the `delay` value to each affected model entry.
 The extension applies this model-specific pause between requests;
