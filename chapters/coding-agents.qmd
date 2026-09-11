@@ -117,6 +117,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/small-local-models-agentic.qmd >}}
 
+# VoltAgent: TypeScript Agent Framework {#sec-ai-voltagent}
+
+{{< include ai-tools/voltagent.qmd >}}
+
 # Configuring GitHub Copilot Settings {#sec-ai-copilot-settings}
 
 {{< include ai-tools/copilot-settings.qmd >}}
@@ -185,6 +189,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/gemini-code-assist-review.qmd >}}
 
+# PR-Agent: Open-Source Pull-Request Review Bot {#sec-ai-pr-agent}
+
+{{< include ai-tools/pr-agent.qmd >}}
+
 # How a Session Learns a PR Changed {#sec-ai-pr-activity-notifications}
 
 {{< include ai-tools/pr-activity-notifications.qmd >}}
@@ -201,6 +209,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/editing-with-docx-files.qmd >}}
 
+# Hosted AI Agent Offices: Vestra and Similar {#sec-ai-agent-offices}
+
+{{< include ai-tools/ai-agent-offices.qmd >}}
+
 # Copilot Instructions for this Repository
 
 {{< include ai-tools/copilot-instructions-explanation.qmd >}}
@@ -216,6 +228,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 # Agent Sessions and Handoff in Visual Studio Code {#sec-ai-vscode-agent-sessions}
 
 {{< include ai-tools/vscode-agent-sessions.qmd >}}
+
+# Herdr: A Terminal Multiplexer for Coding Agents {#sec-ai-herdr}
+
+{{< include ai-tools/herdr.qmd >}}
 
 # Installing Claude Code on Windows {#sec-ai-claude-code-windows}
 
@@ -260,6 +276,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 # Collaborative AI Workspaces: Claude Cowork and Gemini Spark {#sec-ai-collaborative-workspaces}
 
 {{< include ai-tools/collaborative-workspaces.qmd >}}
+
+# AI-Enabled Knowledge Workspaces: Notion and Alternatives {#sec-ai-knowledge-workspaces}
+
+{{< include ai-tools/ai-knowledge-workspaces.qmd >}}
 
 # References {.unnumbered}
 
