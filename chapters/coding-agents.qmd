@@ -97,6 +97,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/agents-best-practices.qmd >}}
 
+# Citadel and Levels of Claude Code Use {#sec-ai-citadel-and-maturity-levels}
+
+{{< include ai-tools/citadel-and-maturity-levels.qmd >}}
+
 # Firewall and Network Configuration {#sec-ai-firewall}
 
 {{< include ai-tools/agents-firewall-config.qmd >}}

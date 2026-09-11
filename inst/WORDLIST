@@ -19,6 +19,7 @@ Anytype
 Anytype's
 Apache
 Apikey
+Archon
 Armin
 ArtificialInteligence
 Asimov
@@ -93,6 +94,7 @@ Daytona
 DeepSeek
 DeepSeek-R1
 DeepSeekMath
+Dependabot
 DevOps
 Devin
 Devstral
@@ -498,12 +500,14 @@ honouring
 honours
 hotspot
 iMessage
+inspectable
 installable
 instantiation
 integrations
 invariants
 io
 iteratively
+journaled
 js
 keyless
 launchd
@@ -582,6 +586,7 @@ rebase
 rebrand
 rebranded
 rebranding
+recoverability
 reflow
 refspec
 renderer
@@ -605,6 +610,7 @@ roxygen
 rsync
 rulesets
 runnable
+runtime's
 sandboxed
 sandboxing
 schemas
