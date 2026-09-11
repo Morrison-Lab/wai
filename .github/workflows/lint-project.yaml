@@ -33,3 +33,6 @@ jobs:
 
       - name: Run .github/scripts unit tests
         run: python3 -m unittest discover -s .github/scripts
+
+      - name: Run scripts unit tests
+        run: python3 -m unittest discover -s scripts
