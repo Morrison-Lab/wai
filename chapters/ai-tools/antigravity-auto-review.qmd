@@ -1,0 +1,91 @@
+Issue #109 asked whether Google Antigravity has an auto-review mode,
+prompted by a Reddit thread in the `r/google_antigravity` community.
+Reddit refuses requests from the machines this site is built on,
+so the thread itself could not be read (measured 2026-09-10);
+this section answers the question from the product's own documentation instead
+and says where the lab's practice fills the gap.
+
+#### What the product offers
+
+Antigravity has two things that look like review, and neither is an automatic review of your code.
+
+- **Artifact review** is a gate on the agent's own plans.
+  The Artifact Review Policy setting, in the Agent tab of the Settings pane,
+  offers "Request Review (Recommended)",
+  which pauses the agent and waits for you to approve its implementation plan or diff,
+  and "Always Proceed",
+  which skips the pause and lets the agent run without manual verification
+  [@antigravity_docs_artifact_review].
+  Neither option makes a reviewer read the change:
+  one asks a human to, and the other asks nobody to.
+- **Review Changes** is a diff pane.
+  Once the agent starts writing code,
+  a Review Changes button in the Agent panel's bottom toolbar
+  opens a pane where you scroll through every change made in the conversation
+  and leave comments on file diffs for the agent to act on
+  [@antigravity_docs_review_changes].
+  The documentation describes it as a human reading the agent's work,
+  not the agent reviewing its own.
+
+So the direct answer is no:
+as documented on 2026-09-10,
+Antigravity ships human-in-the-loop review of what the agent did,
+and an "always proceed" switch that removes even that.
+An automatic second opinion on a pull request has to be built.
+
+#### Building one with the Antigravity SDK
+
+Google's own example is a GitHub Actions workflow
+that runs an Antigravity agent as an adversarial pull-request reviewer
+[@samborski_antigravity_pr_reviewer].
+It triggers on pull-request `opened` and `reopened` events,
+and on an `@agy /review` comment for manual runs;
+it uses the `run-agy-sdk` composite action with a managed agent
+whose system instructions cast it as a code auditor;
+it runs on the Actions runner itself,
+where the SDK can start Docker-based MCP servers for file access and PR commenting;
+and it deliberately limits the agent to reading files and posting comments,
+with reviews restricted to maintainers on non-fork pull requests.
+That is the same shape as the Claude Code Action review in @sec-ai-claude-code-action-review
+and the Gemini review action in @sec-ai-gemini-review-action:
+review is a CI job that a PR event starts,
+not a mode inside the editor.
+
+#### What the lab does
+
+The lab already built this once.
+`Morrison-Lab/ai-config` carries an `agy-review-workflow` skill
+and a reusable `antigravity-code-review.yml` workflow in `Morrison-Lab/gha`
+that posted a review, a security audit, and a set of generated tests on every pull request.
+That route ran on prepaid API credits,
+and it was retired on 2026-08-20 after a dispatched run ended with the credits depleted;
+the skill now documents itself as history and points cross-vendor second opinions at Codex instead
+(see @sec-ai-codex-github-review).
+
+The Antigravity command-line program, `agy`, is a separate lane and still works.
+Its headless form, `agy --print "<prompt>"`,
+answers a single prompt on standard output under the subscription's own quota
+(measured 2026-09-09).
+Quote the prompt so the shell passes it as one argument,
+and put it directly after `--print`:
+on this machine, placing another flag between the two
+made `agy` treat that flag as the prompt.
+The lab uses it as a local adversarial reviewer before a push:
+pipe the branch diff into a prompt that asks for factual errors, unsupported claims,
+broken cross-references, and style violations,
+and ends with a one-word verdict.
+Because `agy --print` cannot read files or the network in that mode,
+the diff has to be pasted into the prompt text itself.
+That is a pre-push check, not a PR bot,
+so the PR-side review stays with the Claude and Copilot reviewers the repositories already run.
+
+#### Useful to us? Yes, as a local second opinion
+
+- **Use** `agy --print` for a cheap, cross-vendor pre-push review
+  when Claude quota is the scarce resource,
+  which was the situation on 2026-09-09.
+- **Do not** re-enable the API-credit workflow;
+  it costs money the lab has stopped budgeting for,
+  and a dispatch that fails leaves a red check no reviewer can clear.
+- **Do not** read "Always Proceed" as an auto-review mode.
+  It is the opposite: it removes the only review step the editor has.

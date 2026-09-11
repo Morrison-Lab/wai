@@ -197,6 +197,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/gemini-review-action.qmd >}}
 
+# Auto-Review in Google Antigravity {#sec-ai-antigravity-auto-review}
+
+{{< include ai-tools/antigravity-auto-review.qmd >}}
+
 # Gemini Code Assist for Repository Code Review {#sec-ai-gemini-code-assist-review}
 
 {{< include ai-tools/gemini-code-assist-review.qmd >}}
