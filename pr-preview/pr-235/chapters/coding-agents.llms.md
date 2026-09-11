@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-10 01:38:25 (PDT)
+Last modified: 2026-09-10 20:26:17 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -63,15 +63,34 @@ The following catalog is a starting point rather than an endorsement:
 |----|----|----|
 | [GitHub Copilot coding agent](https://github.com/features/copilot/agents) | GitHub issues and pull requests | Assign an issue; review the resulting pull request |
 | [OpenAI Codex](https://openai.com/codex/) | Cloud tasks, app, and command line | Delegate a task in an isolated environment or work locally |
-| [Google Jules](https://jules.google.com/) | Cloud coding agent | Connect a repository and review the proposed changes |
+| [Google Jules](https://jules.google.com/) ([Google 2026f](#ref-jules_docs)) | Cloud coding agent | Connect a repository and review the proposed changes |
 | [Google Antigravity](https://antigravity.google/) | Agentic development platform | Coordinate coding tasks in a managed development workspace |
 | [Claude Code](https://www.anthropic.com/claude-code) | Terminal, IDE, and cloud | Work interactively or delegate work that returns a pull request |
 | [Gemini CLI](https://github.com/google-gemini/gemini-cli) | Command line | Inspect, edit, and test the current local checkout |
-| [Cursor](https://www.cursor.com/) | IDE | Edit interactively with path-scoped `.cursor/rules` context |
+| [Cursor](https://www.cursor.com/) ([Cursor 2026](#ref-cursor_cloud_agents)) | IDE and cloud agents | Edit interactively with path-scoped `.cursor/rules` context, or hand a task to a cloud agent that pushes a branch |
 | [Aider](https://aider.chat/) | Command line | Pair locally with explicit files and Git commits |
 | [GitKraken Kepler](https://gitkraken.com/kepler) | Agentic development environment (desktop) | Start a Task from an issue, PR, or idea; run multiple agents in parallel isolated worktrees via reusable Actions; review per-branch diffs and open PRs |
+| [OpenCode](https://opencode.ai) ([OpenCode 2026a](#ref-opencode_docs)) | Terminal, desktop app, and IDE extension | Bring your own model provider (including local endpoints; see [Section 27](#sec-ai-opencode-ollama)) and edit the local checkout |
+| [Cline](https://cline.bot/) ([Cline 2026](#ref-cline_site)) | VS Code extension, CLI, and SDK | Plan, then act with per-step approval; bring your own key, including Ollama |
+| [Kiro](https://kiro.dev/) ([Amazon Web Services 2026](#ref-kiro_docs)) (AWS) | IDE, CLI, web, and mobile | Spec-driven tasks locally, or delegate a web task that opens a pull request |
+| [Warp](https://docs.warp.dev/) ([Warp 2026](#ref-warp_docs)) | Terminal app, standalone CLI, and cloud agents | Approve actions locally, or trigger cloud agents from Slack, Linear, or GitHub webhooks |
+| [OpenHands](https://docs.openhands.dev/) ([OpenHands 2026](#ref-openhands_docs)) | Browser client, managed cloud, self-hosted backend, and CLI | Run headless or hosted; self-host when code must stay on your infrastructure |
+| [Devin](https://devin.ai/) ([Cognition 2026](#ref-devin_docs)) (Cognition) | Cloud agent and desktop editor | Delegate a task to an isolated cloud machine and review the pull request (see [Section 11](#sec-ai-harness-landscape)) |
+| [Ollama](https://ollama.com/) ([Ollama 2026](#ref-ollama_site)) | Local model runner (not an agent) | Serve open-weight models to any of the harnesses above (see [Section 4.0.0.2](#sec-ai-ollama-agents)) |
 
 Kepler is not an agent itself but an orchestration layer. It hosts agents you already use (Claude Code, Codex, Copilot, Cursor, OpenCode) rather than locking in one model, and builds on a decade of GitKraken plumbing for branches, worktrees, diffs, and merges. Where a single-agent platform handles one repo at a time, a Kepler Task can span many repos, and its Agent Graph visualizes every session, turn, tool call, and subagent live.
+
+#### Where the agent runs
+
+The platforms above sort into three execution models (measured 2026-09-09). The model decides where your code is copied, what the agent can reach, and how its work comes back to you.
+
+- **Hosted sandbox.** The vendor provisions an isolated machine, clones the repository into it, and returns a branch or pull request. Jules clones the repository into a virtual machine and submits a pull request after you approve its plan ([Google 2026f](#ref-jules_docs)); Cursor cloud agents clone from GitHub, GitLab, Azure DevOps, or Bitbucket, work on a separate branch, and push it back ([Cursor 2026](#ref-cursor_cloud_agents)); Kiro web tasks and Warp cloud agents follow the same shape ([Amazon Web Services 2026](#ref-kiro_docs); [Warp 2026](#ref-warp_docs)), as do the Copilot coding agent, Codex cloud tasks, Devin, and OpenHands Cloud. Nothing runs on your machine, so the questions are what the sandbox can reach and whether the vendor’s retention terms suit the repository.
+- **Local checkout.** The agent runs on your workstation against the files already there, in a terminal (Claude Code, Codex CLI, OpenCode, Aider, Gemini CLI, Warp) or inside an editor (Cursor, Cline, Kiro, Copilot in VS Code). Code stays put, and the agent inherits whatever credentials and network access your shell has, which is why [Section 22](#sec-ai-best-practices) asks for approval gates and a sandbox. Pairing one of these with Ollama keeps the model local too ([Ollama 2026](#ref-ollama_site)), at the cost of the hardware described in [Section 25](#sec-ai-offline).
+- **Orchestration layer.** Kepler, Kiro Crew, and the Cline Kanban surface do not add a model of their own; they run several of the agents above in parallel worktrees or sessions and present the results for review. Reach for one only once a single agent is no longer the bottleneck ([when orchestration helps](../chapters/agent-orchestration.llms.md#sec-orch-when)).
+
+Several vendors now ship all three, so the platform name alone no longer tells you where the code goes: Claude Code, Codex, Cursor, Kiro, and Warp each offer a local surface and a hosted one. Check the execution model of the specific surface you enable. The Windsurf editor is a naming trap of the same kind: `windsurf.com` now redirects to Devin Desktop, Cognition’s rebranding of that editor (measured 2026-09-09; see [Section 11](#sec-ai-harness-landscape)).
+
+For licensing, token-cost characteristics, and a decision table for choosing among these tools, see [Section 11](#sec-ai-harness-landscape); for the open-weight and fully local end of the spectrum, see [Section 4](#sec-ai-catalog-coding-agents).
 
 Before connecting any platform, check:
 
@@ -99,9 +118,9 @@ The coding agent ecosystem encompasses a spectrum of architectures ranging from 
 
 #### Local Coding Agents with Ollama
 
-For air-gapped environments, strict data privacy requirements, or zero-marginal-cost development, developers pair local model runners like **[Ollama](https://ollama.com/)** with dedicated agent harnesses (detailed setup and hardware sizing are covered in [Section 22](#sec-ai-offline)):
+For air-gapped environments, strict data privacy requirements, or zero-marginal-cost development, developers pair local model runners like **[Ollama](https://ollama.com/)** with dedicated agent harnesses (detailed setup and hardware sizing are covered in [Section 25](#sec-ai-offline)):
 
-- **Terminal Orchestrators**: Harnesses like **[Aider](https://aider.chat/)** and **[OpenHands](https://github.com/All-Hands-AI/OpenHands)** (formerly OpenDevin) connect directly to Ollama endpoints running open-weight coding models (such as `Qwen2.5-Coder`, `DeepSeek-Coder-V2`, or `Llama 3.3`), managing git commits, multi-file edits, and automated test-and-repair loops.
+- **Terminal Orchestrators**: Harnesses like **[OpenCode](https://opencode.ai)** (see [Section 27](#sec-ai-opencode-ollama)), **[Aider](https://aider.chat/)**, and **[OpenHands](https://github.com/All-Hands-AI/OpenHands)** (formerly OpenDevin) connect directly to Ollama endpoints running open-weight coding models (such as `Qwen2.5-Coder`, `DeepSeek-Coder-V2`, or `Llama 3.3`), managing git commits, multi-file edits, and automated test-and-repair loops.
 - **Editor Integrations**: Extensions such as **[Continue](https://www.continue.dev/)** and **[CodeCompanion](https://github.com/olimorris/codecompanion.nvim)** embed local Ollama models directly into VS Code, JetBrains IDEs, and Neovim, providing inline autocompletion and interactive chat without transmitting code to cloud APIs.
 
 #### Comparative Taxonomy of Coding Agent Architectures
@@ -122,7 +141,7 @@ The following table compares the primary paradigms across the coding agent lands
 When deciding between cloud frontier agents and local open-weight deployments:
 
 1.  **Complex Multi-File Refactoring**: Cloud frontier models (such as Claude Sonnet 4.5 or Gemini 3 Pro) currently maintain higher coherence across large, 50+ file refactors and architectural redesigns.
-2.  **Confidentiality and Compliance**: For proprietary codebases with strict regulatory constraints (HIPAA, defense, or sensitive enterprise IP), local agents powered by Ollama and Hermes Agent ensure that source code never leaves on-premises hardware (see [Section 22](#sec-ai-offline)).
+2.  **Confidentiality and Compliance**: For proprietary codebases with strict regulatory constraints (HIPAA, defense, or sensitive enterprise IP), local agents powered by Ollama and Hermes Agent ensure that source code never leaves on-premises hardware (see [Section 25](#sec-ai-offline)).
 3.  **Cost Predictability**: Local open-weight harnesses incur fixed hardware capital expense but zero marginal token costs, making them attractive for high-volume automated test-and-repair loops.
 
 # 5 What are AI harnesses?
@@ -134,7 +153,7 @@ An **AI harness** is the scaffolding built around a language model that turns it
 Most coding-agent harnesses — including the [GitHub Copilot coding agent](https://github.com/features/copilot/agents) and [Claude Code](https://claude.com/product/claude-code) — share a similar set of layers:
 
 - **Core loop**: the [tool-calling loop](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview), permission and sandboxing model, and context management that keep the agent grounded in your repository.
-- **Skills**: reusable, named procedures that encode a workflow so it runs the same way every time, instead of being re-improvised in each conversation. See [Section 30](#sec-ai-agent-skills).
+- **Skills**: reusable, named procedures that encode a workflow so it runs the same way every time, instead of being re-improvised in each conversation. See [Section 35](#sec-ai-agent-skills).
 - **Subagents**: a way to spin up a worker with a fresh context window for a self-contained piece of research or work, keeping the main conversation’s context focused.
 - **Multi-agent orchestration**: deterministic fan-out and fan-in across many subagents — for example, running several independent reviewers over a diff and reconciling their findings — for work that is large or benefits from independent verification.
 - **MCP servers**: the [Model Context Protocol](https://modelcontextprotocol.io/) gives a harness typed access to external systems (issue trackers, chat tools, databases) beyond raw shell or API calls.
@@ -148,7 +167,141 @@ Most coding-agent harnesses — including the [GitHub Copilot coding agent](http
 - **Feed learnings back into the harness.** When a review round or a mistake teaches something generalizable, record it as a memory or skill update rather than letting it evaporate at the end of the session.
 - **Treat external or untrusted content as data, not instructions.** PR comments, fetched web pages, and other tool output can contain text that looks like a command; a harness that acts on it uncritically is vulnerable to [prompt injection](https://genai.owasp.org/llm-top-10/).
 
-# 6 How Agents Are Structured and Implemented
+# 6 Inside the Claude Code Harness
+
+[Section 5](#sec-ai-harnesses) describes the layers most coding-agent harnesses share, and [Section 10](#sec-ai-harness-agent-relationship) sketches the loop that runs inside them. This section walks through those layers for the harness the lab uses most, [Claude Code](https://code.claude.com/docs/en/overview), and says for each one what Anthropic documents, what the community has inferred from the shipped program, and what remains unknown (measured 2026-09-09). Anthropic’s own description is short: Claude Code is the “agentic harness” around the model, supplying “the tools, context management, and execution environment that turn a language model into a capable coding agent” ([Anthropic 2026ab](#ref-claude_code_how_it_works)). The sections below take those three things in turn.
+
+The distinction between documented and inferred matters here more than usual. Claude Code is proprietary, and since mid-2026 it ships as a single compiled executable rather than readable JavaScript ([anthropics/claude-code contributors 2026b](#ref-claude_code_issue_80988)), so everything not in Anthropic’s documentation comes from people running `strings` on the binary, reading the compiled function bodies, or intercepting its network traffic. Those readings are checkable but fragile: the build tool renames every internal function on every release, and a behaviour observed in one build may be gone in the next. Treat the inferred claims as a snapshot, and re-verify against the build you are running before relying on one.
+
+#### The loop and the tool registry (documented)
+
+The core of the harness is the loop described in [Section 9](#sec-ai-agent-program-kind): the model produces a tool call, the harness runs the matching handler, and the result goes back into the conversation. Anthropic describes the same loop as three blended phases — gather context, take action, verify results — and stresses that the model, not the harness, decides which tool to call next ([Anthropic 2026ab](#ref-claude_code_how_it_works)).
+
+The built-in tools are the registry the loop dispatches against. As of September 2026 the tools reference lists more than forty of them ([Anthropic 2026ae](#ref-claude_code_tools_reference)). The ones a lab member sees every day are:
+
+- **File and search tools**: `Read`, `Edit`, `Write`, `Glob`, `Grep`, `NotebookEdit`, and `LSP` for language-server code intelligence.
+- **Execution tools**: `Bash`, `PowerShell`, and `Monitor`, which streams a background command’s output lines back to the model.
+- **Orchestration tools**: `Agent` (spawns a subagent), `Skill` (runs a skill), `SendMessage` and `ListAgents` (agent teams), the `Task*` family (a session task list), `CronCreate` and `ScheduleWakeup` (timers), and `ToolSearch` (loads deferred tool schemas on demand).
+- **Interaction tools**: `AskUserQuestion`, `EnterPlanMode` and `ExitPlanMode`, `EnterWorktree` and `ExitWorktree`, `Artifact`, and `SendUserFile`.
+
+Each tool is a schema the model sees plus a handler it does not, exactly as [Section 8](#sec-ai-harness-construction) describes. The tool names double as the vocabulary of the permission system, hook matchers, and subagent tool lists, so a rule written as `Bash(git *)` refers to the same `Bash` entry the model calls ([Anthropic 2026ae](#ref-claude_code_tools_reference)). MCP servers (below) extend this registry without changing its shape.
+
+#### The system prompt: what is public and what is not
+
+Anthropic does not publish Claude Code’s system prompt. What the documentation does describe is the *startup context*: everything already in the model’s window before you type a word. The context-window page walks through it in order ([Anthropic 2026z](#ref-claude_code_context_window)):
+
+- the system prompt itself, including an output style and any `--append-system-prompt` text, which “both go into the system prompt the same way”;
+- an environment block (working directory, platform, shell, whether this is a git repository), with git branch, status, and recent commits loaded “as a separate block at the very end of the system prompt”;
+- MCP tool *names*, with their full schemas deferred until `ToolSearch` loads them;
+- one-line skill descriptions, so the model knows what it can invoke;
+- your `CLAUDE.md` files and the first 200 lines of auto memory.
+
+One documented detail changes how the rest of this section reads: `CLAUDE.md` content “is delivered as a user message after the system prompt, not as part of the system prompt itself” ([Anthropic 2026ac](#ref-claude_code_memory)). So the layered picture is harness-authored system prompt first, then your instructions, then the conversation. The same page is candid that the harness “treats them as context, not enforced configuration”: a `CLAUDE.md` instruction is prose the model may weigh against other prose, and anything that must hold regardless goes in a permission rule or a hook.
+
+Three documented levers reach the system prompt directly ([Anthropic 2026x](#ref-claude_code_env_vars)):
+
+- `--append-system-prompt` adds text to it for one invocation.
+- `CLAUDE_CODE_SIMPLE_SYSTEM_PROMPT=1` requests “a shorter system prompt and abbreviated tool descriptions”, and `0` opts out “even on models where the experiment or server configuration would otherwise enable it” — the documentation’s own acknowledgment that the prompt varies by model and by server-side configuration.
+- `--bare` (equivalently `CLAUDE_CODE_SIMPLE=1`) runs “with a minimal system prompt and only the Bash, file read, and file edit tools”, and disables discovery of hooks, skills, subagents, plugins, MCP servers, auto memory, and `CLAUDE.md`. It is a stripped harness, not a stripped prompt, which is why it is the wrong fix for the problem described next.
+
+What the community has inferred is the prompt’s internal structure. Binary analysis reported in the Claude Code issue tracker shows the prompt assembled from named sections, each behind a function that returns text or `null`, with names such as `anti_verbosity`, `thinking_guidance`, `action_caution`, `delivering_work_max`, `overcorrection`, `subagent_steer_delegation`, `heron_brook`, and `autonomy_append` ([anthropics/claude-code contributors 2026a](#ref-claude_code_issue_62061), [2026b](#ref-claude_code_issue_80988)). Some sections are gated on a *model capability* declared in an internal model registry (the reported gate for Opus 5 is a capability string `opus_5_prompt_bundle`), some on a remote feature flag, and some on both. One analyst counted roughly 23 sections in a mid-2026 build, with user memory rendered around eighth and `heron_brook` second-to-last ([anthropics/claude-code contributors 2026b](#ref-claude_code_issue_80988)). None of this is documented, the counts and names are build-specific, and the section order is one person’s inference from the compiled code — so the safe statement is that the system prompt is *modular and conditional*, not that any particular section exists on your machine today.
+
+#### Hard-coded instructions, remote flags, and `heron_brook`
+
+`heron_brook` is not a feature. It is the internal name of one system-prompt section, and its story is the clearest public window into how the harness’s prompt is controlled. The name follows the pattern of every Claude Code feature flag: a `tengu_` prefix (the product’s internal code name, per one community catalog of the binary’s strings ([wtfwhs 2026](#ref-tengu_decoded))) followed by an auto-generated `adjective_noun` pair that carries no meaning of its own. `tengu_fennel_godwit`, mentioned below, is the same kind of name. Anthropic’s only public statement touching the section is the short reply quoted below.
+
+**May 2026: the slot appears.** Claude Code 2.1.150 shipped with a changelog entry reading, in full, “Internal infrastructure improvements (no user-facing changes)” ([Anthropic 2026n](#ref-claude_code_changelog)). Within days a user reported that the build added a function reading a string from two network-backed sources — the `client_data` field of the `/api/claude_cli/bootstrap` response, and a GrowthBook feature flag named `tengu_heron_brook` that refreshes every 60 seconds — and inserting it verbatim as a system-prompt section ([anthropics/claude-code contributors 2026a](#ref-claude_code_issue_62061)). The same finding reached Hacker News under the title “Claude Code now allows Anthropic to remotely inject system prompts” ([matheusmoreira 2026](#ref-hn_claude_code_remote_prompts)). An Anthropic engineer replied on the issue that the company “sometimes run\[s\] experiments on changes to our system prompt so that we can evaluate how a change impacts quality before fully rolling it out”, that users can opt out with `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1` and `DISABLE_GROWTHBOOK=1`, and that Claude Code should not be used through an untrusted proxy ([anthropics/claude-code contributors 2026a](#ref-claude_code_issue_62061)). The issue was closed. A separate HackerOne report on the same channel was closed as *Informative*, with Anthropic’s security team stating that TLS is the integrity boundary and no response signing is planned ([cnighswonger 2026](#ref-cache_fix_heron_brook_disclosure)). An independent catalog of the binary’s strings describes the section the same way: “a server-controlled prompt-injection slot” ([wtfwhs 2026](#ref-tengu_decoded)).
+
+**July 2026: the slot gets a hard-coded default.** Claude Code 2.1.219 was the release that added Opus 5 ([Anthropic 2026n](#ref-claude_code_changelog)). Users on that model noticed their sessions had stopped delegating to subagents, and the model, when asked, quoted two lines it said it had been given:
+
+> Do not call the `AgentTool` unless the user requested it Do not use workflows or deep-research unless the user requested it
+
+The canonical report ([anthropics/claude-code contributors 2026b](#ref-claude_code_issue_80988)) traced the lines to a constant compiled into the binary, served as the *fallback* text of the `heron_brook` section when neither the bootstrap response nor the GrowthBook flag supplies a string. The reported gate has two parts: the section fires only for models whose registry entry carries the `opus_5_prompt_bundle` capability (in the builds examined, only `claude-opus-5`, not the Fable, Sonnet, or Haiku families), and only while a kill-switch flag, `tengu_fennel_godwit`, is false, which is its default. A thread in the r/ClaudeCode community on Reddit carried the finding to a wider audience ([r/ClaudeCode 2026](#ref-reddit_claude_code_hardcoded_instruction)). (Reddit blocks unauthenticated fetches, so the thread is cited by title only.)
+
+Four consequences are reported across that issue and its siblings:
+
+- **It overrides user configuration silently.** Users whose `CLAUDE.md` *requires* delegation — including several with mandatory review-by-subagent gates — saw zero subagent dispatches for whole sessions, and one fleet operator measured Opus 5 sessions taking 2.5 times as many assistant turns as Opus 4.8 on the same work, which they attributed to serial work that had previously fanned out ([anthropics/claude-code contributors 2026b](#ref-claude_code_issue_80988)). The documentation says delegation is driven by each subagent’s `description` ([Anthropic 2026u](#ref-claude_code_subagents)); a separate report argues the directive contradicts that documented behaviour ([anthropics/claude-code contributors 2026e](#ref-claude_code_issue_82456)).
+- **The model attributes the line to you.** Because the section arrives in the same voice as everything else, and because `CLAUDE.md` is a *user* message that appears earlier, the model reads “unless the user requested it” as the user’s own standing rule and tells users their configuration forbids delegation when it says the opposite ([anthropics/claude-code contributors 2026d](#ref-claude_code_issue_87635)). A related report frames the underlying gap: there is no defined precedence between an Anthropic-authored prompt section and a user-authored `CLAUDE.md`, and no way to observe from inside a session which sections are active ([anthropics/claude-code contributors 2026c](#ref-claude_code_issue_80998)).
+- **The documented opt-outs do not reach it.** `DISABLE_GROWTHBOOK=1` disables flag *fetching*, so every flag takes its code default ([Anthropic 2026x](#ref-claude_code_env_vars)) — and the kill switch’s default is off, so blocking the flag source guarantees the hard-coded text is used. `--bare` removes the `Agent` tool along with the prompt section. Six sibling sections in the same Opus 5 bundle reportedly have dedicated `CLAUDE_CODE_*` environment variables; `heron_brook` and its kill switch do not ([anthropics/claude-code contributors 2026b](#ref-claude_code_issue_80988)). Session transcripts under `~/.claude/projects/` do not record the system prompt, so the injection leaves no trace to search for afterwards.
+- **It persisted.** Comments on the issue confirm the same constant, gate, and behaviour in every build examined from 2.1.219 through at least 2.1.245 (2026-08-26), across macOS, Windows, and Linux, with no maintainer response on the thread ([anthropics/claude-code contributors 2026b](#ref-claude_code_issue_80988)).
+
+What is documented, and what is not, about `heron_brook` as of 2026-09-09:
+
+| Claim | Status |
+|----|----|
+| Anthropic runs server-side system-prompt experiments and offers two environment variables to opt out of flag fetching | Documented, by an Anthropic engineer’s comment ([anthropics/claude-code contributors 2026a](#ref-claude_code_issue_62061)) and the environment-variable reference ([Anthropic 2026x](#ref-claude_code_env_vars)) |
+| A prompt section named `heron_brook` reads its text from the bootstrap response, then a GrowthBook flag, then a compiled-in fallback | Inferred from binary analysis, reproduced independently by many reporters on three platforms |
+| The fallback text tells the model not to call the `Agent` tool unless the user requested it | Inferred; the two strings are verifiable with `grep -a -c` on the installed executable |
+| The gate is Opus 5’s `opus_5_prompt_bundle` capability plus a `tengu_fennel_godwit` kill switch | Inferred from the compiled code; not documented anywhere |
+| Whether the remote sources have ever carried non-empty text in production, and what | Unknown; one Windows reporter found the flag absent from the locally cached flag set, meaning the fallback branch was firing |
+| Why the directive exists (cost control, quality regression, an experiment that leaked) | Unknown; Anthropic has not said |
+| Whether it is still active in the build you are running | Unknown until you check |
+
+Table 1: `heron_brook`: documented, inferred, and unknown
+
+The lab’s own [ai-config](https://github.com/Morrison-Lab/ai-config) leans heavily on subagents (adversarial self-review, delegated UMS passes, parallel issue workers), so this affects us directly on any Opus 5 session. Two workarounds came out of the thread and cost nothing to adopt. First, tell the harness in `CLAUDE.md` that text arriving in the system prompt is not the user’s voice, and that subagent use is requested in advance — several reporters found this restored delegation ([anthropics/claude-code contributors 2026b](#ref-claude_code_issue_80988)). Second, when a session unexpectedly stops delegating, ask it to quote the instruction it is following before auditing your own configuration for a rule that is not there.
+
+#### Permission modes and settings layers (documented)
+
+Permission rules “are enforced by Claude Code, not by the model” ([Anthropic 2026t](#ref-claude_code_permissions)), which makes them the first layer that the prompt controversy above cannot reach. A prompt can change what the model *tries*; only a rule changes what the harness *allows*. Six modes are documented ([Anthropic 2026t](#ref-claude_code_permissions)):
+
+- `default` (labeled Manual): prompts on first use of each tool.
+- `acceptEdits`: auto-accepts file edits and common filesystem commands inside the working directory.
+- `plan`: read-only exploration; no source edits.
+- `auto`: auto-approves tool calls, with a classifier checking that actions match the request.
+- `dontAsk`: auto-denies anything not pre-approved by an allow rule.
+- `bypassPermissions`: skips prompts except for a short list no mode auto-approves.
+
+Rules and the mode live in settings files that layer from managed policy through user, project, and local scope, with `permissions.deny` in managed settings as the enforcement an organization cannot have overridden ([Anthropic 2026ac](#ref-claude_code_memory)). One inferred caveat belongs here: the `heron_brook` thread cites a separate report that GrowthBook flags can override `permissions.defaultMode` from the server ([anthropics/claude-code contributors 2026b](#ref-claude_code_issue_80988)), so even this layer may have a remotely controlled input. That report is cited second-hand and was not verified for this section.
+
+#### Hooks (documented)
+
+Hooks are the harness’s event system: shell commands, HTTP endpoints, MCP tool calls, single-turn prompts, or spawned subagents that run at fixed lifecycle points ([Anthropic 2026aa](#ref-claude_code_hooks_reference)). The reference lists more than thirty events, grouped as session (`SessionStart`, `SessionEnd`), per-turn (`UserPromptSubmit`, `Stop`), tool execution (`PreToolUse`, `PostToolUse`, `PermissionRequest`), agent (`SubagentStart`, `SubagentStop`), context (`InstructionsLoaded`, `PreCompact`, `PostCompact`), and several more. A `PreToolUse` hook that exits with code 2 blocks the call, and a hook’s JSON output can deny, add context, or rewrite the tool’s input. This is the mechanism [Section 41](#sec-ai-customization) calls “the part the model cannot talk its way around”, and it is the right home for any rule that must hold regardless of what the prompt says — including a rule that the prompt itself has been told to contradict. `InstructionsLoaded` is also the only documented way to log exactly which instruction files a session loaded and when ([Anthropic 2026ac](#ref-claude_code_memory)).
+
+#### Subagents (documented)
+
+The `Agent` tool spawns a subagent: a fresh instance of the same loop with its own context window, its own system prompt, a restricted tool list, and independent permissions ([Anthropic 2026u](#ref-claude_code_subagents)). Built-in subagents include `Explore` and `Plan` (read-only; they skip `CLAUDE.md` and git status to stay cheap) and `general-purpose`; custom ones are markdown files with front matter in `.claude/agents/` or `~/.claude/agents/`, as [Section 8](#sec-ai-harness-construction) illustrates, and plugins can ship more. The harness watches those directories and picks up edits without a restart. Delegation is documented as description-driven: “Claude uses each subagent’s description to decide when to delegate tasks”, and the combined descriptions are capped at 15,000 tokens before a startup warning ([Anthropic 2026u](#ref-claude_code_subagents)). Delegation can be removed entirely by denying the `Agent` tool in `permissions.deny`. That is the documented, user-controlled way to stop subagent use; `heron_brook` is the undocumented, server-controlled one.
+
+#### Skills and plugins (documented)
+
+A skill is a `SKILL.md` with front matter and a body, run through the built-in `Skill` tool rather than as a tool of its own ([Anthropic 2026ae](#ref-claude_code_tools_reference)). Only skill *descriptions* sit in the startup context; the body loads when the skill is invoked, and a skill marked `disable-model-invocation: true` stays out of context entirely until you type its slash command ([Anthropic 2026z](#ref-claude_code_context_window)). [Section 35](#sec-ai-agent-skills) covers the format. A plugin bundles skills, agents, hooks, MCP and LSP server configurations, background monitors, and default settings into one directory with a `.claude-plugin/plugin.json` manifest, namespaces its skills as `/plugin-name:skill`, and can be loaded from a marketplace, from a local path with `--plugin-dir`, or from the user’s skills directory ([Anthropic 2026v](#ref-claude_code_plugins)). [Section 66](#sec-ai-plugins-deep-dive) dissects the bundle, and [Section 42](#sec-ai-config-install) describes how the lab’s own plugin reaches a machine.
+
+#### MCP servers (documented)
+
+An MCP server adds tools to the registry without changing the loop. By default the harness lists only the server’s tool *names* at startup and defers the full schemas, loading each on demand through `ToolSearch`; `ENABLE_TOOL_SEARCH=false` loads everything up front ([Anthropic 2026z](#ref-claude_code_context_window)). That deferral is why a session can carry dozens of servers without paying their schema cost on every turn. Two dedicated tools, `ListMcpResourcesTool` and `ReadMcpResourceTool`, expose server resources as well as tools ([Anthropic 2026ae](#ref-claude_code_tools_reference)). [Section 62](#sec-ai-mcp-server-setup) covers registration and its failure modes.
+
+#### Memory and `CLAUDE.md` loading (documented)
+
+Two mechanisms carry knowledge across sessions ([Anthropic 2026ac](#ref-claude_code_memory)):
+
+- **`CLAUDE.md` files**, loaded in a fixed order: managed policy, then `~/.claude/CLAUDE.md`, then every `CLAUDE.md` and `CLAUDE.local.md` from the filesystem root down to the working directory, concatenated rather than overriding each other. Files in subdirectories load on demand when the model reads files there. `@path` imports expand at launch to a depth of four, `.claude/rules/*.md` files load alongside, with `paths:` front matter scoping a rule to matching files, and block-level HTML comments are stripped before injection. A file over `4 MiB` is skipped.
+- **Auto memory**, notes the model writes itself under `~/.claude/projects/<project>/memory/`, of which the first 200 lines or 25 KB of `MEMORY.md` load every session and topic files load on demand.
+
+`/context` shows which files actually loaded, and `/memory` opens them. The “delivered as a user message” detail above applies to all of it.
+
+#### Compaction (documented)
+
+When the context window nears its limit, the harness summarizes the conversation and replaces it; `/compact` does the same on demand, optionally with a focus instruction, and `/autocompact <tokens>` moves the threshold ([Anthropic 2026z](#ref-claude_code_context_window)). What survives is specific:
+
+- the system prompt and output style are unchanged, because they were never in message history;
+- project-root `CLAUDE.md`, rules without a `paths:` field, auto memory, and a plan-mode plan are re-injected from disk;
+- path-scoped rules and nested `CLAUDE.md` files reload only as matching files are read again;
+- up to five recently modified files are re-read;
+- invoked skill bodies are re-injected, capped at 5,000 tokens each and 25,000 total;
+- context that hooks added earlier is summarized away, unless a `SessionStart` hook matching the `compact` source re-adds it;
+- the skill *listing* is not reloaded ([Anthropic 2026z](#ref-claude_code_context_window)).
+
+The lab’s `compress-session` practice exists because the automatic summary guesses what matters; running `/compact` with a focus before it triggers keeps that choice with you.
+
+#### The Agent SDK relationship (documented)
+
+The Claude Agent SDK “gives you the same tools, agent loop, and context management that power Claude Code, programmable in Python and TypeScript” ([Anthropic 2026a](#ref-claude_agent_sdk_overview)). It is the harness as a library: built-in tools, hooks, subagents, MCP, permissions, sessions, skills, memory, and plugins are all listed as SDK capabilities, and it loads `.claude/` and `~/.claude/` configuration “same as Claude Code”. Anthropic distinguishes it from the Client SDK (raw API access, where you write the loop yourself), from the CLI (interactive use), and from Managed Agents (a hosted product where Anthropic runs the sandbox). Other languages drive the same loop by running the CLI as a subprocess with `-p` and `--output-format json` ([Anthropic 2026a](#ref-claude_agent_sdk_overview)). The corollary for this section is that everything above, including the modular and conditional system prompt, is what an SDK-built agent inherits. The SDK documents a way to replace or extend the system prompt, which is the supported route where the CLI offers only `--append-system-prompt`.
+
+#### Summary: what you can and cannot see
+
+Claude Code’s execution engine, tool registry, permission system, hooks, subagents, skills, plugins, MCP integration, memory loading, compaction, and SDK surface are all documented in detail, and the documentation is unusually precise about what loads when. The one layer it does not describe is the system prompt, and the `heron_brook` episode shows that layer is modular, model-gated, and partly remote-controlled, with no in-session way to observe which parts are active. The practical rule for the lab follows from the documentation’s own advice: anything that must hold goes in a permission rule or a hook, which the harness enforces, not in `CLAUDE.md`, which the model weighs against text you cannot see.
+
+# 7 How Agents Are Structured and Implemented
 
 An **agent** is not part of the harness itself. It is a configuration — a goal, a role, a bounded toolset, and a stopping condition — executed on top of the harness’s core loop (see [Section 5](#sec-ai-harnesses)). A single harness can host many different agents at once: a main conversation, and any number of subagents it spawns.
 
@@ -178,7 +331,7 @@ Agents can spawn agents: an orchestration layer runs many agent instances, some 
 - **Isolation versus continuation**: a subagent gets no inherited context (isolation); a resumed agent keeps its own accumulated history and continues it (continuation). Both use the same loop machinery, differing only in history-management policy.
 - **Free-form versus structured output**: by default an agent returns prose. Given a schema, it is forced to call a structured-output tool instead, turning it into a typed function from the caller’s point of view — input in, validated object out — even though internally it is still a multi-turn loop.
 
-# 7 How Harnesses and Agents Are Built
+# 8 How Harnesses and Agents Are Built
 
 The layers described above are not all built the same way. Some are ordinary software; others are just text files the harness reads at runtime.
 
@@ -216,7 +369,7 @@ Multi-agent orchestration cannot be expressed declaratively, because it needs ge
 
 Files like this manual, or a repository’s `CLAUDE.md`/[`AGENTS.md`](https://agents.md/), carry no front matter and no schema. They are concatenated into the system prompt as plain text, and the harness trusts the model to read and follow that prose, the same way it follows any other instruction in its context.
 
-# 8 What Kind of Program Is an Agent?
+# 9 What Kind of Program Is an Agent?
 
 An agent is not a standalone program that does the reasoning itself. It is an **[orchestration](https://en.wikipedia.org/wiki/Orchestration_(computing))** program: something closer in shape to a chat client or a build tool than to a compiler or a web server.
 
@@ -254,7 +407,7 @@ Because most production coding-agent harnesses are closed source, the clearest w
 - **[SWE-agent](https://github.com/SWE-agent/SWE-agent)** — a research coding-agent harness from Princeton NLP, described in its associated paper.
 - **[OpenHands](https://github.com/OpenHands/OpenHands)** (formerly OpenDevin) — a general-purpose open-source agent platform.
 
-Their orchestration code runs to thousands of lines, because that is where the real engineering lives: retries, streaming, permission checks, and state management. A single *agent definition* running on top of that engine, by contrast, is typically tens of lines (see [Section 7](#sec-ai-harness-construction)).
+Their orchestration code runs to thousands of lines, because that is where the real engineering lives: retries, streaming, permission checks, and state management. A single *agent definition* running on top of that engine, by contrast, is typically tens of lines (see [Section 8](#sec-ai-harness-construction)).
 
 #### Where It Runs
 
@@ -264,17 +417,17 @@ Their orchestration code runs to thousands of lines, because that is where the r
 
 So an agent’s lifetime is scoped to a single task, not persistent: it starts when given a goal, runs for as long as its loop keeps producing tool calls, and ends the moment a stopping condition fires.
 
-# 9 How Does a Harness Relate to an Agent?
+# 10 How Does a Harness Relate to an Agent?
 
 The relationship between a harness and an agent is closer to an **[interpreter](https://en.wikipedia.org/wiki/Interpreter_(computing))** running a program than to two peers calling each other.
 
 #### Does the Harness Call the Agent, or the Agent Call the Harness?
 
-**Harness to agent: not a call, an instantiation.** The harness does not “call” an agent as a subroutine it invokes and waits on. An agent has no code of its own outside the harness’s loop (see [Section 8](#sec-ai-agent-program-kind)) — its whole behavior *is* that loop, running with the agent’s configuration (instructions, tool allowlist, model) loaded in. The harness instantiates and runs an agent, start to termination; it is not a function call with a return address.
+**Harness to agent: not a call, an instantiation.** The harness does not “call” an agent as a subroutine it invokes and waits on. An agent has no code of its own outside the harness’s loop (see [Section 9](#sec-ai-agent-program-kind)) — its whole behavior *is* that loop, running with the agent’s configuration (instructions, tool allowlist, model) loaded in. The harness instantiates and runs an agent, start to termination; it is not a function call with a return address.
 
 **Agent to harness: yes, a real call, via tool calls.** While an agent’s loop is running, the model produces a [tool-call request](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview), and the harness’s dispatcher looks up and executes the matching handler — read a file, run a command, call an API. So the concrete direction of calling is **agent calls harness**, through tool dispatch, not the reverse.
 
-**Agent to agent: routed through the harness.** When a parent agent spawns a subagent, it does not call that subagent directly. It issues a tool call that the harness’s dispatcher handles by spinning up a fresh instance of its own loop (see [Section 6](#sec-ai-agent-implementation)), running it to completion with the subagent’s configuration, and handing the result back to the parent as a tool result. Even “agent calls agent” bottoms out as: parent calls harness, harness instantiates and runs a new agent, harness returns that agent’s output to the parent.
+**Agent to agent: routed through the harness.** When a parent agent spawns a subagent, it does not call that subagent directly. It issues a tool call that the harness’s dispatcher handles by spinning up a fresh instance of its own loop (see [Section 7](#sec-ai-agent-implementation)), running it to completion with the subagent’s configuration, and handing the result back to the parent as a tool result. Even “agent calls agent” bottoms out as: parent calls harness, harness instantiates and runs a new agent, harness returns that agent’s output to the parent.
 
 #### Sketching the Harness’s Own Loop
 
@@ -315,7 +468,7 @@ def run_agent(agent, tools):
     return history[-1]
 ```
 
-`run_agent` is identical in shape to the loop in [Section 8](#sec-ai-agent-program-kind). `run_harness` and the permission check are the parts that only exist at the harness level, not inside any individual agent. That recursive call — `run_agent` calling itself for a subagent — is the concrete mechanism behind “agent calls agent, routed through the harness,” described in the previous subsection.
+`run_agent` is identical in shape to the loop in [Section 9](#sec-ai-agent-program-kind). `run_harness` and the permission check are the parts that only exist at the harness level, not inside any individual agent. That recursive call — `run_agent` calling itself for a subagent — is the concrete mechanism behind “agent calls agent, routed through the harness,” described in the previous subsection.
 
 #### What Do You Launch When You Type `claude`?
 
@@ -325,7 +478,7 @@ There is no observable moment of “harness running, no agent yet.” The closes
 
 So typing `claude` launches the harness, and that act inherently instantiates the default agent that handles the session: **harness** names the engine and process; **agent** names the particular loop instance and configuration currently running inside it. At startup, those two come into existence together.
 
-# 10 The Harness Landscape in 2026
+# 11 The Harness Landscape in 2026
 
 [Section 5](#sec-ai-harnesses) explains what a harness is, and [Section 3](#sec-ai-coding-agent-platforms) lists common platforms as a starting point. This section is the wider map: which harnesses exist as of August 2026, how they group, and how to choose among them.
 
@@ -340,7 +493,7 @@ The consensus across the comparisons surveyed is that the frontier models have c
 Two consequences follow for reading the rest of this section:
 
 - **Benchmarks are saturating.** Leading models cluster within about a point on SWE-bench Verified, which is widely regarded as near its ceiling and exposed to training-data contamination. Harder successors (SWE-bench Pro, Terminal-Bench 2.x) show much lower absolute scores and separate tools better, but their figures are vendor-reported and version-specific.
-- **Your own tasks are the benchmark that matters.** A day of real work on a repository you ship reveals more than any leaderboard, which is why [Table 3](#tbl-harness-landscape-choice) ends in a pilot rather than a ranking.
+- **Your own tasks are the benchmark that matters.** A day of real work on a repository you ship reveals more than any leaderboard, which is why [Table 4](#tbl-harness-landscape-choice) ends in a pilot rather than a ranking.
 
 #### Terminal-first harnesses
 
@@ -354,7 +507,7 @@ Two consequences follow for reading the rest of this section:
 | [Gemini CLI](https://github.com/google-gemini/gemini-cli) (Google) | Apache 2.0 | Being folded into Antigravity CLI; issue \#95 records free individual access ending on 2026-06-18, with enterprise Code Assist licenses unaffected. |
 | [Amp](https://ampcode.com) | Proprietary | Deliberately optimizes for the best outcome regardless of token cost: multi-model routing, parallel subagents, and an “Oracle” deep-reasoning mode. Spun out of Sourcegraph. |
 
-Table 1: Terminal-first coding harnesses
+Table 2: Terminal-first coding harnesses
 
 #### Editor-integrated harnesses
 
@@ -367,7 +520,7 @@ Table 1: Terminal-first coding harnesses
 | [Devin Desktop](https://devin.ai/) (Cognition) | Proprietary | The former Windsurf editor, rebranded in June 2026 with a local Devin agent, an agent command center, and Agent Client Protocol support. |
 | [Continue](https://continue.dev/), [Tabnine](https://www.tabnine.com/), [Kilo Code](https://kilo.ai/), [Zed](https://zed.dev/) | Mixed | Specialists: Continue adds an open-source agent to an existing editor; Tabnine is the on-premises, air-gapped enterprise pick; Kilo Code carries on the Roo Code lineage after that project’s 2026 shutdown; Zed is an open-source AI-native editor. |
 
-Table 2: Editor-integrated coding harnesses
+Table 3: Editor-integrated coding harnesses
 
 #### Autonomous and cloud harnesses
 
@@ -407,11 +560,11 @@ Proprietary:
 - Replit Agent
 - Tabnine
 
-For raw capability the proprietary leaders still edge ahead, but the open options are competitive and win outright on cost, privacy, auditability, and model freedom. The 2026 signature of open-source use is bring-your-own-key, with two friction points worth knowing. Anthropic restricted third-party harnesses’ use of flat-rate Claude subscriptions in April 2026, which pushed some of those users onto extra-usage or per-token billing ([Section 25](#sec-ai-claude-code-other-models) covers the same rule from the Claude Code side), and OpenCode lost Claude Pro and Max login access after a dispute with Anthropic.
+For raw capability the proprietary leaders still edge ahead, but the open options are competitive and win outright on cost, privacy, auditability, and model freedom. The 2026 signature of open-source use is bring-your-own-key, with two friction points worth knowing. Anthropic restricted third-party harnesses’ use of flat-rate Claude subscriptions in April 2026, which pushed some of those users onto extra-usage or per-token billing ([Section 29](#sec-ai-claude-code-other-models) covers the same rule from the Claude Code side), and OpenCode lost Claude Pro and Max login access after a dispute with Anthropic.
 
 #### Local-model coding
 
-Local coding has matured to the point where the strongest open-weight models compete on the standard benchmarks. The community favorites for consumer hardware are the Qwen, Devstral, Gemma, and DeepSeek families, and the typical stack pairs OpenCode or Aider with a local OpenAI-compatible endpoint. [Section 22](#sec-ai-offline) and [Section 26](#sec-ai-small-local-models) cover the mechanics and the model choice.
+Local coding has matured to the point where the strongest open-weight models compete on the standard benchmarks. The community favorites for consumer hardware are the Qwen, Devstral, Gemma, and DeepSeek families, and the typical stack pairs OpenCode or Aider with a local OpenAI-compatible endpoint. [Section 25](#sec-ai-offline) and [Section 30](#sec-ai-small-local-models) cover the mechanics and the model choice.
 
 #### Beyond coding: general agent frameworks
 
@@ -436,37 +589,37 @@ Browser-use agents are a fast-growing adjacent category, and they remain structu
 | Hands-off delegation of well-scoped backlog work | Devin or the cloud agents in Codex, Cursor, and Copilot, with humans still reviewing the pull requests |
 | Control, observability, and cheap parallel runs in a sandbox | Pi or Goose; stay with a heavier harness for long unattended runs |
 
-Table 3: Matching a harness to the job
+Table 4: Matching a harness to the job
 
 Then pilot two of them on a repository you actually ship. Token or usage-limit pain points toward Codex or an open bring-your-own-key harness; a need for audit trails points toward Cline or LangGraph; a need for private inference points toward OpenCode or Aider with a local model.
 
-# 11 Custom Harnesses and How to Build Our Own
+# 12 Custom Harnesses and How to Build Our Own
 
-[Section 5](#sec-ai-harnesses) defines a harness, [Section 7](#sec-ai-harness-construction) explains which of its layers are code and which are prose, and [Section 10](#sec-ai-harness-landscape) maps the vendor harnesses. This section covers the layer that sits on top of those: the **custom harnesses** that individuals and small teams build for themselves, and what building one would mean for this lab (measured 2026-09-09 unless stated otherwise).
+[Section 5](#sec-ai-harnesses) defines a harness, [Section 8](#sec-ai-harness-construction) explains which of its layers are code and which are prose, and [Section 11](#sec-ai-harness-landscape) maps the vendor harnesses. This section covers the layer that sits on top of those: the **custom harnesses** that individuals and small teams build for themselves, and what building one would mean for this lab (measured 2026-09-09 unless stated otherwise).
 
 #### Two things people mean by “custom harness”
 
 The projects surveyed here split into two kinds, and the distinction decides how much work a custom harness is:
 
-- **A configuration layer on a vendor harness.** The execution engine stays Claude Code, Codex, or OpenCode, and the “harness” is a plugin: skills, hooks, subagent definitions, slash commands, and memory files that the vendor harness reads at runtime (the markdown-plus-front-matter layer of [Section 7](#sec-ai-harness-construction)). `oh-my-claudecode`, Hoyeon, Superpowers, and GSD Core are all this kind.
+- **A configuration layer on a vendor harness.** The execution engine stays Claude Code, Codex, or OpenCode, and the “harness” is a plugin: skills, hooks, subagent definitions, slash commands, and memory files that the vendor harness reads at runtime (the markdown-plus-front-matter layer of [Section 8](#sec-ai-harness-construction)). `oh-my-claudecode`, Hoyeon, Superpowers, and GSD Core are all this kind.
 - **A standalone runtime.** The tool-calling loop, permission model, and tool handlers are your own code, and the model is called through an API. `OpenHarness` and the LangChain guide are this kind.
 
 The first kind is days of work and inherits every vendor upgrade for free. The second is months of work and gives you control over the loop itself, which is the only reason to pay for it.
 
 #### Surveyed projects
 
-[Table 4](#tbl-custom-harnesses) lists the projects surveyed.
+[Table 5](#tbl-custom-harnesses) lists the projects surveyed.
 
 | Project | Kind | Runs on | License | Size (2026-09-09) |
 |----|----|----|----|----|
 | [`oh-my-claudecode`](https://github.com/yeachan-heo/oh-my-claudecode) ([Heo 2026](#ref-oh_my_claudecode)) | layer | Claude Code (plus CLI workers for Codex, Gemini, Antigravity, Grok, Cursor) | MIT | 39.1k stars |
 | [Hoyeon](https://github.com/team-attention/hoyeon) ([team-attention 2026](#ref-hoyeon)) | layer | Claude Code | MIT | 174 stars; last push 2026-05-21 |
-| [Superpowers](https://github.com/obra/superpowers) ([Vincent 2026](#ref-superpowers)) | layer | Claude Code, Codex, Cursor, OpenCode, Pi, Hermes, and eight others | MIT | 283.8k stars; on the official Claude plugin marketplace |
+| [Superpowers](https://github.com/obra/superpowers) ([Vincent 2026b](#ref-superpowers)) | layer | Claude Code, Codex, Cursor, OpenCode, Pi, Hermes, and eight others | MIT | 283.8k stars; on the official Claude plugin marketplace |
 | [GSD Core](https://github.com/open-gsd/gsd-core) ([open-gsd 2026](#ref-gsd_core)) | layer | Claude Code, OpenCode, Codex, Copilot, Cursor, and four others | MIT | 9.3k stars |
 | [`OpenHarness`](https://github.com/HKUDS/OpenHarness) ([HKUDS 2026](#ref-openharness)) | runtime | any Anthropic- or OpenAI-compatible endpoint | MIT | 15.7k stars; last push 2026-06-04 |
 | [LangChain `create_agent`](https://www.langchain.com/blog/how-to-build-a-custom-agent-harness) ([Runkle 2026](#ref-langchain_custom_harness)) | runtime | any LangChain model | MIT (library) | guide, not a product |
 
-Table 4: Custom harnesses surveyed for this section
+Table 5: Custom harnesses surveyed for this section
 
 #### `oh-my-claudecode` (OMC)
 
@@ -477,7 +630,7 @@ The `README` states: “Multi-agent orchestration for Claude Code. Zero learning
 - `/skillify`, which extracts a reusable skill from a session into `.omc/skills/` (project) or `~/.omc/skills/` (user) and auto-injects matching skills later;
 - a HUD status line, cost tracking, Discord/Telegram/Slack notifications, and a `tmux`-based mode that drives other vendors’ CLIs as workers.
 
-It is the same family as the Oh My OpenCode project in [Section 53](#sec-ai-oh-my-opencode) (the npm package is still named `oh-my-claude-sisyphus`), and by star count the most-used custom harness in this survey after Superpowers.
+It is the same family as the Oh My OpenCode project in [Section 68](#sec-ai-oh-my-opencode) (the npm package is still named `oh-my-claude-sisyphus`), and by star count the most-used custom harness in this survey after Superpowers.
 
 **Useful to us?** Partly. Its model routing and skill extraction are things `Morrison-Lab/ai-config` already does with `select-model` and `ums`, so installing OMC on top would double them. Its notification integrations and HUD are the pieces we lack, and they are separable.
 
@@ -485,11 +638,11 @@ It is the same family as the Oh My OpenCode project in [Section 53](#sec-ai-oh-
 
 Hoyeon calls itself a “Requirements-first Harness — derive, verify, execute” ([team-attention 2026](#ref-hoyeon)). Its idea is that most agent failures are planning failures, so it forces a derivation chain (goal, context, decisions, requirements, tasks, execution) and gates each transition twice: a CLI validates the structure of `requirements.md` and `plan.json` before any model reads them, and a reviewer agent checks for scope drift and blind spots. The commands are `/specify` (a Socratic interview), `/blueprint` (contract-first planning into a task dependency graph), `/execute` (parallel workers plus independent verification against sub-requirements), `/bugfix`, `/council`, and `/tribunal` (a three-agent adversarial review: risk, value, feasibility). It ships 22 agents and 29 skills and installs with `claude plugin add team-attention/hoyeon` plus an npm CLI.
 
-**Useful to us?** The design principle is exactly the lab’s own “deterministic tools over model judgment” rule ([Section 33](#sec-ai-customization)): a CLI that rejects malformed plans before an LLM sees them is the kind of instrument our hooks already are for pushes and merges. The requirements interview is heavier than most of our tasks need, and it is Claude-Code-only.
+**Useful to us?** The design principle is exactly the lab’s own “deterministic tools over model judgment” rule ([Section 41](#sec-ai-customization)): a CLI that rejects malformed plans before an LLM sees them is the kind of instrument our hooks already are for pushes and merges. The requirements interview is heavier than most of our tasks need, and it is Claude-Code-only.
 
 #### Superpowers
 
-Superpowers is Jesse Vincent’s “agentic skills framework & software development methodology” ([Vincent 2026](#ref-superpowers)). It is the purest example of the layer kind: a set of skills and one bootstrap that makes them mandatory. The `using-superpowers` meta-skill injects itself at session start so the agent checks for a relevant skill before any task, and the skills encode a workflow: brainstorming, writing and executing plans, test-driven development, systematic debugging, git worktrees, requesting and receiving code review, and subagent-driven development with a two-stage review (spec compliance first, then code quality). It installs from the official Claude plugin marketplace (`/plugin install superpowers@claude-plugins-official`) and from Codex’s `/plugins`, and supports fourteen harnesses. Its own README records the cost of the layer approach: Hermes has no post-compaction hook, so a long session that compacts loses the bootstrap.
+Superpowers is Jesse Vincent’s “agentic skills framework & software development methodology” ([Vincent 2026b](#ref-superpowers)). It is the purest example of the layer kind: a set of skills and one bootstrap that makes them mandatory. The `using-superpowers` meta-skill injects itself at session start so the agent checks for a relevant skill before any task, and the skills encode a workflow: brainstorming, writing and executing plans, test-driven development, systematic debugging, git worktrees, requesting and receiving code review, and subagent-driven development with a two-stage review (spec compliance first, then code quality). It installs from the official Claude plugin marketplace (`/plugin install superpowers@claude-plugins-official`) and from Codex’s `/plugins`, and supports fourteen harnesses. Its own README records the cost of the layer approach: Hermes has no post-compaction hook, so a long session that compacts loses the bootstrap.
 
 **Useful to us?** Yes, and the lab’s maintainer already runs it alongside `ai-config` in Claude Code. The overlap is real (both have a brainstorming skill, both have a code-review workflow), so treat it as a reference implementation of skill design rather than a second source of truth.
 
@@ -511,7 +664,7 @@ State lives in `STATE.md` and `CONTEXT.md` so it survives session boundaries. It
 
 `OpenHarness`, from the HKUDS group at the University of Hong Kong, is an “Open Agent Harness with a Built-in Personal Agent” ([HKUDS 2026](#ref-openharness)) and the one standalone runtime in this survey that targets coding-agent use. It is Python with a React terminal UI, installs from a shell script in the repository (the command is `oh`), and rebuilds the whole stack from [Section 5](#sec-ai-harnesses): an agent loop with streaming tool use and retries, a registry of more than forty tools, Markdown skills loaded on demand, plugins that follow Claude Code’s conventions (the README reports testing against twelve official plugins), three permission modes (ask, auto, plan) plus path and command rules, lifecycle hooks, MCP, persistent memory, background tasks, and subagent coordination. It talks to Anthropic, OpenAI, Copilot, Codex, Kimi, GLM, MiniMax, and NVIDIA endpoints.
 
-**Useful to us?** As an escape hatch. Because it reads Claude Code skills and plugins, `ai-config` would largely carry over, so it is the cheapest way to run our configuration on a model or endpoint Claude Code cannot use ([Section 25](#sec-ai-claude-code-other-models) covers the subscription restrictions that motivate this). It is not a reason to leave Claude Code while Claude Code does what we need.
+**Useful to us?** As an escape hatch. Because it reads Claude Code skills and plugins, `ai-config` would largely carry over, so it is the cheapest way to run our configuration on a model or endpoint Claude Code cannot use ([Section 29](#sec-ai-claude-code-other-models) covers the subscription restrictions that motivate this). It is not a reason to leave Claude Code while Claude Code does what we need.
 
 #### The LangChain guide
 
@@ -521,7 +674,7 @@ Sydney Runkle’s “How to build a custom agent harness” (2026-06-03) ([Runkl
 
 #### The community thread
 
-The r/ClaudeCode thread “Show off your own harness setups here” collects personal setups of the layer kind. Reddit blocks automated fetches, so the thread is not summarized here and is worth reading directly. One small repository of the same kind, [`my-claude-code-harness`](https://github.com/code-yeongyu/my-claude-code-harness) ([code-yeongyu 2025](#ref-my_claude_code_harness)) (12 stars, no license, last pushed 2025-11-28), shows the shape such personal setups take: plan-reviewer, executor, and librarian agents; hooks that inject language guidelines and run a linter; and `/planner`, `/execute`, `/commit`, and `/create-pr` commands. [Section 12](#sec-ai-guidance-sources) lists the communities where these setups are discussed.
+The r/ClaudeCode thread “Show off your own harness setups here” collects personal setups of the layer kind. Reddit blocks automated fetches, so the thread is not summarized here and is worth reading directly. One small repository of the same kind, [`my-claude-code-harness`](https://github.com/code-yeongyu/my-claude-code-harness) ([code-yeongyu 2025](#ref-my_claude_code_harness)) (12 stars, no license, last pushed 2025-11-28), shows the shape such personal setups take: plan-reviewer, executor, and librarian agents; hooks that inject language guidelines and run a linter; and `/planner`, `/execute`, `/commit`, and `/create-pr` commands. [Section 13](#sec-ai-guidance-sources) lists the communities where these setups are discussed.
 
 #### What the projects have in common
 
@@ -543,7 +696,7 @@ The runtime-kind projects add the loop itself, the permission model, and provide
 - 94 hook scripts, and a `hooks/hooks.json` with 55 registrations (30 `PreToolUse`, 10 `UserPromptSubmit`, and 15 `Stop`);
 - 8 subagent definitions (including the `adversarial-reviewer` that gates every push);
 - 131 shared prose fragments and 59 memory files;
-- a plugin manifest, so Claude Code and Cursor load it as a plugin ([Section 34](#sec-ai-config-install) explains how, and [Section 33](#sec-ai-customization) what the corpus contains).
+- a plugin manifest, so Claude Code and Cursor load it as a plugin ([Section 42](#sec-ai-config-install) explains how, and [Section 41](#sec-ai-customization) what the corpus contains).
 
 It already implements all five common moves: the bootstrap is `CLAUDE.md` and `AGENTS.md`, planning goes through issue-first and `st`, fresh-context workers are the `Agent` and `Workflow` calls, independent verification is the adversarial-reviewer subagent, and the deterministic gates are the hooks. So “building our own” means three concrete things, in order:
 
@@ -551,7 +704,7 @@ It already implements all five common moves: the bootstrap is `CLAUDE.md` and `A
 2.  **Borrow the pieces we lack.** Superpowers’ two-stage review (spec compliance, then code quality) is a sharper split than our single adversarial pass; Hoyeon’s structural validation of a plan file before a model reads it is a hook we do not have; OMC’s notification integrations would replace our scheduled-poll check-ins. Each is one skill or one hook, and each should land as its own `ai-config` issue and PR.
 3.  **Decide the runtime question by a measured need, not by ambition.** The trigger for the runtime kind is a feature the vendor loop cannot give us: a model Claude Code will not call under our subscription, a permission mode it does not offer, or a loop change (a retry policy, a cost ceiling) that hooks cannot express. When that day comes, `OpenHarness` is the cheaper route, because it already loads our plugin, and the LangChain middleware table is the checklist for anything it lacks.
 
-# 12 Where Current Practice Is Discussed: Reddit Communities
+# 13 Where Current Practice Is Discussed: Reddit Communities
 
 The practice of working with AI agents changes faster than any static page (these notes included) can track. Much of the current guidance circulates as forum discussion: tool comparisons, configuration recipes, failure reports, and launch announcements. This section catalogs the Reddit communities where that discussion concentrates, grouped by what they are for, so you know where to look when a page here has gone stale. This section covers Reddit only: vendor documentation, project issue trackers, and the papers behind a technique are cited where the chapters use them, and the forum layer had no index here until this section.
 
@@ -568,7 +721,7 @@ The practice of working with AI agents changes faster than any static page (thes
 | [r/AgentsOfAI](https://www.reddit.com/r/AgentsOfAI/) | ~98k | Showcase-friendly; known for its “I Made This” flair. |
 | [r/automation](https://www.reddit.com/r/automation/) | ~228k | Workflow automation with heavy agent crossover; not agent-only. |
 
-Table 5: Communities dedicated to AI agents
+Table 6: Communities dedicated to AI agents
 
 #### Frameworks and tools
 
@@ -582,7 +735,7 @@ Table 5: Communities dedicated to AI agents
 | [r/AutoGenAI](https://www.reddit.com/r/AutoGenAI/) | ~7k | Microsoft’s AutoGen; small but active. |
 | [r/crewai](https://www.reddit.com/r/crewai/) | ~1.6k | The CrewAI role-based framework. |
 
-Table 6: Framework and tool communities
+Table 7: Framework and tool communities
 
 The framework-specific communities are much smaller than the general agent ones, and [r/PydanticAI](https://www.reddit.com/r/PydanticAI/), [r/LangGraph](https://www.reddit.com/r/LangGraph/), and [r/LlamaIndex](https://www.reddit.com/r/LlamaIndex/) exist but had no reliable counts at compilation time. In practice, framework discussion concentrates in [r/AI_Agents](https://www.reddit.com/r/AI_Agents/), [r/LLMDevs](https://www.reddit.com/r/LLMDevs/), and [r/LocalLLaMA](https://www.reddit.com/r/LocalLLaMA/) rather than in the niche communities.
 
@@ -596,7 +749,7 @@ The framework-specific communities are much smaller than the general agent ones,
 | [r/VibeCodeDevs](https://www.reddit.com/r/VibeCodeDevs/) | ~59k | Developers shipping real products with agents and automation. |
 | [r/Cursor](https://www.reddit.com/r/Cursor/) | not verified | The Cursor editor and its agent features. |
 
-Table 7: AI coding-agent communities
+Table 8: AI coding-agent communities
 
 #### General AI communities with heavy agent discussion
 
@@ -612,7 +765,7 @@ Table 7: AI coding-agent communities
 | [r/LocalLLaMA](https://www.reddit.com/r/LocalLLaMA/) | ~800k (Aug 2026) | The dominant local and open-weight model community; high signal on local agents and tooling. |
 | [r/LocalLLM](https://www.reddit.com/r/LocalLLM/) | ~207k | A second local-model community. |
 
-Table 8: General AI communities
+Table 9: General AI communities
 
 #### How to use this list
 
@@ -622,7 +775,51 @@ Table 8: General AI communities
 - **For research and trend-spotting**, follow r/LocalLLaMA, r/MachineLearning, and r/singularity, filtering the last for hype.
 - **Treat a community as a lead, not a source.** A forum thread is where a technique surfaces first; verify it against the tool’s documentation before you rely on it, in the spirit of [reviewing AI-generated work](../chapters/pr-workflow-with-agents.llms.md#sec-invalidate-ai-review).
 
-# 13 AI Agents and the Technological Singularity
+# 14 Thinking Machines Lab’s Inkling Models
+
+[Inkling](https://thinkingmachines.ai/inkling/) ([Thinking Machines Lab 2026a](#ref-inkling_page)) is a pair of open-weight, multimodal foundation models from Thinking Machines Lab (measured 2026-09-09). This is a model release, not a coding agent or a chat product: the weights are downloadable, and the company’s own hosted surfaces for it are a fine-tuning API and a playground rather than an end-user assistant. This section summarizes the release and asks whether it matters for our workflow.
+
+#### Who Thinking Machines Lab is
+
+Thinking Machines Lab is a San Francisco AI startup founded in February 2025 by Mira Murati, formerly OpenAI’s chief technology officer, with John Schulman, an OpenAI co-founder, as chief scientist ([Wikipedia contributors 2026](#ref-wikipedia_thinking_machines)). It raised \$2 billion at a \$12 billion valuation in July 2025, and two founding members left for OpenAI in January 2026 ([Wikipedia contributors 2026](#ref-wikipedia_thinking_machines)). Its first product, [Tinker](https://thinkingmachines.ai/tinker/) ([Thinking Machines Lab 2026f](#ref-tinker_page)), released in October 2025, is a LoRA fine-tuning API for open-weight models where the customer writes the training loop in Python and Thinking Machines runs the GPUs ([Wikipedia contributors 2026](#ref-wikipedia_thinking_machines)). Inkling is the company’s first in-house model, released on 2026-07-15 ([Thinking Machines Lab 2026c](#ref-inkling_announcement)).
+
+#### What Inkling is
+
+Two models share the name (measured 2026-09-09) ([Thinking Machines Lab 2026a](#ref-inkling_page)):
+
+- **Inkling**: a mixture-of-experts transformer with 975 billion total parameters, 41 billion of them active per token, and a context window of up to one million tokens ([Thinking Machines Lab 2026c](#ref-inkling_announcement)).
+- **Inkling-Small**: 276 billion total parameters, 12 billion active, released 2026-07-30 and post-trained by on-policy distillation with Inkling as the teacher ([Thinking Machines Lab 2026e](#ref-inkling_small_announcement)). The product page says it matches the larger model on many benchmarks at a quarter of the size ([Thinking Machines Lab 2026a](#ref-inkling_page)).
+
+Both accept text, image, and audio input and produce text only ([Thinking Machines Lab 2026b](#ref-inkling_model_card), [2026d](#ref-inkling_small_model_card)). Both are released under the Apache 2.0 license ([Thinking Machines Lab 2026b](#ref-inkling_model_card), [2026d](#ref-inkling_small_model_card)), and both expose an effort setting that trades reasoning tokens for score; the reported evaluations are run at `effort=0.99` ([Thinking Machines Lab 2026c](#ref-inkling_announcement)).
+
+The announcement positions Inkling as a broad base for customization rather than a leaderboard winner ([Thinking Machines Lab 2026c](#ref-inkling_announcement)). Its claims, and the evidence offered for them:
+
+- **Breadth**: reported scores of 77.6% on SWE-Bench Verified, 63.8% on Terminal Bench 2.1, 87.2% on GPQA Diamond, and 73.5% on MMMU Pro, all at the highest effort setting ([Thinking Machines Lab 2026c](#ref-inkling_announcement)).
+- **Efficiency**: the company reports that Inkling matches NVIDIA’s Nemotron 3 Ultra on Terminal Bench 2.1 using roughly a third of the tokens ([Thinking Machines Lab 2026c](#ref-inkling_announcement)).
+- **Training**: 45 trillion tokens of text, image, audio, and video, then supervised fine-tuning on synthetic data and reinforcement learning with more than 30 million rollouts ([Thinking Machines Lab 2026c](#ref-inkling_announcement)).
+
+These are the vendor’s own numbers on the vendor’s own runs; we have not reproduced any of them. Inkling-Small’s announcement reports 80.2% on SWE-Bench Verified and 31.6% on Humanity’s Last Exam, against Inkling’s 77.6% and 29.7% ([Thinking Machines Lab 2026e](#ref-inkling_small_announcement)).
+
+#### How it is accessed and priced
+
+Access routes (measured 2026-09-09):
+
+- **Weights**: on Hugging Face, in BF16 and `NVFP4` checkpoints ([Thinking Machines Lab 2026b](#ref-inkling_model_card), [2026d](#ref-inkling_small_model_card)). Even the smaller model has 276 billion parameters, so neither fits any hardware the lab owns.
+- **Tinker**: LoRA fine-tuning at 64K or 256K context, and a beta serverless inference endpoint, both billed per million tokens ([Thinking Machines Lab 2026g](#ref-tinker_models_pricing)). Under a limited-time 50% discount, fine-tuning Inkling at 64K context costs \$1.87 per million prefill tokens, \$4.68 per million sampled tokens, and \$5.61 per million training tokens, roughly doubling at 256K; Inkling-Small is about a third of that. Serverless inference is \$1.00 input and \$4.05 output per million tokens for Inkling, and \$0.30 and \$1.20 for Inkling-Small. Checkpoint storage adds \$0.10 per GB per month ([Thinking Machines Lab 2026f](#ref-tinker_page)).
+- **Third-party hosts**: the announcement lists Together AI, Fireworks, Modal, Databricks, and Baseten as hosts, and vLLM, SGLang, and `llama.cpp` among supported inference engines ([Thinking Machines Lab 2026c](#ref-inkling_announcement)). Our quota-aware defaults for the Databricks endpoint are already in
+  1.  
+
+#### What it is for
+
+Thinking Machines’ stated bet is that organizations will want to fine-tune a capable open model on their own data rather than rent a closed frontier model, and Inkling exists to give Tinker a strong first-party base ([Thinking Machines Lab 2026c](#ref-inkling_announcement)). Tinker’s own pitch lists specialized agents, forecasting, continual learning, and AI research as the intended uses ([Thinking Machines Lab 2026f](#ref-tinker_page)). The audio and image inputs make it a candidate for transcription-plus-reasoning pipelines as well as coding.
+
+#### Useful to us? Marginally, and only through a host
+
+As a coding-agent backend, Inkling is one more open-weight option alongside the models in [Section 4](#sec-ai-catalog-coding-agents), reachable through Databricks ([Section 33](#sec-ai-byok-vscode)) or, when a host lists it there, OpenRouter ([Section 28](#sec-ai-opencode-openrouter)). Its reported SWE-Bench and Terminal Bench scores are competitive but not ahead of the closed models we already pay for, and the 8,192-token output cap on the Databricks endpoint is a real constraint for agentic edits. Self-hosting is out: the lab has no machine within an order of magnitude of the memory required.
+
+The more interesting angle is research. Tinker lets a student run a fine-tuning or reinforcement-learning experiment on a frontier-class open model with a Python training loop and no cluster administration, and universities can ask for wider access ([Thinking Machines Lab 2026f](#ref-tinker_page)). If a project ever needs to adapt a model to epidemiological text or lab-specific coding conventions, Tinker with Inkling-Small is a cheap place to try it. Until such a project appears, no action is needed beyond keeping the Databricks endpoint in our defaults table.
+
+# 15 AI Agents and the Technological Singularity
 
 The emergence of sophisticated [AI agents](https://en.wikipedia.org/wiki/Intelligent_agent) has prompted discussions about whether we are witnessing or approaching a [technological singularity](https://en.wikipedia.org/wiki/Technological_singularity). Understanding this concept helps contextualize the rapid evolution of AI tools and our responsibility in using them.
 
@@ -664,20 +861,20 @@ The value of AI coding agents lies in their ability to accelerate human producti
 
 For thoughtful perspectives on AI consciousness and intelligence, see Douglas Hofstadter’s reflections in [“I Thought I Was in an AI Apocalypse. Then I Started Looking Closer.”](https://www.nytimes.com/2023/07/13/opinion/ai-chatgpt-consciousness-hofstadter.html)
 
-# 14 Relative Advantages of AI and Humans
+# 16 Relative Advantages of AI and Humans
 
 AI coding agents and human coders have complementary strengths. Understanding these differences helps you decide when to delegate work to agents and when to handle tasks yourself.
 
 #### Comparative Strengths: Humans vs. AI Agents
 
-[Table 9](#tbl-ai-human-comparison) summarizes the relative advantages of human coders and AI coding agents across different types of tasks:
+[Table 10](#tbl-ai-human-comparison) summarizes the relative advantages of human coders and AI coding agents across different types of tasks:
 
 | Task Type | Humans 😊 | AI agents 🤖 |
 |----|----|----|
 | **Creative thinking** | 😊 Humans excel at understanding context, handling ambiguous requirements, and thinking creatively about novel problems | 😞 AI agents struggle with ambiguous requirements and creative problem-solving in unfamiliar domains |
 | **Algorithmic thinking** | 😞 Humans make mistakes when following repetitive instructions and may introduce inconsistencies | 😊 AI agents excel at executing well-defined, repetitive tasks with precision and consistency |
 
-Table 9: Relative advantages of humans and AI coding agents
+Table 10: Relative advantages of humans and AI coding agents
 
 ------------------------------------------------------------------------
 
@@ -685,10 +882,10 @@ Or, if you prefer a more visual representation:
 
 |  | Humans | AI Agents |
 |----|----|----|
-| **Creative thinking** | [![](assets/images/The-Matrix-Neo-Flying.png)](assets/images/The-Matrix-Neo-Flying.png "Table 10: Relative advantages of humans and Agents") | [![](assets/images/agent-smith-no-its-not-fair.jpg)](assets/images/agent-smith-no-its-not-fair.jpg "Table 10: Relative advantages of humans and Agents") |
-| **Algorithmic thinking** | [![](assets/images/sad-keanu.png)](assets/images/sad-keanu.png "Table 10: Relative advantages of humans and Agents") | [![](assets/images/grinning-smith.png)](assets/images/grinning-smith.png "Table 10: Relative advantages of humans and Agents") |
+| **Creative thinking** | [![](assets/images/The-Matrix-Neo-Flying.png)](assets/images/The-Matrix-Neo-Flying.png "Table 11: Relative advantages of humans and Agents") | [![](assets/images/agent-smith-no-its-not-fair.jpg)](assets/images/agent-smith-no-its-not-fair.jpg "Table 11: Relative advantages of humans and Agents") |
+| **Algorithmic thinking** | [![](assets/images/sad-keanu.png)](assets/images/sad-keanu.png "Table 11: Relative advantages of humans and Agents") | [![](assets/images/grinning-smith.png)](assets/images/grinning-smith.png "Table 11: Relative advantages of humans and Agents") |
 
-Table 10: Relative advantages of humans and Agents
+Table 11: Relative advantages of humans and Agents
 
 This pattern mirrors the evolution of programming itself. Just as almost no one writes machine code anymore because higher-level languages and compilers handle those details, most developers will increasingly spend less time writing low-level code. Instead, you’ll describe what the system needs to do as clearly as possible, and AI agents will handle many of the computational and coding details.
 
@@ -715,7 +912,7 @@ World models aim to give AI systems:
 
 As these technologies mature, AI agents may become better at tasks requiring contextual understanding and creative problem-solving. This makes it even more important to develop strong supervision and validation skills now, so you can effectively work with increasingly capable AI systems.
 
-# 15 Twelve Fixes for Claude Usage Limits
+# 17 Twelve Fixes for Claude Usage Limits
 
 [Issue \#207](https://github.com/Morrison-Lab/wai/issues/207) asked for a summary of a YouTube video, “Never Hit a Claude Limit Again: 12 Fixes Ranked by How Much Window They Buy”, from the channel Hyperautomation Labs ([Hyperautomation Labs 2026](#ref-hyperautomation_claude_limits)). The video is ten and a half minutes long and was published on 2026-08-16; this summary works from its auto-generated English transcript, fetched with `yt-dlp` on 2026-09-10, so wording attributed to the presenter below may carry speech-to-text errors. The first draft of the summary was produced by the Antigravity command-line program from that transcript and then checked against it by hand.
 
@@ -754,7 +951,7 @@ The lab’s own measurement agrees with the video’s ranking. On 2026-09-09 a d
 
 Two of the fixes are not worth adopting as stated. The prompt-discipline block (fix 1) is a promotional download whose text the video withholds, and “terse answers, minimal file reading” conflicts with the lab’s review rules, which pay tokens for verification on purpose. And the MCP finding (fix 7) is one measurement on one build; re-measure it on your own setup before removing servers you rely on.
 
-# 16 How to Work with Coding Agents
+# 18 How to Work with Coding Agents
 
 Coding agents can be accessed through several interfaces, each with different trade-offs for task size, feedback speed, and collaboration style.
 
@@ -848,7 +1045,7 @@ For more details and community discussion about this limitation, see:
 
 For detailed instructions, see [GitHub Copilot coding agent documentation](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent).
 
-# 17 Useful Prompt Formats
+# 19 Useful Prompt Formats
 
 When working with coding agents, using clear and specific prompts helps achieve better results. Here are some useful prompt formats that you can use when requesting assistance from coding agents:
 
@@ -903,7 +1100,7 @@ When working with coding agents, using clear and specific prompts helps achieve 
 - **Set boundaries**: Specify what should or shouldn’t change
 - **Request validation**: Ask the agent to test or verify its changes when appropriate
 
-# 18 Addressing Failing GitHub Actions Workflows
+# 20 Addressing Failing GitHub Actions Workflows
 
 When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix the issues. However, it’s important to use the right prompts depending on whether the problem is in your code or in the workflow configuration itself.
 
@@ -949,9 +1146,9 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 > 3.  **Check** that no new secret access or command execution has been added
 > 4.  **Test** in a safe environment if possible
 >
-> See [Section 20](#sec-ai-best-practices) for more details on workflow file security.
+> See [Section 22](#sec-ai-best-practices) for more details on workflow file security.
 
-**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 41](#sec-ai-when-to-use) for more guidance.
+**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 52](#sec-ai-when-to-use) for more guidance.
 
 #### Scenario 3: Uncertain Which Scenario Applies
 
@@ -981,11 +1178,11 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 #### Additional Resources
 
 - See the [UCD-SERG Lab Manual’s continuous integration chapter](https://ucd-serg.github.io/lab-manual/continuous-integration.html) for setting up GitHub Actions workflows
-- See [Section 20](#sec-ai-best-practices) and [Section 19](#sec-ai-benefits-hazards) for security considerations with workflow files
-- See [Section 41](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
+- See [Section 22](#sec-ai-best-practices) and [Section 21](#sec-ai-benefits-hazards) for security considerations with workflow files
+- See [Section 52](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
 - See the [GitHub Actions documentation](https://docs.github.com/en/actions) for workflow syntax and troubleshooting
 
-# 19 Benefits and Hazards
+# 21 Benefits and Hazards
 
 Coding agents are powerful programs that can work autonomously. They create pull requests that propose changes to the code in our repositories, potentially including their own configuration files and our automated workflows. They can work powerfully on our behalf, but they require careful oversight and control to ensure they serve our interests and that we understand the consequences of their actions.
 
@@ -1036,7 +1233,7 @@ However, coding agents also come with significant hazards:
 
 [Agents](https://en.wikipedia.org/wiki/Agent_(The_Matrix))
 
-# 20 Best Practices for Safe and Successful Use
+# 22 Best Practices for Safe and Successful Use
 
 To work with coding agents safely and successfully:
 
@@ -1074,7 +1271,89 @@ When using coding agents, work interactively with the AI suggestions: review, mo
 
 Remember: AI tools are assistants, not replacements for your expertise and judgment. The quality and correctness of your work remains your responsibility.
 
-# 21 Firewall and Network Configuration
+# 23 Citadel and Levels of Claude Code Use
+
+Every lab that uses a coding agent for more than one-off edits eventually builds something around it: instruction files, then skills, then hooks, then scripts that watch pull requests. [Section 41](#sec-ai-customization) maps those mechanisms one at a time. This section looks at the question from the other end: what does a *complete* layer look like when someone builds one deliberately, and how much of it does the lab actually need?
+
+The example is [Citadel](https://github.com/SethGammon/Citadel) ([Gammon 2026d](#ref-citadel_repo)), an open-source “operating layer” for Claude Code and OpenAI Codex. Issue [\#102](https://github.com/Morrison-Lab/wai/issues/102) paired it with a r/ClaudeAI post describing five maturity levels of Claude Code use. That post could not be fetched from the network this section was written on (every route to `reddit.com` was blocked, measured 2026-09-09), so the five-level model is tracked separately in [\#227](https://github.com/Morrison-Lab/wai/issues/227), and the ladder discussed here is Citadel’s own.
+
+#### What Citadel is
+
+Citadel is a plugin, not a harness ([Section 5](#sec-ai-harnesses)). It installs into an existing Claude Code or Codex session through the runtime’s plugin marketplace, pinned to a release tag, and then adds four things around the agent you already run ([Gammon 2026d](#ref-citadel_repo)):
+
+- a single natural-language entry point, `/do`, that routes a request to a skill,
+- repository-local state under `.planning/` that survives the end of a session,
+- approval boundaries and verification hooks around multi-step changes, and
+- coordination for several agents working in parallel worktrees.
+
+It is MIT-licensed JavaScript requiring Node.js 22 or later, and it is essentially one person’s project: of roughly 630 commits, 600 are by the author, 19 by Dependabot, and the rest by three occasional contributors (measured 2026-09-09). The repository was created in March 2026, has 920 stars and 82 forks, and its latest release, `v1.3.5`, dates from 2026-08-13. The release ships 48 skills, 35 hook scripts across 29 lifecycle events, and 7 subagent definitions.
+
+The README frames the operating loop as five public states: **Request**, **Run**, **Evidence**, **Needs You**, and **Resume**. The last two are the interesting ones. “Needs You” is a deliberate stop that names the exact approval, conflict, or missing evidence required before the agent continues. “Resume” means the repo-local state names the next useful action for a fresh session, so that a session ending is not the same as the work being lost.
+
+#### The orchestration ladder
+
+Citadel’s architecture document ([Gammon 2026a](#ref-citadel_architecture)) arranges its capabilities as a ladder, with the instruction to use the cheapest rung that fits:
+
+| Rung | Duration | Token cost | State kept | Use when |
+|----|----|----|----|----|
+| Skill | minutes | low | none | a focused task with a known pattern |
+| Marshal | half an hour to two hours | medium | a session log | several steps, one session |
+| Archon | hours to days | high | a campaign file | work that must survive across sessions |
+| Fleet | days | very high | a session file | three or more parallel streams |
+
+Table 12: Citadel’s orchestration ladder, from the project’s architecture document (measured 2026-09-09).
+
+A skill is a `SKILL.md` protocol file in the format [Section 35](#sec-ai-agent-skills) describes, loaded on demand and costing nothing when not loaded. Marshal chains skills inside one session. Archon runs a multi-session campaign whose state lives in a Markdown campaign file with a feature ledger, a decision log, and a machine-readable continuation point, re-read at the start of every invocation. Fleet spawns agents in isolated git worktrees in waves, and compresses each wave’s discoveries to a few hundred tokens so the next wave starts informed rather than rediscovering.
+
+The `/do` router that sits above the ladder narrows a request in four stages. Exact-command matching and a check of active campaign state cost no model tokens; candidate discovery from built-in and project-local skills also costs none; only the final stage, a semantic classifier that reads scope, complexity, persistence, and parallelism, spends around 500 tokens. Only an exact command can skip that classifier, and an explicit route override changes which skill runs without bypassing the approval or verification boundaries.
+
+#### Enforcement and evidence
+
+The part of Citadel most relevant to the lab’s own practice is how much of its policy is enforced rather than advised. [Section 41](#sec-ai-customization) makes the point that an instruction file is context the model may ignore, and that a rule you cannot afford to have ignored belongs in a hook. Citadel takes that seriously in three layers ([Gammon 2026a](#ref-citadel_architecture)):
+
+- **Hooks** on every tool call: `PreToolUse` scripts that block edits to protected files and gate pushes and pull requests behind user consent, `PostToolUse` scripts that run the project’s type check and file-placement rules, and session-start scripts that scaffold state and restore context after compaction.
+- **A spawned judge**: a read-only `policy-enforcer` subagent that receives a proposed hard-to-reverse action and returns a structured allow-or-block verdict, with the most severe rule tier always blocking.
+- **Signed telemetry**: every event and artifact record carries a content hash, optionally an `HMAC` signature, and lineage fields linking runs, agents, and tasks.
+
+Verification reports one of four outcomes: passed, failed, blocked, or unknown. Missing evidence is never promoted to success. That is the same instinct as the first rule in [Section 22](#sec-ai-best-practices), never to assume an agent’s output is correct: an unknown that reads as a pass is worse than a failure you can see.
+
+The project’s threat model ([Gammon 2026c](#ref-citadel_threat_model)) is equally plain about what it does not do. Citadel runs with whatever permissions the host runtime has; it is not a sandbox, it does not make an untrusted repository safe to run, and it does not claim to stop prompt injection. Its README says it “does not replace `CLAUDE.md`, `AGENTS.md`, branch protection, or human review” ([Gammon 2026d](#ref-citadel_repo)).
+
+#### What the evidence does and does not show
+
+Citadel is unusual among agent-tooling projects in publishing negative results beside positive ones ([Gammon 2026b](#ref-citadel_experiments)). Its README states that the first experiment “does not support a savings claim”: one baseline timeout drove the aggregate advantage, and removing that pair reversed the economic direction. An outside-authored holdout across 24 repositories verified 3 of 16 tasks for Citadel against 2 of 16 for direct Claude, at similar cost, and the author calls that a diagnostic rather than proof, because a 12.5% baseline is too weak to compare against. The deterministic results are stronger but narrower: journaled recovery produced zero duplicate side effects where a naive restart produced three, and a leased “deploy steward” eliminated every stale-head merge race that independent loops produced across 45 pull requests, under a generated workload in disposable repositories.
+
+The public claim is stated as deliberately narrow: Citadel can make agent evaluations inspectable, reproducible, and honest about failure. Whether it makes a real user faster or cheaper is left open. For a lab deciding whether to adopt it, that candor is itself a reason to trust the rest of the documentation, and also the answer: the case for Citadel is governance and recoverability, not throughput.
+
+#### Where the lab sits and what the next level would take
+
+The lab’s equivalent layer is [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config), described in [Section 41](#sec-ai-customization)’s worked example. On 2026-09-09 its `main` branch carried:
+
+- 190 skill directories
+- 47 hook scripts, each with a test file, registered on three lifecycle events (`UserPromptSubmit`, `PreToolUse`, and `Stop`)
+- 8 subagent definitions, including an adversarial reviewer and a prose fact-checker
+- 81 shared workflow fragments imported into `CLAUDE.md`
+- 73 Python scripts, most of them instruments that a hook or a skill calls
+
+Against [Table 12](#tbl-citadel-ladder), that configuration sits firmly on the first rung and reaches the others by convention rather than by machinery:
+
+- **Skill.** Fully occupied, and more heavily than Citadel’s 48. Nearly every lab convention is a skill, because a skill is the mechanism the model reaches for unprompted.
+- **Marshal.** Covered by skills that chain other skills (the loop that drives a pull request through review rounds to a clean verdict is one) and by the harness’s own workflow tool. There is no session log; the transcript is the log.
+- **Archon.** Partly covered. Persistence across sessions comes from memory files, a per-session lab notebook, and GitHub issues and pull requests as the durable record. Nothing re-reads a campaign file at session start; a new session reconstructs where it was from the issue tracker.
+- **Fleet.** Reached in practice, since parallel workers in isolated worktrees are routine, but coordinated by claim comments on issues and by branch naming, not by a claims directory with scope-overlap detection. Two workers editing one file find out at merge time.
+
+The hooks are the sharpest contrast. The lab’s 47 are concentrated on three events, and most of them guard the *conversation*: that a reply exists, that a promise ships a mechanism, that a push was reviewed, that a merge was authorized. Citadel’s 35 span 29 events and guard the *repository*: protected files, type checks after every edit, file placement, consent before a push. Both are enforcement; they enforce different things.
+
+So the next rung, if the lab wants it, is not more skills. Concretely it would take:
+
+- **A session-start hook** that scaffolds and re-reads resumable state, so a fresh session begins from a named next action rather than from a tracker search. This is Citadel’s “Resume” state, and the lab notebook already holds the content; what is missing is the hook that loads it.
+- **`PostToolUse` quality gates** that run the project’s own checks (a spell check, a lint, a render of the edited page) after each edit instead of at push time.
+- **File-level claims for parallel workers**, so that two sessions editing the same fragment collide at claim time rather than at merge time.
+- **A verification vocabulary with an explicit “unknown”**, so that a check that did not run is reported as not having run.
+
+None of that requires adopting Citadel. Installing it would add 2,031 files of plugin, four state directories to every repository it manages, and a single-maintainer dependency, in exchange for machinery the lab has mostly rebuilt in its own idiom. The more useful reading of Citadel is as a reference design: a worked answer to what each rung of the ladder costs and what state it needs, written by someone who then measured whether it helped and published the answer either way.
+
+# 24 Firewall and Network Configuration
 
 Coding agents require specific network access to function properly. If a coding agent is running behind a corporate firewall or on a restricted network, you may need to configure allowlists to enable coding agent functionality.
 
@@ -1173,7 +1452,7 @@ For data science and R-focused repositories, we recommend adding the following U
 >
 > These sites do not host user-generated content or allow arbitrary code execution, making them appropriate for inclusion in your allowlist.
 
-# 22 Running Coding Agents Offline
+# 25 Running Coding Agents Offline
 
 Some environments restrict or prohibit internet access—high-performance computing (HPC) clusters, hospital networks, or air-gapped research servers may block connections to cloud AI providers. Running a local AI model lets you use coding assistance in these settings without sending code to external servers, which also addresses data-privacy concerns when working with sensitive or confidential data.
 
@@ -1624,11 +1903,82 @@ aider --yes --message "Fix the off-by-one error in mean()." stats.py
 
 Check the block itself first, as above. A test that passes because the proxy was never applied tells you nothing, and looks exactly like success.
 
-# 23 Connecting OpenCode to Local Models
+# 26 Assessing Aeris and Graft
+
+Issue [\#46](https://github.com/Morrison-Lab/wai/issues/46) asked whether two GitHub projects, Aeris and Graft, have a place in the lab’s AI workflow. The notes below reflect each repository’s README and metadata as read on 2026-09-09.
+
+#### Aeris
+
+[`Cedrick-Coto/Aeris`](https://github.com/Cedrick-Coto/Aeris) ([Coto 2026](#ref-aeris)) describes itself as a deterministic cognitive simulation engine with emergent narrative, whose README describes an entity-component-system (ECS) architecture in C# (.NET 10). Its design premise is that the language model “verbalizes, never thinks”: a deterministic simulation core computes perception, attention, memory, affect, and goals each tick, and the LLM only turns that state into narrative or dialogue, never modifying it. The target application is a simulated character in a Pokemon world.
+
+Repository facts (measured 2026-09-09):
+
+- GPL-3.0 license
+- 2 stars, 1 fork, 2 contributors, 80 commits since creation on 2026-07-26
+- 2 commits in the month before the reading date
+- 87 Markdown files and three `.csproj` project files on `main`, but no `.cs` source files, so the “complete” engine and “210 tests” that the README roadmap reports are not present in the public repository
+
+The project is a research design document for LLM-backed simulated agents, not a tool for working with AI coding assistants. Nothing in it targets writing, reviewing, or running code.
+
+##### Useful to us? No
+
+Aeris does not overlap with any lab workflow. Its one transferable idea, keeping the LLM out of state changes and confining it to presentation, is already how this site recommends treating agents: the [responsibility-for-validation policy](../chapters/ai-use-policies.llms.md#responsibility-for-validation) and the [review guidance](../chapters/pr-workflow-with-agents.llms.md#sec-invalidate-ai-review) put the deterministic checks and the accountability with the human and the CI pipeline, not the model. The GPL-3.0 license would also complicate reuse of any code in lab packages, though at the reading date there was no code to reuse. No further action is warranted.
+
+#### Graft
+
+[`trailhq/Graft`](https://github.com/trailhq/Graft) ([NanoNets and Trail contributors 2026](#ref-graft)) (formerly `NanoNets/Graft`; the old URL redirected at the reading date) is an open-source “context layer” for coding agents. Its aim is to stop an agent re-exploring a repository at the start of every task by building a persistent map of the codebase once and feeding the relevant parts of that map into each prompt.
+
+Repository facts (measured 2026-09-09):
+
+- MIT license
+- TypeScript, published on npm as `@nanonets/graft` (0.16.0 on npm; `package.json` on `main` reads 0.17.0), requiring Node 20 or later
+- 6,788 stars, 613 forks, 34 contributors
+- 174 commits in the 30 days before the reading date, and 43 open issues (excluding pull requests)
+
+How it works, per the README:
+
+- `graft build` parses the repository with tree-sitter into a per-symbol code graph (functions, classes, call and import edges). This layer is deterministic, runs locally, and never calls a model, so it needs no API key.
+
+- `graft build --deep` adds an LLM layer: a short summary per file, grouped into a few dozen Markdown “nodes” (one per subsystem or concept) with typed links between them and a “crux” excerpt of the lines that carry the logic. The model runs under your own key through one of:
+
+  - OpenAI
+  - Anthropic
+  - OpenRouter
+  - a LiteLLM proxy
+  - a local server
+
+- `graft init` wires the graph into an agent. For Claude Code it writes a skill file, hooks, and a status line. For the other hosts it adds a fenced section to `AGENTS.md`, `GEMINI.md`, or `.github/copilot-instructions.md`:
+
+  - Codex
+  - OpenCode
+  - Gemini CLI
+  - Copilot
+  - Cursor
+  - others that read those files
+
+  It also registers an MCP server exposing six tools (find code, file API, trace callers, regex search, repo map, freshness check).
+
+- The graph is a git-ignored local cache, rebuilt incrementally and refreshed before each query; only the small wiring is committed.
+
+- R is one of the “full-fidelity” languages, with support for plain functions, S3, S4, and R6 classes and methods, roxygen `@export` tags, and `library()` and `source()` imports.
+
+The README reports benchmarks from the project’s own harness (42% fewer tokens and 60% less latency with equal correctness on 162 runs across two repositories) and a 50-instance SWE-bench Verified run, Claude Code with Claude Sonnet 5 on both arms (33 of 50 resolved with Graft against 27 without, using 23% fewer tokens). These are vendor-run measurements on the vendor’s chosen tasks, so treat them as an upper bound until reproduced. The package sends an anonymous batched usage ping by default; the README states the ping carries no code, paths, or queries, and that `graft telemetry disable` or `DO_NOT_TRACK=1` turns it off.
+
+##### Useful to us? Yes, trial it on one R package
+
+Graft addresses a cost the lab pays constantly: each new agent session re-reads an R package to rebuild the same picture of its structure. Three things make it a good fit for a trial:
+
+- The structural layer is free and local, so it can run on a package without spending model tokens or sending code anywhere, which matches the constraints in [Section 25](#sec-ai-offline).
+- R is a first-class language in its parser, including S3, S4, and R6 dispatch and roxygen tags.
+- It wires into the agents the lab already uses (Claude Code, Codex, OpenCode, Gemini CLI, and Copilot) through their existing instruction files and an MCP server, the mechanism [Section 62](#sec-ai-mcp-server-setup) covers, so a trial adds no new harness.
+
+Check two things before adopting it lab-wide. First, the benchmark claims are vendor-run, so measure the token and tool-call counts on one of our own packages before and after `graft init`. Second, the `--deep` layer spends model tokens on every changed file and the `init` step for Codex writes to user-level config outside the repository (`~/.codex/`; skip with `--no-global`), so start with the structural layer only and the Claude Code wiring only. The `graft init --dry-run` flag lists every file it would touch, which is the right first command. Graft is complementary to the memory tooling in [Section 64](#sec-ai-magic-context): that section covers remembering what happened across sessions, whereas Graft covers what the code is, and the two do not overlap.
+
+# 27 Connecting OpenCode to Local Models
 
 [OpenCode](https://opencode.ai) is an open-source coding agent that runs in your terminal, reads your project, edits files, and runs commands. It supports local models through OpenAI-compatible providers.
 
-This section assumes Ollama is already installed and that you have pulled a code-focused model — see [Section 22](#sec-ai-offline) for both, including the Linux and Windows install paths.
+This section assumes Ollama is already installed and that you have pulled a code-focused model — see [Section 25](#sec-ai-offline) for both, including the Linux and Windows install paths.
 
 Verify the server is running:
 
@@ -1663,9 +2013,9 @@ Restart OpenCode and run `/models` to see your local models listed alongside any
 
 A lightweight hand-written provider block in your project’s `opencode.json` still works if you prefer explicit control over model names and context limits, but the plugin removes the need to keep that list in sync with `ollama pull`.
 
-# 24 Connecting OpenCode to OpenRouter
+# 28 Connecting OpenCode to OpenRouter
 
-[OpenRouter](https://openrouter.ai) is a gateway that exposes hundreds of hosted models — Claude, GPT, Gemini, DeepSeek, Qwen, Kimi, Llama, and more — behind a single API key and billing account. OpenCode treats it as a built-in provider, so its catalog appears in the `/models` picker alongside local models ([Section 23](#sec-ai-opencode-ollama)). The catalog changes frequently; model IDs below were verified against it in August 2026.
+[OpenRouter](https://openrouter.ai) is a gateway that exposes hundreds of hosted models — Claude, GPT, Gemini, DeepSeek, Qwen, Kimi, Llama, and more — behind a single API key and billing account. OpenCode treats it as a built-in provider, so its catalog appears in the `/models` picker alongside local models ([Section 27](#sec-ai-opencode-ollama)). The catalog changes frequently; model IDs below were verified against it in August 2026.
 
 **Connect an API key:**
 
@@ -1710,7 +2060,7 @@ Models are addressed as `openrouter/<vendor>/<model>`, for example `openrouter/d
 
 Config loads at startup, so restart OpenCode after editing it.
 
-# 25 Running Claude Code with Non-Anthropic Models
+# 29 Running Claude Code with Non-Anthropic Models
 
 Claude Code is built around the Anthropic Messages API, and its documentation describes how to point the harness at any endpoint that speaks that format (measured 2026-09-01). That mechanism is what makes it possible to run Claude Code against models Anthropic does not make, and the same documentation says plainly that doing so is unsupported. This section summarizes:
 
@@ -1745,7 +2095,7 @@ The variables that matter, from the [connection guide](https://code.claude.com/d
 - `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1` makes Claude Code query the gateway’s `/v1/models` endpoint at startup and add the results to the `/model` picker.
 - `ANTHROPIC_CUSTOM_MODEL_OPTION` (with optional `_NAME` and `_DESCRIPTION`) adds a single custom row to the picker; Claude Code skips validation for that ID, so any string the endpoint accepts works.
 - `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1` stops Claude Code from sending pre-release request fields and beta headers. The connection guide lists it as the fix for `400` errors naming `context_management` or `Extra inputs are not permitted`, which is what a non-Anthropic upstream returns when it rejects Claude-specific fields.
-- `CLAUDE_CODE_MAX_CONTEXT_TOKENS` declares the context window for a model ID Claude Code does not recognize; [Section 22](#sec-ai-offline) shows it in use for a local model.
+- `CLAUDE_CODE_MAX_CONTEXT_TOKENS` declares the context window for a model ID Claude Code does not recognize; [Section 25](#sec-ai-offline) shows it in use for a local model.
 
 Claude Code reads these at startup, either from the shell or from the `env` block of `~/.claude/settings.json`.
 
@@ -1754,10 +2104,10 @@ Claude Code reads these at startup, either from the shell or from the `env` bloc
 The forum reports collected in the tracking issue fall into a few shapes, from fewest moving parts to most:
 
 - **A model vendor’s Anthropic-compatible endpoint.** Several labs, including [Z.ai](https://z.ai/) (GLM), [Moonshot](https://www.kimi.com/) (Kimi), and [MiniMax](https://www.minimax.io/), publish endpoints that speak the Messages format directly, so the whole setup is `ANTHROPIC_BASE_URL` plus the vendor’s key. It is the route those reports describe most often, and the one bundled with the vendors’ “coding plan” subscriptions.
-- **A hosted aggregator.** [OpenRouter](https://openrouter.ai/) exposes an Anthropic-format endpoint, so Claude Code can talk to it with no local proxy; [Section 24](#sec-ai-opencode-openrouter) covers the same aggregator from the OpenCode side.
-- **A self-hosted gateway.** [LiteLLM](https://docs.litellm.ai) and [Kong](https://konghq.com/) are the examples that Anthropic’s own environment-variable reference names for gateway model discovery. LiteLLM translates Messages-format requests to many providers and adds virtual keys, fallbacks, and cost tracking; [Section 22](#sec-ai-offline) shows a LiteLLM configuration for local models.
+- **A hosted aggregator.** [OpenRouter](https://openrouter.ai/) exposes an Anthropic-format endpoint, so Claude Code can talk to it with no local proxy; [Section 28](#sec-ai-opencode-openrouter) covers the same aggregator from the OpenCode side.
+- **A self-hosted gateway.** [LiteLLM](https://docs.litellm.ai) and [Kong](https://konghq.com/) are the examples that Anthropic’s own environment-variable reference names for gateway model discovery. LiteLLM translates Messages-format requests to many providers and adds virtual keys, fallbacks, and cost tracking; [Section 25](#sec-ai-offline) shows a LiteLLM configuration for local models.
 - **A community router.** [Claude Code Router](https://github.com/musistudio/claude-code-router) intercepts each request and routes it by type (background, thinking, long-context, default) to a different provider or model. It has the most features of the five, and the tracking issue quotes its own issue tracker describing it as unstable and hard to configure.
-- **A local model server.** [vLLM](https://docs.vllm.ai/) and [Ollama](https://ollama.com/) both serve the Messages API directly, so Claude Code can point at either with no proxy; [Section 22](#sec-ai-offline) covers the mechanics, and [Section 26](#sec-ai-small-local-models) covers which local models can sustain an autonomous loop.
+- **A local model server.** [vLLM](https://docs.vllm.ai/) and [Ollama](https://ollama.com/) both serve the Messages API directly, so Claude Code can point at either with no proxy; [Section 25](#sec-ai-offline) covers the mechanics, and [Section 30](#sec-ai-small-local-models) covers which local models can sustain an autonomous loop.
 
 Treat any self-hosted gateway or community router as infrastructure: pin its version, and keep the official `claude` launcher as a fallback. The tracking issue records a 2026 incident in which malicious LiteLLM releases were briefly published to PyPI, which is the concrete reason for pinning.
 
@@ -1784,13 +2134,13 @@ The policy history in the tracking issue concerns the other direction, using a C
 
 | Goal | Suggested route |
 |----|----|
-| Model flexibility is the priority | A model-agnostic harness ([OpenCode](https://opencode.ai), [Aider](https://aider.chat/), [Cline](https://github.com/cline/cline)), which is built for it; see [Section 23](#sec-ai-opencode-ollama) and [Section 24](#sec-ai-opencode-openrouter) |
+| Model flexibility is the priority | A model-agnostic harness ([OpenCode](https://opencode.ai), [Aider](https://aider.chat/), [Cline](https://github.com/cline/cline)), which is built for it; see [Section 27](#sec-ai-opencode-ollama) and [Section 28](#sec-ai-opencode-openrouter) |
 | Claude Code’s skills and plugins with one cheaper model | The vendor’s Anthropic-compatible endpoint with your own key |
 | Several models with team governance | A self-hosted gateway such as LiteLLM, or an enterprise gateway product, pinned as infrastructure |
 | Per-request-type cost routing | Claude Code Router, pinned as infrastructure |
 | Claude models at subscription prices | The official Claude Code CLI signed in with the subscription, which remains fully supported |
 
-Table 11: Choosing a route for running Claude Code with other models
+Table 13: Choosing a route for running Claude Code with other models
 
 Whichever route you pick:
 
@@ -1798,9 +2148,9 @@ Whichever route you pick:
 - Assume prompt caching is off until the gateway proves otherwise.
 - Measure cost per completed task on your own work rather than comparing token prices; if the alternative is not cheaper on that measure, or tool-call failures disrupt sessions, go back to a supported configuration.
 
-# 26 Small, Local Models for Autonomous Agentic Coding
+# 30 Small, Local Models for Autonomous Agentic Coding
 
-[Section 22](#sec-ai-offline) covers the mechanics of running a model on your own hardware: installing Ollama, wiring up an editor, and driving `aider` against a local endpoint. This section is about a narrower and harder question sitting on top of that setup: which local model to pick, and how to let it work **autonomously** — making a sequence of edits, commits, and tool calls with no human approving each step — without the loop quietly going wrong.
+[Section 25](#sec-ai-offline) covers the mechanics of running a model on your own hardware: installing Ollama, wiring up an editor, and driving `aider` against a local endpoint. This section is about a narrower and harder question sitting on top of that setup: which local model to pick, and how to let it work **autonomously** — making a sequence of edits, commits, and tool calls with no human approving each step — without the loop quietly going wrong.
 
 > **WARNING:**
 >
@@ -1831,7 +2181,7 @@ Prefer a model explicitly trained for **tool calling and agentic use** over a ge
 
 Qwen3-Coder’s 30B-A3B tag is a mixture-of-experts model: 30B total parameters, but only about 3.3B active per token. VRAM at rest is set by the total, not the active count — every expert has to stay resident in memory even though only a fraction fires on any given token — which is why the tag still needs roughly 19 GB at 4-bit quantization, in line with its 30B total rather than its 3.3B active count. What the small active count buys is speed: inference runs closer to a 3–4B model’s pace despite the larger memory footprint. Codestral’s license is worth reading before you rely on it: Mistral’s Non-Production License permits local evaluation but not production or commercial deployment — fine for trying it out, not fine for a lab pipeline that runs unattended.
 
-As a practical floor, treat the 24–32B tier at 4-bit quantization as the smallest size that holds up across a multi-step autonomous loop without frequent tool-call errors. Below that, a model is still useful as an assistant you supervise turn by turn ([Section 22](#sec-ai-offline) covers exactly that setup), but it is not yet a safe choice to leave unattended.
+As a practical floor, treat the 24–32B tier at 4-bit quantization as the smallest size that holds up across a multi-step autonomous loop without frequent tool-call errors. Below that, a model is still useful as an assistant you supervise turn by turn ([Section 25](#sec-ai-offline) covers exactly that setup), but it is not yet a safe choice to leave unattended.
 
 > **IMPORTANT:**
 >
@@ -1931,13 +2281,13 @@ This ensures:
 
 #### Routed architectures: a planner and an executor
 
-[Section 22](#sec-ai-offline) already shows the mechanics of splitting a task between two local models with `aider --architect`: a larger model plans the change, and a smaller one applies the edits. The same split has a name in the research literature and a stronger motivating argument than “it’s faster”: Belcak and NVIDIA’s small-language-model research group argue that most of what an agent does in a loop is “a small number of specialized tasks repetitively and with little variation” — reading a diff, running a test, formatting a commit message — and that a small model is “sufficiently powerful, inherently more suitable, and necessarily more economical” for that work ([Belcak et al. 2025](#ref-slm_agentic_ai)). A large model earns its cost only on the steps that genuinely need broad, general reasoning: deciding *what* to change and why.
+[Section 25](#sec-ai-offline) already shows the mechanics of splitting a task between two local models with `aider --architect`: a larger model plans the change, and a smaller one applies the edits. The same split has a name in the research literature and a stronger motivating argument than “it’s faster”: Belcak and NVIDIA’s small-language-model research group argue that most of what an agent does in a loop is “a small number of specialized tasks repetitively and with little variation” — reading a diff, running a test, formatting a commit message — and that a small model is “sufficiently powerful, inherently more suitable, and necessarily more economical” for that work ([Belcak et al. 2025](#ref-slm_agentic_ai)). A large model earns its cost only on the steps that genuinely need broad, general reasoning: deciding *what* to change and why.
 
 Two shapes of this pattern are worth knowing:
 
 - **All-local**: a single strong local model (30–32B) does both planning and execution, which is simplest to set up and is the right default for a laptop or workstation with one GPU.
 - **Local planner, local executor**: a 30–32B planner drafts each step and a 7–8B executor applies it, trading some plan quality for throughput — worthwhile mainly on hardware that cannot comfortably hold two copies of a 32B model at once.
-- **Cloud planner, local executor**: a frontier cloud model plans and a local model executes, which keeps the bulk of file contents on your own machine while still using strong reasoning for the decisions that matter most. This is a hybrid rather than a fully local setup — see the LiteLLM fallback pattern in [Section 22](#sec-ai-offline) for one way to wire a cloud-with-local-fallback endpoint, which composes with this split.
+- **Cloud planner, local executor**: a frontier cloud model plans and a local model executes, which keeps the bulk of file contents on your own machine while still using strong reasoning for the decisions that matter most. This is a hybrid rather than a fully local setup — see the LiteLLM fallback pattern in [Section 25](#sec-ai-offline) for one way to wire a cloud-with-local-fallback endpoint, which composes with this split.
 
 The same split is the main cost lever in a public field report from a non-programmer ([“Vibe coded this game in four months”](https://www.reddit.com/r/ClaudeCode/comments/1vvhrfq/), r/ClaudeCode, 2026-08-22; summarized in [issue \#98](https://github.com/Morrison-Lab/wai/issues/98)), who built a browser racing game over four months with coding agents. The report names three levers:
 
@@ -2003,7 +2353,78 @@ This page explains the reasoning; it does not implement a launcher or a CI gate.
   - non-standard-characters
   - bibliography DOIs
 
-# 27 Configuring GitHub Copilot Settings
+# 31 VoltAgent: TypeScript Agent Framework
+
+[VoltAgent](https://github.com/VoltAgent/voltagent) is an open-source TypeScript framework for building LLM agents, paired with a commercial console called VoltOps that adds observability, deployment, evals, and prompt management ([VoltAgent 2026g](#ref-voltagent_repo)). The GitHub repository reports about 10,600 stars, 1,100 forks, and an MIT license, with the latest package releases published on 2026-08-27 (measured 2026-09-09). The project started in April 2025, so it is young but actively maintained.
+
+#### How agents are expressed
+
+An agent is a TypeScript object built from a name, a set of instructions, and a model ([VoltAgent 2026a](#ref-voltagent_agents)):
+
+``` typescript
+const agent = new Agent({
+  name: "my-agent",
+  instructions: "A helpful assistant that can check weather",
+  model: openai("gpt-4o-mini"),
+  tools: [weatherTool],
+  memory,
+});
+```
+
+The `model` field takes either a model object from the [Vercel AI SDK](https://ai-sdk.dev/) (the `ai-sdk` packages) or a `provider/model` string that VoltAgent resolves for you ([VoltAgent 2026a](#ref-voltagent_agents)). Because the model layer is the AI SDK, swapping between OpenAI, Anthropic, Google, and other providers is a configuration change rather than a rewrite ([VoltAgent 2026g](#ref-voltagent_repo)). The agent exposes `generateText()` and `streamText()` methods, and both accept an `output` schema for structured results. The default step limit is five model calls per turn ([VoltAgent 2026a](#ref-voltagent_agents)).
+
+Other building blocks follow the same pattern:
+
+- **Tools** are functions with a [Zod](https://zod.dev/) parameter schema, plus lifecycle hooks and cancellation support. MCP servers can be attached as tool sources “without extra glue code” ([VoltAgent 2026g](#ref-voltagent_repo)).
+
+- **Workflows** are chains built with `createWorkflowChain()`. Steps are added with `andThen()` (plain code), `andAgent()` (an LLM call), `andWhen()` (a conditional), `andAll()` (parallel, wait for all), and `andRace()` (parallel, first to finish wins). Input, result, and suspend/resume payloads are validated with Zod schemas, and the TypeScript type of the data flowing through the chain is inferred at each step ([VoltAgent 2026f](#ref-voltagent_workflows)).
+
+- **Memory** is a `Memory` object wrapping a storage adapter. Adapters exist for:
+
+  - in-process memory
+  - LibSQL/SQLite
+  - PostgreSQL
+  - Supabase
+  - Cloudflare D1
+  - a hosted “Managed Memory” on VoltOps
+
+  Optional embedding and vector adapters add semantic recall, and a “working memory” slot holds a compact summary the agent can read and update through built-in tools ([VoltAgent 2026b](#ref-voltagent_memory)).
+
+- **Supervisors and sub-agents** are ordinary agents passed in a `subAgents` array. The supervisor gains a `delegate_task` tool that takes a task description and the names of the sub-agents to call, and returns each sub-agent’s text plus its token usage. A `supervisorConfig` option controls the delegation guidelines, event forwarding, error handling, and the system prompt ([VoltAgent 2026d](#ref-voltagent_subagents)).
+
+A `VoltAgent` instance registers the agents and workflows and serves them over HTTP through a [Hono](https://hono.dev/) server, which is how the console and other clients reach them ([VoltAgent 2026g](#ref-voltagent_repo)).
+
+#### Observability and hosted parts
+
+The framework emits traces through an OpenTelemetry-based module. In development, the VoltOps console at `console.voltagent.dev` connects from the browser to the local agent process, and the documentation states that in this mode no data is sent to or stored on external servers ([VoltAgent 2026e](#ref-voltagent_console)). In production, export to the hosted platform switches on when VoltOps API keys are present in the environment; Langfuse and MLflow are also listed as export targets ([VoltAgent 2026c](#ref-voltagent_observability)).
+
+VoltOps itself is not open source. The README labels it “Cloud” and “Self-Hosted” ([VoltAgent 2026g](#ref-voltagent_repo)), but self-hosting is listed only on the Enterprise plan ([VoltAgent 2026h](#ref-voltagent_pricing)). The plans as of 2026-09-09:
+
+- **Developer**, free: one seat, one project, 250 traces per month, seven days of retention.
+- **Core**, USD 50 per month: three seats, 50,000 traces per month, 90 days of retention.
+- **Pro**, USD 250 per month: 20 seats, 250,000 traces per month, 90 days of retention, SSO.
+- **Enterprise**, custom pricing: unlimited tracing and self-hosted deployment.
+
+Overage is USD 10 per 5,000 additional traces ([VoltAgent 2026h](#ref-voltagent_pricing)). The managed RAG “Knowledge Base” ([VoltAgent 2026g](#ref-voltagent_repo)) and “Managed Memory” ([VoltAgent 2026b](#ref-voltagent_memory)) adapters are also VoltOps features, so an agent that uses them depends on the hosted service even though the framework around them is MIT-licensed.
+
+#### Useful to us?
+
+Probably not as a replacement for what we already run. Our orchestration baseline (**?@sec-orch-baseline**) is Claude Code subagents, the `Workflow` fan-out tool, and git worktrees, driven from R and Python repositories. VoltAgent’s supervisor and sub-agent pattern is the same idea expressed as a TypeScript library rather than as a coding harness: the sub-agents are LLM calls with tools, not sessions with a shell and a checkout. Adopting it would mean writing our agent logic in TypeScript and hosting a Node server, which adds a language and a runtime the lab does not otherwise use.
+
+Where it could earn a place:
+
+- **A long-running service** rather than a coding session. A lab chatbot over the manual, or a triage bot for issue queues, is the shape VoltAgent is built for: persistent memory keyed by user and conversation, typed tools, and an HTTP server out of the box.
+- **Typed, resumable workflows.** The `createWorkflowChain()` builder with Zod-validated suspend and resume payloads is more structured than what our `Workflow` tool offers for human-in-the-loop pauses.
+- **Local trace inspection.** The console’s localhost mode gives a trace viewer without sending data off the machine, which matters for anything touching unpublished data. The same OpenTelemetry traces can go to Langfuse or MLflow instead, so the viewer does not lock us in.
+
+The comparison table in **?@sec-orch-comparison** covers three other orchestrators and does not include VoltAgent. On that table’s dimensions, VoltAgent would read as:
+
+- **Primary domain**: general agent infrastructure, in TypeScript.
+- **License**: MIT framework, paid and closed console.
+- **Maturity**: young but active.
+- **Execution model**: supervisor agents delegating to sub-agents in one Node process.
+
+# 32 Configuring GitHub Copilot Settings
 
 GitHub Copilot offers numerous configuration options that control how the AI assistant integrates into your development workflow. This section explains the key settings visible in your GitHub account preferences and provides guidance on which options to enable based on your use case.
 
@@ -2162,7 +2583,7 @@ These settings control where and how Copilot integrates into your development en
 - *What it does*: Delegate tasks to Copilot coding agent in repositories where it is enabled
 - *Pros*: Autonomous multi-file edits, can execute complex refactoring, runs tests and fixes issues
 - *Cons*: Requires careful oversight, can make unwanted changes if instructions unclear
-- *Recommendation*: **Enable** (see [Section 20](#sec-ai-best-practices) for safe usage guidelines)
+- *Recommendation*: **Enable** (see [Section 22](#sec-ai-best-practices) for safe usage guidelines)
 
 **Copilot Memory (Preview):**
 
@@ -2233,9 +2654,9 @@ For lab members, we recommend the following configuration:
 - Editor preview features (only if comfortable with potential instability)
 - Automatic Copilot code review (wait until familiar with review quality)
 
-Following these guidelines will help establish an effective Copilot configuration. The key is to enable features that add value to your workflow while maintaining awareness that AI assistance requires validation (see [Section 20](#sec-ai-best-practices)).
+Following these guidelines will help establish an effective Copilot configuration. The key is to enable features that add value to your workflow while maintaining awareness that AI assistance requires validation (see [Section 22](#sec-ai-best-practices)).
 
-# 28 Connecting VS Code to a Custom Model Endpoint (BYOK)
+# 33 Connecting VS Code to a Custom Model Endpoint (BYOK)
 
 VS Code’s built-in Chat usually talks to GitHub’s hosted models. It can also route requests to a model provider of your own; GitHub calls this “bring your own key” (BYOK). The lab uses BYOK to reach Databricks model serving endpoints, which expose an OpenAI-compatible API, through the community extension [`oai-compatible-copilot`](https://marketplace.visualstudio.com/items?itemName=johnny-zhao.oai-compatible-copilot).
 
@@ -2283,7 +2704,7 @@ Databricks serves models over an OpenAI-compatible endpoint at `https://<workspa
 ]
 ```
 
-The `id` of each model must exactly match the name of a deployed serving endpoint in your workspace. The extension sends `id` as the OpenAI `model` field, and Databricks routes the request to the endpoint of that name. Most entries use `POST /serving-endpoints/chat/completions`. Models marked as Responses-API-only in the [Databricks model catalog](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models), including GPT-5.3 Codex, instead require `apiMode: "openai-responses"`. An `id` that names no real endpoint fails (see the 404 below).
+The `id` of each model must exactly match the name of a deployed serving endpoint in your workspace. The extension sends `id` as the OpenAI `model` field, and Databricks routes the request to the endpoint of that name. Most entries use `POST /serving-endpoints/chat/completions`. Models marked as Responses-API-only in the [Databricks model catalog](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models) instead require `apiMode: "openai-responses"`. That set is GPT-5.5 Pro, GPT-5.5, and GPT-5.3 Codex (measured 2026-09-09). It is not a Codex-family property: GPT-5.5 and GPT-5.5 Pro are in the set and are not Codex models. The older `gpt-5-2-codex`, `gpt-5-1-codex-max`, and `gpt-5-1-codex-mini` endpoints that earlier configurations also set to `openai-responses` no longer appear in the catalog (measured 2026-09-09). An `id` that names no real endpoint fails (see the 404 below).
 
 To store your token, run **Set OAI Compatible Multi-Provider Apikey** from the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`), choose the `databricks` provider, and paste a Databricks personal access token. The extension keeps it in VS Code’s encrypted secret storage (under `oaicopilot.apiKey.databricks`) and sends it as an `Authorization: Bearer` header.
 
@@ -2300,22 +2721,30 @@ The extension advertises input capacity as `context_length` minus `max_tokens`. 
 
 The underlying model’s maximum output is not always a good value for `max_tokens`. [Databricks reserves the requested output allowance before admitting a request](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/limits). Under the standard pay-per-token quota, Claude, GPT-5, and Gemini models generally have a 20,000 output-token-per-minute limit. A 64,000-token request can therefore receive an immediate 429 response even when the underlying model supports that output length.
 
-Use the quota-aware lab defaults in [Table 12](#tbl-databricks-oaicopilot-defaults). The context column is the operational value to put in `settings.json`, not the model’s maximum capability.
+Use the quota-aware lab defaults in 1. The context column is the operational value to put in `settings.json`, not the model’s maximum capability.
 
 | Model group | Workspace ITPM / OTPM | OAICopilot context | Output cap | Delay |
 |----|---:|---:|---:|---:|
 | GPT-5.6 Sol/Terra/Luna | 2,000,000 / 200,000 | 400,000 | 16,000 | 0 ms |
 | Claude Opus/Sonnet/Haiku | 200,000 / 20,000 | 64,000 | 16,000 | 15,000 ms |
-| GPT-5.5 through GPT-5 | 200,000 / 20,000 | 64,000 | 16,000 | 15,000 ms |
+| GPT-6 Astra and GPT-5.5 through GPT-5 | 200,000 / 20,000 | 64,000 | 16,000 | 15,000 ms |
 | Gemini | 200,000 / 20,000 | 64,000 | 16,000 | 15,000 ms |
-| Inkling | 200,000 / 10,000 | 64,000 | 8,192 | 15,000 ms |
+| GLM 5.3/5.3 Flash/5.2 | 200,000 / 20,000 | 64,000 | 16,000 | 15,000 ms |
+| Grok 4.6 | 200,000 / 20,000 | 64,000 | 16,000 | 15,000 ms |
+| Inkling | 200,000 / 10,000 | 56,000 | 8,192 | 15,000 ms |
+| Kimi K3 | 200,000 / 10,000 | 56,000 | 8,192 | 15,000 ms |
+| DeepSeek V4 Flash | 200,000 / 10,000 | 56,000 | 8,192 | 15,000 ms |
+| DeepSeek V4 Pro | 200,000 / 4,000 | 64,000 | 2,000 | 30,000 ms |
 | GPT OSS 120B/20B | 1,000,000 / 100,000 | 131,072 | 25,000 | 0 ms |
+| Qwen3.5 122B | 1,000,000 / 100,000 | 131,072 | 25,000 | 0 ms |
 | Llama 4 Maverick | 1,000,000 / 100,000 | 128,000 | 8,192 | 0 ms |
 | Llama 3.3/3.1 and Gemma 3 | 1,000,000 / 100,000 | 128,000 | 8,192 | 0 ms |
 
-Table 12: Lab defaults for Databricks-hosted models
+Table 14: Lab defaults for Databricks-hosted models
 
-Use `openai-responses` for any endpoint that the current catalog marks as requiring the Responses API, and `openai` for the rest. Checked 2026-08-26, the catalog gives that instruction for GPT-5.5 Pro, GPT-5.5, and GPT-5.3 Codex. Read the catalog rather than the list, since an endpoint can change API mode without any model being added. Add the `delay` value to each affected model entry. The extension applies this model-specific pause between requests; models without it fall back to the global `oaicopilot.delay` value. Every context and output cap in the table is a working default, not the underlying model’s maximum capability. Workspaces with higher provisioned or priority limits can raise these after checking their actual quota.
+The ITPM / OTPM column is the Enterprise-tier pay-per-token limit from the Databricks limits page ([Databricks 2026a](#ref-databricks_fmapi_limits)), and the endpoint names are from the model catalog ([Databricks 2026b](#ref-databricks_supported_models)), both measured 2026-09-09. The endpoint ids for the rows added on that date are `databricks-gpt-6-astra`, `databricks-glm-5-3`, `databricks-glm-5-3-flash`, `databricks-glm-5-2`, `databricks-grok-4-6`, `databricks-kimi-k3`, `databricks-deepseek-v4-flash-0731`, `databricks-deepseek-v4-pro-0813`, and `databricks-qwen35-122b-a10b`. The context column is a quota-derived working value, not a provider window. The catalog gives 1 million tokens of context for GLM, Kimi K3, and Inkling, and no window at all for either DeepSeek endpoint (measured 2026-09-09); on a 200,000 ITPM tier a 1 million-token `context_length` overruns every budget in [Table 15](#tbl-databricks-itpm-pacing). Qwen3.5’s 256K window and 25K output cap (measured 2026-09-09) sit on the 1,000,000 tier, so its row copies the GPT OSS values, and its 25,000 output cap is the provider figure, which that tier’s 100,000 OTPM admits. `databricks-inkling` is a real catalog endpoint, listed under Thinking Machine Labs as a Public Preview model that always reasons (measured 2026-09-09), so its row documents a live deployment rather than a local alias. The output cap is a per-request ceiling that most turns never reach, which is why the 20,000 OTPM rows carry a 16,000 cap at four requests per minute. A 4,000 OTPM tier has no such slack: DeepSeek V4 Pro’s 2,000 cap and 30,000 ms delay keep two requests inside the allowance, and 2,000 tokens is too little for an agent-mode edit, so treat that row as a chat-only default and prefer DeepSeek V4 Flash for agent work.
+
+Use `openai-responses` for the endpoints named in the wiring section above, and `openai` for the rest. Read the catalog rather than that list, since an endpoint can change API mode without any model being added. Add the `delay` value to each affected model entry. The extension applies this model-specific pause between requests; models without it fall back to the global `oaicopilot.delay` value. Every context and output cap in the table is a working default, not the underlying model’s maximum capability. Workspaces with higher provisioned or priority limits can raise these after checking their actual quota.
 
 #### Why the context and delay columns move together
 
@@ -2327,7 +2756,7 @@ A workspace admits `ITPM` input tokens per minute. The extension advertises `con
 
 The Claude row is tuned to sit just under that ceiling. A 15,000 ms delay allows four requests per minute, and each request carries the 48,000-token input budget derived above, so a busy client draws about 192,000 against a 200,000 ITPM tier. That is roughly 96 percent of the allowance, which is why the 64,000 value looks conservative and is not.
 
-This is what makes a larger window expensive. Raising `context_length` while leaving the delay alone multiplies straight through the inequality above. [Table 13](#tbl-databricks-itpm-pacing) gives the largest input budget each tier sustains at a given pace.
+This is what makes a larger window expensive. Raising `context_length` while leaving the delay alone multiplies straight through the inequality above. [Table 15](#tbl-databricks-itpm-pacing) gives the largest input budget each tier sustains at a given pace.
 
 | Workspace ITPM | 15 s (4/min) | 30 s (2/min) | 60 s (1/min) |
 |----------------|-------------:|-------------:|-------------:|
@@ -2335,7 +2764,7 @@ This is what makes a larger window expensive. Raising `context_length` while lea
 | 1,000,000      |      250,000 |      500,000 |    1,000,000 |
 | 2,000,000      |      500,000 |    1,000,000 |    2,000,000 |
 
-Table 13: Largest sustainable input budget by tier and pacing
+Table 15: Largest sustainable input budget by tier and pacing
 
 A model’s own maximum window is a separate quantity from either column, and it is usually far larger. Registering it directly is the common mistake. Advertising a 1,000,000-token window on a 200,000 ITPM tier offers a single prompt of 984,000 input tokens, which is 4.9 times the entire per-minute allowance, so two full prompts would need about 295 seconds between them. The window is a real capability of the model and it is not available at that quota.
 
@@ -2484,9 +2913,9 @@ Error: No lowest priority node found (path: ...)
   ... [ConversationHistorySummarizer] summarization failed
 ```
 
-This one comes from Copilot Chat’s prompt renderer, not from Databricks. The renderer drops prompt elements in priority order until the prompt fits the input budget the extension advertises, which is `context_length` minus `max_tokens`, or 48,000 tokens at the Claude defaults in [Table 12](#tbl-databricks-oaicopilot-defaults). The error is what it raises when it has nothing left to drop and the prompt is still over budget. A prompt pruned that far need not still contain your own message, which fits a model that replies it cannot see a request.
+This one comes from Copilot Chat’s prompt renderer, not from Databricks. The renderer drops prompt elements in priority order until the prompt fits the input budget the extension advertises, which is `context_length` minus `max_tokens`, or 48,000 tokens at the Claude defaults in 1. The error is what it raises when it has nothing left to drop and the prompt is still over budget. A prompt pruned that far need not still contain your own message, which fits a model that replies it cannot see a request.
 
-Agent mode reaches this sooner than ordinary chat, because tool definitions and instruction files consume the budget before any conversation does. Raise the model’s `context_length` and leave `max_tokens` alone: that widens the input allowance without reserving more output tokens per minute. Reducing the number of active tools and instruction files works too. Weigh both against [Table 12](#tbl-databricks-oaicopilot-defaults), whose context values are chosen to keep one client inside an ITPM tier, so buying prompt headroom this way costs more 429s. Raising the window without lengthening the delay breaks the pairing those two columns encode, and on a 200,000 ITPM tier the headroom is not there to buy. Switching to a higher-tier family is the move that gets both, as [Table 13](#tbl-databricks-itpm-pacing) sets out.
+Agent mode reaches this sooner than ordinary chat, because tool definitions and instruction files consume the budget before any conversation does. Raise the model’s `context_length` and leave `max_tokens` alone: that widens the input allowance without reserving more output tokens per minute. Reducing the number of active tools and instruction files works too. Weigh both against 1, whose context values are chosen to keep one client inside an ITPM tier, so buying prompt headroom this way costs more 429s. Raising the window without lengthening the delay breaks the pairing those two columns encode, and on a 200,000 ITPM tier the headroom is not there to buy. Switching to a higher-tier family is the move that gets both, as [Table 15](#tbl-databricks-itpm-pacing) sets out.
 
 **7. `[object Object]` in the reply text**
 
@@ -2498,7 +2927,7 @@ This is a display bug in the extension rather than a configuration error, so no 
 >
 > Copilot’s own hosted quota still applies to some background chores even when the main chat model is BYOK. A log line reading `quotaExceeded | gpt-4o-mini-2024-07-18 | [title]` is conversation-title generation failing against GitHub’s models, and it says nothing about whether your provider is working. In the 2026-08-20 session above, `chat.byokUtilityModelDefault` was already set to `"mainAgent"` and the title request still went to `gpt-4o-mini`, so that setting did not cover conversation titles in this version.
 
-# 29 Configuring the Agent Environment
+# 34 Configuring the Agent Environment
 
 The `.github/workflows/copilot-setup-steps.yml` file allows you to customize the development environment in which the GitHub Copilot coding agent operates. This file preinstalls tools and dependencies so that Copilot can build, test, and lint your code more reliably.
 
@@ -2646,7 +3075,7 @@ Note: When using self-hosted runners, you must disable Copilot’s integrated fi
 
 For complete details, see [Customizing the development environment for GitHub Copilot coding agent](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment).
 
-# 30 Agent Skills
+# 35 Agent Skills
 
 [Agent Skills](https://agentskills.io/home) are a lightweight, open standard for extending AI agent capabilities with specialized knowledge and workflows. The [specification](https://agentskills.io/specification) defines a portable, tool-agnostic format that any compatible agent can load.
 
@@ -2688,7 +3117,7 @@ Skills package procedural knowledge and team-specific context into portable, ver
 
 For the complete specification and more details, see [agentskills.io](https://agentskills.io/home).
 
-A skill is one of several ways to customize an agent, and not always the right one. [Section 33](#sec-ai-customization) compares it against:
+A skill is one of several ways to customize an agent, and not always the right one. [Section 41](#sec-ai-customization) compares it against:
 
 - instruction files
 - subagents
@@ -2699,9 +3128,65 @@ That section also explains why Claude Code’s custom slash commands are now ski
 
 The [Morrison-Lab/ai-config](https://github.com/Morrison-Lab/ai-config) repository contains an example of personal Claude Code configuration, including user-level skills, hooks, and subagents, synced across machines via Git.
 
-# 31 The Posit Skill Collection
+# 36 Tessl: Skills Registry and CLI
 
-[posit-dev/skills](https://github.com/posit-dev/skills) is the collection of [Agent Skills](https://agentskills.io/home) published by Posit (see [Section 30](#sec-ai-agent-skills) for what a skill is) for R, Python, Quarto, and Shiny work. It is MIT-licensed, and its skills load in Claude Code, Claude.ai, or through the Claude API, or in any other skills-compatible agent. The notes below reflect the repository’s README as read on 2026-09-01.
+[Tessl](https://tessl.io/) is a commercial platform for managing [Agent Skills](https://agentskills.io/home) (see [Section 35](#sec-ai-agent-skills) for what a skill is) the way `npm` or `pip` manage code dependencies: a searchable registry of skills and plugins, a `tessl` command-line tool that installs them into a project, and a hosted service that scores each skill for quality and security and measures whether it changes what an agent produces ([Tessl 2026k](#ref-tessl_docs_overview)). The notes below reflect the Tessl website and documentation as read on 2026-09-09.
+
+#### What it is
+
+Tessl’s home page describes it as an “Agent Enablement Platform” and pitches it at enterprise teams whose developers have accumulated many skills with no inventory, no version control, and no security review ([Tessl 2026i](#ref-tessl_home)). The documentation lists six components ([Tessl 2026k](#ref-tessl_docs_overview)):
+
+- a **registry and package manager** for discovering, installing, versioning, and rolling back skills and plugins
+- **governance**: security scanning powered by Snyk, role-based access control, install and publish policies, and an audit trail
+- **evals**, which run an agent on a task with and without a skill and compare the results
+- **observability** of where skills activate across agent sessions
+- an **inventory** that scans a GitHub organization and maps every `SKILL.md` across every repository
+- the **Tessl Agent**, a conversational agent for driving the platform (in open beta)
+
+The registry page counts more than 3,000 searchable skills, including Anthropic’s own `docx` and `frontend-design` skills and skills published by OpenAI, Google, GitHub, and HashiCorp, each shown with a quality score, an “agent success vs baseline” multiplier from the evals, and a security-scan result (measured 2026-09-09) ([Tessl 2026h](#ref-tessl_registry)).
+
+The pages fetched for this review do not describe spec-driven development: apart from one blog article linked from the home page, the current site is about managing skills, not about generating code from specifications.
+
+#### Relation to the Agent Skills standard
+
+Tessl does not define its own skill format. A Tessl skill is the same `SKILL.md` folder the Agent Skills specification defines, and Tessl’s conformance review checks a published skill against that specification ([Tessl 2026f](#ref-tessl_docs_faqs)). What Tessl adds is a lifecycle around the standard: a manifest (`tessl.json`) that records which skills a project depends on, versioned publishing with `--bump patch|minor|major`, and `tessl outdated` and `tessl update` for keeping dependencies current ([Tessl 2026j](#ref-tessl_docs_package_manager)).
+
+Tessl distinguishes two kinds of context ([Tessl 2026a](#ref-tessl_docs_core_concepts)):
+
+- **rules**, which apply to every task (the role instruction files play in [Section 41](#sec-ai-customization))
+- **skills**, which load only when the task matches their description
+
+A **plugin** bundles skills and rules together, and can also carry MCP servers and hooks, so it is roughly the same unit as a Claude Code plugin.
+
+The registry and the Posit skill collection in [Section 37](#sec-ai-posit-skills) are two different distribution routes for the same kind of artifact. Posit publishes its skills as a Git repository that the `skills` CLI or Claude Code’s plugin marketplace installs from; Tessl installs from a GitHub repository URL as well as from its own registry (the documentation’s example is `tessl install https://github.com/anthropics/skills`), and either way writes the skill into the agent’s skills directory.
+
+#### Installing and using it
+
+The CLI installs natively (`curl -fsSL https://get.tessl.io | sh`), through Homebrew, or on Windows through `winget install tessl.tessl`; the `npm` package is deprecated ([Tessl 2026b](#ref-tessl_docs_installation)). If your organization’s policy requires it, download and inspect the script before running it rather than piping it straight to `sh`. It needs Node.js 22.17 or later ([Tessl 2026e](#ref-tessl_docs_supported_platforms)), and by default it checks for updates every three hours and installs them silently ([Tessl 2026b](#ref-tessl_docs_installation)). Logging in (`tessl login`) uses a GitHub or Google account and is optional for searching and installing.
+
+In a project, `tessl init` detects the coding agents present and configures each of them. The supported list is Claude Code, Cursor, Codex, Gemini CLI, Antigravity, GitHub Copilot CLI, and GitHub Copilot for VS Code, with manual setup documented for other MCP-capable agents such as OpenCode and OpenClaw ([Tessl 2026e](#ref-tessl_docs_supported_platforms)). `tessl search "code review"` searches the registry by meaning rather than by keyword, and `tessl install <workspace>/<skill>` installs a skill into `.tessl/plugins/` and links it into each agent’s directory, so for Claude Code the skill appears under `.claude/skills/` ([Tessl 2026f](#ref-tessl_docs_faqs)). Adding `--global` installs into `~/.tessl/` for every project instead. On Windows the links are directory junctions, so moving the project folder requires running `tessl install` again.
+
+Before installing a third-party skill, `tessl review run security ./path-to-skill` scans it and returns a Snyk severity from `LOW` to `CRITICAL`; `--fail-on high` makes the command exit non-zero for use in CI ([Tessl 2026c](#ref-tessl_docs_security)). Installing from the registry warns on critical and high findings but leaves the decision to the user, unless a workspace administrator has set an install policy that blocks them.
+
+#### Pricing
+
+Tessl charges by usage credits rather than by seat. Publishing and installing skills and plugins is always free; credits pay for reviews, evals, and Tessl Agent sessions, and frontier models consume credits faster than the defaults. The tiers as of 2026-09-09 ([Tessl 2026g](#ref-tessl_pricing)):
+
+- **Free**: 1,000 credits per month, one workspace, free best-practice reviews on publicly published plugins
+- **Team**: \$100 per month for 5,000 credits, top-ups, spending limits, and role management within a workspace
+- **Enterprise**: custom pricing with multiple workspaces, SAML single sign-on, install and publish controls, mandatory skills, and bring-your-own-key models
+
+The CLI collects telemetry by default, and the documentation says this may include conversations, code snippets, and file contents; it can be turned off in the CLI configuration ([Tessl 2026d](#ref-tessl_docs_usage_data)). Tessl also reserves the right to train on data from free-tier usage, though it states it has not done so ([Tessl 2026d](#ref-tessl_docs_usage_data)).
+
+#### Useful to us? Marginally, for vetting skills; not as a package manager
+
+The lab’s skills already live in [Morrison-Lab/ai-config](https://github.com/Morrison-Lab/ai-config), where they are version-controlled, reviewed in pull requests, and installed as a Claude Code plugin, and the Posit skills the lab uses are copied into that repository (see [Section 37](#sec-ai-posit-skills)). Tessl’s package-manager features solve a problem the lab does not have: one repository is the single source of skills, so there is no sprawl to inventory, and the governance, role, and policy features are built for organizations with many teams rather than one. Adopting the CLI would add a Node.js dependency, a `tessl.json` manifest and `.tessl/` directory to each project, and telemetry that includes code by default.
+
+Two parts are worth using without adopting the rest. The registry is a convenient place to browse public skills and see a security-scan result and an eval score before copying one, and the free `tessl review run security` scan is a quick check on a skill from an unfamiliar source before it goes into `ai-config`. The eval model, running the same task with and without a skill and comparing the results, is the only part of Tessl the lab has no equivalent for, and it is worth keeping in mind if the lab ever wants evidence that a skill helps rather than an impression that it does.
+
+# 37 The Posit Skill Collection
+
+[posit-dev/skills](https://github.com/posit-dev/skills) is the collection of [Agent Skills](https://agentskills.io/home) published by Posit (see [Section 35](#sec-ai-agent-skills) for what a skill is) for R, Python, Quarto, and Shiny work. It is MIT-licensed, and its skills load in Claude Code, Claude.ai, or through the Claude API, or in any other skills-compatible agent. The notes below reflect the repository’s README as read on 2026-09-01.
 
 #### What it contains
 
@@ -2728,7 +3213,7 @@ The README documents these routes:
 - copying skill folders into the agent’s skills directory by hand
 - uploading a skill to Claude.ai, or loading it through the Skills API
 
-Once installed, the agent activates a skill from its description rather than on an explicit command, which is the progressive-disclosure model [Section 30](#sec-ai-agent-skills) describes.
+Once installed, the agent activates a skill from its description rather than on an explicit command, which is the progressive-disclosure model [Section 35](#sec-ai-agent-skills) describes.
 
 #### Useful to us? Yes, and largely already adopted
 
@@ -2744,9 +3229,49 @@ The R and Quarto skills match this lab’s daily work, and nine of them are alre
 - `release-post`
 - `testing-r-packages`
 
-Copying the skills in rather than installing the marketplace plugin lets them follow the lab’s own review and hook conventions, at the cost of tracking upstream changes by hand. Four categories are not adopted. Three of them have the least overlap with lab work: Shiny app development, `ggsql`, and Posit Connect deployment. The fourth, `posit-dev`, overlaps with practices the lab already has: its `critical-code-reviewer` parallels the adversarial self-review subagent that the lab’s agent configuration dispatches before every push, and `new-work` / `working-on` keep a per-task tracking document where the lab uses the issue tracker and a session notebook. The `github` skills likewise overlap with the lab’s own [pull-request workflow](../chapters/pr-workflow-with-agents.llms.md) and with the review setup in [Section 37](#sec-ai-claude-code-action-review), so both categories are worth reading for ideas rather than installing alongside that tooling. The contribution guidance in the repository recommends Anthropic’s `skill-creator` skill for authoring new skills.
+Copying the skills in rather than installing the marketplace plugin lets them follow the lab’s own review and hook conventions, at the cost of tracking upstream changes by hand. Four categories are not adopted. Three of them have the least overlap with lab work: Shiny app development, `ggsql`, and Posit Connect deployment. The fourth, `posit-dev`, overlaps with practices the lab already has: its `critical-code-reviewer` parallels the adversarial self-review subagent that the lab’s agent configuration dispatches before every push, and `new-work` / `working-on` keep a per-task tracking document where the lab uses the issue tracker and a session notebook. The `github` skills likewise overlap with the lab’s own [pull-request workflow](../chapters/pr-workflow-with-agents.llms.md) and with the review setup in [Section 46](#sec-ai-claude-code-action-review), so both categories are worth reading for ideas rather than installing alongside that tooling. The contribution guidance in the repository recommends Anthropic’s `skill-creator` skill for authoring new skills.
 
-# 32 Useful plugins
+# 38 Posit AI Tooling on GitHub
+
+The [`posit-dev`](https://github.com/posit-dev) GitHub organization holds the open-source work of Posit PBC that does not live under the `rstudio`, `tidyverse`, `r-lib`, or `quarto-dev` organizations. Much of the LLM tooling from Posit started there, so this section reviews the organization for repositories relevant to working with AI. The Posit skill collection, `posit-dev/skills`, is covered separately in [Section 37](#sec-ai-posit-skills) and is not repeated here.
+
+The listing below was derived from the GitHub API (`gh repo list posit-dev --limit 300`) rather than from browsing the website. The organization had 226 public repositories, of which the 16 below are about building with or evaluating LLMs (measured 2026-09-09). Star counts and last-push dates are as of the same date. The rest of the organization is Positron and its extensions, Shiny for Python, `great-tables`, `pointblank`, `air`, `ggsql`, Posit Team deployment tooling, container images, and workshop material.
+
+#### AI-related repositories
+
+| Repository | Purpose | Language | Stars | Last push | Verdict for this lab |
+|----|----|----|----|----|----|
+| [`querychat`](https://github.com/posit-dev/querychat) ([Posit PBC 2026m](#ref-posit_dev_querychat)) | Natural-language exploration of tabular data, translated to SQL, for R and Python Shiny apps | Python, R | 211 | 2026-09-08 | Maybe: a safe pattern for letting an LLM query a data frame |
+| [`mcptools`](https://github.com/posit-dev/mcptools) ([Posit PBC 2026i](#ref-posit_dev_mcptools)) | Model Context Protocol for R: expose a running R session as an MCP server, or register MCP servers with `ellmer` chats | R | 194 | 2026-08-22 | Yes: the MCP layer `btw` uses, and the way to expose a lab function as a tool |
+| [`chatlas`](https://github.com/posit-dev/chatlas) ([Posit PBC 2026e](#ref-posit_dev_chatlas)) | Python client for LLM chat and tool calling, the Python counterpart of `ellmer` | Python | 175 | 2026-09-08 | No: the lab builds in R |
+| [`shinychat`](https://github.com/posit-dev/shinychat) ([Posit PBC 2026p](#ref-posit_dev_shinychat)) | Chat UI component for Shiny, in R and Python | TypeScript, R, Python | 137 | 2026-09-09 | Maybe: only if a lab app needs a chat panel |
+| [`btw`](https://github.com/posit-dev/btw) ([Posit PBC 2026d](#ref-posit_dev_btw)) | Toolkit for giving LLMs context about an R session: copy context to the clipboard, chat in the IDE, or connect R to coding agents through `mcptools` | R | 135 | 2026-09-09 | Yes: the most direct fit for an R-centric workflow |
+| [`mcp-repl`](https://github.com/posit-dev/mcp-repl) ([Posit PBC 2026h](#ref-posit_dev_mcp_repl)) | Sandboxed MCP server that keeps a persistent R or Python session alive across an agent’s tool calls, with plots returned as images | Rust | 65 | 2026-07-27 | Yes, untried: replaces `Rscript -e` round trips in Claude Code |
+| [`shiny-assistant`](https://github.com/posit-dev/shiny-assistant) ([Posit PBC 2026o](#ref-posit_dev_shiny_assistant)) | Source of the hosted Shiny Assistant chat app | Python | 58 | 2026-01-17 | No: an application, not a library |
+| [`raghilda`](https://github.com/posit-dev/raghilda) ([Posit PBC 2026n](#ref-posit_dev_raghilda)) | Retrieval-augmented generation pipeline in Python, with DuckDB or ChromaDB storage | Python | 36 | 2026-09-02 | No: the R counterpart is `tidyverse/ragnar` |
+| [`shinyrealtime`](https://github.com/posit-dev/shinyrealtime) ([Posit PBC 2026q](#ref-posit_dev_shinyrealtime)) | Voice chat in Shiny apps via the OpenAI Realtime API | Python, R, TypeScript | 25 | 2026-07-31 | No |
+| [`commons`](https://github.com/posit-dev/commons) ([Posit PBC 2026g](#ref-posit_dev_commons)) | Experimental framework for data agents built on trusted R or Python calculations and data dictionaries | R, Python | 20 | 2026-09-09 | Watch: experimental, but aimed at the “agent over our own analyses” problem |
+| [`code-index`](https://github.com/posit-dev/code-index) ([Posit PBC 2026f](#ref-posit_dev_code_index)) | Semantic code search over a repository, exposed to coding agents through MCP; parses R, Python, Quarto, and Markdown | Go | 6 | 2026-04-29 | Maybe: for large codebases only |
+| [`ai-lib`](https://github.com/posit-dev/ai-lib) ([Posit PBC 2026a](#ref-posit_dev_ai_lib)) | TypeScript LLM-provider infrastructure behind Posit Assistant, successor to the archived `ai-provider-bridge` | TypeScript | 5 | 2026-09-08 | No: internal infrastructure |
+| [`bluffbench2`](https://github.com/posit-dev/bluffbench2) ([Posit PBC 2026c](#ref-posit_dev_bluffbench2)) | Evaluation of whether agents notice subtle data-quality artifacts in plots, implemented with `vitals` | R | 4 | 2026-07-21 | Yes, as a reference: an eval built in R about data-analysis judgment |
+| [`positron-copilot-chat`](https://github.com/posit-dev/positron-copilot-chat) ([Posit PBC 2026l](#ref-posit_dev_positron_copilot_chat)) | Fork of Microsoft’s Copilot Chat extension bundled into Positron | TypeScript | 4 | 2026-05-06 | No: consumed through Positron itself |
+| [`assistant-feedback`](https://github.com/posit-dev/assistant-feedback) ([Posit PBC 2026b](#ref-posit_dev_assistant_feedback)) | Issue tracker for feedback on Posit Assistant | none | 4 | 2026-05-28 | Reference: where to report Positron Assistant problems |
+| [`nesevals`](https://github.com/posit-dev/nesevals) ([Posit PBC 2026j](#ref-posit_dev_nesevals)) | Evaluation tooling for next-edit-suggestion prompts and models | R | 2 | 2026-04-07 | No: relevant to IDE builders |
+
+Two tools the lab might expect to find here live elsewhere. [`ellmer`](https://github.com/tidyverse/ellmer), the R package for LLM chat and tool calling that `btw` and `querychat` build on and that `mcptools` and `shinychat` integrate with, and [`ragnar`](https://github.com/tidyverse/ragnar), its retrieval companion, are in the `tidyverse` organization. Positron Assistant has no public repository of its own. Going by the repository descriptions, its provider layer is `ai-lib`, the Copilot fork above supplies its chat surface, and the rest is part of the [`positron`](https://github.com/posit-dev/positron) repository ([Posit PBC 2026k](#ref-posit_dev_positron)). The organization also holds workshop and demo repositories (`positron-ai-workshop`, `ai-powered-app-workshop`, `shiny-querychat-workshop`, `posit-conf-chat`) that are worked examples of the packages above rather than tools.
+
+#### Useful to us? Yes, three tools and one reference
+
+The lab’s workflow is R and Quarto driven by Claude Code and Copilot, so the question is which of these repositories connect that workflow to an R session.
+
+- **`btw`** is the direct fit. Its clipboard mode pastes the structure of the objects in an R session into whatever chat is open, and its MCP server route (through `mcptools`) lets Claude Code read package documentation and inspect the global environment instead of guessing at column names. The MCP route follows the setup pattern in [Section 62](#sec-ai-mcp-server-setup).
+- **`mcptools`** is the layer underneath `btw`, and the package to use directly when a lab package wants to expose one of its own functions to an agent as a tool.
+- **`mcp-repl`** addresses a cost the lab already pays: each `Rscript -e` call an agent makes starts a fresh process, so data and packages are reloaded on every check. A persistent, sandboxed session with inline plots is a better fit for iterating on an analysis with an agent, at the cost of a Rust binary to install. It has not yet been tried in the lab.
+- **`bluffbench2`** is a reference rather than a dependency. It is an evaluation written in R with [`vitals`](https://github.com/tidyverse/vitals) that measures whether an agent notices data-quality problems, which is the kind of judgment the lab expects a human reviewer to keep. Anyone building an eval of the lab’s own agent configuration can start from its harness.
+
+`querychat` and `shinychat` matter only if the lab ships Shiny apps with a chat interface. `commons` is a framework for data agents rather than a chat component, and it is still marked experimental. The Python packages (`chatlas`, `raghilda`) duplicate R tools the lab already prefers. Positron Assistant is configured through Positron rather than through these repositories; see [Section 32](#sec-ai-copilot-settings) for its OpenAI setup and [Section 25](#sec-ai-offline) for running it against Ollama.
+
+# 39 Useful plugins
 
 This site’s Quarto sources already use [Semantic Line Breaks](https://sembr.org/) (SemBr): a line break after each substantial unit of thought, so the source is easier to edit while the rendered HTML still reads as ordinary paragraphs.
 
@@ -2773,13 +3298,153 @@ The agent reads the touched code first and is lazy about the solution, never abo
 
 [Contextify](https://contextify.sh/) keeps your Claude Code and Codex history forever in a private, searchable timeline. Claude Code deletes history after 30 days; Contextify watches both tools, summarizes each message (on-device via Apple Intelligence on macOS 26, or Lite Mode on macOS 15), and lets you search every conversation you ever had. It runs local-first with no account required, and optionally syncs across devices via Cloud Sync or a self-hosted instance you operate. The ambient timeline lets you follow sessions in real time or skim what happened while you were away.
 
-The lab’s portable agent config lives in [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config). It is a plugin-or-symlink install of skills, hooks, and memories — not a third marketplace next to SemBr. How that config actually reaches a machine, and how a doubled plugin install fails, is [Section 34](#sec-ai-config-install). [Section 33](#sec-ai-customization) is the worked example of what the corpus contains.
+The lab’s portable agent config lives in [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config). It is a plugin-or-symlink install of skills, hooks, and memories — not a third marketplace next to SemBr. How that config actually reaches a machine, and how a doubled plugin install fails, is [Section 42](#sec-ai-config-install). [Section 41](#sec-ai-customization) is the worked example of what the corpus contains. [Section 40](#sec-ai-plugin-catalog) maps the official and community marketplaces these four sit in and sets each against `ai-config`.
 
-# 33 Customizing an Agent
+# 40 The plugin catalog
 
-[Section 30](#sec-ai-agent-skills) describes one way to extend an agent. It is not the only one, and a lab that knows only that one tends to write every customization as a skill, including the ones that should have been something else.
+[Section 39](#sec-ai-useful-plugins) names four plugins the lab already uses. This section is the map they sit on: what Anthropic’s official marketplace contains, which community plugins are worth knowing about, and how each of them relates to the lab’s own [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config) ([Morrison Lab 2026a](#ref-ai_config_readme)). It closes with the question that prompted it: what the `ralph-loop` plugin is, and whether it is the same thing as `ai-config`’s `ardi`.
 
-This section maps the whole surface. The mechanisms differ less in what you can write in them — most are Markdown with a [YAML front matter](https://jekyllrb.com/docs/front-matter/) header, as [Section 7](#sec-ai-harness-construction) describes — than in **when they fire and who decides**.
+Plugin counts and names change weekly, so every figure below is stamped with the date it was read. The anatomy of a plugin bundle (skills, hooks, MCP servers, agents, commands) is [Section 66](#sec-ai-plugins-deep-dive); this section assumes it.
+
+#### The three Anthropic marketplaces
+
+Anthropic runs three plugin catalogs for Claude Code, and they differ in who curates them ([Anthropic 2026w](#ref-claude_code_discover_plugins)):
+
+- **`claude-plugins-official`** ([`anthropics/claude-plugins-official`](https://github.com/anthropics/claude-plugins-official) ([Anthropic 2026q](#ref-claude_plugins_official))). Curated by Anthropic at its discretion; there is no application process. Claude Code registers it automatically the first time it starts interactively, so `/plugin install <name>@claude-plugins-official` works with no setup. Browse it with `/plugin` (the **Discover** tab) or at [claude.com/plugins](https://claude.com/plugins).
+- **`claude-community`** ([`anthropics/claude-plugins-community`](https://github.com/anthropics/claude-plugins-community) ([Anthropic 2026s](#ref-claude_plugins_community))). Third-party submissions that passed Anthropic’s automated validation and safety screening, each pinned to a commit SHA and synced nightly from the review pipeline. Added by hand: `/plugin marketplace add anthropics/claude-plugins-community`, then `/plugin install <name>@claude-community`. Pull requests against the mirror are closed automatically; submissions go through a form.
+- **`claude-code-plugins`** ([`anthropics/claude-code`, `plugins/`](https://github.com/anthropics/claude-code/tree/main/plugins) ([Anthropic 2026p](#ref-claude_code_demo_plugins))). The demo marketplace: thirteen example plugins (`commit-commands`, `code-review`, `feature-dev`, `hookify`, `ralph-wiggum`, and others) that show what the plugin system can do. Most of them also ship in the official marketplace under the same or a renamed entry (`ralph-wiggum` there is `ralph-loop` here).
+
+The official README carries the warning that governs all three: Anthropic does not control what MCP servers, files, or other software a plugin includes, and cannot verify that it works as intended or will not change ([Anthropic 2026q](#ref-claude_plugins_official)). A plugin runs arbitrary code with your user privileges, so the trust decision is yours, per plugin, every time.
+
+#### What the official marketplace contains
+
+The official catalog’s `marketplace.json` lists 287 plugins (measured 2026-09-09 from the copy Claude Code caches locally; ([Anthropic 2026q](#ref-claude_plugins_official))). Only 38 of them live in the repository’s own `plugins/` directory, which the README describes as the plugins Anthropic develops and maintains. Another 15 sit in `external_plugins/`, and the remaining 234 are pointers to third-party repositories (Amazon, Microsoft, Google’s `gemini-cli-extensions`, Databricks, Hugging Face, Sentry, and many vendors), each pinned to a commit SHA. So “official” mostly means “listed and pinned by Anthropic”, not “written by Anthropic”. By declared category the catalog is:
+
+- development (119)
+- productivity (49)
+- database (38)
+- monitoring (20)
+- security (18)
+- a long tail of deployment, design, automation, learning, location, testing, migration, and math
+
+The 38 Anthropic-maintained plugins fall into five groups. The verdicts are for this lab’s work (R packages, Quarto sites, Python and shell tooling, GitHub pull requests), not for software teams in general.
+
+##### Code intelligence
+
+Twelve `*-lsp` plugins (`clangd`, `csharp`, `gopls`, `jdtls`, `kotlin`, `lua`, `php`, `pyright`, `ruby`, `rust-analyzer`, `swift`, `typescript`) connect a Language Server Protocol server so that Claude sees type errors and missing imports after every edit and can jump to definitions instead of grepping ([Anthropic 2026w](#ref-claude_code_discover_plugins)). The plugin does not install the language server binary; you do, and cloud sessions never start it.
+
+Verdict: `pyright-lsp` is worth installing wherever the lab writes Python. There is no R entry in the catalog (measured 2026-09-09), so R work gets no diagnostics from this route; the docs describe an `.lsp.json` for writing your own LSP plugin, which is the path if anyone wants to wire up R’s `languageserver`.
+
+##### Development workflows
+
+- `commit-commands`: commit, push, and open a PR from slash commands.
+- `code-review`: multi-agent PR review with confidence-based scoring.
+- `pr-review-toolkit`: reviewer agents specialized by concern (comments, tests, error handling, type design).
+- `feature-dev`: a phased explore-design-implement workflow with dedicated agents.
+- `code-simplifier`: an agent that refines code for clarity without changing behaviour.
+- `code-modernization`: a preflight-assess-transform workflow for legacy codebases.
+- `security-guidance`: pattern warnings on every edit plus an LLM diff review at `Stop`, with fixes applied in the same session.
+- `claude-security`: deeper vulnerability scanning of your own code, at a chosen effort level.
+- `ralph-loop`: the self-referential iteration loop, treated on its own below.
+
+Verdict: `security-guidance` fills a gap `ai-config` does not cover and costs little, so install it. `commit-commands`, `code-review`, and `pr-review-toolkit` overlap the lab’s forge workflow (claim, PR-on-claim, `ardi`, the `@claude` review action) and would run beside it rather than replace it; skip them unless you are working outside a lab repository. `feature-dev` and `code-modernization` are aimed at application codebases and have not earned a place here.
+
+##### Building your own extensions
+
+- `plugin-dev`: seven skills covering hooks, MCP integration, and plugin structure.
+- `skill-creator`: create, improve, and benchmark skills.
+- `hookify`: write a hook from a conversation pattern or an explicit instruction.
+- `mcp-server-dev` and `agent-sdk-dev`: building MCP servers and Claude Agent SDK programs.
+- `mcp-tunnels`: reach a private MCP server through an Anthropic tunnel.
+- `claude-md-management`: audit `CLAUDE.md`, capture session learnings, keep project memory tidy.
+- `claude-code-setup`: analyze a codebase and recommend hooks, skills, and MCP servers for it.
+
+Verdict: `skill-creator` and `plugin-dev` are the ones to reach for when adding to `ai-config`, since the corpus is itself a plugin. `claude-md-management` duplicates `ai-config`’s `ums` and `memorize` skills and its `MEMORY.md` conventions; skip it in lab repositories. `hookify` generates a hook from a description; `ai-config`’s hooks are hand-written Python with a test per hook, so use `hookify` for a personal one-off and the corpus for anything shared.
+
+##### Output styles and reports
+
+`explanatory-output-style` recreates the deprecated built-in Explanatory style (commentary on implementation choices), and `learning-output-style` implements a Learning style that never shipped (prompts for you to write key pieces yourself). `receipts`, `session-report`, and `project-artifact` generate HTML reports of what you shipped, what a session cost, and a project status page. `playground` builds single-file interactive HTML explorers; `frontend-design` targets distinctive web interfaces; `math-olympiad` solves competition mathematics with adversarial verification; `cwc-makers` sets up a hardware kit.
+
+Verdict: `learning-output-style` is a reasonable choice for a student who wants to learn a codebase rather than delegate it, per [Section 52](#sec-ai-when-to-use). `session-report` is useful when a quota question comes up. The rest are not relevant to lab work.
+
+##### External integrations
+
+The `external_plugins/` directory and many third-party entries bundle a pre-configured MCP server: `github`, `gitlab`, `atlassian`, `asana`, `linear`, `notion`, `figma`, `slack`, `sentry`, `vercel`, `firebase`, `supabase`, `context7`, `playwright`, `serena`, `terraform`, and messaging bridges for Discord, Telegram, and iMessage ([Anthropic 2026w](#ref-claude_code_discover_plugins)).
+
+Verdict: `github` is the one that matters here; [Section 62](#sec-ai-mcp-server-setup) covers configuring it, and [Section 51](#sec-ai-pr-activity-notifications) what it adds. `context7` (live library documentation lookup) is worth a try for Python and JavaScript work. Everything else depends on whether the lab uses the service.
+
+#### Community plugins worth knowing
+
+Beyond the three Anthropic catalogs, any GitHub repository with a `.claude-plugin/marketplace.json` is a marketplace (`/plugin marketplace add owner/repo`), and the four plugins in [Section 39](#sec-ai-useful-plugins) (`sembr/skills`, `ponytail`, Contextify, and `ai-config` itself) all reach you that way. One more is widely enough used to describe here.
+
+**Superpowers** ([`obra/superpowers`](https://github.com/obra/superpowers) ([Vincent 2026a](#ref-obra_superpowers))) calls itself “a complete software development methodology for your coding agents, built on top of a set of composable skills”. The 6.3.0 build installed on one lab machine carries fourteen skills (measured 2026-09-09):
+
+- `brainstorming`
+- `writing-plans` and `executing-plans`
+- `test-driven-development`
+- `systematic-debugging`
+- `subagent-driven-development` and `dispatching-parallel-agents`
+- `requesting-code-review` and `receiving-code-review`
+- `using-git-worktrees`
+- `finishing-a-development-branch`
+- `verification-before-completion`
+- `using-superpowers` and `writing-skills`, the two meta-skills
+
+The `using-superpowers` skill loads at session start so the others trigger on their own. It is MIT-licensed and installs into more than a dozen agents, among them:
+
+- Claude Code, via `/plugin install superpowers@claude-plugins-official`
+- Cursor, Codex, and Copilot CLI
+- Gemini CLI, OpenCode, and Antigravity
+- Pi and Hermes
+
+Verdict: install it if you want an opinionated end-to-end process and are not already running `ai-config`. Running both means two session-start bootstraps competing to set the workflow, and `ai-config` already covers the same ground in its own vocabulary (`brainstorm`, `st`, `ardi`, `adversarial-reviewer`, `clean-worktrees`, `wrap-up`). The skills that do not overlap (`systematic-debugging`, `test-driven-development`) are worth reading even if you do not install the plugin.
+
+The community marketplace itself is small so far (four plugin directories visible on 2026-09-09: `eli5`, `quickdesign`, `testdino`, `tres-finance-plugin`; ([Anthropic 2026s](#ref-claude_plugins_community))), so “branching out” today means the official catalog’s third-party entries and independent repositories, not that mirror.
+
+#### Compared with `ai-config`
+
+[`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config) ([Morrison Lab 2026a](#ref-ai_config_readme)) is the lab’s own plugin. The copy Claude Code caches on one lab machine holds 198 skills and 90 hook scripts (measured 2026-09-09), plus memories and the `shared/` fragments this site vendors into **?@sec-fully-clean** and its neighbours. It installs as a Claude Code plugin (`/plugin marketplace add Morrison-Lab/ai-config`), as a Cursor plugin, and via `bootstrap.sh` for Codex, Gemini CLI and Antigravity, VS Code Copilot, and OpenCode ([Section 42](#sec-ai-config-install)).
+
+Set beside the marketplaces above, four differences decide what to install:
+
+- **Scope.** A marketplace plugin does one thing: one language server, one MCP server, one workflow. `ai-config` is a whole working style: forge etiquette (claim, PR-on-claim, `ardi`, `mwc`), lab coding and writing conventions, quota management, and the memory that carries lessons between sessions. Nothing in the official catalog is shaped like that; `superpowers` is the closest, and it stops at the software-methodology layer.
+- **Enforcement.** The official workflow plugins are mostly skills and agents, which advise. `ai-config` pairs its skills with hooks that block: an unauthorized merge, a force push, a reply that promises without a mechanism. The one official plugin with a comparable `Stop`-hook design is `security-guidance`, which is why it is the clearest addition.
+- **Cross-agent reach.** Both `ai-config` and `superpowers` install into several agents from one repository; the official plugins are Claude Code only. If a lab member works in Codex or Antigravity as well, that decides it.
+- **Ownership.** A finding in an official plugin is a bug report to Anthropic; a finding in `ai-config` is a PR you can open today, and the corpus’s UMS discipline expects exactly that.
+
+The practical composition, as of 2026-09-09: `ai-config` as the base, `pyright-lsp` and `security-guidance` from the official marketplace, `github` where the MCP server is not already configured by hand, and `sembr/skills` for prose repositories. Everything else is a per-person choice.
+
+#### What is `ralph-loop`, and is it `ardi`?
+
+`ralph-loop` (official marketplace; `ralph-wiggum` in the demo marketplace) packages Geoffrey Huntley’s “Ralph” technique ([Anthropic 2026ad](#ref-ralph_loop_plugin); [Huntley 2025](#ref-ghuntley_ralph)). Ralph, in Huntley’s words, “is a Bash loop”:
+
+``` bash
+while :; do cat PROMPT.md | claude-code ; done
+```
+
+The same prompt file is fed to a fresh agent run, over and over. Nothing changes between iterations except the repository: the previous run’s files, commits, and test results are what the next run reads. Tests supply the backpressure that keeps each pass honest, and the operator “tunes Ralph by adding a sign” to the prompt when a failure pattern shows up ([Huntley 2025](#ref-ghuntley_ralph)). Huntley says it works best on greenfield projects, one task per loop ([Huntley 2025](#ref-ghuntley_ralph)).
+
+The plugin moves that loop inside a single Claude Code session. `/ralph-loop "<prompt>" --max-iterations <n> --completion-promise "<text>"` installs a `Stop` hook that intercepts the agent’s attempt to end the turn and feeds the same prompt back, until the agent’s output contains the completion-promise string exactly, or the iteration cap is hit, or you run `/cancel-ralph` ([Anthropic 2026ad](#ref-ralph_loop_plugin)). The caveats in the README are the important part: the promise is an exact-string match, so it cannot distinguish “done” from “blocked”, and `--max-iterations` (unlimited by default) is the only real safety net. It lists tasks needing human judgment, one-shot operations, unclear success criteria, and production debugging as cases where not to use it.
+
+So: is it like `ardi`? Both are loops that refuse to let the agent stop early, and both rely on a `Stop`-time mechanism (`ai-config`’s own `Stop` hooks are what block a placeholder reply or an empty promise). Past that they answer different questions.
+
+|  | `ralph-loop` | `ardi` |
+|----|----|----|
+| What it loops over | one prompt, re-fed to the same session | one pull request, across review rounds and sessions |
+| Who decides “done” | the agent, by emitting an agreed string | an independent reviewer’s verdict plus green CI on the current head |
+| What changes each round | nothing but the repository state | the reviewer’s new findings, each Addressed, Rebutted, or Deferred |
+| Safety valve | an iteration cap you set | a human merge gate; the loop reports ready and never merges |
+| Where it fits | before a PR exists: grind an implementation against tests | after a PR exists: drive it to fully clean |
+
+`ardi` is not self-referential. Each iteration is triggered by something outside the agent (a review landing, a check turning red), it re-arms itself with a timer rather than a `Stop` hook, and its terminal condition is **?@sec-fully-clean**, which an agent cannot declare about itself. `ralph-loop` has no reviewer in the loop at all; its judge is whichever tests the prompt tells it to run.
+
+The two compose rather than compete. A Ralph loop is a reasonable way to get a well-specified, well-tested change to the point of opening a PR; `ardi` takes over from there. What the lab should not do is use `ralph-loop` as a substitute for review: a loop whose exit is a string the agent writes will exit whether or not the work is right.
+
+# 41 Customizing an Agent
+
+[Section 35](#sec-ai-agent-skills) describes one way to extend an agent. It is not the only one, and a lab that knows only that one tends to write every customization as a skill, including the ones that should have been something else.
+
+This section maps the whole surface. The mechanisms differ less in what you can write in them — most are Markdown with a [YAML front matter](https://jekyllrb.com/docs/front-matter/) header, as [Section 8](#sec-ai-harness-construction) describes — than in **when they fire and who decides**.
 
 #### The Question That Picks the Mechanism
 
@@ -2796,7 +3461,7 @@ A rule you cannot afford to have ignored does not belong in a `CLAUDE.md`.
 
 #### Instruction Files: Always-On Context
 
-`CLAUDE.md` and [`AGENTS.md`](https://agents.md/) are prose the harness loads at the start of a session, with no front matter and no schema ([Section 7](#sec-ai-harness-construction)).
+`CLAUDE.md` and [`AGENTS.md`](https://agents.md/) are prose the harness loads at the start of a session, with no front matter and no schema ([Section 8](#sec-ai-harness-construction)).
 
 Three properties matter when you write one:
 
@@ -2841,7 +3506,7 @@ One concrete sign that the format genuinely crosses vendors: GitHub Copilot [loo
 
 #### Subagents: Delegating to a Fresh Context
 
-[Section 6](#sec-ai-agent-implementation) and [Section 9](#sec-ai-harness-agent-relationship) cover what a subagent *is* and how the harness runs one. The authoring question is narrower: a subagent is a single Markdown file with front matter in `.claude/agents/` (project) or `~/.claude/agents/` (personal), whose body becomes that agent’s entire system prompt.
+[Section 7](#sec-ai-agent-implementation) and [Section 10](#sec-ai-harness-agent-relationship) cover what a subagent *is* and how the harness runs one. The authoring question is narrower: a subagent is a single Markdown file with front matter in `.claude/agents/` (project) or `~/.claude/agents/` (personal), whose body becomes that agent’s entire system prompt.
 
 Two details are easy to get wrong.
 
@@ -2875,7 +3540,7 @@ Rules are written as `Tool(specifier)` — for example `Bash(npm run test *)`, `
 
 Everything above changes what the agent *knows or must do*. An [MCP](https://modelcontextprotocol.io/) server changes what it *can reach*: typed tools, data resources, and reusable templates exposed over a standard protocol. The specification is explicit that it “does not dictate how AI applications use LLMs or manage the provided context.”
 
-So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. [Section 48](#sec-ai-mcp-server-setup) covers configuration and its failure modes.
+So MCP is never the answer to “how do I make the agent follow our convention”, and always a candidate answer to “how do I let the agent query our issue tracker”. [Section 62](#sec-ai-mcp-server-setup) covers configuration and its failure modes.
 
 #### Choosing
 
@@ -2893,10 +3558,10 @@ So MCP is never the answer to “how do I make the agent follow our convention�
 
 | Mechanism | Portable? | Evidence |
 |----|----|----|
-| Agent Skills (`SKILL.md`) | yes, in format | open standard with a published specification, adopted across Claude Code, Codex, Copilot, Cursor, and Google Antigravity (and legacy Gemini CLI; see [Section 10](#sec-ai-harness-landscape) on Gemini CLI’s sunset and folding into Antigravity CLI) |
-| `AGENTS.md` | yes, as an open specification | standardizes filename, location, and precedence across Codex, Google Antigravity (and legacy Gemini CLI; see [Section 10](#sec-ai-harness-landscape)), Cursor, Aider, and Copilot (Claude Code reads `CLAUDE.md` by default, or imports `@AGENTS.md`) |
+| Agent Skills (`SKILL.md`) | yes, in format | open standard with a published specification, adopted across Claude Code, Codex, Copilot, Cursor, and Google Antigravity (and legacy Gemini CLI; see [Section 11](#sec-ai-harness-landscape) on Gemini CLI’s sunset and folding into Antigravity CLI) |
+| `AGENTS.md` | yes, as an open specification | standardizes filename, location, and precedence across Codex, Google Antigravity (and legacy Gemini CLI; see [Section 11](#sec-ai-harness-landscape)), Cursor, Aider, and Copilot (Claude Code reads `CLAUDE.md` by default, or imports `@AGENTS.md`) |
 | MCP servers | yes | open protocol with multiple independent clients |
-| `CLAUDE.md` / `GEMINI.md` | by courtesy | vendor instruction files read by default in their respective environments (Claude Code and Google Antigravity; see [Section 10](#sec-ai-harness-landscape) on the legacy Gemini CLI product folding into Antigravity CLI), and supported by courtesy in GitHub Copilot |
+| `CLAUDE.md` / `GEMINI.md` | by courtesy | vendor instruction files read by default in their respective environments (Claude Code and Google Antigravity; see [Section 11](#sec-ai-harness-landscape) on the legacy Gemini CLI product folding into Antigravity CLI), and supported by courtesy in GitHub Copilot |
 | Cursor Rules (`.cursor/rules/*.mdc`) | no | Markdown Cursor (`.mdc`) files with `alwaysApply` and `globs` frontmatter, scoped to Cursor |
 | `.github/copilot-instructions.md` | no | GitHub Copilot only |
 | `.github/instructions/*.instructions.md` | no | GitHub Copilot only, and not on every Copilot surface |
@@ -2918,9 +3583,9 @@ That distribution is itself the argument. Nearly everything is a skill, because 
 
 This repository is a smaller example of the same idea: it carries a `.github/copilot-instructions.md` for conventions that apply everywhere, plus path-scoped files under `.github/instructions/` whose `applyTo` globs attach them only when you edit a matching file.
 
-# 34 How the Config Reaches a Machine
+# 42 How the Config Reaches a Machine
 
-[Section 33](#sec-ai-customization) describes *which* mechanism a customization should use. This section is about the step after that decision: how a config like a shared instruction repository actually reaches a machine, and how a broken install fails.
+[Section 41](#sec-ai-customization) describes *which* mechanism a customization should use. This section is about the step after that decision: how a config like a shared instruction repository actually reaches a machine, and how a broken install fails.
 
 Two agents can load the identical instruction corpus and still behave differently, because behavior depends not only on what the config says but on how it is installed where the agent runs. An install problem is quiet by construction — nothing errors, the work still gets done, and a capability simply goes missing with no message that it existed.
 
@@ -2958,7 +3623,104 @@ A broken install rarely announces itself; you read it backward from a symptom.
 
 The common thread is that the install layer is a real surface, distinct from the content of the config, with its own failure modes and its own checks. When an agent behaves as though a rule or skill you wrote does not exist, suspect the install before you suspect the rule.
 
-# 35 Claude Code Cloud Environments
+# 43 Anthropic’s Public Repositories
+
+Anthropic publishes its code under the [`anthropics`](https://github.com/anthropics) GitHub organization. The organization held 108 repositories when surveyed (measured 2026-09-09). Claude Code itself is not open source, but its public repository is still useful, and so are several others. This section inventories the repositories that matter to us, says what the two headline repositories actually contain, and ends with a verdict on each.
+
+All counts below come from the GitHub API on the survey date (measured 2026-09-09); stars and push dates drift daily, and the license column reports what the API detected. `none` means the API found no license; for `claude-code` and `claude-agent-sdk-typescript` that is because `LICENSE.md` is a proprietary notice rather than a recognized open-source license, marked `none (proprietary)`, and for the other `none` rows there is no license file at all. `not detected` means a license file exists that the API could not classify (it reports `NOASSERTION`). A single row can also hide a split: `skills` has no root license file, so the API reports none, while its README says four of its skills are source-available.
+
+#### Which repositories matter to us
+
+Forks and archived repositories together are 38 of the 108 (measured 2026-09-09): forks of infrastructure projects that Anthropic contributes patches to (`tokio`, `rayon`, `argo-cd`, `httpcore`, `orjson`, `beam`), and archived companions to research papers (`hh-rlhf`, `toy-models-of-superposition`, `sleeper-agents-paper`). Neither group concerns a lab that consumes Claude as a product. The rest sorts into six groups.
+
+| Repository | Purpose | Language | Stars | Last push | License | Verdict |
+|----|----|----|----|----|----|----|
+| `claude-code` | Issue tracker, changelog, and bundled plugins for the Claude Code CLI | Python (plugin scripts) | 144.5k | 2026-09-08 | none (proprietary) | Track issues and read the plugins |
+| `claude-code-action` | GitHub Action that runs Claude Code on PRs and issues | TypeScript | 8.8k | 2026-09-08 | MIT | Already in use; read its `examples/` |
+| `claude-code-base-action` | Read-only mirror of `base-action/` from the repository above | TypeScript | 974 | 2026-09-08 | MIT | Reference only; do not pin to it |
+| `claude-code-security-review` | Security-focused PR review action | Python | 6.2k | 2026-02-11 | MIT | Low priority; superseded by a review prompt |
+| `claude-agent-sdk-python` | Python SDK wrapping the Claude Code agent loop | Python | 8.1k | 2026-09-08 | MIT | Useful for scripted agents |
+| `claude-agent-sdk-typescript` | Issue tracker and changelog for the TypeScript agent SDK | Shell | 1.7k | 2026-09-08 | none (proprietary) | Track issues only |
+| `anthropic-sdk-python` | Raw Messages API client | Python | 3.9k | 2026-09-04 | MIT | Useful for direct API calls |
+| `sandbox-runtime` | OS-level sandbox (`srt`) for processes, MCP servers, and agents | TypeScript | 5.2k | 2026-09-07 | Apache-2.0 | Trial on Linux and macOS; alpha on Windows |
+| `skills` | Reference Agent Skills plus the `spec/` for the skill format | Python | 175.4k | 2026-09-03 | none | Read the spec; borrow document skills |
+| `claude-plugins-official` | Anthropic-curated plugin marketplace | Python | 36.1k | 2026-09-09 | Apache-2.0 | Install from it; see [Section 39](#sec-ai-useful-plugins) |
+| `claude-plugins-community` | Read-only mirror of the community marketplace | Python | 3.7k | 2026-08-25 | Apache-2.0 | Browse before writing our own |
+| `knowledge-work-plugins` | Role-specific plugins built for Claude Cowork | Python | 23.9k | 2026-09-09 | Apache-2.0 | Templates for a lab-role plugin |
+| `claude-cookbooks` | Notebook recipes for the Claude API | Jupyter Notebook | 52.6k | 2026-09-03 | MIT | Reference when scripting the API |
+| `courses` | Five API and prompting courses | Jupyter Notebook | 22.8k | 2026-08-28 | not detected | Introductory material |
+| `prompt-eng-interactive-tutorial` | Nine-chapter prompting tutorial | Jupyter Notebook | 38.1k | 2026-08-28 | none | Introductory material; dated model names |
+| `claude-quickstarts` | Starter apps you can deploy (support agent, computer use) | TypeScript | 17.6k | 2026-09-04 | MIT | Skim only |
+| `devcontainer-features` | Dev Container feature that installs the CLI | Shell | 302 | 2025-12-16 | MIT | Useful for a GitHub Codespaces setup |
+| `claude-code-monitoring-guide` | Telemetry and cost-tracking guide | Markdown | 369 | 2025-07-29 | none | Read once if we meter usage |
+| `claude-ai-mcp` | Issue tracker for MCP inside claude.ai | Markdown | 467 | 2026-06-08 | not detected | Search before filing an MCP bug |
+
+The six groups, and what each is for:
+
+- **Product trackers.** `claude-code`, `claude-agent-sdk-typescript`, and `claude-ai-mcp` exist mainly so users can file issues against a closed product.
+- **Automation.** `claude-code-action`, its mirror, and `claude-code-security-review` run Claude inside GitHub Actions.
+- **Programmatic access.** The `anthropic-sdk-*` clients (Python, TypeScript, Go, Java, Ruby, C#, PHP) speak the raw API; `claude-agent-sdk-python` wraps the whole Claude Code agent loop and bundles the CLI, and the TypeScript package does the same from npm, though its repository here is only a tracker.
+- **Extensions.** `skills`, the two plugin marketplaces, and `knowledge-work-plugins` hold the skills and plugins the harness loads.
+- **Infrastructure.** `sandbox-runtime`, `devcontainer-features`, and `claude-code-monitoring-guide` are about where the CLI runs and what it costs.
+- **Learning material.** `claude-cookbooks`, `courses`, `prompt-eng-interactive-tutorial`, and `claude-quickstarts` teach the API rather than the CLI.
+
+Two repositories one might look for are not in the organization. There is no `mcp` repository, because the Model Context Protocol lives under its own `modelcontextprotocol` organization, and the former `dxt` repository (Desktop Extensions) now redirects to `modelcontextprotocol/mcpb`, the renamed MCP Bundles format (measured 2026-09-09).
+
+#### What the public `claude-code` repository actually contains
+
+The repository named after Claude Code, second in the table only to `skills` by stars, does not contain Claude Code. The tree at `main` has 333 paths and no `src/` directory (measured 2026-09-09) ([Anthropic 2026e](#ref-anthropics_claude_code_repo)). `LICENSE.md` is a one-line proprietary notice pointing at Anthropic’s commercial terms, which is why the API reports no license. The CLI itself ships as a compiled npm package (and, since the README marked npm installation deprecated, as a native installer, a Homebrew cask, and a `winget` package; read 2026-09-09) ([Anthropic 2026e](#ref-anthropics_claude_code_repo)), and this repository is the public face of that closed product.
+
+The repository holds five things the lab can use:
+
+- **`CHANGELOG.md`** is the only authoritative per-release changelog. It is the file to read when a behavior changes between versions, and its entries are detailed enough to diagnose regressions (the entry for 2.1.266, for example, names the gateway environment variable, `CLAUDE_CODE_USE_GATEWAY`, that 2.1.265 had started honoring on its own, and says no configuration change is needed; read 2026-09-09) ([Anthropic 2026f](#ref-anthropics_claude_code_changelog)).
+- **`plugins/`** holds thirteen first-party plugins and a `.claude-plugin/marketplace.json` that publishes them as the `claude-code-plugins` marketplace ([Anthropic 2026o](#ref-anthropics_claude_code_plugins_readme)). Several map directly onto lab workflows: `code-review` (five parallel review agents with confidence scoring), `pr-review-toolkit` (six specialist review agents, including a `silent-failure-hunter`), `commit-commands`, `hookify` (generates hooks from observed misbehavior), `ralph-wiggum` (a `Stop`-hook loop that keeps re-running one task), and `security-guidance` (a `PreToolUse` hook watching nine patterns). `plugin-dev` is the toolkit for writing more.
+- **`examples/`** holds the reference configurations that the documentation describes in prose: `settings/` (strict, lax, and bash-sandbox profiles), `hooks/` (a Bash command validation hook), `mdm/` (managed settings for macOS and Windows fleets), and `gateway/` (AWS and GCP gateway setups).
+- **`.devcontainer/`** is the container Anthropic uses for its own sandboxed sessions, including `init-firewall.sh`, the allowlist firewall that [Section 24](#sec-ai-firewall) discusses.
+- **`.github/workflows/`** is a live example of running the action against a very large issue tracker: `claude.yml` (the `@claude` agent), `claude-issue-triage.yml`, `claude-dedupe-issues.yml`, and `auto-close-duplicates.yml`, with the TypeScript behind them in `scripts/`. The repository had 12,563 open issues (measured 2026-09-09), which is why that automation exists.
+
+So the honest description is “issue tracker plus plugins plus example configs”. The harness internals are described from the outside in [Section 8](#sec-ai-harness-construction); nothing in this repository lets you read them.
+
+#### `claude-code-action`: modes and what ships with it
+
+`claude-code-action` is genuinely open source (MIT), and the whole action is readable: `src/` holds the entry points, the GitHub client, an in-process MCP server for file operations, and the two execution modes; `test/` has a test file per concern (comment sanitizing, branch validation, permissions, public-comment redaction, SSH signing) ([Anthropic 2026g](#ref-anthropics_claude_code_action_repo)).
+
+[Section 46](#sec-ai-claude-code-action-review) already explains that review is a prompt, not a separate action. The general form of that observation is the mode detector in `src/modes/detector.ts`, documented in `docs/experimental.md` ([Anthropic 2026y](#ref-anthropics_claude_code_action_experimental)):
+
+1.  If the workflow supplies a `prompt` input, the action runs in **agent mode**: it executes the prompt directly on whatever event fired, which is how scheduled maintenance, issue triage, and one-shot review work.
+2.  If there is no `prompt` but the event carries an `@claude` mention, an assignment, or the trigger label, it runs in **tag mode**: it posts a tracking comment with progress checkboxes and runs an open-ended session that can push code.
+3.  If neither, it does nothing.
+
+The `track_progress` input forces tag-mode tracking comments onto `pull_request` and `issues` events that would otherwise run in agent mode. Everything else about behavior is set through `claude_args`, which passes flags straight to the CLI (`--max-turns`, `--system-prompt`, and so on), and through `plugins`, which installs named marketplace plugins before the run.
+
+Three other things in the repository are easy to miss:
+
+- **`examples/`** has eleven copy-paste workflows (measured 2026-09-09): the three review variants, plus `claude.yml` (the general `@claude` mention workflow), `ci-failure-auto-fix.yml`, `test-failure-analysis.yml`, `issue-deduplication.yml`, `issue-triage.yml`, `manual-code-analysis.yml`, `agent-approval-check.yml`, and `claude-wif.yml`, the workload-identity-federation variant that avoids storing a long-lived API key.
+- **`agent-approval-check/`** is a second, smaller action that gates a workflow on whether the actor is a recognized agent identity, with an example identities file.
+- **Authentication inputs** cover a direct API key, a Claude Code OAuth token, federation (`anthropic_federation_rule_id` plus organization, workspace, and service-account IDs), and OIDC to Bedrock, Vertex AI, or Microsoft Foundry.
+
+The `allowed_non_write_users` input carries its own warning in `action.yml`: letting users without write access trigger the action exposes the run to prompt injection, and the secret scrubbing it performs is best-effort. `claude-code-security-review` says the same of itself in its README and recommends requiring approval for fork PRs ([Anthropic 2026h](#ref-anthropics_claude_code_security_review)). Both are the upstream statement of the caution in [Section 21](#sec-ai-benefits-hazards).
+
+#### The extension and SDK repositories, briefly
+
+`skills` is the reference implementation of the Agent Skills format that [Section 35](#sec-ai-agent-skills) describes. Its `spec/` directory is the format definition, `template/` is a starting skill, and `skills/` holds the examples. The README states the licensing split plainly: most skills are Apache-2.0, while the `docx`, `pdf`, `pptx`, and `xlsx` skills that power Claude’s own document features are source-available rather than open source ([Anthropic 2026m](#ref-anthropics_skills_repo)). Read a license header before copying one.
+
+`claude-plugins-official` is the marketplace behind `/plugin install <name>@claude-plugins-official`, split into Anthropic-maintained `plugins/` and partner-submitted `external_plugins/` ([Anthropic 2026j](#ref-anthropics_claude_plugins_official)). Its README states a rule that applies to any marketplace we publish: a plugin’s `name` is an immutable slug, since renaming it breaks every existing install, and a `renames` map exists for the unavoidable case. `claude-plugins-community` is a nightly, read-only mirror of the community submissions that passed security scanning ([Anthropic 2026i](#ref-anthropics_claude_plugins_community)), and `knowledge-work-plugins` holds eleven role-specific bundles built for Claude Cowork ([Section 71](#sec-ai-collaborative-workspaces)) that also load in Claude Code ([Anthropic 2026k](#ref-anthropics_knowledge_work_plugins)).
+
+Of the two agent SDKs, only the Python one is open source. `claude-agent-sdk-python` bundles the CLI inside the wheel and exposes `query()` and `ClaudeAgentOptions` for driving a full agent session from a script ([Anthropic 2026c](#ref-anthropics_claude_agent_sdk_python)). `claude-agent-sdk-typescript` has the same shape as `claude-code`: a proprietary `LICENSE.md`, a changelog, examples, and an issue tracker for the npm package ([Anthropic 2026d](#ref-anthropics_claude_agent_sdk_typescript)). The lower-level `anthropic-sdk-python` is the raw API client (MIT) for anyone who wants the model without the agent loop ([Anthropic 2026b](#ref-anthropics_anthropic_sdk_python)).
+
+`sandbox-runtime` (`srt`) is the sandbox Claude Code uses internally, released as a beta research preview. It wraps `sandbox-exec` on macOS and `bubblewrap` on Linux with a proxy-based network allowlist, and the headline use case in its README is wrapping a local MCP server so it can read only the directories you name ([Anthropic 2026l](#ref-anthropics_sandbox_runtime)). Windows support is marked alpha, through a bundled `srt-win.exe` helper that runs the process under a dedicated local user account (measured 2026-09-09), so Windows users in the lab should treat it as experimental.
+
+#### Useful to us?
+
+Yes, selectively, and less for code than for reference.
+
+- **Adopt now.** `claude-code-action` is already how our repositories run `@claude` and review ([Section 46](#sec-ai-claude-code-action-review)); the `examples/` directory and `claude-wif.yml` are the upgrade path when we move off static API keys. `claude-plugins-official` is the safe default source for plugins.
+- **Read, then borrow.** The `plugins/` directory in `claude-code` duplicates several things our own instruction repository does by hand — a multi-agent review command, a silent-failure hunter, a hook generator — and a `hookify`-style rule is a lighter way to encode a “never do X again” correction than a hand-written hook. `skills/spec/` is the authority when a skill fails to load.
+- **Track, do not depend on.** `claude-code` and `claude-agent-sdk-typescript` are trackers. Search their issues before filing; read `CHANGELOG.md` before blaming a regression on your config. Pin workflows to `claude-code-action@v1`, never to the base-action mirror.
+- **Trial on Linux and macOS.** `sandbox-runtime` could replace part of the firewall configuration in [Section 24](#sec-ai-firewall) for macOS and Linux users; its Windows path is alpha.
+- **Skip.** `claude-code-security-review` has not been pushed since February 2026 and its job is now a review prompt; the quickstarts and courses are for API programming, which is not the lab’s main use of Claude.
+
+# 44 Claude Code Cloud Environments
 
 [Claude Code](https://www.anthropic.com/claude-code) is a CLI coding agent that can also run tasks on Anthropic-managed cloud infrastructure— either from the web at [claude.ai/code](https://claude.ai/code) (“Claude Code on the web”), or from the terminal by adding the `--remote` flag to move a session into the cloud.
 
@@ -2983,7 +3745,7 @@ The `/remote-env` slash command sets **which configured environment is the defau
 
 For details, see the [Claude Code on the web documentation](https://code.claude.com/docs/en/claude-code-on-the-web) and the [slash command reference](https://code.claude.com/docs/en/commands).
 
-# 36 Using a ChatGPT Account for Codex Pull-Request Reviews
+# 45 Using a ChatGPT Account for Codex Pull-Request Reviews
 
 OpenAI Codex can act as a reviewer on GitHub pull requests. The native integration uses the Codex service connected to a ChatGPT workspace and posts a standard GitHub review through the Codex connector bot. It does not require you to build a separate GitHub Action.
 
@@ -3070,7 +3832,7 @@ Codex review is an additional signal; it does not replace:
 
 For current setup details, see OpenAI’s [GitHub code-review documentation](https://learn.chatgpt.com/docs/third-party/github).
 
-# 37 Where Pull-Request Review Lives in Claude Code Action
+# 46 Where Pull-Request Review Lives in Claude Code Action
 
 A common question about [`anthropics/claude-code-action`](https://github.com/anthropics/claude-code-action) is where its pull-request review lives. The answer is surprising: **there is no dedicated review action.** The repository publishes one general-purpose top-level action, and “review” is a *prompt* you pass it, not a separate artifact.
 
@@ -3126,7 +3888,7 @@ This distinction explains a common debugging dead end: “`@claude` answered my 
 
 This is the Claude-side counterpart to [using a ChatGPT account for Codex pull-request reviews](#sec-ai-codex-github-review). Codex ships a hosted native reviewer configured through the ChatGPT workspace, with no workflow file. Claude Code’s reviewer is the opposite trade: you own a workflow file and supply API credentials, but the prompt, tools, model, and triggering events are all visible and editable in your repository.
 
-# 38 Gemini Review Action for GitHub Pull Requests
+# 47 Gemini Review Action for GitHub Pull Requests
 
 [`derailed-dash/gemini-review-action`](https://github.com/derailed-dash/gemini-review-action) is an open-source GitHub Action that provides automated code reviews on pull requests and automated triage on issues using Google’s Gemini models (measured 2026-08-31; repository at `v1.6.6`).
 
@@ -3177,7 +3939,36 @@ jobs:
 
 Like [Claude Code Action](#sec-ai-claude-code-action-review), `derailed-dash/gemini-review-action` gives the repository owner full visibility over workflow triggers, authentication methods, and review prompts. In contrast to hosted review offerings that require platform-level permissions across an entire organization, this GitHub Action operates per-repository with credentials scoped to GitHub Actions secrets or Google Cloud IAM roles.
 
-# 39 Gemini Code Assist for Repository Code Review
+# 48 Auto-Review in Google Antigravity
+
+Issue \#109 asked whether Google Antigravity has an auto-review mode, prompted by a Reddit thread in the `r/google_antigravity` community. Reddit refuses requests from the machines this site is built on, so the thread itself could not be read (measured 2026-09-10); this section answers the question from the product’s own documentation instead and says where the lab’s practice fills the gap.
+
+#### What the product offers
+
+Antigravity has two things that look like review, and neither is an automatic review of your code.
+
+- **Artifact review** is a gate on the agent’s own plans. The Artifact Review Policy setting, in the Agent tab of the Settings pane, offers “Request Review (Recommended)”, which pauses the agent and waits for you to approve its implementation plan or diff, and “Always Proceed”, which skips the pause and lets the agent run without manual verification ([Google 2026a](#ref-antigravity_docs_artifact_review)). Neither option makes a reviewer read the change: one asks a human to, and the other asks nobody to.
+- **Review Changes** is a diff pane. Once the agent starts writing code, a Review Changes button in the Agent panel’s bottom toolbar opens a pane where you scroll through every change made in the conversation and leave comments on file diffs for the agent to act on ([Google 2026i](#ref-antigravity_docs_review_changes)). The documentation describes it as a human reading the agent’s work, not the agent reviewing its own.
+
+So the direct answer is no: as documented on 2026-09-10, Antigravity ships human-in-the-loop review of what the agent did, and an “always proceed” switch that removes even that. An automatic second opinion on a pull request has to be built.
+
+#### Building one with the Antigravity SDK
+
+Google’s own example is a GitHub Actions workflow that runs an Antigravity agent as an adversarial pull-request reviewer ([Samborski 2026](#ref-samborski_antigravity_pr_reviewer)). It triggers on pull-request `opened` and `reopened` events, and on an `@agy /review` comment for manual runs; it uses the `run-agy-sdk` composite action with a managed agent whose system instructions cast it as a code auditor; it runs on the Actions runner itself, where the SDK can start Docker-based MCP servers for file access and PR commenting; and it deliberately limits the agent to reading files and posting comments, with reviews restricted to maintainers on non-fork pull requests. That is the same shape as the Claude Code Action review in [Section 46](#sec-ai-claude-code-action-review) and the Gemini review action in [Section 47](#sec-ai-gemini-review-action): review is a CI job that a PR event starts, not a mode inside the editor.
+
+#### What the lab does
+
+The lab already built this once. `Morrison-Lab/ai-config` carries an `agy-review-workflow` skill and a reusable `antigravity-code-review.yml` workflow in `Morrison-Lab/gha` that posted a review, a security audit, and a set of generated tests on every pull request. That route ran on prepaid API credits, and it was retired on 2026-08-20 after a dispatched run ended with the credits depleted; the skill now documents itself as history and points cross-vendor second opinions at Codex instead (see [Section 45](#sec-ai-codex-github-review)).
+
+The Antigravity command-line program, `agy`, is a separate lane and still works. Its headless form, `agy --print "<prompt>"`, answers a single prompt on standard output under the subscription’s own quota (measured 2026-09-09). Quote the prompt so the shell passes it as one argument, and put it directly after `--print`: on this machine, placing another flag between the two made `agy` treat that flag as the prompt. The lab uses it as a local adversarial reviewer before a push: pipe the branch diff into a prompt that asks for factual errors, unsupported claims, broken cross-references, and style violations, and ends with a one-word verdict. Because `agy --print` cannot read files or the network in that mode, the diff has to be pasted into the prompt text itself. That is a pre-push check, not a PR bot, so the PR-side review stays with the Claude and Copilot reviewers the repositories already run.
+
+#### Useful to us? Yes, as a local second opinion
+
+- **Use** `agy --print` for a cheap, cross-vendor pre-push review when Claude quota is the scarce resource, which was the situation on 2026-09-09.
+- **Do not** re-enable the API-credit workflow; it costs money the lab has stopped budgeting for, and a dispatch that fails leaves a red check no reviewer can clear.
+- **Do not** read “Always Proceed” as an auto-review mode. It is the opposite: it removes the only review step the editor has.
+
+# 49 Gemini Code Assist for Repository Code Review
 
 Google Cloud provides a native code-review capability through [Gemini Code Assist](https://docs.cloud.google.com/gemini/docs/code-review/review-repo-code) (measured 2026-08-31; documentation in Enterprise preview). Unlike GitHub Actions that run inside individual repository workflows, Gemini Code Assist operates as a managed service connected at the organization or repository level.
 
@@ -3208,7 +3999,94 @@ Gemini Code Assist enforces several deliberate boundaries on review scope:
 | **Interactive mode** | Built-in `/gemini` comment tags | Configurable via `@claude` or Action triggers |
 | **Credential location** | Google Cloud IAM & Developer Connect token | GitHub Secrets or Workload Identity Federation |
 
-# 40 How a Session Learns a PR Changed
+# 50 PR-Agent: Open-Source Pull-Request Review Bot
+
+[PR-Agent](https://github.com/The-PR-Agent/pr-agent) ([The PR Agent 2026h](#ref-pr_agent_repo)) is an open-source pull-request review bot. It runs one large-language-model call per command, posts the result as a pull-request comment or review, and works against several git forges with any model that LiteLLM can reach. All claims below were checked against the repository at `main`, its release list, and the documentation site at <https://docs.pr-agent.ai/> (measured 2026-09-09; the latest release was `v0.45.0`, published 2026-09-05).
+
+#### History and ownership
+
+PR-Agent began at CodiumAI, later renamed Qodo, and its hosted enterprise edition was sold as Qodo Merge. In 2026 Qodo donated the open-source project to the community. The repository now lives in the `The-PR-Agent` GitHub organization, has an external maintainer, and its README says it “is currently in the process of being donated to an open-source foundation” ([The PR Agent 2026h](#ref-pr_agent_repo)). Qodo Merge was rebranded as Qodo 2.0, a separate hosted product.
+
+The README is emphatic that the two are not the same thing: the repository “is not the Qodo offering for open-source projects”, and PR-Agent is “a community-maintained legacy project of Qodo” ([The PR Agent 2026h](#ref-pr_agent_repo)). Qodo remains the project’s gold sponsor. Read the documentation with that split in mind: pages that describe a hosted app or a free tier for open-source projects are describing Qodo’s product, while PR-Agent itself is software you run.
+
+The Docker images moved with the ownership. Releases `0.34.2` and later are published under `pragent/pr-agent`; the older `codiumai/pr-agent` namespace is a frozen archive ([The PR Agent 2026h](#ref-pr_agent_repo)).
+
+#### Commands
+
+Every command is a slash comment on the pull request or a subcommand of the `pr-agent` command-line tool. The four core commands ([The PR Agent 2026a](#ref-pr_agent_docs)):
+
+- `/describe` generates a title, type, summary, code walk-through, and labels.
+- `/review` generates a review covering possible issues, security concerns, tests, and an estimate of review effort. The review can also rate risk, recommend whether to merge, list the files a human should read first, and check the change against a linked GitHub or Jira ticket ([The PR Agent 2026g](#ref-pr_agent_review)).
+- `/improve` posts actionable code suggestions, which the forge can render as one-click suggestion blocks.
+- `/ask "..."` answers a free-text question about the whole PR or about specific lines.
+
+Six further commands (`/add_docs`, `/generate_labels`, `/similar_issue`, `/help`, `/help_docs`, and `/update_changelog`) round out the set. `/help_docs` is disabled as of `v0.36.1` pending a fix for a credential-exposure issue ([The PR Agent 2026h](#ref-pr_agent_repo)).
+
+Each command is a single model call, which the README describes as “~30 seconds, low cost” ([The PR Agent 2026h](#ref-pr_agent_repo)). Large diffs are handled by a compression strategy rather than by a multi-step agent loop: deletion-only hunks are dropped, deleted files are collapsed into a list, and remaining files are added in order of size until the prompt approaches the model’s token limit ([The PR Agent 2026f](#ref-pr_agent_compression)). Files that do not fit are named but not shown to the model. `v0.45.0` adds an opt-in large-diff chunking mode for `/review` that splits a diff across several calls and merges the results.
+
+Behavior is configured in a `.pr_agent.toml` file at the repository root, or by environment variables using dotted keys such as `pr_reviewer.extra_instructions` and `config.model` ([The PR Agent 2026c](#ref-pr_agent_automation)). Each tool has an `extra_instructions` field for free-text review guidance, and `/review` has `require_*` switches (`require_security_review`, `require_tests_review`, and so on) that turn individual sections on or off ([The PR Agent 2026g](#ref-pr_agent_review)).
+
+#### Supported forges and models
+
+PR-Agent supports five forges:
+
+- GitHub
+- GitLab
+- Bitbucket
+- Azure DevOps
+- Gitea
+
+Most commands work on all five; the documentation keeps a per-forge feature matrix, and a few commands (such as `/similar_issue`) are GitHub-only ([The PR Agent 2026a](#ref-pr_agent_docs)).
+
+Models are bring-your-own. PR-Agent calls models through LiteLLM, so any provider LiteLLM supports can be selected by setting `config.model` ([The PR Agent 2026d](#ref-pr_agent_models)). Named providers include OpenAI, Azure OpenAI, Anthropic, Google (AI Studio and Vertex AI), Amazon Bedrock, DeepSeek, Mistral, Groq, xAI, OpenRouter, and local servers such as Ollama and vLLM. Further keys let you route work to different models: `config.model_weak` for lighter commands (`/describe`, `/ask`, `/update_changelog`), `config.fallback_models` for retries, and a `[model_routing]` table that picks a model by diff size ([The PR Agent 2026d](#ref-pr_agent_models)).
+
+Local models work but come with a warning. The model-configuration page says that “most open-source models currently available (as of January 2025) face challenges with these complex tasks” and recommends them for “experimentation and learning purposes (mainly for the ask command)” ([The PR Agent 2026d](#ref-pr_agent_models)). That note predates the current generation of open-weight coding models, so treat it as a prompt to test rather than as a verdict; [Section 30](#sec-ai-small-local-models) covers what we have found local models can and cannot do.
+
+#### Deployment
+
+There is no hosted PR-Agent service. Every route runs the software on infrastructure you control ([The PR Agent 2026e](#ref-pr_agent_github_install)):
+
+- **GitHub Action** (the README’s recommended route). A workflow that `uses: the-pr-agent/pr-agent@main` with `OPENAI_KEY` (or another provider’s key) and `GITHUB_TOKEN` in `env`, triggered on `pull_request` and `issue_comment` events. `github_action_config.auto_review`, `auto_describe`, and `auto_improve` choose which commands run automatically when a PR opens, and the `issue_comment` trigger enables slash commands.
+- **Self-hosted GitHub App**. A webhook server (the `pr-agent:github_app` Docker target) registered as a GitHub App with pull-request, issue-comment, and metadata permissions. The documentation covers running it as an AWS Lambda function and sizing the `gunicorn` workers. Equivalent webhook servers exist for GitLab and Gitea.
+- **Command line**. `pip install pr-agent`, then `pr-agent --pr_url <url> review` runs a command against an existing PR from your own machine.
+- **Docker**. Versioned images under `pragent/pr-agent` back all of the above.
+
+The README’s data-privacy section says only that a self-hosted PR-Agent with your own OpenAI key “is between you and OpenAI” ([The PR Agent 2026h](#ref-pr_agent_repo)). That is the whole privacy story: no third party sees the diff except the model provider you chose.
+
+#### License and the hosted-versus-open split
+
+The code is MIT-licensed, with the 2026 copyright held by “The PR Agent” ([The PR Agent 2026b](#ref-pr_agent_license)). The current documentation no longer marks individual commands as open-source or hosted-only: after the donation, everything at `docs.pr-agent.ai` describes the open-source tool, and the hosted features moved to Qodo’s own product and documentation. Older blog posts and third-party guides still refer to “PR-Agent Pro” or “Qodo Merge” feature tiers; those describe the product that became Qodo 2.0, not the repository reviewed here.
+
+#### Useful to us?
+
+The lab already runs four pull-request reviewers, so the question is what PR-Agent adds. The comparison uses the same axes as the other review sections:
+
+| Dimension | PR-Agent | [Claude Code Action](#sec-ai-claude-code-action-review) | [Codex review](#sec-ai-codex-github-review) | [Gemini Review Action](#sec-ai-gemini-review-action) | [Gemini Code Assist](#sec-ai-gemini-code-assist-review) |
+|----|----|----|----|----|----|
+| **Source** | Open (MIT) | Open action, closed model | Closed | Open | Closed |
+| **Hosting** | Actions runner or your own webhook server | Actions runner | OpenAI-hosted | Actions runner | Google-hosted |
+| **Model** | Any via LiteLLM, including local | Claude only | OpenAI only | Gemini only | Gemini only |
+| **Forges** | GitHub, GitLab, Bitbucket, Azure DevOps, Gitea | GitHub | GitHub | GitHub | GitHub |
+| **Billing** | Your API key (or free with a local model) | Anthropic API key or federation | ChatGPT workspace | Gemini API key or Google Cloud | Google Cloud |
+| **Review depth** | One model call per command over a compressed diff | Agentic; five reviewer subagents with repository access | Hosted agent | One call with repository context indexing | Managed service |
+| **Interactive** | `/ask`, `/review`, and other slash comments | `@claude` mention (separate workflow) | `@codex review` | Triggered by workflow events | `/gemini` comments |
+| **Customization** | `.pr_agent.toml`, `extra_instructions`, prompts in repo | Review prompt in the workflow file | `AGENTS.md` review rules | Skills directory | Google Cloud Console |
+
+What PR-Agent offers that none of the others do:
+
+- **Model independence.** It is the only reviewer here that can be pointed at whichever provider currently has spare quota, or at an Ollama model for a zero-cost pass on a private repository. For the lab’s quota juggling ([Section 70](#sec-ai-gemini-spend-management) and [Section 29](#sec-ai-claude-code-other-models)), a reviewer whose model is a one-line config change is attractive.
+- **Structured output.** `/review` reports effort, risk, and a merge recommendation in a fixed format, which a script can parse. The other reviewers produce prose.
+- **GitLab and other forges.** Only PR-Agent covers repositories outside GitHub, which matters if a collaborator hosts code elsewhere.
+
+What it lacks:
+
+- **Depth.** A single call over a pruned diff cannot follow a symbol into a file the diff did not touch. The Claude Code Action reviewer runs as an agent with the repository checked out, so it can. For the review standard the lab’s ARDI loop expects (see [Section 46](#sec-ai-claude-code-action-review)), PR-Agent is a first pass, not a replacement.
+- **A stable maintainer story.** The project changed hands in 2026, its README says a foundation transfer is still in progress, and one command is disabled pending a security fix. Release cadence remains weekly (five releases between 2026-08-01 and 2026-09-05), so the project is active, but the governance is newer than the code.
+- **Another bot in the thread.** Each added reviewer costs a review round per push and a comment the ARDI loop has to triage. Adding a fifth reviewer only pays off if it catches something the other four miss.
+
+A reasonable trial is one repository, the GitHub Action route, `auto_review` on and `auto_describe` and `auto_improve` off, with `config.model` set to whichever provider has spare quota that month. If its `/review` findings overlap the Claude reviewer’s after a few weeks, turn it off; if it catches something distinct, keep it as the cheap first pass.
+
+# 51 How a Session Learns a PR Changed
 
 A coding-agent session that is watching a pull request does not poll it. Something wakes the session when the pull request changes, and in Claude Code that “something” is one of **two separate channels**.
 
@@ -3231,7 +4109,7 @@ Two caveats are worth knowing before relying on it.
 
 **A successful subscribe does not guarantee delivery.** If a PR Steward agent already holds the watch on that pull request, the call still succeeds — but this session receives nothing. The tool result says so in as many words, so read the result rather than the exit status. Taking over the watch requires opting the steward out first, by removing its watching label on the pull request.
 
-**The tool does not exist on a locally-run GitHub MCP server.** Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. [Section 48](#sec-ai-mcp-server-setup) covers the local analogues to reach for instead.
+**The tool does not exist on a locally-run GitHub MCP server.** Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. [Section 62](#sec-ai-mcp-server-setup) covers the local analogues to reach for instead.
 
 **Webhook delivery is also not exhaustive**, which is the failure mode most likely to be mistaken for “nothing has happened”. CI *successes*, new pushes, and merge-conflict transitions can arrive late or not at all. A session that treats silence as “still green” will sit indefinitely on a pull request that has gone stale or conflicted, so a subscription is a supplement to periodically re-reading the pull request’s real state, not a replacement for it.
 
@@ -3247,7 +4125,7 @@ Three properties of that panel surprise people:
 - **No agent-side tool can reach it.** It is client-UI state, not something an agent’s configuration surface touches, so asking an agent to enable it cannot work. If the checkbox changes, a human changed it.
 - **One of the two has a shortcut, and the other does not.** Running `/autofix-pr` from the command line on a pull request’s branch spawns a web session with **Auto-fix CI & address comments** already on. There is no equivalent shortcut for **Auto-merge when ready**.
 
-See [Section 35](#sec-ai-claude-cloud-env) for the web-session context these run in.
+See [Section 44](#sec-ai-claude-cloud-env) for the web-session context these run in.
 
 #### The instruction template is boilerplate
 
@@ -3294,13 +4172,90 @@ So treat a footer as a strong hint and a missing footer as near-conclusive, and 
 >
 > The delivery mechanics and the wording of the instruction template above were established by observation during agent sessions in mid-2026, not from a published specification. Claude Code on the web is a research-preview feature, so treat the specifics as liable to change and re-check them against current behavior before depending on any one detail.
 
-# 41 When to use a coding agent
+# 52 When to use a coding agent
 
 Coding agent sessions are currently[^1] considered “premium requests”, which are limited resources; see <https://github.com/features/copilot/plans> for details. So, use coding agents sparingly. Use them for complex changes that would be difficult or time-consuming for you to complete by hand. Coding agents also take time to get configured for work, every time you make a request. See <https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment#preinstalling-tools-or-dependencies-in-copilots-environment> for ways to reduce that startup time, but it will never be 0. If you can complete the task faster than the coding agent can, you should probably do it yourself. For example, when you have errors in the spell-check or lint workflows, you can often fix them faster than Copilot can. Similarly, when reviewing Copilot’s PRs, you can often make direct changes to the branch faster than you could write clear review comments and get Copilot to address them.
 
 Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.
 
-# 42 Editing with `.docx` files
+# 53 Deep Research Modes
+
+Every major assistant now ships a “deep research” mode: a long-running agent that plans a search strategy, runs dozens of queries, reads the results, and writes a cited report (measured 2026-09-09). These modes sit between a single web search and a coding agent. They do not edit files or run your code, but they read far more sources per question than a chat turn does, and they hand back something closer to a literature memo than an answer.
+
+This section compares five of them from their vendors’ own documentation:
+
+- Claude Research (Anthropic)
+- Gemini Deep Research (Google)
+- ChatGPT deep research (OpenAI)
+- Researcher in Microsoft 365 Copilot (Microsoft)
+- Perplexity Research (Perplexity)
+
+For each we record what it does, which plans include it and with what limits, how long a run takes, what the output looks like, which connected sources it can read, and whether the same capability is reachable from an API. All figures are as published on 2026-09-09; vendors change plan limits often, so re-check before relying on one.
+
+#### Claude Research
+
+[Research](https://support.claude.com/en/articles/11088861-use-research-on-claude) ([Anthropic 2026af](#ref-claude_research_help)) is available on the paid Claude plans (Pro, Max, Team, and Enterprise) in the web, desktop, and mobile apps. Web search must be switched on for Research to work. Claude runs a chain of searches that build on each other and returns an answer with inline citations. Anthropic’s guidance on choosing between web search, extended thinking, and Research ([Anthropic 2026ah](#ref-claude_research_when)) places Research at “five or more tool calls over 1-3 minutes”, with web search for one- or two-query lookups and extended thinking for reasoning that needs no new information.
+
+Research draws on the same connectors as the rest of the app: when Gmail, Google Calendar, and Google Docs are connected, it searches those alongside the web ([Anthropic 2026af](#ref-claude_research_help)). There is no separate Research quota; runs count against the plan’s ordinary conversation limits, and the help page warns that a run “may consume limits faster” because it retrieves many sources.
+
+The Claude API has no Research endpoint. What it exposes is the [web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool) ([Anthropic 2026ag](#ref-claude_web_search_tool)): a server-side tool that searches, returns results with citations, and can be capped with `max_uses` or restricted to `allowed_domains`. It is billed at \$10 per 1,000 searches plus token costs. A multi-search research loop over that tool is something you build, not something you call.
+
+#### Gemini Deep Research
+
+[Deep Research in the Gemini app](https://support.google.com/gemini/answer/15719111) ([Google 2026j](#ref-gemini_deep_research_help)) searches Google by default, and you can add Gmail, Drive, uploaded files, and NotebookLM notebooks as sources. A report “usually takes about 5-10 minutes to generate”, longer for complex topics. The report can be exported to Google Docs or turned into an Audio Overview. All users can run reports; Google AI Pro and Ultra subscribers can generate them with the Pro model, and Ultra reports may include charts, diagrams, and interactive simulators.
+
+Limits are compute-based rather than a per-report count ([Google 2026d](#ref-gemini_apps_limits)): the allowance refreshes every 5 hours up to a weekly cap, with AI Plus at 2x the free allowance, AI Pro at 4x, and AI Ultra at 5x or 20x the Pro allowance depending on the subscription. Deep Research is listed as available on every tier, but the same page notes that for accounts without a paid plan compute-heavy features like Deep Research “may be unavailable during periods of high demand”.
+
+Google is the one vendor here that sells the app feature and the API feature under the same name. The [Gemini Deep Research agent](https://ai.google.dev/gemini-api/docs/deep-research) ([Google 2026e](#ref-gemini_deep_research_api)) runs only through the Interactions API, must be launched with `background=true`, and ships as two agents: `deep-research-preview-04-2026` and `deep-research-max-preview-04-2026`. The Max variant, built on Gemini 3.1 Pro, is positioned for exhaustive batch work such as a nightly job that writes due-diligence reports ([Google 2026c](#ref-gemini_deep_research_max)). By default the agent gets Google Search, URL context, and code execution; it accepts documents as input and can call remote MCP servers. A run is capped at 60 minutes, and the docs estimate \$1-3 per standard task and \$3-7 per Max task.
+
+#### ChatGPT deep research
+
+[Deep research in ChatGPT](https://help.openai.com/en/articles/10500283-deep-research-faq) ([OpenAI 2026d](#ref-openai_deep_research_help)) is the one mode here that puts a plan in front of you before it starts. ChatGPT may ask clarifying questions, drafts a research plan you can edit, lets you watch and interrupt the run to redirect it, and finishes with a full-screen report carrying a table of contents, a sources section, and an activity history. Reports download as Markdown, Word, or PDF.
+
+Sources are the public web, files you upload, and connected apps such as Google Drive or SharePoint where your plan and workspace allow them; deep research uses only an app’s read actions. You can also restrict a run to named sites, or prioritize them while still allowing full-web search. Usage “varies by plan” and shows in an in-product counter; plans with a fixed monthly allowance reset 30 days from first use, and availability depends on country. Enterprise and Edu admins gate access by role.
+
+The [API version](https://developers.openai.com/api/docs/guides/deep-research) ([OpenAI 2026c](#ref-openai_deep_research_api)) runs through the Responses API with model `o3-deep-research` or `o4-mini-deep-research`. OpenAI recommends background mode because runs “can take tens of minutes”, and background mode is incompatible with zero-data-retention agreements. Available tools are web search, file search over at most two vector stores, remote MCP servers exposing a search/fetch interface, and the code interpreter. Output carries inline citations as annotations with a URL, title, and character offsets.
+
+#### Microsoft 365 Copilot Researcher and Think Deeper
+
+Microsoft has consolidated its offerings into one agent. The consumer “Deep Research” mode was retired from the Copilot app on 2026-08-18, and Microsoft 365 Premium subscribers are directed to [Researcher](https://support.microsoft.com/en-us/microsoft-365-copilot/get-started-with-researcher-in-microsoft-365-copilot) ([Microsoft 2026e](#ref-ms_researcher_help), [2026c](#ref-ms_copilot_deep_research_retired)) instead. Researcher is also included for business and enterprise tenants with a Copilot add-on license, and admins can block it in the Microsoft 365 admin center.
+
+Researcher’s distinguishing source is your work graph: it reads files, emails, meetings, and Teams chats you already have access to, plus Microsoft Graph connectors, and uses the Bing index for the web ([Microsoft 2026h](#ref-ms_researcher_faq)). Web search can be disabled tenant-wide, but there is no allow-list or block-list of sites below that. It asks clarifying questions before running, and the FAQ gives run times of “under five minutes for simple queries” and “10 to 45 minutes for highly complex ones”. Output is a report with headings, visuals, and cited sources; PowerPoint and PDF export are listed as “to be released soon”. The hard limit is 25 queries per user per month. Tenants can enable Anthropic’s Claude models inside Researcher, and the model picker is available when Researcher is opened as its own agent. The FAQ states that Researcher cannot be customized or extended through Copilot Studio, and none of the pages we read describe a programmatic route to it ([Microsoft 2026i](#ref-ms_researcher_overview)).
+
+Think Deeper is not a research mode. It is one of the [conversation modes](https://support.microsoft.com/en-us/microsoft-copilot/conversation-modes-in-microsoft-copilot) ([Microsoft 2026b](#ref-ms_copilot_conversation_modes)) in the consumer Copilot app: a reasoning pass that “takes up to 10 seconds” and does no extra retrieval, available to all users with priority for Microsoft 365 subscribers when capacity is short. Treat it as the counterpart of Claude’s extended thinking, not of Researcher.
+
+#### Perplexity Research
+
+[Research mode](https://www.perplexity.ai/help-center/en/articles/10738684-what-is-research-mode) ([Perplexity 2026b](#ref-perplexity_research_mode)) runs “dozens of searches, reads hundreds of sources”, completes most tasks in under 3 minutes, and takes around 4 to 5 minutes to deliver the report. Reports export to PDF or a document, or become a shareable Perplexity Page. Free accounts get limited access and Pro subscribers get extended access; the help page gives no counts. You cannot choose the model in Research mode. The [Advanced Deep Research](https://www.perplexity.ai/help-center/en/articles/13600190-what-s-new-in-advanced-deep-research) ([Perplexity 2026c](#ref-perplexity_advanced_deep_research)) update added a code sandbox, uploaded-document input, clarifying questions, follow-up questions while a run is in progress, and reports that stream into an editable file. It also names the underlying model by plan. Which model each plan gets has changed more than once, and Perplexity’s help-center pages refuse automated requests, so this section does not reproduce the mapping: check the linked page before relying on a particular model being behind your plan.
+
+The API equivalent is the [`sonar-deep-research`](https://docs.perplexity.ai/docs/sonar/models/sonar-deep-research) model ([Perplexity 2026a](#ref-perplexity_sonar_deep_research)), priced at \$2 per million input tokens, \$8 per million output tokens, \$2 per million citation tokens, \$3 per million reasoning tokens, and \$5 per 1,000 searches, with a 128K context window. The docs carry a deprecation notice moving the Sonar chat-completions interface to the Agent API, with the old interface supported until 2026-09-27.
+
+#### Comparison
+
+|  | Claude Research | Gemini Deep Research | ChatGPT deep research | Copilot Researcher | Perplexity Research |
+|----|----|----|----|----|----|
+| **Plans** | Pro, Max, Team, Enterprise | All tiers; Pro model on AI Pro and Ultra | Varies by plan and country | M365 Premium; Copilot add-on licenses | Free (limited), Pro (extended) |
+| **Limit** | Shared conversation limits | Compute-based, 5-hour refresh, weekly cap | In-product counter; monthly allowance on some plans | 25 queries per user per month | Not published |
+| **Run time** | 1-3 minutes | 5-10 minutes | Not published for the app; “tens of minutes” via API | Under 5 minutes to 45 minutes | 3-5 minutes |
+| **Plan review** | No | No | Editable plan; run can be interrupted | Clarifying questions | Clarifying questions |
+| **Output** | Answer with inline citations | Report; Google Docs export; Audio Overview | Report with table of contents and sources; Markdown, Word, PDF | Report with visuals and citations | Report; PDF, document, Perplexity Page |
+| **Connected sources** | Gmail, Calendar, Docs connectors | Gmail, Drive, uploads, NotebookLM | Uploads, Drive, SharePoint, other apps; site restriction | Files, email, meetings, chats, Graph connectors | Uploaded documents |
+| **API** | Web search tool only (\$10 per 1,000 searches) | Interactions API; two agents; 60-minute cap; \$1-7 per task | Responses API; `o3-deep-research`, `o4-mini-deep-research` | None documented | `sonar-deep-research` |
+
+#### Useful to us?
+
+Yes, for a specific slice of work, and no as a substitute for the agents in [Section 4](#sec-ai-catalog-coding-agents).
+
+Reach for a research mode when the question is about the world rather than about your repository: a literature scan before a grant section, a comparison of vendors or packages you have not yet chosen between, or a check on what a regulator or funding agency currently requires. The modes read many more pages than a coding agent will in one turn, they hand back citations you can audit, and several export straight into the document formats we already draft in (see [Section 71](#sec-ai-collaborative-workspaces) for the workspace side). Researcher is the odd one out: its value is reading your own institution’s email and files, which none of the others can see, and that is also why its output stays inside the Microsoft 365 boundary.
+
+Reach for a coding agent with web search instead when the answer must touch the code: a dependency upgrade that needs the changelog read *and* applied, a CI failure whose fix lives in a vendor’s docs, or anything where the deliverable is a diff rather than a memo. [Section 52](#sec-ai-when-to-use) covers that decision in general. A coding agent can also chain research and action in one run, whereas every research mode above stops at the report.
+
+Two cautions carry across all five:
+
+- **The limits are the product.** Monthly caps of 25 (Copilot) or compute pools that refresh every 5 hours (Gemini) mean a research mode is not a tool to leave running in a loop. For batch or scheduled research, use the API routes, and budget them like any other agent spend ([Section 70](#sec-ai-gemini-spend-management)).
+- **A cited report is not a verified one.** Every mode cites, and none checks that the cited page supports the sentence. Spot-check the citations you intend to reuse before they reach a manuscript, exactly as the fact-check rules in this manual require of any AI-drafted prose.
+
+# 54 Editing with `.docx` files
 
 GitHub Copilot coding agents can read Microsoft Word (`.docx`) files, including tracked changes and comments. This enables a hybrid editing workflow where:
 
@@ -3335,7 +4290,87 @@ When opening DOCX files generated by Quarto (including this site), Microsoft Wor
 
 This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.
 
-# 43 Copilot Instructions for this Repository
+# 55 Hosted AI Agent Offices: Vestra and Similar
+
+[Vestra](https://vestra.ai/) ([Vestra AI 2026d](#ref-vestra)) sells what it calls an “AI agent office”: a hosted, always-on general-purpose agent that you reach from the tools you already use and that runs on a cloud machine the vendor operates. This section reviews Vestra and four products in the same category (measured 2026-09-09):
+
+- [Manus](https://manus.im/) ([Manus AI 2026](#ref-manus))
+- [Lindy](https://www.lindy.ai/) ([Lindy 2026b](#ref-lindy))
+- [Zapier Agents](https://zapier.com/agents) ([Zapier 2026a](#ref-zapier_agents))
+- [Relevance AI](https://relevanceai.com/agents) ([Relevance AI 2026a](#ref-relevanceai_agents))
+
+The category sits between two things this site already covers. [Make](../chapters/make.llms.md) and Zapier’s core product are visual automation builders: you draw the workflow, and the AI parts are modules inside it. The collaborative workspace agents in [Section 71](#sec-ai-collaborative-workspaces) (Claude Cowork, Gemini Spark) work on files and documents you own. An agent office is closer to a hired assistant than to either: you describe an outcome in chat, the vendor’s agent plans and executes it on the vendor’s infrastructure, connects to your accounts through OAuth, and keeps a memory of your organization between tasks. **?@sec-openclaw** describes the self-hosted, open-source version of the same idea.
+
+## 55.1 Vestra
+
+Vestra’s marketing describes two named agents. “Bash” is the executor: you describe “outcomes, not instructions”, it “plans it, in the open, before anything runs”, and it can split work across specialist sub-agents, running up to ten tasks in parallel. “Nami” is the memory layer, which the handbook says builds a company memory by “watching everything: every task Bash finishes, every document, every decision” plus whatever is in the connected tools ([Vestra AI 2026a](#ref-vestra_handbook)). Each task runs on “a real cloud machine with files, a browser, and a terminal”, and the platform routes each task to a model it picks from several providers unless you pin one.
+
+- **Target user.** The use-case pages address:
+
+  - founders
+  - sales and marketing
+  - support
+  - finance
+  - recruiting
+  - operations
+  - research and strategy teams
+
+  Press coverage aims it at non-technical domain experts and small teams. The site describes a private beta.
+
+- **Pricing** ([Vestra AI 2026b](#ref-vestra_pricing)). Four self-serve tiers, all “entire office, all features”:
+
+  - Lite at USD 19/month for 2,000 credits on a 4 GB machine
+  - Pro at USD 97 for 10,000 credits
+  - Max at USD 197 for 20,000 credits
+  - Ultra at USD 497 for 50,000 credits on a 32 GB machine
+
+  A credit is “the unit of work” and the cost per task varies. The first 1,000 credits are free, and custom engagements with forward-deployed engineers start at USD 4,000/month.
+
+- **Data handling** ([Vestra AI 2026c](#ref-vestra_privacy)). The privacy policy (effective 2026-09-04) says content is not used for training by default, but task content is sent to whichever model provider handles the task, and one listed model tier (Meta’s Muse Spark 1.3) permits that provider to train on it. OAuth flows and access tokens are handled by a subprocessor, Composio, Inc. Deleting the account removes stored data within 30 days. User-created agents may be indexed by search engines by default, with opt-out by email.
+
+- **Agent and API access.** Chat channels are Slack, Telegram, WhatsApp, iMessage, Gmail, and a desktop overlay on the Mac app. “Abilities” package skills, specialist agents, connectors, and guardrails into installable bundles. We found no public API documentation. The memory store can be exported as plain Markdown.
+
+## 55.2 Manus
+
+Manus ([Manus AI 2026](#ref-manus)) is the best-known product in the category. Its home page lists a browser operator, a web app builder, “Wide Research” for parallel research tasks, slide and image generators, email (“Mail Manus”) and Slack integrations, a team plan with SSO, and an API for developers. Its pricing page renders client-side and its privacy policy returned only a title when we fetched them, so we could not verify plan prices or the training policy from the vendor (measured 2026-09-09); check `manus.im/pricing` and `trust.manus.im` directly before relying on either.
+
+## 55.3 Lindy
+
+Lindy ([Lindy 2026b](#ref-lindy)) is a “Slack-native teammate”: everyone on a team gets a private assistant in Slack DMs and a shared one in channels. It runs scheduled routines, connects to over 1,000 apps, supports MCP and computer use, and ships with “40+ skills: research, data analysis, decks, dashboards” that a team can extend by saving a completed task as a new skill.
+
+- **Pricing** ([Lindy 2026a](#ref-lindy_pricing)). Plus at USD 29.99/month for 3,000 credits per user, Pro at USD 99.99 for 15,000, Max at USD 199.99 for 35,000, and an Enterprise tier with HIPAA, a BAA, SSO, and audit logs. Credits do not roll over.
+- **Data handling.** “Your data is encrypted, never sold, and never used to train models”, with SOC 2 Type II, GDPR, HIPAA, and PIPEDA compliance claimed. “Nothing irreversible happens without your approval.”
+- **Agent and API access.** MCP support is the extension route; the pricing page lists no public API.
+
+## 55.4 Zapier Agents
+
+Zapier Agents ([Zapier 2026a](#ref-zapier_agents)) are “superhuman teammates” layered on Zapier’s 9,000-app integration catalog. You describe the agent, attach knowledge sources (FAQs, documentation, public links), and it acts across those apps, with real-time activity monitoring. Templates cover lead enrichment, content, support, candidate ranking, and expense classification.
+
+- **Pricing** ([Zapier 2026b](#ref-zapier_pricing)). Agents bill in *activities*, separate from Zap tasks: “any billable action an agent takes: using a trigger, answering from a knowledge source, running an action, web browsing or scraping, a web search, or a message sent via the Chrome extension.” The Free plan includes 400 activities/month with a 10-activity cap per run; paid plans start at about 1,500 activities/month with a 40-activity cap. Zapier’s paid plans start at USD 19.99/month billed annually; nonprofits get 15% off.
+- **Data handling.** Neither the Agents page nor the pricing page states how AI features handle data, so read Zapier’s separate privacy and security documents.
+- **Agent and API access.** Agents inherit Zapier’s triggers, webhooks, and Chrome extension; this is the most “automation builder” of the five.
+
+## 55.5 Relevance AI
+
+Relevance AI ([Relevance AI 2026a](#ref-relevanceai_agents)) calls itself “the home of the AI Workforce”. Agents are built three ways: a drag-and-drop canvas, plain-language description, or programmatically through MCP and an API. Each agent “owns one narrow task”, and a workforce nests them with parallel streams, human-in-the-loop approvals, evaluation pass-rate tracking, audit trails, and triggers from CRM events, email, calendar, webhooks, and cron.
+
+- **Pricing.** The public pricing page lists only an Enterprise tier with custom pricing ([Relevance AI 2026c](#ref-relevanceai_pricing)); a case study on the agents page quotes USD 0.01 to 0.11 per task.
+- **Data handling** ([Relevance AI 2026b](#ref-relevanceai_security)). The data security policy covers AES-256 encryption in transit, need-to-know staff access, and background checks, but does not address model training on customer data, data residency regions, or certifications.
+- **Agent and API access.** The strongest developer surface of the five: API, MCP, webhooks, and cron.
+
+## 55.6 Useful to us? Not for research work
+
+For an epidemiology lab whose work is code, data, and manuscripts, these products solve a problem we mostly do not have. Their value is in gluing SaaS business tools together (CRM, inbox, calendar, Slack) for people who do not write code. Our work lives in Git repositories, R and Python environments, and Quarto documents, where the coding agents in [Section 4](#sec-ai-catalog-coding-agents) and the collaborative workspace agents in [Section 71](#sec-ai-collaborative-workspaces) already reach the files directly.
+
+Three concerns weigh against adopting any of them for lab work:
+
+- **Data.** An agent office works by connecting to your accounts and remembering what it sees. Vestra’s memory layer is designed to watch “every document, every decision”; its policy names one model tier that trains on task content; and Manus’s policy could not be read at all. Human-subjects data, unpublished results, and grant drafts should not flow through a vendor whose training and residency terms we cannot verify. Lindy’s explicit no-training statement and HIPAA/BAA tier is the exception, and it costs enterprise pricing.
+- **Reproducibility.** A task that ran on a vendor’s cloud machine with an auto-selected model leaves no script we can re-run. For analysis, that is disqualifying.
+- **Cost.** Credit-metered plans at USD 19 to 497 per person per month buy less than a coding-agent subscription for our use, because the expensive part (a hosted VM with a browser) is what we least need.
+
+Where they could earn a place is in lab administration: a scheduled routine that drafts a weekly summary from a shared inbox, triages a calendar, or files reminders. Zapier Agents is the cheapest way to try that, because the free tier covers 400 activities a month and the integration catalog is the largest. If a member wants to try Vestra or Manus, use a throwaway account connected only to non-sensitive tools, and treat **?@sec-openclaw** as the option that keeps the data on our own machine.
+
+# 56 Copilot Instructions for this Repository
 
 A `.github/copilot-instructions.md` file contains repository-specific instructions and guidelines for GitHub Copilot coding agents. This file helps ensure that AI-generated contributions follow the project’s formatting standards, coding conventions, and documentation practices.
 
@@ -3352,7 +4387,7 @@ By having these instructions in `.github/copilot-instructions.md`, you ensure th
 
 See this repository’s own [`.github/copilot-instructions.md`](https://github.com/Morrison-Lab/wai/blob/main/.github/copilot-instructions.md) for a working example.
 
-# 44 Using Copilot Review Before Human Review
+# 57 Using Copilot Review Before Human Review
 
 Before requesting review from other humans, **always have Copilot review your pull request first**—even if Copilot created the PR itself. AI review provides fast, thorough feedback that helps catch issues before involving human reviewers, saving everyone time and improving code quality.
 
@@ -3395,7 +4430,7 @@ Even if you’re highly experienced, treating Copilot review as a required pre-r
 
 When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.
 
-# 45 Reviewing a Copilot PR You Didn’t Create
+# 58 Reviewing a Copilot PR You Didn’t Create
 
 When reviewing a pull request where someone else prompted Copilot to make changes, follow these guidelines to avoid confusion and ensure smooth collaboration:
 
@@ -3468,7 +4503,7 @@ To transfer the PR manager role:
 
 This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.
 
-# 46 Agent Sessions and Handoff in Visual Studio Code
+# 59 Agent Sessions and Handoff in Visual Studio Code
 
 In Visual Studio Code, interactions with AI coding assistants are structured around [Agent Sessions and Handoff](https://code.visualstudio.com/docs/agents/concepts/sessions?referrer=in-product) (measured 2026-08-31). Understanding how sessions organize work and transfer state across tools is essential for managing multi-step agent workflows.
 
@@ -3497,7 +4532,55 @@ Session handoff transfers context and intent from an active session to a special
 - **Plan to implementation**: Hand off a high-level architectural plan or task specification directly to an implementation session to generate code.
 - **Continue in the cloud**: Hand off a local session to run in a cloud-hosted agent environment (such as background tasks leading to pull requests), freeing local editor resources while the agent executes in the background.
 
-# 47 Installing Claude Code on Windows
+# 60 Herdr: A Terminal Multiplexer for Coding Agents
+
+[Herdr](https://herdr.dev/) ([herdrdev 2026e](#ref-herdr)) is a terminal multiplexer built for running several coding agents at once (measured 2026-09-09). It describes itself as “the runtime your coding agents live on”: a background server owns the real terminal processes, clients attach to render them, and the server keeps every agent running when the client closes or an SSH connection drops. On top of that `tmux`-like core it detects which agent is running in each pane and reports whether that agent is working, blocked, done, or idle, so the operator looks only at the pane that needs attention.
+
+#### Maker and activity
+
+Herdr is developed by [`herdrdev`](https://github.com/herdrdev/herdr) ([herdrdev 2026f](#ref-herdr_github)), a one-person company founded in 2026 by Can Celik in Ankara, Turkey, and part of the Y Combinator Fall 2026 batch ([Y Combinator 2026](#ref-herdr_yc)). The project is written in Rust and licensed under Apache 2.0. The GitHub repository was created on 2026-03-27 and had about 37,000 stars, 2,700 forks, and 326 open issues on 2026-09-09, with the most recent commit the day before; the latest stable release was v0.9.0 on 2026-09-07, following v0.8.2 (2026-08-19) and v0.8.0 (2026-08-03) ([herdrdev 2026f](#ref-herdr_github)). A Show HN thread drew 166 points and 110 comments ([Hacker News 2026](#ref-herdr_hn)), and a community-maintained list of plugins and integrations has grown around the tool ([Konur 2026](#ref-awesome_herdr)). The software is pre-1.0 and changes quickly, so expect some of what follows to be out of date.
+
+#### What it does
+
+Herdr organizes terminals into a hierarchy of sessions, workspaces, tabs, and panes ([herdrdev 2026b](#ref-herdr_concepts)). A pane is a real terminal (a PTY) that the server owns; a workspace groups the tabs and panes for one repository, task, or investigation. The distinctive features, beyond ordinary multiplexing, are:
+
+- **Agent status detection**: Herdr recognizes 21 coding agents out of the box, including Claude Code, Codex, Cursor Agent CLI, OpenCode, GitHub Copilot CLI, Hermes Agent, Pi, Amp, Grok CLI, Antigravity CLI, and Kiro CLI, with Gemini CLI and Cline detected but less thoroughly tested ([herdrdev 2026a](#ref-herdr_agents)). Where an agent ships lifecycle hooks, the hook reports state authoritatively; otherwise Herdr matches the bottom of the live terminal buffer against a TOML detection manifest, and marks a pane `blocked` only when that snapshot matches a known approval, question, or permission prompt.
+- **Git worktree management**: the socket API exposes `worktree.list`, `worktree.create`, `worktree.open`, and `worktree.remove`, which “manage Git checkouts as Herdr workspaces” ([herdrdev 2026i](#ref-herdr_socket_api)). Creating a worktree checks out (or creates) a branch and opens the checkout as a new workspace grouped under the source workspace; the CLI form is `herdr worktree create --branch <name>` ([Copes 2026](#ref-flaviocopes_herdr)).
+- **A CLI and socket API for agents to drive**: the two are “the same surface agents drive”, speaking newline-delimited JSON over a Unix socket (a named pipe on Windows) at `~/.config/herdr/herdr.sock`. Methods include `pane.read` to read a pane’s recent output, `agent.prompt` to send a prompt, and `agent.wait` to block until another agent reaches `done` or `blocked` rather than polling ([herdrdev 2026i](#ref-herdr_socket_api)).
+- **Persistence and resume**: detaching with `ctrl+b q` leaves every process running; a server restart stops processes but restores workspaces, tabs, panes, working directories, and layout from a `session.json` snapshot, and supported agents can resume their own conversation (for example `claude --resume <id>`) from a saved session reference ([herdrdev 2026h](#ref-herdr_session_state)).
+- **Remote machines**: `herdr machine add <ssh-host>` registers a machine reachable over ordinary SSH, installs or starts the Herdr server there, and folds its agents into one combined agent list; authentication stays with OpenSSH, and Herdr stores no keys or passwords ([herdrdev 2026c](#ref-herdr_machines)). Remote servers must run Linux or macOS; a native Windows server is not supported as an SSH target.
+
+#### Install and use
+
+Herdr ships stable binaries for Linux, macOS, and Windows x86_64 ([herdrdev 2026g](#ref-herdr_install)). The one-line installers are:
+
+``` bash
+curl -fsSL https://herdr.dev/install.sh | sh
+```
+
+``` powershell
+powershell -ExecutionPolicy Bypass -c "irm https://herdr.dev/install.ps1 | iex"
+```
+
+Homebrew (`brew install herdr`), `mise`, and Nix are also supported. Run `herdr` to start the server and attach a client, `herdr agent list` to see detected agents and their states, `herdr status` to summarize the runtime, and `herdr update` to upgrade. The default prefix key is `ctrl+b`, as in `tmux`, and the configuration file lives at `~/.config/herdr/config.toml` (`%APPDATA%\herdr\config.toml` on Windows) ([herdrdev 2026d](#ref-herdr_agent_guide)). The maintainers publish an [agent guide](https://herdr.dev/agent-guide.md) ([herdrdev 2026d](#ref-herdr_agent_guide)) meant to be handed to a coding agent so it can set Herdr up for you.
+
+#### Pricing and license
+
+The runtime is free and open source under the Apache 2.0 license. The landing page announces a paid “Herdr Cloud” as “coming soon”, described as connecting your own machines without configuring SSH, with a waitlist and no published pricing (measured 2026-09-09) ([herdrdev 2026e](#ref-herdr)).
+
+#### Useful to us?
+
+Herdr overlaps with two things the lab already does (**?@sec-orch-baseline**): running several Claude Code sessions in parallel, and isolating each one in its own git worktree. It does not replace either. Herdr runs the same agent CLIs unchanged, and its worktree commands wrap the same `git worktree` calls that Claude Code’s own worktree isolation makes. What it adds is the layer between those sessions and the person watching them:
+
+- **An attention queue instead of a wall of terminals.** When a dozen sessions run at once, the expensive part is finding the one waiting on a permission prompt. The blocked, working, and done states Herdr aggregates across every workspace and every machine answer that question at a glance, which is the gap one early adopter reported it filling when herding parallel agents on a remote box ([Coles 2026](#ref-coles_herdr)).
+- **Sessions that survive a closed laptop.** Long runs of the lab’s review-and-iterate loop currently die with the terminal that started them unless they are already running on a server under `tmux`. Herdr gives the same persistence with a friendlier client, and can reattach to a Claude Code conversation by session ID after a restart.
+- **A machine-readable control surface.** `agent.wait` and `pane.read` let a supervising agent spawn helpers in separate worktrees, wait until each is done or blocked, and read their output, without the polling loops our current scheduled check-ins use.
+
+The same early adopters name the limits ([Coles 2026](#ref-coles_herdr); [Copes 2026](#ref-flaviocopes_herdr)). Herdr provides no sandboxing and does not isolate file changes between agents sharing a directory; worktrees, permissions, and network egress remain the user’s problem, so our hooks and permission rules stay in place unchanged. Windows support is in beta, a Windows machine cannot serve as a remote target, and the tool is pre-1.0. It also sits beside, not inside, the editor-hosted session views described in [Section 59](#sec-ai-vscode-agent-sessions): VS Code discovers CLI sessions and hands work between harnesses, while Herdr owns the terminals those sessions run in.
+
+The practical recommendation is to try Herdr on a Linux workstation or server where a lab member already runs several Claude Code sessions, using one workspace per worktree. It is a small, reversible addition (no wrapper around the agent, no change to `ai-config`), and the status sidebar alone may justify it. Adopting the socket API as an orchestration layer is a larger step that we should defer until the project reaches a stable release.
+
+# 61 Installing Claude Code on Windows
 
 [Claude Code](https://www.anthropic.com/claude-code) is Anthropic’s command-line coding agent. Installing it on Windows works well, but a few platform-specific pitfalls can cost you hours if you don’t know about them. These notes capture a setup that works, and the gotchas to watch for.
 
@@ -3597,7 +4680,7 @@ claude --version      # prints the installed version number
 
 If you get a version number, you’re ready to run `claude` in your project directory. If you get `command not found`, re-check the two `PATH` issues above: the directory must be on `PATH`, and you must `rehash` (or open a fresh window) after changing it.
 
-# 48 Setting up MCP servers
+# 62 Setting up MCP servers
 
 The [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) is how a harness gains typed access to external systems. Configuring a server is usually a one-line command. Diagnosing one that *silently* isn’t working is the part worth writing down, because the common failure mode produces no error at all — only a quiet absence of tools you assumed were there.
 
@@ -3755,7 +4838,7 @@ The gap it closes is the copy-paste loop: without it, using something you discus
 
 It connects through the standard [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) as a remote server at `https://mcp.granola.ai/mcp`. For Claude or ChatGPT, enable it from the app’s connector/app settings and authenticate; for Cursor, Claude Code, or any other MCP client that supports a manual URL, register that URL directly (see [the announcement](https://www.granola.ai/blog/granola-mcp) for per-client steps). On an Enterprise plan it is an early-access beta, off by default until an admin enables it.
 
-# 49 Google Antigravity Python SDK
+# 63 Google Antigravity Python SDK
 
 The [`google-antigravity/antigravity-sdk-python`](https://github.com/google-antigravity/antigravity-sdk-python) repository provides the official Python SDK for building and automating agents on the Google Antigravity agent runtime (measured 2026-08-31; distributed via PyPI as `google-antigravity`).
 
@@ -3784,7 +4867,7 @@ Developers can customize agent behavior and enforce safety policies:
 | **Tool definitions** | In-process Python callables & MCP | JSON manifests, plugins, and CLI scripts |
 | **Runtime engine** | Embedded native binary | Managed local service |
 
-# 50 Unbounded Context with Magic Context
+# 64 Unbounded Context with Magic Context
 
 [`cortexkit/magic-context`](https://github.com/cortexkit/magic-context) is an open-source self-managing memory engine designed to provide unbounded context for AI coding agents (measured 2026-08-31). It operates as a background memory subsystem—often described as a “hippocampus for coding agents”—that extracts, consolidates, and retrieves long-term repository state without pausing the active coding turn.
 
@@ -3804,7 +4887,7 @@ A key challenge with dynamic prompt injection is preserving prompt caching effic
 - **Deferred background extraction**: Memory analysis and summarization tasks are deferred to idle windows or subagent threads, preventing token churn and latency spikes during high-tempo coding loops.
 - **Cross-session persistence**: Extracted knowledge persists in lightweight local stores across IDE restarts, enabling coding agents to resume work with full institutional memory of past decisions.
 
-# 51 Spec-Driven Development with Conductor
+# 65 Spec-Driven Development with Conductor
 
 [`gemini-cli-extensions/conductor`](https://github.com/gemini-cli-extensions/conductor) is an open-source plugin for AI coding agents (including Google Antigravity and Claude Code) that implements **Spec-Driven Development** (measured 2026-08-31). Rather than relying on conversational chat history that degrades over extended sessions, Conductor anchors agent behavior in structured, version-controlled Markdown artifacts stored directly in the repository, providing persistent context across multi-session workflows.
 
@@ -3826,9 +4909,9 @@ Conductor structures development into four distinct, sequential phases:
 | **Verification loop** | Manual spot-checking | Milestone-level automated tests and `/conductor:conductor-review` |
 | **Handoff & resumption** | Requires re-prompting or context replay | Any agent resumes from the checked-in track state |
 
-# 52 Anatomy of Agent Plugins
+# 66 Anatomy of Agent Plugins
 
-In modern AI coding assistants (such as Google Antigravity and Claude Code; see [Section 10](#sec-ai-harness-landscape) on the sunset of legacy Gemini CLI and its folding into Antigravity CLI), **plugins** serve as the top-level packaging and distribution layer for agent capabilities (measured 2026-09-01). While individual skills or Model Context Protocol (MCP) servers extend specific tasks, a plugin aggregates multiple extensibility primitives into a unified, version-controlled bundle.
+In modern AI coding assistants (such as Google Antigravity and Claude Code; see [Section 11](#sec-ai-harness-landscape) on the sunset of legacy Gemini CLI and its folding into Antigravity CLI), **plugins** serve as the top-level packaging and distribution layer for agent capabilities (measured 2026-09-01). While individual skills or Model Context Protocol (MCP) servers extend specific tasks, a plugin aggregates multiple extensibility primitives into a unified, version-controlled bundle.
 
 #### Anatomy of a plugin bundle
 
@@ -3858,7 +4941,85 @@ Effective plugin architectures mitigate this through several strategies:
 - **On-demand skill activation**: Agents search skill catalogs dynamically when relevant keywords appear, rather than loading the entire skill directory into the initial system prompt.
 - **Prefix caching preservation**: Static plugin definitions are placed at the root of prompt structures so provider-level prompt caching remains undisturbed during multi-turn sessions.
 
-# 53 Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent
+# 67 Running Codex Inside Claude Code: the codex-plugin-cc Plugin
+
+[`openai/codex-plugin-cc`](https://github.com/openai/codex-plugin-cc) is OpenAI’s official Claude Code plugin for running Codex from inside a Claude Code session ([OpenAI 2026a](#ref-codex_plugin_cc)). It adds slash commands that ask Codex to review the current work or take over a task, while Claude Code stays the harness the user is typing into. The repository is Apache-2.0 licensed, has about 33,000 GitHub stars, and its latest release is `v1.0.6` from 2026-07-08 (measured 2026-09-09).
+
+#### What it does
+
+The plugin does not ship a second Codex runtime. It wraps the `codex` binary already installed on the machine, talking to it through the Codex app server, so it uses the same login, the same `config.toml`, and the same repository checkout that the Codex CLI would use directly ([OpenAI 2026a](#ref-codex_plugin_cc)). A Node.js script (`codex-companion.mjs`) does the actual work; the Markdown command files tell Claude to invoke that script once and to return Codex’s output verbatim rather than paraphrasing it. The command files enforce this: they forbid Claude from fixing anything a Codex review reports until the user says which findings to act on.
+
+#### Installation
+
+Node.js 18.18 or later is required ([OpenAI 2026a](#ref-codex_plugin_cc)). The plugin is installed through Claude Code’s plugin marketplace mechanism (see [Section 66](#sec-ai-plugins-deep-dive) for how marketplaces and manifests fit together); the repository’s `marketplace.json` names the marketplace `openai-codex`, which is why the install command does not repeat the repository name:
+
+``` text
+/plugin marketplace add openai/codex-plugin-cc
+/plugin install codex@openai-codex
+/reload-plugins
+/codex:setup
+```
+
+`/codex:setup` checks whether Codex is installed and logged in, and offers to run `npm install -g @openai/codex` when it is missing. Logging in is done outside the plugin with `codex login`.
+
+#### What gets added
+
+The marketplace manifest lists a single plugin, `codex`, whose bundle contains commands, one subagent, three skills, and a hook file ([OpenAI 2026a](#ref-codex_plugin_cc)).
+
+Slash commands:
+
+- `/codex:review` runs Codex’s built-in read-only review on the working tree or on the branch against `--base <ref>`, with `--scope` to force one or the other and `--wait` or `--background` to choose whether it blocks the session. It takes no focus text.
+- `/codex:adversarial-review` is the steerable version: it questions the design and assumptions rather than only the diff, accepts free-text focus such as “look for race conditions”, and takes the same `--base`, `--scope`, `--wait`, and `--background` flags.
+- `/codex:rescue` hands a task to Codex to investigate or fix, with `--model`, `--effort`, `--resume`, and `--fresh` flags. By default this run is write-capable.
+- `/codex:transfer` exports the current Claude Code transcript into a Codex thread and prints the `codex resume <session-id>` command, for continuing the same conversation in Codex.
+- `/codex:status`, `/codex:result`, and `/codex:cancel` manage background jobs.
+- `/codex:setup` checks the install and toggles the review gate described below.
+
+Subagent:
+
+- `codex:codex-rescue` (pinned to the Sonnet model tier) is a thin forwarder that `/codex:rescue` invokes. Its definition tells it to make exactly one `Bash` call to the companion script and to do no repository inspection or independent reasoning of its own, beyond using the `gpt-5-4-prompting` skill to tighten the forwarded prompt.
+
+Skills (all marked `user-invocable: false`, so Claude loads them by description and the user cannot call them by name):
+
+- `codex-cli-runtime`, the calling contract for the companion script, attached to the subagent
+- `gpt-5-4-prompting`, guidance for tightening a request into a block-structured Codex prompt, attached to the subagent
+- `codex-result-handling`, rules for presenting Codex output without altering it, attached to no agent and so available to the main session
+
+Hooks:
+
+- `SessionStart` and `SessionEnd` hooks record the transcript path that `/codex:transfer` later reads.
+- An optional `Stop` hook implements a **review gate**: when enabled with `/codex:setup --enable-review-gate`, every time Claude tries to end a turn, Codex reviews that turn and blocks the stop if it finds problems. The README warns that this can produce a long Claude-Codex loop that drains usage limits quickly, and recommends enabling it only in an actively monitored session ([OpenAI 2026a](#ref-codex_plugin_cc)).
+
+#### Authentication and cost
+
+The plugin uses whatever `codex login` set up. Two routes exist ([OpenAI 2026a](#ref-codex_plugin_cc), [2026b](#ref-codex_pricing)):
+
+- A **ChatGPT account** (including the Free tier) draws on the Codex usage limits included in that plan; every review or rescue run counts against them.
+- An **OpenAI API key** bills at API rates, which OpenAI positions for shared or automated environments such as CI.
+
+Either way, the Claude Code session itself still bills to the Anthropic plan. A rescue run therefore spends on both providers at once: Claude’s tokens to dispatch and read back, and Codex’s usage limits or API credits to do the work. Model and reasoning-effort defaults come from `~/.codex/config.toml` or a project-level `.codex/config.toml`, the latter only in a trusted project ([OpenAI 2026a](#ref-codex_plugin_cc)).
+
+#### Comparison with the lab’s existing Codex paths
+
+The lab already reaches Codex two ways, and the plugin overlaps with both.
+
+**`delegate-to-codex` in `ai-config`** ([Morrison Lab 2026b](#ref-ai_config_delegate_to_codex)). That skill runs `codex exec` directly from a Bash call, with a read-only sandbox by default, prompts written to files, an optional JSON output schema, and a background runner that fans out several prompts at once and polls a completion marker. It exists to spend the separately billed ChatGPT plan on heavy read/draft/verify fan-out before Claude’s own quota. The plugin covers the single-task case of that skill and adds three things the skill lacks: job tracking, threads that can be resumed, and a subagent Claude can call proactively. It does not cover the fan-out case, it defaults to write-capable runs where the skill defaults to read-only, and it does not enforce structured output. The two also disagree on who orchestrates: the skill keeps Claude as the integrator that assembles Codex’s parts, while the plugin’s result-handling skill tells Claude to relay Codex’s answer and stop.
+
+**Codex as a GitHub reviewer** ([Section 45](#sec-ai-codex-github-review)). That path runs through Codex Cloud and posts a review on the pull request, so it needs a connected repository and a workspace that permits Codex Cloud. `/codex:review` runs locally against the checkout instead, with no GitHub side effects. It is the same local `/review` that the GitHub-review section names as the fallback when an administrator has disabled Codex Cloud, reachable without leaving Claude Code. Its output stays in the terminal, so it does not create the durable review record that the lab’s pull-request workflow relies on.
+
+#### Useful to us? Yes, for local second-opinion reviews; not a replacement
+
+The main use is `/codex:adversarial-review --base main` as a cross-vendor second opinion before pushing, which is what `ai-config`’s adversarial self-review rule asks for and what the `delegate-to-codex` skill implements by hand. The plugin makes that one command, and the `--background` flag keeps a multi-file review from blocking the session.
+
+Three cautions apply:
+
+- Leave the review gate off. A `Stop` hook that reruns Codex on every turn spends on both providers at the rate of a chat conversation, and the lab’s own `Stop` hooks already gate on cheaper deterministic checks.
+- `/codex:rescue` writes to the working tree by default. In a shared worktree or a multi-agent session, ask for a read-only run or use the `delegate-to-codex` skill, which sandboxes by default.
+- The plugin is a wrapper, so it inherits Codex’s model access rules: a ChatGPT login cannot reach every `--model` value the CLI accepts, and the refusal arrives from the API after the flag is accepted.
+
+For fan-out work, structured output, or anything a script needs to consume, the `delegate-to-codex` skill remains the right tool. For pull-request reviews that must be visible to other contributors, the GitHub integration in [Section 45](#sec-ai-codex-github-review) remains the right tool. See [Section 39](#sec-ai-useful-plugins) for the rest of the plugins the lab has evaluated.
+
+# 68 Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent
 
 [`code-yeongyu/oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent) (originally published as **Oh My OpenCode** or `omo`, with community forks such as [`opensoft/oh-my-opencode`](https://github.com/opensoft/oh-my-opencode)) is an open-source multi-agent orchestration framework and plugin for AI coding agent harnesses (including OpenCode and OpenAI Codex CLI) with over 65,000 GitHub stars (measured 2026-09-01). Inspired by modular terminal configuration frameworks (such as [Oh My Zsh](https://ohmyz.sh/)), it expands single-agent coding into a specialized multi-agent system with automated model routing and background task execution.
 
@@ -3893,7 +5054,108 @@ A central capability of the framework is decoupling agent roles from a single mo
 | **Execution monitoring** | Standard terminal output | Interactive `tmux`-backed session management |
 | **Extensibility** | Individual plugins and MCPs | Curated bundle of tools, agents, and MCP integrations |
 
-# 54 Managing Gemini API Spend and Cost Optimization
+# 69 The OpenCode Ecosystem
+
+[OpenCode](https://opencode.ai) ([anomalyco 2026](#ref-opencode_repo)) is the open-source coding agent harness (MIT-licensed, about 206,000 GitHub stars, measured 2026-09-09) that the earlier OpenCode sections of this chapter build on: running it against local models ([Section 27](#sec-ai-opencode-ollama)), against OpenRouter ([Section 28](#sec-ai-opencode-openrouter)), and under the Oh My OpenCode multi-agent framework ([Section 68](#sec-ai-oh-my-opencode)). Around the harness itself sits a community ecosystem of plugins, clients, and agent bundles, which the OpenCode maintainers index on a single documentation page ([OpenCode 2026b](#ref-opencode_ecosystem)). This section maps that page (as of 2026-09-09) and calls out the entries most relevant to us. Where the site already covers a project, this section points there instead of repeating it.
+
+#### How the ecosystem is organized
+
+The ecosystem page groups its entries into three lists ([OpenCode 2026b](#ref-opencode_ecosystem)):
+
+- **Plugins** (38 entries): JavaScript or TypeScript modules that OpenCode loads at startup and that hook into its lifecycle events (tool execution, file edits, session compaction, permissions, notifications, and so on). A plugin is named in the `plugin` key of `opencode.json` as an npm package, or dropped as a file into `.opencode/plugins/` (project) or `~/.config/opencode/plugins/` (global); npm packages are fetched automatically with Bun ([OpenCode 2026d](#ref-opencode_plugins)).
+- **Projects** (11 entries): clients and integrations built on the OpenCode server API or SDK — editor front ends, web and desktop apps, a Discord bot, an Obsidian plugin, and an extension manager.
+- **Agents** (2 entries): bundles of agent definitions, prompts, and commands that reshape how OpenCode plans and executes work.
+
+The issue that prompted this section also asked about **providers**. The ecosystem page has no provider list; model providers are configured in `opencode.json` and documented separately, and the two first-party paid options are covered under “OpenCode Zen and OpenCode Go” below.
+
+A recurring caveat applies to almost every entry: these projects are independent, and most carry an explicit “not built by the OpenCode team and not affiliated with OpenCode” disclaimer (for example `ocx` ([kdcokenny 2026a](#ref-ocx)) and `opencode-worktree` ([kdcokenny 2026d](#ref-opencode_worktree))). Listing on the ecosystem page is a courtesy index, not an endorsement or a security review. Every plugin runs with the same permissions as OpenCode itself, so treat adding one the way you would treat adding any unaudited dependency (see [Section 21](#sec-ai-benefits-hazards)).
+
+#### Notable plugins
+
+Activity figures below (stars, last push, latest release) were read from the GitHub API on 2026-09-09. Several repositories have moved since the ecosystem page was written; the current location is given where it differs.
+
+**Context and token management**
+
+- [`opencode-dynamic-context-pruning`](https://github.com/Opencode-DCP/opencode-dynamic-context-pruning) ([Opencode-DCP 2026](#ref-opencode_dcp)) (now under the `Opencode-DCP` organization; AGPL-3.0; about 4,200 stars; release `v3.1.15` on 2026-08-16). Reduces token spend by deduplicating repeated tool calls, purging the inputs of failed tool calls after a configurable number of turns, and letting the model compress stale conversation content into summaries. The README reports prompt-cache hit rates of roughly 85% with the plugin versus 90% without, and says development focus has shifted to a separate tool called Sleev. *Useful to us?* Yes, for long ARDI sessions on paid metered providers; the AGPL license is irrelevant for a locally-run tool but worth knowing.
+- [`opencode-morph-plugin`](https://github.com/morphllm/opencode-morph-plugin) (Morph, the vendor; MIT; 85 stars; release `v2.0.17` on 2026-09-07) and its community predecessor [`opencode-morph-fast-apply`](https://github.com/JRedeker/opencode-morph-fast-apply) (MIT; 170 stars). Both route edits through Morph’s hosted “Fast Apply” model to cut edit latency, which means a second paid API and a second party seeing your code. *Useful to us?* Not by default; the privacy cost outweighs the speed gain for research code.
+
+**Subscription and quota bridges**
+
+These plugins let OpenCode consume a chat subscription you already pay for instead of API credits. They are among the most-starred plugins on the page and also the most fragile, since they depend on undocumented OAuth flows that the subscription vendors can close at any time:
+
+- [`opencode-openai-codex-auth`](https://github.com/numman-ali/opencode-openai-codex-auth) ([Ali 2026](#ref-opencode_codex_auth)) (Numman Ali; about 2,200 stars; release `v4.4.0` on 2026-01-09; no push since then). Uses the ChatGPT Plus/Pro OAuth flow to expose the GPT and Codex model presets, and its README restricts it to “personal development use” with your own subscription.
+- [`opencode-gemini-auth`](https://github.com/jenslys/opencode-gemini-auth) (MIT; about 1,700 stars; release `v1.4.16` on 2026-05-21). The same idea for a Gemini plan.
+- [`opencode-antigravity-auth`](https://github.com/NoeFabris/opencode-antigravity-auth) ([Fabris 2026](#ref-opencode_antigravity_auth)) (MIT; about 11,000 stars; **archived** on GitHub as of 2026-09-09). Authenticated against Google Antigravity’s model pool with a Google account, rotating across accounts to stay under quota. Its own README states that using it “violates Google’s Terms of Service” and that your account “may be suspended or permanently banned”. The similar [`opencode-google-antigravity-auth`](https://github.com/shekohex/opencode-google-antigravity-auth) (375 stars) is archived as well.
+
+*Useful to us?* No. Our lab policy is to use delegation budgets through their supported routes (the `codex` CLI on the ChatGPT plan, OpenCode Go or Zen, OpenRouter credits), and a bridge whose README concedes a terms-of-service violation is a liability, not a saving. The Codex and Gemini bridges are less clearly prohibited but share the fragility.
+
+**Sandboxing, isolation, and worktrees**
+
+- [`opencode-daytona`](https://github.com/daytona/integrations/tree/main/packages/opencode-plugin) ([Daytona 2026](#ref-opencode_daytona)) (Daytona, the vendor; Apache-2.0; release `opencode-plugin-v0.192.1` on 2026-09-03). Runs each session in a hosted Daytona sandbox, syncs the sandbox to a local branch named `opencode/<n>`, and produces live preview links when a server starts. Requires a Daytona account and API key. *Useful to us?* Maybe, for untrusted-code experiments; otherwise the firewall and container setups in this chapter’s Firewall and Network Configuration section cover the same ground.
+- [`opencode-devcontainers`](https://github.com/athal7/opencode-devcontainers) (MIT; 222 stars; release `v0.5.1` on 2026-08-24; pushed 2026-09-08). Runs several devcontainer instances at once, one per branch, with auto-assigned ports. *Useful to us?* Yes, for repositories that already ship a `.devcontainer/`.
+- [`opencode-worktree`](https://github.com/kdcokenny/opencode-worktree) ([kdcokenny 2026d](#ref-opencode_worktree)) (MIT; 726 stars; no tagged release; pushed 2026-08-17). Adds `worktree_create` and `worktree_delete` tools that create an isolated git worktree under `~/.local/share/opencode/worktree/`, sync configured files into it, and open a terminal with OpenCode running there. *Useful to us?* Yes; it is the OpenCode counterpart of the per-agent worktrees our Claude Code sessions use.
+
+**Orchestration and workflow bundles**
+
+- [`oh-my-opencode`](https://github.com/code-yeongyu/oh-my-openagent) (now `oh-my-openagent`; about 68,800 stars; release `v5.0.0-beta.51` on 2026-09-09). Covered in [Section 68](#sec-ai-oh-my-opencode).
+- [`opencode-workspace`](https://github.com/kdcokenny/opencode-workspace) ([kdcokenny 2026c](#ref-opencode_workspace)) (MIT; 586 stars; no tagged release). A one-install bundle of 16 components: four plugins (workspace management, async delegation, notifications, git isolation), two npm plugins, three MCP servers (documentation, web search, code search), four specialist agents (researcher, coder, scribe, reviewer), four skill modules, and one command interface. Its sibling [`opencode-background-agents`](https://github.com/kdcokenny/opencode-background-agents) ([kdcokenny 2026b](#ref-opencode_background_agents)) (MIT; 382 stars) provides `delegate()`, `delegation_read()`, and `delegation_list()` tools whose results persist to disk under `~/.local/share/opencode/delegations/`, so they survive context compaction; only read-only sub-agents may run in the background, because background sessions sit outside OpenCode’s undo and branching system. *Useful to us?* Worth a trial as a lighter alternative to Oh My OpenCode; the disk-persisted delegation results address the same loss-on-compaction problem our lab notebook convention exists for.
+- [`micode`](https://github.com/vtemian/micode) (MIT; 483 stars) and [`octto`](https://github.com/vtemian/octto) (MIT; 493 stars), from the same author: a brainstorm-plan-implement workflow with session continuity, and a browser UI that turns an agent’s clarifying questions into multi-question forms. *Useful to us?* Possibly `octto`, which does for OpenCode what `AskUserQuestion` does in Claude Code.
+- [`opencode-conductor`](https://github.com/derekbar90/opencode-conductor) (Apache-2.0; 129 stars; last push 2026-03-02) ports the Context, Spec, Plan, Implement lifecycle described in [Section 65](#sec-ai-conductor-extension) to OpenCode. *Useful to us?* Only if that lifecycle is adopted; the port looks dormant.
+- [`plannotator`](https://github.com/backnotprop/plannotator) (Apache-2.0; about 8,600 stars; release `v0.27.12` on 2026-09-03) is a visual plan-and-diff annotation tool with an OpenCode plugin; it is agent-agnostic and also targets Claude Code. *Useful to us?* Yes, for reviewing agent plans before implementation; it addresses the plan-review step directly.
+- [`opencode-goal-plugin`](https://github.com/willytop8/OpenCode-goal-plugin) (MIT; 252 stars; release `v0.10.0` on 2026-09-07) adds a session-scoped `/goal` that keeps an objective in context and auto-continues until “evidence-gated completion”. *Useful to us?* Maybe, for unattended ARDI-style loops.
+
+**Safety and observability**
+
+- [`opencode-vibeguard`](https://github.com/inkdust2021/opencode-vibeguard) ([inkdust2021 2026](#ref-opencode_vibeguard)) (MIT; 198 stars; no tagged release; last push 2026-03-01). Replaces configured secrets and personal data with placeholders of the form `__VG_<CATEGORY>_<hash>__` before each request leaves for the model provider, restores them locally when output completes, and restores them again before tool execution so shell commands still work. *Useful to us?* Yes in principle, for work touching participant data, but the redaction list is hand-configured and the project has been quiet for six months; test it before relying on it.
+- [`opencode-shell-strategy`](https://github.com/JRedeker/opencode-shell-strategy) (MIT; 136 stars) and [`opencode-pty`](https://github.com/shekohex/opencode-pty) (MIT; 571 stars) tackle the same hang: an agent running a TTY-dependent command with no terminal attached. The first injects instructions to use non-interactive flags; the second gives the agent a real pseudo-terminal it can write to and read from. *Useful to us?* Yes; the hang they fix is one we hit regularly with `R` and `quarto preview`.
+- [`opencode-sentry-monitor`](https://github.com/stolinski/opencode-sentry-monitor) (53 stars), [`opencode-wakatime`](https://github.com/angristan/opencode-wakatime) (198 stars), and [`opencode-helicone-session`](https://github.com/H2Shami/opencode-helicone-session) (16 stars) send traces or usage to Sentry, Wakatime, and Helicone respectively. *Useful to us?* No; we do not run those services.
+
+**Notifications and quality of life**
+
+Four plugins do desktop notifications (`opencode-notifier`, 810 stars, is the most-used; `opencode-notify`, `opencode-notificator`), and the rest of the list is small conveniences: `opencode-md-table-formatter` cleans up model-generated Markdown tables, `opencode-zellij-namer` names Zellij sessions, `opencode-supermemory` (about 1,600 stars) adds cross-session memory through the hosted Supermemory service, and `opencode-scheduler` runs recurring jobs through `launchd` or `systemd`. Vendor plugins from JFrog, Firecrawl, and Tavily wrap their own CLIs. *Useful to us?* A notifier, yes; the rest only with a specific need.
+
+#### Notable clients and integrations
+
+- [`CodeNomad`](https://github.com/NeuralNomadsAI/CodeNomad) ([Neural Nomads AI 2026](#ref-codenomad)) (Neural Nomads AI; MIT; about 2,600 stars; release `v0.19.0` on 2026-08-24; pushed 2026-09-09). Describes itself as “The AI Coding Cockpit for OpenCode”: a SolidJS front end with a Node.js server that wraps an OpenCode CLI already on your `PATH`. It ships as Electron and Tauri desktop builds for macOS, Windows (x64 and ARM64), and Linux, and as a password-protected local web server (`npx @neuralnomads/codenomad --password <password> --launch`) for remote or browser access. Features include multi-instance workspaces, session management, git worktrees, voice input, a file browser, a command palette, and “SideCars” that embed local web tools as tabs. Despite the ecosystem page’s “Desktop, Web, Mobile and Remote” description, the README documents no native mobile app; mobile access is through the web server. *Useful to us?* Yes, as the most complete graphical front end for OpenCode and a plausible answer to “I want several OpenCode sessions side by side without `tmux`”.
+- [`OpenChamber`](https://github.com/openchamber/openchamber) ([OpenChamber 2026](#ref-openchamber)) (now under its own organization; MIT; about 9,700 stars; release `v1.22.2` on 2026-09-05). A workspace for running and reviewing agent work on desktop, web, VS Code, iOS, and Android, with session goals, a “multi-run” mode that runs the same task across up to five models, a guided changes walkthrough for large diffs, scheduled tasks, and an end-to-end encrypted “Private Relay” for remote connections. Like CodeNomad it uses OpenCode as the engine and is not affiliated with the OpenCode team. *Useful to us?* Yes; the multi-model run is a direct fit for our habit of getting a second model’s review.
+- [`OpenWork`](https://github.com/different-ai/openwork) ([different-ai 2026](#ref-openwork)) (different-ai; about 23,400 stars; release `v0.18.44` on 2026-09-09). Positions itself as “an open-source alternative to Claude Cowork and Codex” for macOS, Windows, and Linux, sharing skills, MCP servers, and connected services across tools and machines. Code outside `ee/` is MIT; the organizational control plane under `ee/` uses a separate license that is free for up to five users. *Useful to us?* Compare against the collaborative workspaces in [Section 71](#sec-ai-collaborative-workspaces); the five-user free tier fits a lab, and the open core makes it auditable.
+- [`opencode.nvim`](https://github.com/nickjvandyke/opencode.nvim) ([Dyke 2026](#ref-opencode_nvim)) (Nick van Dyke; MIT; about 3,800 stars; release `v1.0.0` on 2026-08-20) connects Neovim to a running OpenCode server (`opencode --port`), injects editor context (cursor, selection, diagnostics) into prompts, surfaces OpenCode’s server-sent events as Neovim autocommands, and reloads buffers when the agent edits files. A second, unrelated [`sudo-tee/opencode.nvim`](https://github.com/sudo-tee/opencode.nvim) (Apache-2.0; 937 stars) is a full Neovim front end rather than a bridge. *Useful to us?* For the Neovim users in the lab, yes.
+- [`kimaki`](https://github.com/remorses/kimaki) ([remorses 2026](#ref-kimaki)) (MIT; about 1,400 stars; release `kimaki@0.27.0` on 2026-09-01). A Discord bot in which each project is a channel and each session a thread; it queues messages, forks sessions, transcribes voice messages, shows diffs, and maps Discord roles to permission controls. *Useful to us?* No for now; our coordination runs through GitHub, not Discord.
+- [`portal`](https://github.com/hosenur/portal) ([hosenur 2026](#ref-opencode_portal)) (MIT; 798 stars; last push 2026-05-12) is a mobile-first web UI meant to be reached over Tailscale. [`OpenCode-Obsidian`](https://github.com/mtymek/opencode-obsidian) (MIT; about 1,100 stars) embeds OpenCode in Obsidian’s sidebar. *Useful to us?* Niche; CodeNomad and OpenChamber cover the remote-access case with more activity.
+- [`ocx`](https://github.com/kdcokenny/ocx) ([kdcokenny 2026a](#ref-ocx)) (MIT; 942 stars; release `v2.0.15` on 2026-08-17). An extension manager with portable, isolated profiles: `ocx profile add` installs a profile from a registry, `ocx oc -p <name>` launches OpenCode with it, and components are copied into `.opencode/` (the shadcn model) rather than hidden in dependencies, with SHA verification of what is installed. *Useful to us?* Yes, if we standardize an OpenCode profile for the lab; it is the closest thing to the plugin marketplace we use for Claude Code ([Section 66](#sec-ai-plugins-deep-dive)).
+- [`ai-sdk-provider-opencode-sdk`](https://github.com/ben-vargas/ai-sdk-provider-opencode-sdk) (MIT; 116 stars) exposes OpenCode’s configured providers to the Vercel AI SDK, and [`opencode-plugin-template`](https://github.com/zenobi-us/opencode-plugin-template) (archived) was the scaffold for writing plugins. *Useful to us?* Only when building on the SDK.
+
+#### Agent bundles
+
+- [`OpenAgentsControl`](https://github.com/darrenhinde/OpenAgentsControl) (listed as `opencode-agents`; MIT; about 4,800 stars; release `v0.7.1` on 2026-01-30) is a plan-first framework with approval-gated execution and built-in test, review, and validation steps.
+- [`agentic`](https://github.com/Cluster444/agentic) (MIT; 638 stars; last push 2025-09-02) is a context-engineering toolkit that appears dormant.
+
+*Useful to us?* `OpenAgentsControl` overlaps heavily with Oh My OpenCode ([Section 68](#sec-ai-oh-my-opencode)) and `opencode-workspace`; pick one such harness rather than layering them.
+
+#### OpenCode Zen and OpenCode Go
+
+The ecosystem page does not describe them, but two first-party paid services sit alongside the community projects:
+
+- **OpenCode Zen** ([OpenCode 2026e](#ref-opencode_zen)) is the maintainers’ own model gateway: a curated set of models tested against coding-agent workloads, billed pay-as-you-go per million tokens from a prepaid balance (with optional auto-reload, by default \$20 whenever the balance drops below \$5). As of 2026-09-09 it lists six free models under limited-time trials, including `Big Pickle`, `MiMo-V2.5 Free`, and `Nemotron 3 Ultra Free`, beside paid Claude, GPT, Gemini, Grok, Qwen, DeepSeek, Kimi, and GLM models.
+- **OpenCode Go** ([OpenCode 2026c](#ref-opencode_go)) is a \$10-per-month subscription to 30-plus open-weight coding models (Qwen, DeepSeek, Kimi, GLM, MiMo, Grok, and others) with usage caps expressed in dollar value: \$12 per five hours, \$30 per week, \$60 per month. When a cap is hit, an optional “Use balance” setting falls back to Zen credits. Only one member per workspace can hold the subscription.
+
+*Useful to us?* Yes; OpenCode Go is already one of the lab’s delegation budgets, and the Zen free tier is a zero-cost way to try a new open-weight model before routing work to it (compare the OpenRouter `:free` models in [Section 28](#sec-ai-opencode-openrouter)).
+
+#### Summary
+
+| Need | Start with | Also see |
+|----|----|----|
+| Graphical or remote front end | `CodeNomad`, `OpenChamber` | `portal`, `OpenWork` |
+| Multi-agent orchestration | Oh My OpenCode ([Section 68](#sec-ai-oh-my-opencode)) | `opencode-workspace`, `OpenAgentsControl` |
+| Cheaper tokens | OpenCode Go, Zen free models | `opencode-dynamic-context-pruning` |
+| Isolation per task | `opencode-worktree`, `opencode-devcontainers` | `opencode-daytona` |
+| Redaction of sensitive data | `opencode-vibeguard` | (none) |
+| Plan review before implementation | `plannotator`, `octto` | `opencode-conductor` |
+| Shareable lab configuration | `ocx` | (none) |
+
+Skip the subscription-bridge plugins.
+
+# 70 Managing Gemini API Spend and Cost Optimization
 
 This guide describes how to manage Google AI Studio and Google Cloud Gemini API spend caps, unpause paused API services, and optimize token consumption across local tools and GitHub Actions workflows.
 
@@ -3939,13 +5201,13 @@ To maximize the efficiency of your API spend across local CLI sessions, subagent
 - **Use the Batch API for Non-Realtime Tasks**: For offline batch processing, evaluation suites, or background doc updates, submit requests via the Gemini Batch API to receive a 50% discount on input and output tokens.
 - **GitHub UI Diff Collapsing**: Mark dependency lockfiles (`*.lock`, `package-lock.json`, `yarn.lock`, `renv.lock`) and generated build artifacts as `linguist-generated=true` in `.gitattributes` to collapse them in GitHub’s web diff view and exclude them from repository language statistics.
 
-# 55 Collaborative AI Workspaces: Claude Cowork and Gemini Spark
+# 71 Collaborative AI Workspaces: Claude Cowork and Gemini Spark
 
 The 2026 AI ecosystem has expanded beyond reactive chat windows and command-line coding orchestrators into collaborative workspace agents (measured 2026-09-01). These systems operate directly on multi-file workspaces, desktop applications, and cloud productivity suites to automate complex, multi-step analytical and administrative workflows.
 
 #### Claude Cowork
 
-[Claude Cowork](https://claude.com/docs/cowork/overview) ([Anthropic 2026](#ref-claude_cowork)) (also discussed in **?@sec-claude-cowork**) is Anthropic’s desktop-native agent architecture designed to collaborate directly within local folders and desktop application environments:
+[Claude Cowork](https://claude.com/docs/cowork/overview) ([Anthropic 2026r](#ref-claude_cowork)) (also discussed in **?@sec-claude-cowork**) is Anthropic’s desktop-native agent architecture designed to collaborate directly within local folders and desktop application environments:
 
 - **Local Sandboxed Execution**: Cowork runs in a sandboxed virtual environment on the host machine, reading, modifying, and creating local files (spreadsheets, markdown manuscripts, datasets) without requiring manual file uploads or cloud synchronizations.
 - **Desktop Application and Browser Interaction**: Beyond static file manipulation, Cowork interfaces with local applications and browser sessions (via [Claude in Chrome](https://claude.com/claude-in-chrome)) to execute multi-application workflows.
@@ -3965,8 +5227,8 @@ The 2026 AI ecosystem has expanded beyond reactive chat windows and command-line
 
 Similar collaborative workspace paradigms have emerged across other frontier ecosystems:
 
-- **ChatGPT Work and OpenAI Canvas**: [ChatGPT Work](https://learn.chatgpt.com/docs/get-started-with-work) ([OpenAI 2026](#ref-chatgpt_work)) (see **?@sec-chatgpt-work**) and Canvas provide side-by-side document and code editing with inline line-level revisions, interactive targeted edits, and multi-file artifact tracking.
-- **Cursor and Google Antigravity Agent Workspaces**: Developer-centric workspace agents providing multi-agent delegation, worktree isolation, and structured planning workflows (such as Conductor extension spec-driven development, [Section 51](#sec-ai-conductor-extension)).
+- **ChatGPT Work and OpenAI Canvas**: [ChatGPT Work](https://learn.chatgpt.com/docs/get-started-with-work) ([OpenAI 2026e](#ref-chatgpt_work)) (see **?@sec-chatgpt-work**) and Canvas provide side-by-side document and code editing with inline line-level revisions, interactive targeted edits, and multi-file artifact tracking.
+- **Cursor and Google Antigravity Agent Workspaces**: Developer-centric workspace agents providing multi-agent delegation, worktree isolation, and structured planning workflows (such as Conductor extension spec-driven development, [Section 65](#sec-ai-conductor-extension)).
 - **Notion AI and Microsoft Copilot Studio**: Enterprise knowledge graph agents designed for querying organizational wikis and automating business process workflows.
 
 #### Comparative Taxonomy of Workspace Agents
@@ -3987,13 +5249,195 @@ When selecting a collaborative workspace agent for academic and computational re
 2.  **Use Cloud Agents for Asynchronous Administration**: For non-sensitive scheduling, lab meeting summaries, and routine administrative reminders, always-on cloud agents (like Gemini Spark) reduce cognitive overhead by automating background tasks.
 3.  **Keep Code and Statistical Analyses in Version Control**: While workspace agents are effective for document drafting, statistical pipelines and computational scripts should remain in dedicated git-managed repositories with automated CI validation and code review.
 
+# 72 AI-Enabled Knowledge Workspaces: Notion and Alternatives
+
+Notion and its competitors sell a hosted wiki, database, and document editor with an AI layer on top. This section reviews Notion’s AI features and the closest alternatives from the perspective of a lab that already keeps its notes in git-backed Quarto and Markdown (this site, and the [Benchbook](../chapters/benchbook.llms.md) pattern). The question is not whether these products are good — most are polished — but whether any of them beats a plain-text wiki that a coding agent can already read, write, and version. Prices and feature lists below were read from each vendor’s own pages and are volatile (measured 2026-09-09).
+
+#### Notion
+
+Notion’s AI surface has three layers ([Notion Labs 2026b](#ref-notion_ai)):
+
+- **Notion AI** in the editor: drafting, rewriting, summarizing, and auto-filling database properties.
+- **Notion Agent** and **Custom Agents**: a chat agent that runs multi-step tasks across the workspace and connected apps (Slack, Google Drive, GitHub), plus scheduled or triggered agents that run without a user present. Custom Agents were free through 2026-05-03 and now bill by credit, at \$10 per 1,000 credits, on Business and Enterprise plans.
+- **AI Meeting Notes** and **Enterprise Search** across connected sources.
+
+For agent access from outside Notion there are two routes. The public REST API exposes pages, databases, blocks, users, and search under internal, OAuth, or personal access tokens (API version `2026-03-11`) ([Notion Labs 2026c](#ref-notion_api)). The Notion MCP server is a remote server hosted by Notion, authorized by OAuth and scoped to what the user can already see, that Claude Code, Cursor, and Codex can connect to ([Notion Labs 2026e](#ref-notion_mcp)). It exposes tools for search, fetch, page and database creation and update, comments, file uploads, and custom-agent sessions, rate-limited to 180 requests per minute per user (30 for keyword search), with some tools gated behind Business or Enterprise plans ([Notion Labs 2026f](#ref-notion_mcp_tools)).
+
+Pricing: Free, Plus at \$10 per member per month, Business at \$20, Enterprise on request. Full Notion Agent, Custom Agents, and Meeting Notes require Business or above; Free and Plus get a limited AI trial ([Notion Labs 2026g](#ref-notion_pricing)). Students and educators at accredited universities get the Plus plan free for a one-member workspace, re-verified annually ([Notion Labs 2026d](#ref-notion_education)). That is a personal plan: a shared lab workspace with AI would be Business at \$20 per member per month.
+
+Export: pages export as Markdown, databases as CSV plus Markdown subpages, and whole pages or workspaces as HTML or PDF. Comments survive only in HTML; only the current database view exports; “include subpages” for full exports is a Business or Enterprise feature; a workspace export can take up to 30 hours; and workspace owners can disable export entirely ([Notion Labs 2026a](#ref-notion_export)).
+
+#### Obsidian
+
+Obsidian is the opposite design: a local Markdown folder with an editor on top. Notes are plain files on disk, so any coding agent can already read and write them with no API at all, and a vault can live in a git repository. Obsidian has no first-party AI features (measured 2026-09-09); the AI plugins are community-maintained ([Obsidian 2026c](#ref-obsidian_home)). The official Obsidian CLI (Obsidian 1.12 or later, enabled in Settings, with the app running) exposes search, note creation, tasks, and developer commands, and the documentation names “agentic coding tools” as an intended user ([Obsidian 2026a](#ref-obsidian_cli)). MCP servers for Obsidian are community projects, several of which wrap that CLI.
+
+Pricing: the app is free for personal and commercial use; a \$50 per user per year commercial license is optional. Sync (\$4 per month annual) and Publish (\$8 per month annual) are optional subscriptions, with a 40% discount for students, faculty, and nonprofit staff ([Obsidian 2026b](#ref-obsidian_pricing)). Export is a non-question: the vault is the export.
+
+#### Coda, now Superhuman Docs
+
+Coda has been renamed Superhuman Docs; `coda.io/pricing` now redirects to `superhuman.com/plans/docs` ([Superhuman 2026](#ref-superhuman_docs_pricing)). The vendor pages are rendered client-side and could not be read in full for this review, so the numbers below come from a third-party summary ([Breeze 2026](#ref-breeze_coda_superhuman)): Pro at \$15 per Doc Maker per month (\$12 annual), Business at \$40 (\$33 annual), Free and Enterprise unchanged, with a rename date of 2026-07-08. The billing unit is the “Doc Maker”, so viewers and editors of existing docs are free. Treat the product as in transition: a rename and a price increase in one quarter is a lock-in signal in itself.
+
+#### Google Workspace with Gemini
+
+Gemini is bundled into every Google Workspace plan rather than sold as an add-on: Starter (\$7 per user per month list) has limited Gemini in Gmail, Standard (\$14) and above have Gemini across Docs, Sheets, Meet, and Gemini Notebook ([Google 2026h](#ref-google_workspace_pricing)). For universities, Education Fundamentals is free and includes Gemini for Education and Gemini Notebook, though in-app Gemini in Docs and Sheets needs Education Plus (\$6 per user per year); the Google AI Pro for Education add-on is \$15 per user per month on an annual commitment ([Google 2026b](#ref-google_workspace_education)). Agent access is through the Docs, Sheets, and Drive APIs, which let a program create and edit document structure ([Google 2026g](#ref-google_docs_api)); Google’s pricing and API pages reviewed here mention no hosted MCP server for Docs (measured 2026-09-09). Google’s always-on Gemini Spark agent is covered in [Section 71](#sec-ai-collaborative-workspaces). Lock-in is moderate: a Doc exports as a file, but comments, suggestions, and version history stay in Google’s copy. Where the campus already licenses Workspace, the marginal cost to the lab is whatever that contract allows.
+
+#### Microsoft Loop and OneNote with Copilot
+
+Copilot in Loop offers preset prompts (Create, Brainstorm, Blueprint, Describe) and page summaries inside Loop workspaces ([Microsoft 2026d](#ref-microsoft_copilot_loop_faq)), and Microsoft positions Loop alongside Copilot Pages (canvases for saving AI output) and Copilot Notebooks (grounded research spaces) ([Microsoft 2026a](#ref-microsoft_loop_compare)). All of it requires a Microsoft 365 Copilot license on top of a qualifying base plan. Copilot Business is \$18 per user per month (annual, reduced from \$21) for small-business plans; the enterprise add-on is listed separately ([Microsoft 2026g](#ref-microsoft_copilot_pricing)). Academic Copilot licenses exist for A1, A3, and A5 plans through volume licensing ([Microsoft 2026f](#ref-microsoft_copilot_licensing)). None of the Microsoft pages reviewed here offers an MCP server for Loop or OneNote, and neither page describes a Markdown export, which makes this the weakest export story in this table. The `.docx` route for reviewer edits, described earlier in this chapter, remains the practical bridge to Word users.
+
+#### Confluence with Rovo
+
+Confluence Cloud is free for up to 10 users; Standard and Premium are per-user and include Rovo (search, chat, and agents) with 25 and 70 Rovo credits per user per month respectively ([Atlassian 2026e](#ref-confluence_plans), [2026d](#ref-rovo_credits)). Credits are pooled at the organization level, reset monthly, and overage billing at \$0.01 per credit starts 2026-12-03 ([Atlassian 2026d](#ref-rovo_credits)). Atlassian’s academic licensing gives qualifying institutions 50% off cloud list price ([Atlassian 2026a](#ref-atlassian_cloud_licensing)). The Atlassian Rovo MCP Server is hosted at `mcp.atlassian.com`, authorizes by OAuth 2.1 or API token, and lets Claude, ChatGPT, GitHub Copilot CLI, and Gemini search, summarize, create, and update Confluence pages and Jira work items within the user’s existing permissions ([Atlassian 2026c](#ref-rovo_mcp_server)). Export is per page to Word or PDF, and per space to PDF, CSV, HTML, or XML ([Atlassian 2026b](#ref-confluence_export)); there is no Markdown export, so leaving Confluence means converting HTML.
+
+#### Anytype
+
+Anytype is a local-first, source-available (Any Source Available License 1.0) knowledge base with zero-knowledge encrypted peer-to-peer sync ([Any Association 2026b](#ref-anytype_ts_github)). It has no built-in AI. Instead it ships a Local API on `localhost`, authenticated by an API key generated from a challenge in the desktop app ([Any Association 2026d](#ref-anytype_local_api)), and an “Agents’ Skill” that lets Claude Code, Cursor, Gemini CLI, or GitHub Copilot run sandboxed JavaScript against that API to read, search, create, and bulk-edit objects ([Any Association 2026a](#ref-anytype_agents_skill)). Community MCP servers wrap the same API. Membership is a free tier plus paid storage tiers, with a 50% student discount ([Any Association 2026e](#ref-anytype_memberships)). Export is Markdown, PDF, HTML, or Anytype’s own Any-Block format, in JSON or Protobuf ([Any Association 2026c](#ref-anytype_export)).
+
+#### Craft
+
+Craft is a native document editor (macOS, iOS, Windows, web) with a credit-metered AI assistant: 15 credits on Free, 50 per month on Plus (\$6.40 per month annual), with a Team plan at \$50 per month for up to 10 seats ([Craft Docs 2026a](#ref-craft_pricing)). It offers a hosted MCP endpoint per connection with user-defined scope, which Claude Desktop, Claude Code, ChatGPT, Cursor, VS Code, and other clients can attach to, and which since version 3.3.5 can create and update documents, not only read them ([Craft Docs 2026c](#ref-craft_mcp)). Export is Markdown, `TextBundle`, PDF, and image on every platform, plus `.docx` on macOS, iOS, and web ([Craft Docs 2026b](#ref-craft_export)). No education discount is listed.
+
+#### Comparison
+
+| Product | AI features | Agent / MCP access | Export and lock-in | Academic pricing | Verdict |
+|----|----|----|----|----|----|
+| Notion | Notion AI, Notion Agent, Custom Agents (credits), meeting notes, enterprise search | Hosted MCP server (OAuth); REST API | Markdown/CSV/HTML/PDF; comments and views partly lost; export can be disabled by admins | Plus free for one student/educator; shared AI workspace is \$20 per member per month | Best hosted option; still a walled garden |
+| Obsidian | None first-party; community plugins | Local files; official CLI; community MCP servers | Vault is plain Markdown on disk | Free app; 40% off Sync/Publish | Closest to what we already do |
+| Superhuman Docs (Coda) | Coda AI, in transition | Packs and API | Per-doc export; rebrand and repricing in 2026 | None listed | Avoid until it settles |
+| Google Workspace + Gemini | Gemini in Docs/Sheets/Gmail, Gemini Notebook, Spark agent | Docs/Drive APIs; no hosted MCP documented | File export; comments and history stay behind | Fundamentals free; Plus \$6 per user per year; AI Pro add-on \$15 per month | Use what the campus already licenses |
+| Microsoft Loop / OneNote + Copilot | Copilot prompts and summaries; Copilot Pages and Notebooks | No MCP server documented | No Markdown export documented; weakest export | Academic Copilot via A3/A5 volume licensing | Only if the collaborators live in Teams |
+| Confluence + Rovo | Rovo search, chat, agents (credit-metered, overage from 2026-12) | Hosted MCP server (OAuth 2.1) | Word/PDF per page, HTML/XML per space; no Markdown | 50% off cloud list | Fine for Jira shops; poor for prose |
+| Anytype | None built in | Local API with key; agent skill; community MCP | Markdown/HTML/PDF/Any-Block; local-first, encrypted | 50% student discount | Interesting, niche |
+| Craft | Credit-metered assistant | Hosted MCP with scoped connections | Markdown/`TextBundle`/PDF/`.docx` | None listed | Nice editor, small ecosystem |
+
+#### Useful to us?
+
+Mostly no, and for a structural reason rather than a feature gap. Every product above adds AI by putting a model *inside* the vendor’s editor and then, more recently, adding an MCP server so outside agents can reach in. A git-backed Quarto or Markdown wiki inverts that: the agent is already a first-class editor of the files, every change is a reviewable diff, CI renders and spell-checks the result, and the wiki is the export. [Benchbook](../chapters/benchbook.llms.md) is the same idea with a written contract for the agent; this site is the same idea with a publishing pipeline. Neither needs an MCP server to let Claude Code read the lab’s notes, and neither can be locked, metered, or renamed by a vendor.
+
+What the hosted products do better, and a plain repository does not:
+
+- **Non-technical collaborators.** Notion, Google Docs, and Loop have editors that a clinician or a first-year student can use without learning git. The `.docx` round-trip described earlier in this chapter covers review comments, but not live co-editing.
+- **Databases with views.** Notion and Coda tables with filters, rollups, and forms have no clean Markdown equivalent; a CSV in a repo is the honest substitute.
+- **Meeting capture.** Notion’s AI Meeting Notes and Copilot’s transcription are convenient; the output is text and can be committed afterward.
+- **Always-on agents.** Notion Custom Agents, Gemini Spark, and Rovo agents run on a schedule without a machine of ours awake. A GitHub Actions cron running a coding agent does the same for a repository.
+
+Recommendations (measured 2026-09-09):
+
+- Keep lab knowledge in git-backed Markdown or Quarto, and let coding agents edit it directly.
+- If a hosted editor is needed for a specific collaborator group, prefer the one the campus already licenses (Google Workspace with Gemini) over a new per-seat subscription, and treat its content as a draft that gets committed.
+- Among the standalone products, Obsidian is the only one whose data model is already ours, so a lab member who wants a graphical editor over the same repository should start there.
+- Notion is the best of the hosted walled gardens, and the Notion MCP server makes it reachable from Claude Code; but the AI features that distinguish it are Business-plan and credit-metered, and export loses structure, so budget for the exit before entering.
+- Re-check prices and plan boundaries before acting on any row of the table; several changed within the last quarter.
+
 # References
 
 *2001: A Space Odyssey*. 1968. Film. <https://en.wikipedia.org/wiki/2001:_A_Space_Odyssey_(film)>.
 
-Anthropic. 2026. *Claude Cowork Overview*. Documentation. <https://claude.com/docs/cowork/overview>.
+Ali, Numman. 2026. *Opencode-Openai-Codex-Auth: Use Your ChatGPT Plus/Pro Subscription with OpenCode*. GitHub repository. <https://github.com/numman-ali/opencode-openai-codex-auth>.
+
+Amazon Web Services. 2026. *Kiro Documentation*. Documentation. <https://kiro.dev/docs/>.
+
+anomalyco. 2026. *OpenCode: The Open Source Coding Agent*. GitHub repository. <https://github.com/anomalyco/opencode>.
+
+Anthropic. 2026a. *Agent SDK Overview*. Documentation. <https://code.claude.com/docs/en/agent-sdk/overview>.
+
+Anthropic. 2026b. *Anthropics/Anthropic-Sdk-Python*. Software. <https://github.com/anthropics/anthropic-sdk-python>.
+
+Anthropic. 2026c. *Anthropics/Claude-Agent-Sdk-Python*. Software. <https://github.com/anthropics/claude-agent-sdk-python>.
+
+Anthropic. 2026d. *Anthropics/Claude-Agent-Sdk-Typescript*. Software. <https://github.com/anthropics/claude-agent-sdk-typescript>.
+
+Anthropic. 2026e. *Anthropics/Claude-Code*. Software. <https://github.com/anthropics/claude-code>.
+
+Anthropic. 2026f. *Anthropics/Claude-Code: CHANGELOG.md*. Documentation. <https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md>.
+
+Anthropic. 2026g. *Anthropics/Claude-Code-Action*. Software. <https://github.com/anthropics/claude-code-action>.
+
+Anthropic. 2026h. *Anthropics/Claude-Code-Security-Review*. Software. <https://github.com/anthropics/claude-code-security-review>.
+
+Anthropic. 2026i. *Anthropics/Claude-Plugins-Community*. Software. <https://github.com/anthropics/claude-plugins-community>.
+
+Anthropic. 2026j. *Anthropics/Claude-Plugins-Official*. Software. <https://github.com/anthropics/claude-plugins-official>.
+
+Anthropic. 2026k. *Anthropics/Knowledge-Work-Plugins*. Software. <https://github.com/anthropics/knowledge-work-plugins>.
+
+Anthropic. 2026l. *Anthropics/Sandbox-Runtime*. Software. <https://github.com/anthropics/sandbox-runtime>.
+
+Anthropic. 2026m. *Anthropics/Skills*. Software. <https://github.com/anthropics/skills>.
+
+Anthropic. 2026n. *Claude Code Changelog*. Documentation. <https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md>.
+
+Anthropic. 2026o. *Claude Code Plugins*. Documentation. <https://github.com/anthropics/claude-code/blob/main/plugins/README.md>.
+
+Anthropic. 2026p. *Claude Code Plugins Directory*. Software. <https://github.com/anthropics/claude-code/tree/main/plugins>.
+
+Anthropic. 2026q. *Claude Code Plugins Official Marketplace*. Software. <https://github.com/anthropics/claude-plugins-official>.
+
+Anthropic. 2026r. *Claude Cowork Overview*. Documentation. <https://claude.com/docs/cowork/overview>.
+
+Anthropic. 2026s. *Claude Plugins Community Marketplace*. Software. <https://github.com/anthropics/claude-plugins-community>.
+
+Anthropic. 2026t. *Configure Permissions*. Documentation. <https://code.claude.com/docs/en/permissions>.
+
+Anthropic. 2026u. *Create Custom Subagents*. Documentation. <https://code.claude.com/docs/en/sub-agents>.
+
+Anthropic. 2026v. *Create Plugins*. Documentation. <https://code.claude.com/docs/en/plugins>.
+
+Anthropic. 2026w. *Discover and Install Prebuilt Plugins Through Marketplaces*. Documentation. <https://code.claude.com/docs/en/discover-plugins>.
+
+Anthropic. 2026x. *Environment Variables*. Documentation. <https://code.claude.com/docs/en/env-vars>.
+
+Anthropic. 2026y. *Experimental Features*. Documentation. <https://github.com/anthropics/claude-code-action/blob/main/docs/experimental.md>.
+
+Anthropic. 2026z. *Explore the Context Window*. Documentation. <https://code.claude.com/docs/en/context-window>.
+
+Anthropic. 2026aa. *Hooks Reference*. Documentation. <https://code.claude.com/docs/en/hooks>.
+
+Anthropic. 2026ab. *How Claude Code Works*. Documentation. <https://code.claude.com/docs/en/how-claude-code-works>.
+
+Anthropic. 2026ac. *How Claude Remembers Your Project*. Documentation. <https://code.claude.com/docs/en/memory>.
+
+Anthropic. 2026ad. *Ralph Loop Plugin*. Documentation. <https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/plugins/ralph-loop/README.md>.
+
+Anthropic. 2026ae. *Tools Reference*. Documentation. <https://code.claude.com/docs/en/tools-reference>.
+
+Anthropic. 2026af. *Use Research on Claude*. Help Center. <https://support.claude.com/en/articles/11088861-use-research-on-claude>.
+
+Anthropic. 2026ag. *Web Search Tool*. Documentation. <https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool>.
+
+Anthropic. 2026ah. *When Should i Use Web Search, Extended Thinking, and Research?* Help Center. <https://support.claude.com/en/articles/11095361-when-should-i-use-web-search-extended-thinking-and-research>.
+
+anthropics/claude-code contributors. 2026a. *\[BUG\] V2.1.150 Adds Server-Side System Prompt Injection via Tengu_heron_brook Feature Flag*. GitHub issue \#62061, anthropics/claude-code. <https://github.com/anthropics/claude-code/issues/62061>.
+
+anthropics/claude-code contributors. 2026b. *\[BUG\] V2.1.219 Heron_brook Prompt Section Injects “Do Not Call the AgentTool Unless the User Requested It” for Opus 5 Only, Silently Overriding User-Configured Delegation Policy, with No Opt-Out*. GitHub issue \#80988, anthropics/claude-code. <https://github.com/anthropics/claude-code/issues/80988>.
+
+anthropics/claude-code contributors. 2026c. *Dynamic System-Prompt Sections Silently Override CLAUDE.md; No Precedence Rule, No Way to Observe It*. GitHub issue \#80998, anthropics/claude-code. <https://github.com/anthropics/claude-code/issues/80998>.
+
+anthropics/claude-code contributors. 2026d. *\[MODEL\] Model Attributes the Opus-5-Only Heron_brook Delegation Directive to the User’s Own CLAUDE.md, Sending Users to Audit Config for a Rule That Isn’t There*. GitHub issue \#87635, anthropics/claude-code. <https://github.com/anthropics/claude-code/issues/87635>.
+
+anthropics/claude-code contributors. 2026e. *Undocumented System-Prompt Directive “Do Not Call the AgentTool Unless the User Requested It” Contradicts Documented Description-Based Subagent Delegation*. GitHub issue \#82456, anthropics/claude-code. <https://github.com/anthropics/claude-code/issues/82456>.
+
+Any Association. 2026a. *Anytype Agents’ Skill*. Documentation. <https://doc.anytype.io/anytype/features/integrations/anytype-agents-skill>.
+
+Any Association. 2026b. *Anytype Desktop (Anytype-Ts)*. Documentation. <https://github.com/anyproto/anytype-ts>.
+
+Any Association. 2026c. *Anytype Import and Export*. Documentation. <https://doc.anytype.io/anytype/data/import-and-export>.
+
+Any Association. 2026d. *Anytype Local API*. Documentation. <https://doc.anytype.io/anytype/features/integrations/local-api>.
+
+Any Association. 2026e. *Anytype Memberships*. Documentation. <https://doc.anytype.io/anytype/resources/memberships>.
 
 Asimov, Isaac. 1950. *I, Robot*. Novel; Gnome Press. <https://search.library.ucdavis.edu/permalink/01UCD_INST/9fle3i/alma990000226350403126>.
+
+Atlassian. 2026a. *Atlassian Cloud Licensing*. Documentation. <https://www.atlassian.com/licensing/cloud>.
+
+Atlassian. 2026b. *Export Content to Word, PDF, HTML and XML*. Documentation. <https://support.atlassian.com/confluence-cloud/docs/export-content-to-word-pdf-html-and-xml/>.
+
+Atlassian. 2026c. *Get Started with the Atlassian Rovo MCP Server*. Documentation. <https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/>.
+
+Atlassian. 2026d. *How Rovo Credits Work*. Documentation. <https://support.atlassian.com/rovo/docs/rovo-usage-limits/>.
+
+Atlassian. 2026e. *Learn about the Features of Confluence Cloud Plans*. Documentation. <https://support.atlassian.com/confluence-cloud/docs/learn-about-confluence-cloud-plans/>.
 
 *Battlestar Galactica*. 2004. Television Series. <https://en.wikipedia.org/wiki/Battlestar_Galactica_(2004_TV_series)>.
 
@@ -4001,41 +5445,363 @@ Belcak, Peter, Greg Heinrich, Shizhe Diao, et al. 2025. *Small Language Models A
 
 *Blade Runner*. 1982. Film. <https://en.wikipedia.org/wiki/Blade_Runner>.
 
+Breeze. 2026. *Coda Is Now Superhuman Docs: What Changed for Users*. Documentation. <https://www.breeze.pm/articles/coda-is-now-superhuman-docs>.
+
 Card, Orson Scott. 1985. *Ender’s Game*. Novel; Tor Books. <https://en.wikipedia.org/wiki/Ender%27s_Game>.
+
+Cline. 2026. *Cline: AI Coding, Open Source and Open Choice*. Product page. <https://cline.bot/>.
+
+cnighswonger. 2026. *Heron_brook Bootstrap Channel: Disclosure Record (2026-05)*. Documentation. <https://github.com/cnighswonger/claude-code-cache-fix/blob/main/docs/disclosure/heron-brook-2026-05.md>.
 
 code-yeongyu. 2025. *My-Claude-Code-Harness*. Software. <https://github.com/code-yeongyu/my-claude-code-harness>.
 
+Cognition. 2026. *Introducing Devin*. Documentation. <https://docs.devin.ai/get-started/devin-intro>.
+
+Coles, Matt. 2026. *Herding Parallel Agents on a Remote Box with Herdr*. Blog post. <https://coles.codes/posts/herding-agents-with-herdr/>.
+
+Copes, Flavio. 2026. *A Deep Dive into Herdr*. Blog post. <https://flaviocopes.com/herdr/>.
+
+Coto, Cedrick. 2026. *Aeris: Deterministic Cognitive Simulation Engine with Emergent Narrative*. Software. <https://github.com/Cedrick-Coto/Aeris>.
+
+Craft Docs. 2026a. *Craft Pricing*. Documentation. <https://www.craft.do/pricing>.
+
+Craft Docs. 2026b. *Export to PDF, Word, and Markdown*. Documentation. <https://support.craft.do/en/import-and-export/export/document>.
+
+Craft Docs. 2026c. *MCP (Craft Help Center)*. Documentation. <https://support.craft.do/en/integrate/mcp>.
+
+Cursor. 2026. *Cloud Agents*. Documentation. <https://cursor.com/docs/cloud-agent>.
+
+Databricks. 2026a. *Foundation Model APIs Limits and Regions*. Documentation. <https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/limits>.
+
+Databricks. 2026b. *Supported Models in Foundation Model APIs*. Documentation. <https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models>.
+
+Daytona. 2026. *Daytona Integrations: OpenCode Plugin*. GitHub repository. <https://github.com/daytona/integrations/tree/main/packages/opencode-plugin>.
+
 Dettmers, Tim, Artidoro Pagnoni, Ari Holtzman, and Luke Zettlemoyer. 2023. *QLoRA: Efficient Finetuning of Quantized LLMs*. arXiv preprint. <https://arxiv.org/abs/2305.14314>.
 
+different-ai. 2026. *OpenWork: The Open-Source Alternative to Claude Cowork*. GitHub repository. <https://github.com/different-ai/openwork>.
+
+Dyke, Nick van. 2026. *Opencode.nvim: Neovim Plugin for Editor-Aware Prompts*. GitHub repository. <https://github.com/nickjvandyke/opencode.nvim>.
+
+Fabris, Noe. 2026. *Opencode-Antigravity-Auth (Archived)*. GitHub repository. <https://github.com/NoeFabris/opencode-antigravity-auth>.
+
 Flight of the Conchords. 2007. *The Humans Are Dead*. Music Video. <https://www.youtube.com/watch?v=B1BdQcJ2ZYY>.
+
+Gammon, Seth. 2026a. *Citadel Architecture*. Documentation. <https://github.com/SethGammon/Citadel/blob/main/docs/ARCHITECTURE.md>.
+
+Gammon, Seth. 2026b. *Citadel Proof Experiments*. Documentation. <https://github.com/SethGammon/Citadel/blob/main/docs/EXPERIMENTS.md>.
+
+Gammon, Seth. 2026c. *Citadel Threat Model*. Documentation. <https://github.com/SethGammon/Citadel/blob/main/THREAT_MODEL.md>.
+
+Gammon, Seth. 2026d. *Citadel: An Open-Source Operating Layer for Claude Code and OpenAI Codex*. GitHub repository. <https://github.com/SethGammon/Citadel>.
+
+Google. 2026a. *Artifact Review*. Documentation. <https://antigravity.google/docs/artifact-review/>.
+
+Google. 2026b. *Compare Google Workspace for Education Editions*. Documentation. <https://edu.google.com/intl/ALL_us/workspace-for-education/editions/compare-editions/>.
+
+Google. 2026c. *Deep Research Max: A Step Change for Autonomous Research Agents*. The Keyword (blog). <https://blog.google/innovation-and-ai/models-and-research/gemini-models/next-generation-gemini-deep-research/>.
+
+Google. 2026d. *Gemini Apps Limits and Upgrades for Google AI Subscribers*. Gemini Apps Help. <https://support.google.com/gemini/answer/16275805>.
+
+Google. 2026e. *Gemini Deep Research Agent*. Gemini API documentation. <https://ai.google.dev/gemini-api/docs/deep-research>.
+
+Google. 2026f. *Getting Started with Jules*. Documentation. <https://jules.google.com/docs/>.
+
+Google. 2026g. *Google Docs API Overview*. Documentation. <https://developers.google.com/workspace/docs/api/how-tos/overview>.
+
+Google. 2026h. *Google Workspace Pricing*. Documentation. <https://workspace.google.com/pricing>.
+
+Google. 2026i. *Review Changes*. Documentation. <https://antigravity.google/docs/ide/review-changes-editor/>.
+
+Google. 2026j. *Use Deep Research in Gemini Apps*. Gemini Apps Help. <https://support.google.com/gemini/answer/15719111>.
+
+Hacker News. 2026. *Herdr: Agent Multiplexer That Lives in Your Terminal*. Show HN discussion thread. <https://news.ycombinator.com/item?id=48714802>.
 
 Heo, Yeachan. 2026. *Oh-My-Claudecode: Multi-Agent Orchestration for Claude Code*. Software. <https://github.com/yeachan-heo/oh-my-claudecode>.
 
 Herbert, Frank. 1965. *Dune*. Novel; Chilton Books. <https://en.wikipedia.org/wiki/Organizations_of_the_Dune_universe#Thinking_machines>.
 
+herdrdev. 2026a. *Agents*. Herdr documentation. <https://herdr.dev/docs/agents/>.
+
+herdrdev. 2026b. *Concepts and Keybindings*. Herdr documentation. <https://herdr.dev/docs/concepts/>.
+
+herdrdev. 2026c. *Connecting Machines*. Herdr documentation. <https://herdr.dev/docs/connecting-machines/>.
+
+herdrdev. 2026d. *Herdr Agent Guide*. Herdr documentation. <https://herdr.dev/agent-guide.md>.
+
+herdrdev. 2026e. *Herdr: The Runtime Coding Agents Run on*. Website. <https://herdr.dev/>.
+
+herdrdev. 2026f. *Herdrdev/Herdr: The Runtime Your Coding Agents Live on*. GitHub repository. <https://github.com/herdrdev/herdr>.
+
+herdrdev. 2026g. *Install Herdr*. Herdr documentation. <https://herdr.dev/docs/install/>.
+
+herdrdev. 2026h. *Session State*. Herdr documentation. <https://herdr.dev/docs/session-state/>.
+
+herdrdev. 2026i. *Socket API*. Herdr documentation. <https://herdr.dev/docs/socket-api/>.
+
 HKUDS. 2026. *OpenHarness: Open Agent Harness with a Built-in Personal Agent*. Software. <https://github.com/HKUDS/OpenHarness>.
+
+hosenur. 2026. *Portal: Mobile-First Web UI for OpenCode*. GitHub repository. <https://github.com/hosenur/portal>.
 
 Hu, Edward J., Yelong Shen, Phillip Wallis, et al. 2021. *LoRA: Low-Rank Adaptation of Large Language Models*. arXiv preprint. <https://arxiv.org/abs/2106.09685>.
 
+Huntley, Geoffrey. 2025. *Ralph*. Blog post. <https://ghuntley.com/ralph/>.
+
 Hyperautomation Labs. 2026. *Never Hit a Claude Limit Again: 12 Fixes Ranked by How Much Window They Buy*. Video. <https://www.youtube.com/watch?v=dIP-4Mc6ZfA>.
+
+inkdust2021. 2026. *Opencode-Vibeguard: Redact Secrets and PII Before LLM Calls*. GitHub repository. <https://github.com/inkdust2021/opencode-vibeguard>.
+
+kdcokenny. 2026a. *Ocx: OpenCode Extension Manager with Portable, Isolated Profiles*. GitHub repository. <https://github.com/kdcokenny/ocx>.
+
+kdcokenny. 2026b. *Opencode-Background-Agents: Async Delegation with Context Persistence*. GitHub repository. <https://github.com/kdcokenny/opencode-background-agents>.
+
+kdcokenny. 2026c. *Opencode-Workspace: Bundled Multi-Agent Orchestration Harness*. GitHub repository. <https://github.com/kdcokenny/opencode-workspace>.
+
+kdcokenny. 2026d. *Opencode-Worktree: Zero-Friction Git Worktrees for OpenCode*. GitHub repository. <https://github.com/kdcokenny/opencode-worktree>.
+
+Konur, Yigit. 2026. *Awesome-Herdr: A Curated Guide to the Herdr Ecosystem*. GitHub repository. <https://github.com/yigitkonur/awesome-herdr>.
 
 LeCun, Yann. 2022. *A Path Towards Autonomous Machine Intelligence*. Meta AI Research; New York University; Technical Report. <https://openreview.net/forum?id=BZ5a1r-kVsf>.
 
-OpenAI. 2026. *Get Started with ChatGPT Work*. Documentation. <https://learn.chatgpt.com/docs/get-started-with-work>.
+Lindy. 2026a. *Lindy Pricing*. Product website. <https://www.lindy.ai/pricing>.
+
+Lindy. 2026b. *Lindy: The AI Teammate That Will 3x Your Output*. Product website. <https://www.lindy.ai/>.
+
+Manus AI. 2026. *Manus: Hands on AI*. Product website. <https://manus.im/>.
+
+matheusmoreira. 2026. *Tell HN: Claude Code Now Allows Anthropic to Remotely Inject System Prompts*. Hacker News thread. <https://news.ycombinator.com/item?id=48259288>.
+
+Microsoft. 2026a. *Compare Microsoft Loop, Copilot Pages, and Copilot Notebooks*. Documentation. <https://support.microsoft.com/en-us/microsoft-365-copilot/compare-microsoft-loop-copilot-pages-and-copilot-notebooks>.
+
+Microsoft. 2026b. *Conversation Modes in Microsoft Copilot*. Microsoft Support. <https://support.microsoft.com/en-us/microsoft-copilot/conversation-modes-in-microsoft-copilot>.
+
+Microsoft. 2026c. *Deep Research in Microsoft Copilot*. Microsoft Support. <https://support.microsoft.com/en-us/microsoft-copilot/deep-research-in-microsoft-copilot>.
+
+Microsoft. 2026d. *Frequently Asked Questions about Copilot in Loop*. Documentation. <https://support.microsoft.com/en-us/loop/frequently-asked-questions-about-copilot-in-loop>.
+
+Microsoft. 2026e. *Get Started with Researcher in Microsoft 365 Copilot*. Microsoft Support. <https://support.microsoft.com/en-us/microsoft-365-copilot/get-started-with-researcher-in-microsoft-365-copilot>.
+
+Microsoft. 2026f. *License Options for Microsoft Copilot*. Documentation. <https://learn.microsoft.com/en-us/copilot/microsoft-365/microsoft-365-copilot-licensing>.
+
+Microsoft. 2026g. *Microsoft 365 Copilot Plans and Pricing*. Documentation. <https://www.microsoft.com/en-us/microsoft-365-copilot/pricing>.
+
+Microsoft. 2026h. *Microsoft Copilot Researcher Agent Frequently Asked Questions*. Microsoft Learn. <https://learn.microsoft.com/en-us/copilot/microsoft-365/faq-researcher>.
+
+Microsoft. 2026i. *What Is Researcher Agent in Microsoft Copilot?* Microsoft Learn. <https://learn.microsoft.com/en-us/microsoft-365/copilot/researcher-agent>.
+
+Morrison Lab. 2026a. *Ai-Config: Portable AI Agent Config*. Software. <https://github.com/Morrison-Lab/ai-config>.
+
+Morrison Lab. 2026b. *Delegate-to-Codex: Run Heavy Sidecar Work on Codex, Not Claude*. Documentation. <https://github.com/Morrison-Lab/ai-config/blob/main/skills/delegate-to-codex/SKILL.md>.
+
+NanoNets and Trail contributors. 2026. *Graft: Open-Source Context Layer for Coding Agents*. Software. <https://github.com/trailhq/Graft>.
+
+Neural Nomads AI. 2026. *CodeNomad: The AI Coding Cockpit for OpenCode*. GitHub repository. <https://github.com/NeuralNomadsAI/CodeNomad>.
+
+Notion Labs. 2026a. *Export Your Content*. Documentation. <https://www.notion.com/help/export-your-content>.
+
+Notion Labs. 2026b. *Notion AI*. Documentation. <https://www.notion.com/product/ai>.
+
+Notion Labs. 2026c. *Notion API Introduction*. Documentation. <https://developers.notion.com/reference/intro>.
+
+Notion Labs. 2026d. *Notion for Education*. Documentation. <https://www.notion.com/help/notion-for-education>.
+
+Notion Labs. 2026e. *Notion MCP*. Documentation. <https://developers.notion.com/docs/mcp>.
+
+Notion Labs. 2026f. *Notion MCP Supported Tools*. Documentation. <https://developers.notion.com/guides/mcp/mcp-supported-tools>.
+
+Notion Labs. 2026g. *Notion Pricing*. Documentation. <https://www.notion.com/pricing>.
+
+Obsidian. 2026a. *Obsidian CLI*. Documentation. <https://obsidian.md/help/cli>.
+
+Obsidian. 2026b. *Obsidian Pricing*. Documentation. <https://obsidian.md/pricing>.
+
+Obsidian. 2026c. *Obsidian: Sharpen Your Thinking*. Documentation. <https://obsidian.md/>.
+
+Ollama. 2026. *Ollama*. Product page. <https://ollama.com/>.
+
+OpenAI. 2026a. *Codex Plugin for Claude Code*. Software. <https://github.com/openai/codex-plugin-cc>.
+
+OpenAI. 2026b. *Codex Pricing*. Documentation. <https://developers.openai.com/codex/pricing>.
+
+OpenAI. 2026c. *Deep Research*. OpenAI API documentation. <https://developers.openai.com/api/docs/guides/deep-research>.
+
+OpenAI. 2026d. *Deep Research in ChatGPT*. Help Center. <https://help.openai.com/en/articles/10500283-deep-research-faq>.
+
+OpenAI. 2026e. *Get Started with ChatGPT Work*. Documentation. <https://learn.chatgpt.com/docs/get-started-with-work>.
+
+OpenChamber. 2026. *OpenChamber: Agentic Development Environment for OpenCode*. GitHub repository. <https://github.com/openchamber/openchamber>.
+
+OpenCode. 2026a. *Intro: AI Coding Agent Built for the Terminal*. Documentation. <https://opencode.ai/docs/>.
+
+OpenCode. 2026b. *OpenCode Documentation: Ecosystem*. Documentation. <https://opencode.ai/docs/ecosystem/>.
+
+OpenCode. 2026c. *OpenCode Documentation: Go*. Documentation. <https://opencode.ai/docs/go/>.
+
+OpenCode. 2026d. *OpenCode Documentation: Plugins*. Documentation. <https://opencode.ai/docs/plugins/>.
+
+OpenCode. 2026e. *OpenCode Documentation: Zen*. Documentation. <https://opencode.ai/docs/zen/>.
+
+Opencode-DCP. 2026. *Opencode-Dynamic-Context-Pruning: Optimize Token Usage by Pruning Obsolete Tool Outputs*. GitHub repository. <https://github.com/Opencode-DCP/opencode-dynamic-context-pruning>.
 
 open-gsd. 2026. *GSD Core: Git. Ship. Done.* Software. <https://github.com/open-gsd/gsd-core>.
 
+OpenHands. 2026. *OpenHands Documentation: Introduction*. Documentation. <https://docs.openhands.dev/>.
+
+Perplexity. 2026a. *Sonar Deep Research*. Perplexity API documentation. <https://docs.perplexity.ai/docs/sonar/models/sonar-deep-research>.
+
+Perplexity. 2026b. *What Is Research Mode?* Help Center. <https://www.perplexity.ai/help-center/en/articles/10738684-what-is-research-mode>.
+
+Perplexity. 2026c. *What’s New in Advanced Deep Research*. Help Center. <https://www.perplexity.ai/help-center/en/articles/13600190-what-s-new-in-advanced-deep-research>.
+
+Posit PBC. 2026a. *Ai-Lib: LLM Provider Infrastructure for Posit Assistant*. Software. <https://github.com/posit-dev/ai-lib>.
+
+Posit PBC. 2026b. *Assistant-Feedback: Repository for Feedback on Posit Assistant*. Software. <https://github.com/posit-dev/assistant-feedback>.
+
+Posit PBC. 2026c. *Bluffbench2: A Visual Reasoning LLM Benchmark*. Software. <https://github.com/posit-dev/bluffbench2>.
+
+Posit PBC. 2026d. *Btw: A Complete Toolkit for Connecting r and LLMs*. Software. <https://github.com/posit-dev/btw>.
+
+Posit PBC. 2026e. *Chatlas: Your Friendly Guide to Building LLM Chat Apps in Python*. Software. <https://github.com/posit-dev/chatlas>.
+
+Posit PBC. 2026f. *Code-Index: Semantic Code Search for AI Coding Assistants*. Software. <https://github.com/posit-dev/code-index>.
+
+Posit PBC. 2026g. *Commons: AI Agents for Data Analysis*. Software. <https://github.com/posit-dev/commons>.
+
+Posit PBC. 2026h. *Mcp-Repl: A Persistent, Sandboxed r or Python Session for MCP Agents*. Software. <https://github.com/posit-dev/mcp-repl>.
+
+Posit PBC. 2026i. *Mcptools: Model Context Protocol for r*. Software. <https://github.com/posit-dev/mcptools>.
+
+Posit PBC. 2026j. *Nesevals: Evaluate Next Edit Suggestion Scaffolds*. Software. <https://github.com/posit-dev/nesevals>.
+
+Posit PBC. 2026k. *Positron, a Next-Generation Data Science IDE*. Software. <https://github.com/posit-dev/positron>.
+
+Posit PBC. 2026l. *Positron-Copilot-Chat: Copilot Chat Extension for Positron*. Software. <https://github.com/posit-dev/positron-copilot-chat>.
+
+Posit PBC. 2026m. *Querychat: Chat with Your Data in r and Python*. Software. <https://github.com/posit-dev/querychat>.
+
+Posit PBC. 2026n. *Raghilda: RAG Made Simple*. Software. <https://github.com/posit-dev/raghilda>.
+
+Posit PBC. 2026o. *Shiny-Assistant: Chat Assistant for Shiny*. Software. <https://github.com/posit-dev/shiny-assistant>.
+
+Posit PBC. 2026p. *Shinychat: Chat UI Component for Shiny*. Software. <https://github.com/posit-dev/shinychat>.
+
+Posit PBC. 2026q. *Shinyrealtime: OpenAI Realtime API for Shiny*. Software. <https://github.com/posit-dev/shinyrealtime>.
+
+r/ClaudeCode. 2026. *Claude Code Has a Hardcoded Instruction Telling ...* Reddit thread. <https://www.reddit.com/r/ClaudeCode/comments/1v6y5q2/claude_code_has_a_hardcoded_instruction_telling/>.
+
+Relevance AI. 2026a. *Relevance AI Agents*. Product website. <https://relevanceai.com/agents>.
+
+Relevance AI. 2026b. *Relevance AI Data Security Policy*. Policy document. <https://relevanceai.com/data-security-policy>.
+
+Relevance AI. 2026c. *Relevance AI Pricing*. Product website. <https://relevanceai.com/pricing>.
+
+remorses. 2026. *Kimaki: Discord Bot to Control OpenCode Sessions*. GitHub repository. <https://github.com/remorses/kimaki>.
+
 Runkle, Sydney. 2026. *How to Build a Custom Agent Harness*. Documentation. <https://www.langchain.com/blog/how-to-build-a-custom-agent-harness>.
+
+Samborski, Remigiusz. 2026. *Building an Agentic PR Reviewer with Antigravity SDK*. Blog post. <https://dev.to/googleai/building-an-agentic-pr-reviewer-with-antigravity-sdk-3b0i>.
+
+Superhuman. 2026. *Superhuman Docs Pricing and Plans*. Documentation. <https://superhuman.com/plans/docs>.
 
 team-attention. 2026. *Hoyeon: Requirements-First Harness*. Software. <https://github.com/team-attention/hoyeon>.
 
 *Terminator 3: Rise of the Machines*. 2003. Film. <https://en.wikipedia.org/wiki/Terminator_3:_Rise_of_the_Machines>.
 
+Tessl. 2026a. *Core Concepts*. Documentation. <https://docs.tessl.io/introduction-to-tessl/core-concepts>.
+
+Tessl. 2026b. *Installation*. Documentation. <https://docs.tessl.io/introduction-to-tessl/set-up-tessl/installation>.
+
+Tessl. 2026c. *Protecting Yourself from Insecure Skills*. Documentation. <https://docs.tessl.io/tutorials/protecting-against-insecure-skills>.
+
+Tessl. 2026d. *Sharing Usage Data*. Documentation. <https://docs.tessl.io/legal/sharing-usage-data>.
+
+Tessl. 2026e. *Supported Platforms*. Documentation. <https://docs.tessl.io/support/supported-platforms>.
+
+Tessl. 2026f. *Tessl FAQs*. Documentation. <https://docs.tessl.io/support/faqs>.
+
+Tessl. 2026g. *Tessl Pricing*. Website. <https://tessl.io/pricing>.
+
+Tessl. 2026h. *Tessl Skills Registry*. Website. <https://tessl.io/registry>.
+
+Tessl. 2026i. *Tessl: Agent Enablement Platform*. Website. <https://tessl.io/>.
+
+Tessl. 2026j. *Using Tessl as a Package Manager*. Documentation. <https://docs.tessl.io/tutorials/using-tessl-as-a-package-manager>.
+
+Tessl. 2026k. *What Is Tessl?* Documentation. <https://docs.tessl.io/>.
+
 *The Matrix*. 1999. Film. <https://en.wikipedia.org/wiki/The_Matrix>.
 
-Vincent, Jesse. 2026. *Superpowers: An Agentic Skills Framework and Software Development Methodology*. Software. <https://github.com/obra/superpowers>.
+The PR Agent. 2026a. *PR-Agent Documentation*. Documentation. <https://docs.pr-agent.ai/>.
+
+The PR Agent. 2026b. *PR-Agent License*. Documentation. <https://github.com/The-PR-Agent/pr-agent/blob/main/LICENSE>.
+
+The PR Agent. 2026c. *PR-Agent: Automations and Usage*. Documentation. <https://docs.pr-agent.ai/usage-guide/automations_and_usage/>.
+
+The PR Agent. 2026d. *PR-Agent: Changing a Model*. Documentation. <https://docs.pr-agent.ai/usage-guide/changing_a_model/>.
+
+The PR Agent. 2026e. *PR-Agent: GitHub Installation*. Documentation. <https://docs.pr-agent.ai/installation/github/>.
+
+The PR Agent. 2026f. *PR-Agent: PR Compression Strategy*. Documentation. <https://docs.pr-agent.ai/core-abilities/compression_strategy/>.
+
+The PR Agent. 2026g. *PR-Agent: Review Tool*. Documentation. <https://docs.pr-agent.ai/tools/review/>.
+
+The PR Agent. 2026h. *PR-Agent: The Original Open-Source PR Reviewer*. Software. <https://github.com/The-PR-Agent/pr-agent>.
+
+Thinking Machines Lab. 2026a. *Inkling*. Product page. <https://thinkingmachines.ai/inkling/>.
+
+Thinking Machines Lab. 2026b. *Inkling Model Card*. Hugging Face model card. <https://huggingface.co/thinkingmachines/Inkling>.
+
+Thinking Machines Lab. 2026c. *Inkling: Our Open-Weights Model*. News post. <https://thinkingmachines.ai/news/introducing-inkling/>.
+
+Thinking Machines Lab. 2026d. *Inkling-Small Model Card*. Hugging Face model card. <https://huggingface.co/thinkingmachines/Inkling-Small>.
+
+Thinking Machines Lab. 2026e. *Introducing Inkling-Small*. News post. <https://thinkingmachines.ai/news/inkling-small/>.
+
+Thinking Machines Lab. 2026f. *Tinker*. Product page. <https://thinkingmachines.ai/tinker/>.
+
+Thinking Machines Lab. 2026g. *Tinker Models and Pricing*. Documentation. <https://tinker-docs.thinkingmachines.ai/tinker/models/>.
+
+Vestra AI. 2026a. *Vestra Handbook*. Documentation. <https://vestra.ai/handbook>.
+
+Vestra AI. 2026b. *Vestra Pricing*. Product website. <https://vestra.ai/pricing>.
+
+Vestra AI. 2026c. *Vestra Privacy Policy*. Policy document, effective 2026-09-04. <https://vestra.ai/policies/privacy>.
+
+Vestra AI. 2026d. *Vestra: Your AI Agent Office*. Product website. <https://vestra.ai/>.
+
+Vincent, Jesse. 2026a. *Superpowers*. Software. <https://github.com/obra/superpowers>.
+
+Vincent, Jesse. 2026b. *Superpowers: An Agentic Skills Framework and Software Development Methodology*. Software. <https://github.com/obra/superpowers>.
+
+VoltAgent. 2026a. *VoltAgent Documentation: Agents Overview*. Documentation. <https://voltagent.dev/docs/agents/overview/>.
+
+VoltAgent. 2026b. *VoltAgent Documentation: Memory Overview*. Documentation. <https://voltagent.dev/docs/agents/memory/overview/>.
+
+VoltAgent. 2026c. *VoltAgent Documentation: Observability Overview*. Documentation. <https://voltagent.dev/docs/observability/overview/>.
+
+VoltAgent. 2026d. *VoltAgent Documentation: Sub-Agents*. Documentation. <https://voltagent.dev/docs/agents/sub-agents/>.
+
+VoltAgent. 2026e. *VoltAgent Documentation: VoltOps Developer Console*. Documentation. <https://voltagent.dev/docs/observability/developer-console/>.
+
+VoltAgent. 2026f. *VoltAgent Documentation: Workflows Overview*. Documentation. <https://voltagent.dev/docs/workflows/overview/>.
+
+VoltAgent. 2026g. *VoltAgent: AI Agent Engineering Platform Built on an Open Source TypeScript AI Agent Framework*. Software. <https://github.com/VoltAgent/voltagent>.
+
+VoltAgent. 2026h. *VoltOps Pricing*. Documentation. <https://voltagent.dev/pricing/>.
 
 *WarGames*. 1983. Film. <https://en.wikipedia.org/wiki/WarGames>.
+
+Warp. 2026. *Getting Started with Warp*. Documentation. <https://docs.warp.dev/>.
+
+Wikipedia contributors. 2026. *Thinking Machines Lab*. Wikipedia. <https://en.wikipedia.org/wiki/Thinking_Machines_Lab>.
+
+wtfwhs. 2026. *Tengu-Decoded: Internal Codenames, Version 2.1.169*. Software. <https://github.com/wtfwhs/tengu-decoded/blob/main/versions/2.1.169/codenames.md>.
+
+Y Combinator. 2026. *Herdr: Building the Open Agent Runtime*. Company profile. <https://www.ycombinator.com/companies/herdr>.
+
+Zapier. 2026a. *Zapier Agents*. Product website. <https://zapier.com/agents>.
+
+Zapier. 2026b. *Zapier Plans and Pricing*. Product website. <https://zapier.com/pricing>.
 
 Back to top
 
