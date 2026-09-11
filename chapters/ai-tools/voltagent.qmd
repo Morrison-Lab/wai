@@ -1,0 +1,159 @@
+[VoltAgent](https://github.com/VoltAgent/voltagent) is an open-source
+TypeScript framework for building LLM agents,
+paired with a commercial console called VoltOps
+that adds observability, deployment, evals, and prompt management
+[@voltagent_repo].
+The GitHub repository reports about 10,600 stars, 1,100 forks,
+and an MIT license,
+with the latest package releases published on 2026-08-27
+(measured 2026-09-09).
+The project started in April 2025,
+so it is young but actively maintained.
+
+#### How agents are expressed
+
+An agent is a TypeScript object built from a name, a set of instructions,
+and a model [@voltagent_agents]:
+
+```typescript
+const agent = new Agent({
+  name: "my-agent",
+  instructions: "A helpful assistant that can check weather",
+  model: openai("gpt-4o-mini"),
+  tools: [weatherTool],
+  memory,
+});
+```
+
+The `model` field takes either a model object from the
+[Vercel AI SDK](https://ai-sdk.dev/) (the `ai-sdk` packages)
+or a `provider/model` string that VoltAgent resolves for you
+[@voltagent_agents].
+Because the model layer is the AI SDK,
+swapping between OpenAI, Anthropic, Google, and other providers
+is a configuration change rather than a rewrite [@voltagent_repo].
+The agent exposes `generateText()` and `streamText()` methods,
+and both accept an `output` schema for structured results.
+The default step limit is five model calls per turn [@voltagent_agents].
+
+Other building blocks follow the same pattern:
+
+- **Tools** are functions with a
+  [Zod](https://zod.dev/) parameter schema,
+  plus lifecycle hooks and cancellation support.
+  MCP servers can be attached as tool sources
+  "without extra glue code" [@voltagent_repo].
+- **Workflows** are chains built with `createWorkflowChain()`.
+  Steps are added with `andThen()` (plain code),
+  `andAgent()` (an LLM call),
+  `andWhen()` (a conditional),
+  `andAll()` (parallel, wait for all),
+  and `andRace()` (parallel, first to finish wins).
+  Input, result, and suspend/resume payloads are validated with Zod schemas,
+  and the TypeScript type of the data flowing through the chain
+  is inferred at each step [@voltagent_workflows].
+- **Memory** is a `Memory` object wrapping a storage adapter.
+  Adapters exist for:
+
+  - in-process memory
+  - LibSQL/SQLite
+  - PostgreSQL
+  - Supabase
+  - Cloudflare D1
+  - a hosted "Managed Memory" on VoltOps
+
+  Optional embedding and vector adapters add semantic recall,
+  and a "working memory" slot holds a compact summary
+  the agent can read and update through built-in tools
+  [@voltagent_memory].
+- **Supervisors and sub-agents** are ordinary agents
+  passed in a `subAgents` array.
+  The supervisor gains a `delegate_task` tool
+  that takes a task description and the names of the sub-agents to call,
+  and returns each sub-agent's text plus its token usage.
+  A `supervisorConfig` option controls the delegation guidelines,
+  event forwarding, error handling, and the system prompt
+  [@voltagent_subagents].
+
+A `VoltAgent` instance registers the agents and workflows
+and serves them over HTTP through a [Hono](https://hono.dev/) server,
+which is how the console and other clients reach them [@voltagent_repo].
+
+#### Observability and hosted parts
+
+The framework emits traces through an OpenTelemetry-based module.
+In development, the VoltOps console at `console.voltagent.dev`
+connects from the browser to the local agent process,
+and the documentation states that in this mode
+no data is sent to or stored on external servers
+[@voltagent_console].
+In production, export to the hosted platform switches on
+when VoltOps API keys are present in the environment;
+Langfuse and MLflow are also listed as export targets
+[@voltagent_observability].
+
+VoltOps itself is not open source.
+The README labels it "Cloud" and "Self-Hosted" [@voltagent_repo],
+but self-hosting is listed only on the Enterprise plan
+[@voltagent_pricing].
+The plans as of 2026-09-09:
+
+- **Developer**, free: one seat, one project, 250 traces per month,
+  seven days of retention.
+- **Core**, USD 50 per month: three seats, 50,000 traces per month,
+  90 days of retention.
+- **Pro**, USD 250 per month: 20 seats, 250,000 traces per month,
+  90 days of retention, SSO.
+- **Enterprise**, custom pricing: unlimited tracing
+  and self-hosted deployment.
+
+Overage is USD 10 per 5,000 additional traces [@voltagent_pricing].
+The managed RAG "Knowledge Base" [@voltagent_repo]
+and "Managed Memory" [@voltagent_memory] adapters
+are also VoltOps features,
+so an agent that uses them depends on the hosted service
+even though the framework around them is MIT-licensed.
+
+#### Useful to us?
+
+Probably not as a replacement for what we already run.
+Our orchestration baseline (@sec-orch-baseline)
+is Claude Code subagents, the `Workflow` fan-out tool,
+and git worktrees,
+driven from R and Python repositories.
+VoltAgent's supervisor and sub-agent pattern
+is the same idea expressed as a TypeScript library
+rather than as a coding harness:
+the sub-agents are LLM calls with tools,
+not sessions with a shell and a checkout.
+Adopting it would mean writing our agent logic in TypeScript
+and hosting a Node server,
+which adds a language and a runtime the lab does not otherwise use.
+
+Where it could earn a place:
+
+- **A long-running service** rather than a coding session.
+  A lab chatbot over the manual, or a triage bot for issue queues,
+  is the shape VoltAgent is built for:
+  persistent memory keyed by user and conversation,
+  typed tools, and an HTTP server out of the box.
+- **Typed, resumable workflows.**
+  The `createWorkflowChain()` builder with Zod-validated
+  suspend and resume payloads is more structured than what
+  our `Workflow` tool offers for human-in-the-loop pauses.
+- **Local trace inspection.**
+  The console's localhost mode gives a trace viewer
+  without sending data off the machine,
+  which matters for anything touching unpublished data.
+  The same OpenTelemetry traces can go to Langfuse or MLflow instead,
+  so the viewer does not lock us in.
+
+The comparison table in @sec-orch-comparison
+covers three other orchestrators and does not include VoltAgent.
+On that table's dimensions, VoltAgent would read as:
+
+- **Primary domain**: general agent infrastructure, in TypeScript.
+- **License**: MIT framework, paid and closed console.
+- **Maturity**: young but active.
+- **Execution model**: supervisor agents delegating to sub-agents
+  in one Node process.
