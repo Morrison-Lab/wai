@@ -89,13 +89,17 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/agents-best-practices.qmd >}}
 
-# Firewall and Network Configuration
+# Firewall and Network Configuration {#sec-ai-firewall}
 
 {{< include ai-tools/agents-firewall-config.qmd >}}
 
 # Running Coding Agents Offline {#sec-ai-offline}
 
 {{< include ai-tools/running-agents-offline.qmd >}}
+
+# Assessing Aeris and Graft {#sec-ai-aeris-and-graft}
+
+{{< include ai-tools/aeris-and-graft.qmd >}}
 
 # Connecting OpenCode to Local Models {#sec-ai-opencode-ollama}
 
@@ -137,9 +141,17 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/posit-skills.qmd >}}
 
+# Posit AI Tooling on GitHub {#sec-ai-posit-dev-ai-repos}
+
+{{< include ai-tools/posit-dev-ai-repos.qmd >}}
+
 # Useful plugins {#sec-ai-useful-plugins}
 
 {{< include ai-tools/useful-plugins.qmd >}}
+
+# The plugin catalog {#sec-ai-plugin-catalog}
+
+{{< include ai-tools/plugin-catalog.qmd >}}
 
 # Customizing an Agent {#sec-ai-customization}
 
@@ -148,6 +160,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 # How the Config Reaches a Machine {#sec-ai-config-install}
 
 {{< include ai-tools/claude-code-config-install.qmd >}}
+
+# Anthropic's Public Repositories {#sec-ai-anthropic-repos}
+
+{{< include ai-tools/anthropic-repos.qmd >}}
 
 # Claude Code Cloud Environments {#sec-ai-claude-cloud-env}
 
@@ -169,6 +185,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/gemini-code-assist-review.qmd >}}
 
+# PR-Agent: Open-Source Pull-Request Review Bot {#sec-ai-pr-agent}
+
+{{< include ai-tools/pr-agent.qmd >}}
+
 # How a Session Learns a PR Changed {#sec-ai-pr-activity-notifications}
 
 {{< include ai-tools/pr-activity-notifications.qmd >}}
@@ -177,9 +197,17 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/when-to-use-coding-agent.qmd >}}
 
+# Deep Research Modes {#sec-ai-research-modes}
+
+{{< include ai-tools/research-modes.qmd >}}
+
 # Editing with `.docx` files
 
 {{< include ai-tools/editing-with-docx-files.qmd >}}
+
+# Hosted AI Agent Offices: Vestra and Similar {#sec-ai-agent-offices}
+
+{{< include ai-tools/ai-agent-offices.qmd >}}
 
 # Copilot Instructions for this Repository
 
@@ -196,6 +224,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 # Agent Sessions and Handoff in Visual Studio Code {#sec-ai-vscode-agent-sessions}
 
 {{< include ai-tools/vscode-agent-sessions.qmd >}}
+
+# Herdr: A Terminal Multiplexer for Coding Agents {#sec-ai-herdr}
+
+{{< include ai-tools/herdr.qmd >}}
 
 # Installing Claude Code on Windows {#sec-ai-claude-code-windows}
 
@@ -221,9 +253,17 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/plugins-deep-dive.qmd >}}
 
+# Running Codex Inside Claude Code: the codex-plugin-cc Plugin {#sec-ai-codex-plugin-cc}
+
+{{< include ai-tools/codex-plugin-cc.qmd >}}
+
 # Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent {#sec-ai-oh-my-opencode}
 
 {{< include ai-tools/oh-my-opencode.qmd >}}
+
+# The OpenCode Ecosystem {#sec-ai-opencode-ecosystem}
+
+{{< include ai-tools/opencode-ecosystem.qmd >}}
 
 # Managing Gemini API Spend and Cost Optimization {#sec-ai-gemini-spend-management}
 

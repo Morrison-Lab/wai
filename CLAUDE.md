@@ -20,7 +20,7 @@ Authoritative style guide: [UCD-SERG Lab Manual](https://ucd-serg.github.io/lab-
 - `shared/` --- vendored prose fragments included by chapters; `shared/workflow/`
   holds copies of `Morrison-Lab/ai-config` workflow fragments, refreshed by
   `scripts/vendor-ai-config-fragments.py` (do not edit those copies by hand)
-- `scripts/` --- maintainer scripts run by hand (not by CI)
+- `scripts/` --- maintainer scripts run by hand; their `test_*.py` unit tests do run in CI
 - `R/`, `man/`, `DESCRIPTION`, `NAMESPACE` --- the project is also a small R package
 - `references.bib` --- BibTeX bibliography
 - `styles.css` --- website styling; `styles-reveal.scss`, `qwt-reveal-toggle.html`, and the `revealjs-*.lua` filters drive the reveal.js slide output
