@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-10 20:26:17 (PDT)
+Last modified: 2026-09-10 20:42:26 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -914,7 +914,7 @@ As these technologies mature, AI agents may become better at tasks requiring con
 
 # 17 Twelve Fixes for Claude Usage Limits
 
-[Issue \#207](https://github.com/Morrison-Lab/wai/issues/207) asked for a summary of a YouTube video, “Never Hit a Claude Limit Again: 12 Fixes Ranked by How Much Window They Buy”, from the channel Hyperautomation Labs ([Hyperautomation Labs 2026](#ref-hyperautomation_claude_limits)). The video is ten and a half minutes long and was published on 2026-08-16; this summary works from its auto-generated English transcript, fetched with `yt-dlp` on 2026-09-10, so wording attributed to the presenter below may carry speech-to-text errors. The first draft of the summary was produced by the Antigravity command-line program from that transcript and then checked against it by hand.
+[Issue \#207](https://github.com/Morrison-Lab/wai/issues/207) asked for a summary of a YouTube video, “Never Hit a Claude Limit Again — 12 Fixes Ranked by How Much Window They Buy”, from the channel Hyperautomation Labs ([Hyperautomation Labs 2026](#ref-hyperautomation_claude_limits)). The video is ten and a half minutes long and was published on 2026-08-16; this summary works from its auto-generated English transcript, fetched with `yt-dlp` on 2026-09-10, so wording attributed to the presenter below may carry speech-to-text errors. The first draft of the summary was produced by the Antigravity command-line program from that transcript and then checked against it by hand.
 
 #### What the video claims
 
@@ -947,7 +947,7 @@ The lab’s own measurement agrees with the video’s ranking. On 2026-09-09 a d
 
 - Fix 5 (subagents as context firewalls) is the standing “use subagents when helpful” rule, and fix 4 (cheaper subagent models) is its model-routing section.
 - Fix 7 (short `CLAUDE.md`, workflows in skills) is what the corpus’s skills directory is for, and the corpus has an instrument, `check-context-closure.py`, that measures the always-loaded pool the presenter is warning about.
-- Fix 2 (queue rather than parallelize) is now a recorded lab directive: at most two Claude subagents run at once on a shared Max plan.
+- Fix 2 (queue rather than parallelize) is what the sprint above settled on: after the third exhaustion the concurrency was capped at two Claude subagents at once, and the remaining work was routed to a second vendor’s quota.
 
 Two of the fixes are not worth adopting as stated. The prompt-discipline block (fix 1) is a promotional download whose text the video withholds, and “terse answers, minimal file reading” conflicts with the lab’s review rules, which pay tokens for verification on purpose. And the MCP finding (fix 7) is one measurement on one build; re-measure it on your own setup before removing servers you rely on.
 
@@ -5547,7 +5547,7 @@ Hu, Edward J., Yelong Shen, Phillip Wallis, et al. 2021. *LoRA: Low-Rank Adaptat
 
 Huntley, Geoffrey. 2025. *Ralph*. Blog post. <https://ghuntley.com/ralph/>.
 
-Hyperautomation Labs. 2026. *Never Hit a Claude Limit Again: 12 Fixes Ranked by How Much Window They Buy*. Video. <https://www.youtube.com/watch?v=dIP-4Mc6ZfA>.
+Hyperautomation Labs. 2026. *Never Hit a Claude Limit Again — 12 Fixes Ranked by How Much Window They Buy*. Video. <https://www.youtube.com/watch?v=dIP-4Mc6ZfA>.
 
 inkdust2021. 2026. *Opencode-Vibeguard: Redact Secrets and PII Before LLM Calls*. GitHub repository. <https://github.com/inkdust2021/opencode-vibeguard>.
 
