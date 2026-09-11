@@ -31,7 +31,8 @@ with dedicated agent harnesses (detailed setup and hardware sizing are covered i
 @sec-ai-offline):
 
 - **Terminal Orchestrators**:
-  Harnesses like **[Aider](https://aider.chat/)** and **[OpenHands](https://github.com/All-Hands-AI/OpenHands)**
+  Harnesses like **[OpenCode](https://opencode.ai)** (see @sec-ai-opencode-ollama),
+  **[Aider](https://aider.chat/)**, and **[OpenHands](https://github.com/All-Hands-AI/OpenHands)**
   (formerly OpenDevin) connect directly to Ollama endpoints running open-weight
   coding models (such as `Qwen2.5-Coder`, `DeepSeek-Coder-V2`, or `Llama 3.3`),
   managing git commits, multi-file edits, and automated test-and-repair loops.
