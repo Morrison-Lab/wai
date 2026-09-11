@@ -61,6 +61,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/ai-guidance-sources.qmd >}}
 
+# Thinking Machines Lab's Inkling Models {#sec-ai-thinking-machines-inkling}
+
+{{< include ai-tools/thinking-machines-inkling.qmd >}}
+
 # AI Agents and the Technological Singularity
 
 {{< include ai-tools/technological-singularity.qmd >}}
