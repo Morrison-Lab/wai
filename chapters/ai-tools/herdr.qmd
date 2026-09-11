@@ -1,0 +1,161 @@
+[Herdr](https://herdr.dev/) [@herdr]
+is a terminal multiplexer built for running several coding agents at once
+(measured 2026-09-09).
+It describes itself as "the runtime your coding agents live on":
+a background server owns the real terminal processes,
+clients attach to render them,
+and the server keeps every agent running when the client closes
+or an SSH connection drops.
+On top of that `tmux`-like core it detects which agent is running in each pane
+and reports whether that agent is working, blocked, done, or idle,
+so the operator looks only at the pane that needs attention.
+
+#### Maker and activity
+
+Herdr is developed by [`herdrdev`](https://github.com/herdrdev/herdr) [@herdr_github],
+a one-person company founded in 2026 by Can Celik in Ankara, Turkey,
+and part of the Y Combinator Fall 2026 batch [@herdr_yc].
+The project is written in Rust and licensed under Apache 2.0.
+The GitHub repository was created on 2026-03-27
+and had about 37,000 stars, 2,700 forks, and 326 open issues on 2026-09-09,
+with the most recent commit the day before;
+the latest stable release was v0.9.0 on 2026-09-07,
+following v0.8.2 (2026-08-19) and v0.8.0 (2026-08-03) [@herdr_github].
+A Show HN thread drew 166 points and 110 comments [@herdr_hn],
+and a community-maintained list of plugins and integrations
+has grown around the tool [@awesome_herdr].
+The software is pre-1.0 and changes quickly,
+so expect some of what follows to be out of date.
+
+#### What it does
+
+Herdr organizes terminals into a hierarchy of
+sessions, workspaces, tabs, and panes [@herdr_concepts].
+A pane is a real terminal (a PTY) that the server owns;
+a workspace groups the tabs and panes for one repository, task, or investigation.
+The distinctive features, beyond ordinary multiplexing, are:
+
+- **Agent status detection**:
+  Herdr recognizes 21 coding agents out of the box,
+  including Claude Code, Codex, Cursor Agent CLI, OpenCode, GitHub Copilot CLI,
+  Hermes Agent, Pi, Amp, Grok CLI, Antigravity CLI, and Kiro CLI,
+  with Gemini CLI and Cline detected but less thoroughly tested [@herdr_agents].
+  Where an agent ships lifecycle hooks, the hook reports state authoritatively;
+  otherwise Herdr matches the bottom of the live terminal buffer
+  against a TOML detection manifest,
+  and marks a pane `blocked` only when that snapshot matches
+  a known approval, question, or permission prompt.
+- **Git worktree management**:
+  the socket API exposes `worktree.list`, `worktree.create`, `worktree.open`,
+  and `worktree.remove`,
+  which "manage Git checkouts as Herdr workspaces" [@herdr_socket_api].
+  Creating a worktree checks out (or creates) a branch
+  and opens the checkout as a new workspace grouped under the source workspace;
+  the CLI form is `herdr worktree create --branch <name>` [@flaviocopes_herdr].
+- **A CLI and socket API for agents to drive**:
+  the two are "the same surface agents drive",
+  speaking newline-delimited JSON over a Unix socket
+  (a named pipe on Windows) at `~/.config/herdr/herdr.sock`.
+  Methods include `pane.read` to read a pane's recent output,
+  `agent.prompt` to send a prompt,
+  and `agent.wait` to block until another agent reaches `done` or `blocked`
+  rather than polling [@herdr_socket_api].
+- **Persistence and resume**:
+  detaching with `ctrl+b q` leaves every process running;
+  a server restart stops processes but restores workspaces, tabs, panes,
+  working directories, and layout from a `session.json` snapshot,
+  and supported agents can resume their own conversation
+  (for example `claude --resume <id>`) from a saved session reference [@herdr_session_state].
+- **Remote machines**:
+  `herdr machine add <ssh-host>` registers a machine reachable over ordinary SSH,
+  installs or starts the Herdr server there, and folds its agents
+  into one combined agent list;
+  authentication stays with OpenSSH,
+  and Herdr stores no keys or passwords [@herdr_machines].
+  Remote servers must run Linux or macOS;
+  a native Windows server is not supported as an SSH target.
+
+#### Install and use
+
+Herdr ships stable binaries for Linux, macOS, and Windows x86_64 [@herdr_install].
+The one-line installers are:
+
+```bash
+curl -fsSL https://herdr.dev/install.sh | sh
+```
+
+```powershell
+powershell -ExecutionPolicy Bypass -c "irm https://herdr.dev/install.ps1 | iex"
+```
+
+Homebrew (`brew install herdr`), `mise`, and Nix are also supported.
+Run `herdr` to start the server and attach a client,
+`herdr agent list` to see detected agents and their states,
+`herdr status` to summarize the runtime,
+and `herdr update` to upgrade.
+The default prefix key is `ctrl+b`, as in `tmux`,
+and the configuration file lives at `~/.config/herdr/config.toml`
+(`%APPDATA%\herdr\config.toml` on Windows) [@herdr_agent_guide].
+The maintainers publish an
+[agent guide](https://herdr.dev/agent-guide.md) [@herdr_agent_guide]
+meant to be handed to a coding agent so it can set Herdr up for you.
+
+#### Pricing and license
+
+The runtime is free and open source under the Apache 2.0 license.
+The landing page announces a paid "Herdr Cloud" as "coming soon",
+described as connecting your own machines without configuring SSH,
+with a waitlist and no published pricing (measured 2026-09-09) [@herdr].
+
+#### Useful to us?
+
+Herdr overlaps with two things the lab already does
+(@sec-orch-baseline):
+running several Claude Code sessions in parallel,
+and isolating each one in its own git worktree.
+It does not replace either.
+Herdr runs the same agent CLIs unchanged,
+and its worktree commands wrap the same `git worktree` calls
+that Claude Code's own worktree isolation makes.
+What it adds is the layer between those sessions and the person watching them:
+
+- **An attention queue instead of a wall of terminals.**
+  When a dozen sessions run at once,
+  the expensive part is finding the one waiting on a permission prompt.
+  The blocked, working, and done states Herdr aggregates across every workspace
+  and every machine answer that question at a glance,
+  which is the gap one early adopter reported it filling
+  when herding parallel agents on a remote box [@coles_herdr].
+- **Sessions that survive a closed laptop.**
+  Long runs of the lab's review-and-iterate loop
+  currently die with the terminal that started them
+  unless they are already running on a server under `tmux`.
+  Herdr gives the same persistence with a friendlier client,
+  and can reattach to a Claude Code conversation by session ID after a restart.
+- **A machine-readable control surface.**
+  `agent.wait` and `pane.read` let a supervising agent
+  spawn helpers in separate worktrees, wait until each is done or blocked,
+  and read their output,
+  without the polling loops our current scheduled check-ins use.
+
+The same early adopters name the limits [@coles_herdr; @flaviocopes_herdr].
+Herdr provides no sandboxing and does not isolate file changes
+between agents sharing a directory;
+worktrees, permissions, and network egress remain the user's problem,
+so our hooks and permission rules stay in place unchanged.
+Windows support is in beta,
+a Windows machine cannot serve as a remote target,
+and the tool is pre-1.0.
+It also sits beside, not inside, the editor-hosted session views
+described in @sec-ai-vscode-agent-sessions:
+VS Code discovers CLI sessions and hands work between harnesses,
+while Herdr owns the terminals those sessions run in.
+
+The practical recommendation is to try Herdr on a Linux workstation or server
+where a lab member already runs several Claude Code sessions,
+using one workspace per worktree.
+It is a small, reversible addition
+(no wrapper around the agent, no change to `ai-config`),
+and the status sidebar alone may justify it.
+Adopting the socket API as an orchestration layer is a larger step
+that we should defer until the project reaches a stable release.

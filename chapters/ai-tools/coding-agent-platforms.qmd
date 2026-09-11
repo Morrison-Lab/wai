@@ -10,13 +10,20 @@ The following catalog is a starting point rather than an endorsement:
 |---|---|---|
 | [GitHub Copilot coding agent](https://github.com/features/copilot/agents) | GitHub issues and pull requests | Assign an issue; review the resulting pull request |
 | [OpenAI Codex](https://openai.com/codex/) | Cloud tasks, app, and command line | Delegate a task in an isolated environment or work locally |
-| [Google Jules](https://jules.google.com/) | Cloud coding agent | Connect a repository and review the proposed changes |
+| [Google Jules](https://jules.google.com/) [@jules_docs] | Cloud coding agent | Connect a repository and review the proposed changes |
 | [Google Antigravity](https://antigravity.google/) | Agentic development platform | Coordinate coding tasks in a managed development workspace |
 | [Claude Code](https://www.anthropic.com/claude-code) | Terminal, IDE, and cloud | Work interactively or delegate work that returns a pull request |
 | [Gemini CLI](https://github.com/google-gemini/gemini-cli) | Command line | Inspect, edit, and test the current local checkout |
-| [Cursor](https://www.cursor.com/) | IDE | Edit interactively with path-scoped `.cursor/rules` context |
+| [Cursor](https://www.cursor.com/) [@cursor_cloud_agents] | IDE and cloud agents | Edit interactively with path-scoped `.cursor/rules` context, or hand a task to a cloud agent that pushes a branch |
 | [Aider](https://aider.chat/) | Command line | Pair locally with explicit files and Git commits |
 | [GitKraken Kepler](https://gitkraken.com/kepler) | Agentic development environment (desktop) | Start a Task from an issue, PR, or idea; run multiple agents in parallel isolated worktrees via reusable Actions; review per-branch diffs and open PRs |
+| [OpenCode](https://opencode.ai) [@opencode_docs] | Terminal, desktop app, and IDE extension | Bring your own model provider (including local endpoints; see @sec-ai-opencode-ollama) and edit the local checkout |
+| [Cline](https://cline.bot/) [@cline_site] | VS Code extension, CLI, and SDK | Plan, then act with per-step approval; bring your own key, including Ollama |
+| [Kiro](https://kiro.dev/) [@kiro_docs] (AWS) | IDE, CLI, web, and mobile | Spec-driven tasks locally, or delegate a web task that opens a pull request |
+| [Warp](https://docs.warp.dev/) [@warp_docs] | Terminal app, standalone CLI, and cloud agents | Approve actions locally, or trigger cloud agents from Slack, Linear, or GitHub webhooks |
+| [OpenHands](https://docs.openhands.dev/) [@openhands_docs] | Browser client, managed cloud, self-hosted backend, and CLI | Run headless or hosted; self-host when code must stay on your infrastructure |
+| [Devin](https://devin.ai/) [@devin_docs] (Cognition) | Cloud agent and desktop editor | Delegate a task to an isolated cloud machine and review the pull request (see @sec-ai-harness-landscape) |
+| [Ollama](https://ollama.com/) [@ollama_site] | Local model runner (not an agent) | Serve open-weight models to any of the harnesses above (see @sec-ai-ollama-agents) |
 
 Kepler is not an agent itself but an orchestration layer.
 It hosts agents you already use
@@ -26,6 +33,55 @@ and builds on a decade of GitKraken plumbing for branches, worktrees, diffs, and
 Where a single-agent platform handles one repo at a time,
 a Kepler Task can span many repos,
 and its Agent Graph visualizes every session, turn, tool call, and subagent live.
+
+#### Where the agent runs {#sec-ai-platform-execution-models}
+
+The platforms above sort into three execution models
+(measured 2026-09-09).
+The model decides where your code is copied,
+what the agent can reach,
+and how its work comes back to you.
+
+- **Hosted sandbox.**
+  The vendor provisions an isolated machine,
+  clones the repository into it,
+  and returns a branch or pull request.
+  Jules clones the repository into a virtual machine and submits a pull request after you approve its plan [@jules_docs];
+  Cursor cloud agents clone from GitHub, GitLab, Azure DevOps, or Bitbucket,
+  work on a separate branch, and push it back [@cursor_cloud_agents];
+  Kiro web tasks and Warp cloud agents follow the same shape [@kiro_docs; @warp_docs],
+  as do the Copilot coding agent, Codex cloud tasks, Devin, and OpenHands Cloud.
+  Nothing runs on your machine,
+  so the questions are what the sandbox can reach
+  and whether the vendor's retention terms suit the repository.
+- **Local checkout.**
+  The agent runs on your workstation against the files already there,
+  in a terminal (Claude Code, Codex CLI, OpenCode, Aider, Gemini CLI, Warp)
+  or inside an editor (Cursor, Cline, Kiro, Copilot in VS Code).
+  Code stays put,
+  and the agent inherits whatever credentials and network access your shell has,
+  which is why @sec-ai-best-practices asks for approval gates and a sandbox.
+  Pairing one of these with Ollama keeps the model local too [@ollama_site],
+  at the cost of the hardware described in @sec-ai-offline.
+- **Orchestration layer.**
+  Kepler, Kiro Crew, and the Cline Kanban surface do not add a model of their own;
+  they run several of the agents above in parallel worktrees or sessions
+  and present the results for review.
+  Reach for one only once a single agent is no longer the bottleneck
+  ([when orchestration helps](agent-orchestration.qmd#sec-orch-when)).
+
+Several vendors now ship all three,
+so the platform name alone no longer tells you where the code goes:
+Claude Code, Codex, Cursor, Kiro, and Warp each offer a local surface and a hosted one.
+Check the execution model of the specific surface you enable.
+The Windsurf editor is a naming trap of the same kind:
+`windsurf.com` now redirects to Devin Desktop,
+Cognition's rebranding of that editor (measured 2026-09-09; see @sec-ai-harness-landscape).
+
+For licensing, token-cost characteristics, and a decision table for choosing among these tools,
+see @sec-ai-harness-landscape;
+for the open-weight and fully local end of the spectrum,
+see @sec-ai-catalog-coding-agents.
 
 Before connecting any platform, check:
 

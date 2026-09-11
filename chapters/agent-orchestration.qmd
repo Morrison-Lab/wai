@@ -15,8 +15,10 @@ A single coding agent works one problem at a time.
 running several agents at once and coordinating their work.
 This chapter explains when orchestration is worth the added cost,
 describes what our lab already uses for it,
-and evaluates three outside "agent orchestrator" projects
-that lab members have asked about.
+evaluates three outside "agent orchestrator" projects
+that lab members have asked about,
+and surveys the general-purpose orchestration frameworks
+a lab could build its own agent systems on.
 
 ::: {.callout-warning}
 ## A fast-moving, opinionated snapshot
@@ -200,6 +202,244 @@ At most, its design documents are worth skimming
 as a catalog of agent-governance patterns.
 :::
 
+# Agent Orchestration Frameworks {#sec-orch-frameworks}
+
+The three projects above are finished tools.
+The projects in this section are *frameworks*:
+software libraries for building your own multi-agent system
+from agents, tools, and a control flow that you write in code.
+They matter to us for a different reason.
+Nobody in the lab is asking to run `AutoGen`;
+the question is whether any of these libraries
+would let us build something our Claude Code stack cannot.
+
+Every framework below shares one property worth stating up front.
+Each is a Python (or TypeScript, or .NET) library
+for writing an *application* that calls model APIs directly.
+Our workflow instead orchestrates a coding agent from the outside,
+through Claude Code's subagents, `Workflow` fan-out, hooks, and Git worktrees,
+and our research code is in R and Quarto.
+None of these frameworks has an R interface,
+so adopting one would add a Python application layer
+between us and the models,
+and that layer would need its own maintenance.
+That cost is the yardstick for every verdict here.
+
+Star counts, release versions, and dates in this section
+were read from the GitHub API on 2026-09-09
+and will drift.
+
+## Microsoft AutoGen {#sec-orch-autogen}
+
+[AutoGen](https://microsoft.github.io/autogen/stable/) [@autogen_docs]
+is Microsoft's original multi-agent framework,
+and the one issue #101 named first.
+Its current design is layered:
+
+- `Core`: an event-driven, actor-style runtime for message-passing agents.
+- `AgentChat`: the high-level API most users see,
+  where agents are grouped into *teams*
+  (round-robin group chats, model-selected speakers, swarm-style handoff)
+  that pass a task around until a termination condition fires [@autogen_teams].
+- `Extensions`: model clients and tools for outside services.
+- `Studio`: a no-code web interface built on `AgentChat`.
+
+It is Python-first (Python 3.10 or later), with a .NET port.
+The code is under the **MIT** license
+and the documentation under CC-BY-4.0 [@autogen_repo].
+
+The decisive fact is on its own README (measured 2026-09-09):
+AutoGen is in **maintenance mode**.
+It "will not receive new features or enhancements and is community managed going forward,"
+and new users are directed to the Microsoft Agent Framework below.
+The last release was `python-v0.7.5` on 2025-09-30,
+and the repository's last push was in April 2026,
+even though it still carries about 60,900 stars [@autogen_repo].
+
+::: {.callout-note}
+## Useful to us? No
+
+AutoGen is the best-known name on this list
+and is no longer where its own authors want new work to go.
+Its group-chat orchestration
+is what our subagents and `Workflow` fan-out already give us,
+without a Python application to maintain.
+If any Microsoft framework is worth watching, it is the successor.
+:::
+
+## Microsoft Agent Framework {#sec-orch-maf}
+
+The [Microsoft Agent Framework](https://github.com/microsoft/agent-framework)
+[@microsoft_agent_framework]
+merges AutoGen with Semantic Kernel, Microsoft's earlier .NET-first library,
+into one production-oriented framework for Python and .NET,
+with a separate Go SDK.
+Orchestration is expressed as **graph-based workflows**
+with built-in sequential, concurrent, handoff, and group-collaboration patterns,
+plus checkpoints, streaming, human-in-the-loop steps, and `OpenTelemetry` tracing.
+Agents can also be declared in YAML.
+It is under the **MIT** license,
+has about 13,400 stars,
+and released `python-1.17.0` on 2026-09-03 (measured 2026-09-09).
+
+::: {.callout-note}
+## Useful to us? Not now
+
+It is the framework to name if someone asks
+"what replaced AutoGen?",
+and its workflow patterns are a clean catalog of the orchestration shapes
+that also appear in our `Workflow` tool.
+But its hosting story centers on Microsoft Foundry and Azure,
+which we do not use,
+and the general Python-layer cost applies.
+:::
+
+## LangGraph {#sec-orch-langgraph}
+
+[LangGraph](https://docs.langchain.com/oss/python/langgraph/overview)
+[@langgraph_docs]
+is LangChain Inc.'s "low-level orchestration framework and runtime
+for building, managing, and deploying long-running, stateful agents."
+Orchestration is a **graph**:
+you write nodes (a model call, a tool, or plain deterministic code),
+connect them with edges, including conditional ones,
+and share a typed state object between them.
+The runtime adds checkpoints, so a run can be paused, resumed, or replayed,
+interrupts for human-in-the-loop approval,
+and durable execution for long tasks.
+It is available in Python and JavaScript,
+can be used without the wider LangChain library,
+and integrates with LangSmith for tracing and hosted deployment [@langgraph_repo].
+The code is under the **MIT** license,
+has about 41,300 stars,
+and releases are tagged per package
+(the most recent, `sdk==0.4.4`, on 2026-08-27; measured 2026-09-09).
+
+::: {.callout-tip}
+## Useful to us? Worth knowing, not adopting
+
+LangGraph is the most general and least opinionated framework here,
+and its checkpoint-and-resume model is the right design
+for a long analysis pipeline that must survive interruption.
+That is the one case where a lab member might reach for it:
+a durable, multi-step Python pipeline with human sign-off in the middle.
+For coordinating coding agents on a repository,
+which is what we actually do,
+it duplicates what Claude Code and the `Workflow` tool already provide.
+:::
+
+## CrewAI {#sec-orch-crewai}
+
+[CrewAI](https://docs.crewai.com/en/introduction) [@crewai_docs]
+organizes agents by **role**.
+A *crew* is a set of agents, each with a role, goal, and tools,
+working through a list of tasks
+either sequentially or under a manager agent (the hierarchical process),
+delegating to each other as they see fit [@crewai_repo].
+A *flow* is the newer, event-driven layer
+that manages state and decides when to run which crew.
+It is Python-only, under the **MIT** license,
+has about 58,300 stars,
+and released version `1.15.20` on 2026-09-04 (measured 2026-09-09).
+The open-source library sits under a commercial platform
+for deploying and monitoring crews.
+
+::: {.callout-note}
+## Useful to us? No
+
+The role-playing metaphor is easy to start with
+and is the same thing our subagent definitions do
+(a reviewer role, a search role, a verification role),
+with less control over what each agent may touch.
+Nothing here is missing from our stack.
+:::
+
+## OpenAI Agents SDK {#sec-orch-openai-agents}
+
+The [OpenAI Agents SDK](https://github.com/openai/openai-agents-python)
+[@openai_agents_sdk]
+is a deliberately small framework
+built around a few primitives:
+agents, **handoff** between agents, agents used as tools,
+guardrails on input and output,
+sessions for conversation history,
+human-in-the-loop hooks,
+and tracing.
+Newer additions include sandbox agents
+that work inside a container over long tasks.
+Despite the name, it is provider-agnostic
+and works with any Chat Completions-compatible model
+and "100+ other LLMs".
+It is Python (3.10 or later), with a separate TypeScript package,
+under the **MIT** license,
+with about 29,300 stars
+and version `v0.22.2` released on 2026-09-09 (measured the same day).
+
+::: {.callout-note}
+## Useful to us? No
+
+This is the OpenAI-side counterpart to Anthropic's Claude Agent SDK,
+and it would matter only if we built automation around Codex
+rather than Claude Code.
+Its handoff and guardrail design is worth reading as a reference,
+since it is the simplest statement of those ideas on this list.
+:::
+
+## Google Agent Development Kit {#sec-orch-adk}
+
+Google's [Agent Development Kit](https://github.com/google/adk-python)
+[@google_adk]
+(ADK) is a "code-first Python framework for building, evaluating, and deploying" agents.
+Version 2.0 expresses orchestration two ways:
+a graph-based **workflow runtime**
+(routing, fan-out and fan-in, loops, retries, nested workflows, human-in-the-loop)
+and a **task API** for structured delegation between agents
+arranged in hierarchies.
+It is optimized for Gemini but model-agnostic,
+ships ports for Java, Kotlin, Go, and TypeScript,
+and deploys to Cloud Run or Vertex AI Agent Engine.
+It is under the **Apache-2.0** license,
+has about 21,500 stars,
+and released `v2.8.0` on 2026-08-26
+on a roughly two-week cadence (measured 2026-09-09).
+
+::: {.callout-note}
+## Useful to us? No
+
+ADK is the most complete of the vendor frameworks on paper,
+and the least relevant to us in practice:
+its strengths are Gemini and Google Cloud deployment,
+neither of which we use.
+:::
+
+## Others {#sec-orch-others}
+
+Several more frameworks come up in the same conversations.
+None changes the verdicts above,
+so they get one line each
+(stars and dates measured 2026-09-09):
+
+- [`MetaGPT`](https://github.com/FoundationAgents/MetaGPT) [@metagpt]:
+  the most-starred project on this list (about 70,300),
+  simulating a software company of role agents;
+  MIT, Python,
+  but its last release was `v0.8.1` in April 2024
+  and its last push was January 2026.
+- [`LlamaIndex`](https://github.com/run-llama/llama_index) [@llama_index]:
+  document-centric agents and event-driven workflows;
+  MIT, Python, about 52,100 stars, actively released.
+- [`smolagents`](https://github.com/huggingface/smolagents) [@smolagents]:
+  Hugging Face's minimal library for agents that act by writing code;
+  Apache-2.0, Python, about 29,300 stars.
+- [`Pydantic AI`](https://github.com/pydantic/pydantic-ai) [@pydantic_ai]:
+  typed, single-agent-first design from the `Pydantic` team;
+  MIT, Python, about 19,800 stars, released daily.
+- [`CAMEL`](https://github.com/camel-ai/camel) [@camel_ai]:
+  a research-oriented multi-agent framework;
+  Apache-2.0, Python, about 17,700 stars.
+- `VoltAgent`: a TypeScript framework, tracked separately in issue #45
+  of this site's repository.
+
 # Comparison {#sec-orch-comparison}
 
 The table below places the three outside tools against our current stack.
@@ -217,9 +457,17 @@ and follows directly from the rows above it.
 | Local-first | Yes | Yes | Yes | Yes (Ollama, cloud fallback) |
 | Relevance to us | The baseline | Try it | Evaluate it | Pass; reference only |
 
+The frameworks in @sec-orch-frameworks do not fit this table,
+because they are libraries rather than tools:
+each would be a column only after we had built something with it.
+Measured against the same "Relevance to us" row,
+they land together at "reference only",
+with LangGraph the one to read first
+if a durable Python pipeline with human sign-off ever becomes a lab need.
+
 # Recommendation {#sec-orch-recommendation}
 
-For the lab, as of August 2026:
+For the lab, as of September 2026:
 
 - **Try Agent Teams** on a research or review task where parallel, arguing agents
   would beat one agent working alone.
@@ -232,6 +480,10 @@ For the lab, as of August 2026:
 - **Pass on TORQCLAW** for adoption.
   It is unlicensed, off-domain,
   and centered on governance we already have.
+
+- **Build nothing on the orchestration frameworks** in @sec-orch-frameworks
+  until a concrete need appears that Claude Code cannot meet;
+  read the LangGraph documentation as the reference design if one does.
 
 None of these replaces our current Claude Code and `ai-config` practice.
 Agent Teams extends it,

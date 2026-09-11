@@ -1,0 +1,344 @@
+@sec-ai-harnesses describes the layers most coding-agent harnesses share,
+and @sec-ai-harness-agent-relationship sketches the loop that runs inside them.
+This section walks through those layers for the harness the lab uses most,
+[Claude Code](https://code.claude.com/docs/en/overview),
+and says for each one what Anthropic documents,
+what the community has inferred from the shipped program,
+and what remains unknown
+(measured 2026-09-09).
+Anthropic's own description is short:
+Claude Code is the "agentic harness" around the model,
+supplying "the tools, context management, and execution environment that turn a language model into a capable coding agent" [@claude_code_how_it_works].
+The sections below take those three things in turn.
+
+The distinction between documented and inferred matters here more than usual.
+Claude Code is proprietary,
+and since mid-2026 it ships as a single compiled executable rather than readable JavaScript [@claude_code_issue_80988],
+so everything not in Anthropic's documentation comes from people running `strings` on the binary,
+reading the compiled function bodies,
+or intercepting its network traffic.
+Those readings are checkable but fragile:
+the build tool renames every internal function on every release,
+and a behaviour observed in one build may be gone in the next.
+Treat the inferred claims as a snapshot,
+and re-verify against the build you are running before relying on one.
+
+#### The loop and the tool registry (documented)
+
+The core of the harness is the loop described in @sec-ai-agent-program-kind:
+the model produces a tool call,
+the harness runs the matching handler,
+and the result goes back into the conversation.
+Anthropic describes the same loop as three blended phases ---
+gather context, take action, verify results ---
+and stresses that the model, not the harness, decides which tool to call next [@claude_code_how_it_works].
+
+The built-in tools are the registry the loop dispatches against.
+As of September 2026 the tools reference lists more than forty of them [@claude_code_tools_reference].
+The ones a lab member sees every day are:
+
+- **File and search tools**: `Read`, `Edit`, `Write`, `Glob`, `Grep`, `NotebookEdit`, and `LSP` for language-server code intelligence.
+- **Execution tools**: `Bash`, `PowerShell`, and `Monitor`, which streams a background command's output lines back to the model.
+- **Orchestration tools**: `Agent` (spawns a subagent), `Skill` (runs a skill), `SendMessage` and `ListAgents` (agent teams), the `Task*` family (a session task list), `CronCreate` and `ScheduleWakeup` (timers), and `ToolSearch` (loads deferred tool schemas on demand).
+- **Interaction tools**: `AskUserQuestion`, `EnterPlanMode` and `ExitPlanMode`, `EnterWorktree` and `ExitWorktree`, `Artifact`, and `SendUserFile`.
+
+Each tool is a schema the model sees plus a handler it does not,
+exactly as @sec-ai-harness-construction describes.
+The tool names double as the vocabulary of the permission system, hook matchers, and subagent tool lists,
+so a rule written as `Bash(git *)` refers to the same `Bash` entry the model calls [@claude_code_tools_reference].
+MCP servers (below) extend this registry without changing its shape.
+
+#### The system prompt: what is public and what is not
+
+Anthropic does not publish Claude Code's system prompt.
+What the documentation does describe is the *startup context*:
+everything already in the model's window before you type a word.
+The context-window page walks through it in order [@claude_code_context_window]:
+
+- the system prompt itself,
+  including an output style and any `--append-system-prompt` text, which "both go into the system prompt the same way";
+- an environment block (working directory, platform, shell, whether this is a git repository),
+  with git branch, status, and recent commits loaded "as a separate block at the very end of the system prompt";
+- MCP tool *names*, with their full schemas deferred until `ToolSearch` loads them;
+- one-line skill descriptions, so the model knows what it can invoke;
+- your `CLAUDE.md` files and the first 200 lines of auto memory.
+
+One documented detail changes how the rest of this section reads:
+`CLAUDE.md` content "is delivered as a user message after the system prompt, not as part of the system prompt itself" [@claude_code_memory].
+So the layered picture is
+harness-authored system prompt first,
+then your instructions,
+then the conversation.
+The same page is candid that the harness "treats them as context, not enforced configuration":
+a `CLAUDE.md` instruction is prose the model may weigh against other prose,
+and anything that must hold regardless goes in a permission rule or a hook.
+
+Three documented levers reach the system prompt directly [@claude_code_env_vars]:
+
+- `--append-system-prompt` adds text to it for one invocation.
+- `CLAUDE_CODE_SIMPLE_SYSTEM_PROMPT=1` requests "a shorter system prompt and abbreviated tool descriptions",
+  and `0` opts out "even on models where the experiment or server configuration would otherwise enable it" ---
+  the documentation's own acknowledgment that the prompt varies by model and by server-side configuration.
+- `--bare` (equivalently `CLAUDE_CODE_SIMPLE=1`) runs "with a minimal system prompt and only the Bash, file read, and file edit tools",
+  and disables discovery of hooks, skills, subagents, plugins, MCP servers, auto memory, and `CLAUDE.md`.
+  It is a stripped harness, not a stripped prompt,
+  which is why it is the wrong fix for the problem described next.
+
+What the community has inferred is the prompt's internal structure.
+Binary analysis reported in the Claude Code issue tracker shows the prompt assembled from named sections,
+each behind a function that returns text or `null`,
+with names such as `anti_verbosity`, `thinking_guidance`, `action_caution`,
+`delivering_work_max`, `overcorrection`, `subagent_steer_delegation`, `heron_brook`, and `autonomy_append` [@claude_code_issue_62061; @claude_code_issue_80988].
+Some sections are gated on a *model capability* declared in an internal model registry
+(the reported gate for Opus 5 is a capability string `opus_5_prompt_bundle`),
+some on a remote feature flag,
+and some on both.
+One analyst counted roughly 23 sections in a mid-2026 build,
+with user memory rendered around eighth and `heron_brook` second-to-last [@claude_code_issue_80988].
+None of this is documented,
+the counts and names are build-specific,
+and the section order is one person's inference from the compiled code ---
+so the safe statement is that the system prompt is *modular and conditional*,
+not that any particular section exists on your machine today.
+
+#### Hard-coded instructions, remote flags, and `heron_brook`
+
+`heron_brook` is not a feature.
+It is the internal name of one system-prompt section,
+and its story is the clearest public window into how the harness's prompt is controlled.
+The name follows the pattern of every Claude Code feature flag:
+a `tengu_` prefix (the product's internal code name, per one community catalog of the binary's strings [@tengu_decoded])
+followed by an auto-generated `adjective_noun` pair that carries no meaning of its own.
+`tengu_fennel_godwit`, mentioned below, is the same kind of name.
+Anthropic's only public statement touching the section is the short reply quoted below.
+
+**May 2026: the slot appears.**
+Claude Code 2.1.150 shipped with a changelog entry reading, in full, "Internal infrastructure improvements (no user-facing changes)" [@claude_code_changelog].
+Within days a user reported that the build added a function reading a string from two network-backed sources ---
+the `client_data` field of the `/api/claude_cli/bootstrap` response, and a GrowthBook feature flag named `tengu_heron_brook` that refreshes every 60 seconds ---
+and inserting it verbatim as a system-prompt section [@claude_code_issue_62061].
+The same finding reached Hacker News under the title "Claude Code now allows Anthropic to remotely inject system prompts" [@hn_claude_code_remote_prompts].
+An Anthropic engineer replied on the issue that
+the company "sometimes run[s] experiments on changes to our system prompt so that we can evaluate how a change impacts quality before fully rolling it out",
+that users can opt out with `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1` and `DISABLE_GROWTHBOOK=1`,
+and that Claude Code should not be used through an untrusted proxy [@claude_code_issue_62061].
+The issue was closed.
+A separate HackerOne report on the same channel was closed as *Informative*,
+with Anthropic's security team stating that TLS is the integrity boundary and no response signing is planned [@cache_fix_heron_brook_disclosure].
+An independent catalog of the binary's strings describes the section the same way:
+"a server-controlled prompt-injection slot" [@tengu_decoded].
+
+**July 2026: the slot gets a hard-coded default.**
+Claude Code 2.1.219 was the release that added Opus 5 [@claude_code_changelog].
+Users on that model noticed their sessions had stopped delegating to subagents,
+and the model, when asked, quoted two lines it said it had been given:
+
+> Do not call the `AgentTool` unless the user requested it
+> Do not use workflows or deep-research unless the user requested it
+
+The canonical report [@claude_code_issue_80988] traced the lines to a constant compiled into the binary,
+served as the *fallback* text of the `heron_brook` section when neither the bootstrap response nor the GrowthBook flag supplies a string.
+The reported gate has two parts:
+the section fires only for models whose registry entry carries the `opus_5_prompt_bundle` capability
+(in the builds examined, only `claude-opus-5`, not the Fable, Sonnet, or Haiku families),
+and only while a kill-switch flag, `tengu_fennel_godwit`, is false, which is its default.
+A thread in the r/ClaudeCode community on Reddit carried the finding to a wider audience [@reddit_claude_code_hardcoded_instruction].
+(Reddit blocks unauthenticated fetches,
+so the thread is cited by title only.)
+
+Four consequences are reported across that issue and its siblings:
+
+- **It overrides user configuration silently.**
+  Users whose `CLAUDE.md` *requires* delegation --- including several with mandatory review-by-subagent gates ---
+  saw zero subagent dispatches for whole sessions,
+  and one fleet operator measured Opus 5 sessions taking 2.5 times as many assistant turns as Opus 4.8 on the same work,
+  which they attributed to serial work that had previously fanned out [@claude_code_issue_80988].
+  The documentation says delegation is driven by each subagent's `description` [@claude_code_subagents];
+  a separate report argues the directive contradicts that documented behaviour [@claude_code_issue_82456].
+- **The model attributes the line to you.**
+  Because the section arrives in the same voice as everything else,
+  and because `CLAUDE.md` is a *user* message that appears earlier,
+  the model reads "unless the user requested it" as the user's own standing rule
+  and tells users their configuration forbids delegation when it says the opposite [@claude_code_issue_87635].
+  A related report frames the underlying gap:
+  there is no defined precedence between an Anthropic-authored prompt section and a user-authored `CLAUDE.md`,
+  and no way to observe from inside a session which sections are active [@claude_code_issue_80998].
+- **The documented opt-outs do not reach it.**
+  `DISABLE_GROWTHBOOK=1` disables flag *fetching*, so every flag takes its code default [@claude_code_env_vars] ---
+  and the kill switch's default is off,
+  so blocking the flag source guarantees the hard-coded text is used.
+  `--bare` removes the `Agent` tool along with the prompt section.
+  Six sibling sections in the same Opus 5 bundle reportedly have dedicated `CLAUDE_CODE_*` environment variables;
+  `heron_brook` and its kill switch do not [@claude_code_issue_80988].
+  Session transcripts under `~/.claude/projects/` do not record the system prompt,
+  so the injection leaves no trace to search for afterwards.
+- **It persisted.**
+  Comments on the issue confirm the same constant, gate, and behaviour in every build examined from 2.1.219 through at least 2.1.245 (2026-08-26),
+  across macOS, Windows, and Linux,
+  with no maintainer response on the thread [@claude_code_issue_80988].
+
+What is documented, and what is not, about `heron_brook` as of 2026-09-09:
+
+| Claim | Status |
+|---|---|
+| Anthropic runs server-side system-prompt experiments and offers two environment variables to opt out of flag fetching | Documented, by an Anthropic engineer's comment [@claude_code_issue_62061] and the environment-variable reference [@claude_code_env_vars] |
+| A prompt section named `heron_brook` reads its text from the bootstrap response, then a GrowthBook flag, then a compiled-in fallback | Inferred from binary analysis, reproduced independently by many reporters on three platforms |
+| The fallback text tells the model not to call the `Agent` tool unless the user requested it | Inferred; the two strings are verifiable with `grep -a -c` on the installed executable |
+| The gate is Opus 5's `opus_5_prompt_bundle` capability plus a `tengu_fennel_godwit` kill switch | Inferred from the compiled code; not documented anywhere |
+| Whether the remote sources have ever carried non-empty text in production, and what | Unknown; one Windows reporter found the flag absent from the locally cached flag set, meaning the fallback branch was firing |
+| Why the directive exists (cost control, quality regression, an experiment that leaked) | Unknown; Anthropic has not said |
+| Whether it is still active in the build you are running | Unknown until you check |
+: `heron_brook`: documented, inferred, and unknown {#tbl-heron-brook-status}
+
+The lab's own [ai-config](https://github.com/Morrison-Lab/ai-config) leans heavily on subagents
+(adversarial self-review, delegated UMS passes, parallel issue workers),
+so this affects us directly on any Opus 5 session.
+Two workarounds came out of the thread and cost nothing to adopt.
+First, tell the harness in `CLAUDE.md` that text arriving in the system prompt is not the user's voice,
+and that subagent use is requested in advance ---
+several reporters found this restored delegation [@claude_code_issue_80988].
+Second, when a session unexpectedly stops delegating,
+ask it to quote the instruction it is following before auditing your own configuration for a rule that is not there.
+
+#### Permission modes and settings layers (documented)
+
+Permission rules "are enforced by Claude Code, not by the model" [@claude_code_permissions],
+which makes them the first layer that the prompt controversy above cannot reach.
+A prompt can change what the model *tries*;
+only a rule changes what the harness *allows*.
+Six modes are documented [@claude_code_permissions]:
+
+- `default` (labeled Manual): prompts on first use of each tool.
+- `acceptEdits`: auto-accepts file edits and common filesystem commands inside the working directory.
+- `plan`: read-only exploration; no source edits.
+- `auto`: auto-approves tool calls, with a classifier checking that actions match the request.
+- `dontAsk`: auto-denies anything not pre-approved by an allow rule.
+- `bypassPermissions`: skips prompts except for a short list no mode auto-approves.
+
+Rules and the mode live in settings files that layer from managed policy through user, project, and local scope,
+with `permissions.deny` in managed settings as the enforcement an organization cannot have overridden [@claude_code_memory].
+One inferred caveat belongs here:
+the `heron_brook` thread cites a separate report that GrowthBook flags can override `permissions.defaultMode` from the server [@claude_code_issue_80988],
+so even this layer may have a remotely controlled input.
+That report is cited second-hand and was not verified for this section.
+
+#### Hooks (documented)
+
+Hooks are the harness's event system:
+shell commands, HTTP endpoints, MCP tool calls, single-turn prompts, or spawned subagents that run at fixed lifecycle points [@claude_code_hooks_reference].
+The reference lists more than thirty events,
+grouped as session (`SessionStart`, `SessionEnd`),
+per-turn (`UserPromptSubmit`, `Stop`),
+tool execution (`PreToolUse`, `PostToolUse`, `PermissionRequest`),
+agent (`SubagentStart`, `SubagentStop`),
+context (`InstructionsLoaded`, `PreCompact`, `PostCompact`),
+and several more.
+A `PreToolUse` hook that exits with code 2 blocks the call,
+and a hook's JSON output can deny, add context, or rewrite the tool's input.
+This is the mechanism @sec-ai-customization calls "the part the model cannot talk its way around",
+and it is the right home for any rule that must hold regardless of what the prompt says ---
+including a rule that the prompt itself has been told to contradict.
+`InstructionsLoaded` is also the only documented way to log exactly which instruction files a session loaded and when [@claude_code_memory].
+
+#### Subagents (documented)
+
+The `Agent` tool spawns a subagent:
+a fresh instance of the same loop with its own context window, its own system prompt, a restricted tool list, and independent permissions [@claude_code_subagents].
+Built-in subagents include `Explore` and `Plan` (read-only; they skip `CLAUDE.md` and git status to stay cheap) and `general-purpose`;
+custom ones are markdown files with front matter in `.claude/agents/` or `~/.claude/agents/`,
+as @sec-ai-harness-construction illustrates,
+and plugins can ship more.
+The harness watches those directories and picks up edits without a restart.
+Delegation is documented as description-driven:
+"Claude uses each subagent's description to decide when to delegate tasks",
+and the combined descriptions are capped at 15,000 tokens before a startup warning [@claude_code_subagents].
+Delegation can be removed entirely by denying the `Agent` tool in `permissions.deny`.
+That is the documented, user-controlled way to stop subagent use;
+`heron_brook` is the undocumented, server-controlled one.
+
+#### Skills and plugins (documented)
+
+A skill is a `SKILL.md` with front matter and a body,
+run through the built-in `Skill` tool rather than as a tool of its own [@claude_code_tools_reference].
+Only skill *descriptions* sit in the startup context;
+the body loads when the skill is invoked,
+and a skill marked `disable-model-invocation: true` stays out of context entirely until you type its slash command [@claude_code_context_window].
+@sec-ai-agent-skills covers the format.
+A plugin bundles skills, agents, hooks, MCP and LSP server configurations, background monitors, and default settings into one directory with a `.claude-plugin/plugin.json` manifest,
+namespaces its skills as `/plugin-name:skill`,
+and can be loaded from a marketplace, from a local path with `--plugin-dir`, or from the user's skills directory [@claude_code_plugins].
+@sec-ai-plugins-deep-dive dissects the bundle,
+and @sec-ai-config-install describes how the lab's own plugin reaches a machine.
+
+#### MCP servers (documented)
+
+An MCP server adds tools to the registry without changing the loop.
+By default the harness lists only the server's tool *names* at startup and defers the full schemas,
+loading each on demand through `ToolSearch`;
+`ENABLE_TOOL_SEARCH=false` loads everything up front [@claude_code_context_window].
+That deferral is why a session can carry dozens of servers without paying their schema cost on every turn.
+Two dedicated tools, `ListMcpResourcesTool` and `ReadMcpResourceTool`, expose server resources as well as tools [@claude_code_tools_reference].
+@sec-ai-mcp-server-setup covers registration and its failure modes.
+
+#### Memory and `CLAUDE.md` loading (documented)
+
+Two mechanisms carry knowledge across sessions [@claude_code_memory]:
+
+- **`CLAUDE.md` files**, loaded in a fixed order:
+  managed policy, then `~/.claude/CLAUDE.md`, then every `CLAUDE.md` and `CLAUDE.local.md` from the filesystem root down to the working directory,
+  concatenated rather than overriding each other.
+  Files in subdirectories load on demand when the model reads files there.
+  `@path` imports expand at launch to a depth of four,
+  `.claude/rules/*.md` files load alongside, with `paths:` front matter scoping a rule to matching files,
+  and block-level HTML comments are stripped before injection.
+  A file over `4 MiB` is skipped.
+- **Auto memory**, notes the model writes itself under `~/.claude/projects/<project>/memory/`,
+  of which the first 200 lines or 25 KB of `MEMORY.md` load every session and topic files load on demand.
+
+`/context` shows which files actually loaded,
+and `/memory` opens them.
+The "delivered as a user message" detail above applies to all of it.
+
+#### Compaction (documented)
+
+When the context window nears its limit,
+the harness summarizes the conversation and replaces it;
+`/compact` does the same on demand, optionally with a focus instruction,
+and `/autocompact <tokens>` moves the threshold [@claude_code_context_window].
+What survives is specific:
+
+- the system prompt and output style are unchanged, because they were never in message history;
+- project-root `CLAUDE.md`, rules without a `paths:` field, auto memory, and a plan-mode plan are re-injected from disk;
+- path-scoped rules and nested `CLAUDE.md` files reload only as matching files are read again;
+- up to five recently modified files are re-read;
+- invoked skill bodies are re-injected, capped at 5,000 tokens each and 25,000 total;
+- context that hooks added earlier is summarized away, unless a `SessionStart` hook matching the `compact` source re-adds it;
+- the skill *listing* is not reloaded [@claude_code_context_window].
+
+The lab's `compress-session` practice exists because the automatic summary guesses what matters;
+running `/compact` with a focus before it triggers keeps that choice with you.
+
+#### The Agent SDK relationship (documented)
+
+The Claude Agent SDK "gives you the same tools, agent loop, and context management that power Claude Code, programmable in Python and TypeScript" [@claude_agent_sdk_overview].
+It is the harness as a library:
+built-in tools, hooks, subagents, MCP, permissions, sessions, skills, memory, and plugins are all listed as SDK capabilities,
+and it loads `.claude/` and `~/.claude/` configuration "same as Claude Code".
+Anthropic distinguishes it from the Client SDK (raw API access, where you write the loop yourself),
+from the CLI (interactive use),
+and from Managed Agents (a hosted product where Anthropic runs the sandbox).
+Other languages drive the same loop by running the CLI as a subprocess with `-p` and `--output-format json` [@claude_agent_sdk_overview].
+The corollary for this section is that everything above, including the modular and conditional system prompt, is what an SDK-built agent inherits.
+The SDK documents a way to replace or extend the system prompt,
+which is the supported route where the CLI offers only `--append-system-prompt`.
+
+#### Summary: what you can and cannot see
+
+Claude Code's execution engine, tool registry, permission system, hooks, subagents, skills, plugins, MCP integration, memory loading, compaction, and SDK surface are all documented in detail,
+and the documentation is unusually precise about what loads when.
+The one layer it does not describe is the system prompt,
+and the `heron_brook` episode shows that layer is modular, model-gated, and partly remote-controlled,
+with no in-session way to observe which parts are active.
+The practical rule for the lab follows from the documentation's own advice:
+anything that must hold goes in a permission rule or a hook, which the harness enforces,
+not in `CLAUDE.md`, which the model weighs against text you cannot see.
