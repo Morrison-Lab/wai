@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-10 16:53:45 (PDT)
+Last modified: 2026-09-10 17:02:43 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -63,15 +63,34 @@ The following catalog is a starting point rather than an endorsement:
 |----|----|----|
 | [GitHub Copilot coding agent](https://github.com/features/copilot/agents) | GitHub issues and pull requests | Assign an issue; review the resulting pull request |
 | [OpenAI Codex](https://openai.com/codex/) | Cloud tasks, app, and command line | Delegate a task in an isolated environment or work locally |
-| [Google Jules](https://jules.google.com/) | Cloud coding agent | Connect a repository and review the proposed changes |
+| [Google Jules](https://jules.google.com/) ([Google 2026d](#ref-jules_docs)) | Cloud coding agent | Connect a repository and review the proposed changes |
 | [Google Antigravity](https://antigravity.google/) | Agentic development platform | Coordinate coding tasks in a managed development workspace |
 | [Claude Code](https://www.anthropic.com/claude-code) | Terminal, IDE, and cloud | Work interactively or delegate work that returns a pull request |
 | [Gemini CLI](https://github.com/google-gemini/gemini-cli) | Command line | Inspect, edit, and test the current local checkout |
-| [Cursor](https://www.cursor.com/) | IDE | Edit interactively with path-scoped `.cursor/rules` context |
+| [Cursor](https://www.cursor.com/) ([Cursor 2026](#ref-cursor_cloud_agents)) | IDE and cloud agents | Edit interactively with path-scoped `.cursor/rules` context, or hand a task to a cloud agent that pushes a branch |
 | [Aider](https://aider.chat/) | Command line | Pair locally with explicit files and Git commits |
 | [GitKraken Kepler](https://gitkraken.com/kepler) | Agentic development environment (desktop) | Start a Task from an issue, PR, or idea; run multiple agents in parallel isolated worktrees via reusable Actions; review per-branch diffs and open PRs |
+| [OpenCode](https://opencode.ai) ([OpenCode 2026a](#ref-opencode_docs)) | Terminal, desktop app, and IDE extension | Bring your own model provider (including local endpoints; see [Section 23](#sec-ai-opencode-ollama)) and edit the local checkout |
+| [Cline](https://cline.bot/) ([Cline 2026](#ref-cline_site)) | VS Code extension, CLI, and SDK | Plan, then act with per-step approval; bring your own key, including Ollama |
+| [Kiro](https://kiro.dev/) ([Amazon Web Services 2026](#ref-kiro_docs)) (AWS) | IDE, CLI, web, and mobile | Spec-driven tasks locally, or delegate a web task that opens a pull request |
+| [Warp](https://docs.warp.dev/) ([Warp 2026](#ref-warp_docs)) | Terminal app, standalone CLI, and cloud agents | Approve actions locally, or trigger cloud agents from Slack, Linear, or GitHub webhooks |
+| [OpenHands](https://docs.openhands.dev/) ([OpenHands 2026](#ref-openhands_docs)) | Browser client, managed cloud, self-hosted backend, and CLI | Run headless or hosted; self-host when code must stay on your infrastructure |
+| [Devin](https://devin.ai/) ([Cognition 2026](#ref-devin_docs)) (Cognition) | Cloud agent and desktop editor | Delegate a task to an isolated cloud machine and review the pull request (see [Section 10](#sec-ai-harness-landscape)) |
+| [Ollama](https://ollama.com/) ([Ollama 2026](#ref-ollama_site)) | Local model runner (not an agent) | Serve open-weight models to any of the harnesses above (see [Section 4.0.0.2](#sec-ai-ollama-agents)) |
 
 Kepler is not an agent itself but an orchestration layer. It hosts agents you already use (Claude Code, Codex, Copilot, Cursor, OpenCode) rather than locking in one model, and builds on a decade of GitKraken plumbing for branches, worktrees, diffs, and merges. Where a single-agent platform handles one repo at a time, a Kepler Task can span many repos, and its Agent Graph visualizes every session, turn, tool call, and subagent live.
+
+#### Where the agent runs
+
+The platforms above sort into three execution models (measured 2026-09-09). The model decides where your code is copied, what the agent can reach, and how its work comes back to you.
+
+- **Hosted sandbox.** The vendor provisions an isolated machine, clones the repository into it, and returns a branch or pull request. Jules clones the repository into a virtual machine and submits a pull request after you approve its plan ([Google 2026d](#ref-jules_docs)); Cursor cloud agents clone from GitHub, GitLab, Azure DevOps, or Bitbucket, work on a separate branch, and push it back ([Cursor 2026](#ref-cursor_cloud_agents)); Kiro web tasks and Warp cloud agents follow the same shape ([Amazon Web Services 2026](#ref-kiro_docs); [Warp 2026](#ref-warp_docs)), as do the Copilot coding agent, Codex cloud tasks, Devin, and OpenHands Cloud. Nothing runs on your machine, so the questions are what the sandbox can reach and whether the vendor’s retention terms suit the repository.
+- **Local checkout.** The agent runs on your workstation against the files already there, in a terminal (Claude Code, Codex CLI, OpenCode, Aider, Gemini CLI, Warp) or inside an editor (Cursor, Cline, Kiro, Copilot in VS Code). Code stays put, and the agent inherits whatever credentials and network access your shell has, which is why [Section 19](#sec-ai-best-practices) asks for approval gates and a sandbox. Pairing one of these with Ollama keeps the model local too ([Ollama 2026](#ref-ollama_site)), at the cost of the hardware described in [Section 21](#sec-ai-offline).
+- **Orchestration layer.** Kepler, Kiro Crew, and the Cline Kanban surface do not add a model of their own; they run several of the agents above in parallel worktrees or sessions and present the results for review. Reach for one only once a single agent is no longer the bottleneck ([when orchestration helps](../chapters/agent-orchestration.llms.md#sec-orch-when)).
+
+Several vendors now ship all three, so the platform name alone no longer tells you where the code goes: Claude Code, Codex, Cursor, Kiro, and Warp each offer a local surface and a hosted one. Check the execution model of the specific surface you enable. The Windsurf editor is a naming trap of the same kind: `windsurf.com` now redirects to Devin Desktop, Cognition’s rebranding of that editor (measured 2026-09-09; see [Section 10](#sec-ai-harness-landscape)).
+
+For licensing, token-cost characteristics, and a decision table for choosing among these tools, see [Section 10](#sec-ai-harness-landscape); for the open-weight and fully local end of the spectrum, see [Section 4](#sec-ai-catalog-coding-agents).
 
 Before connecting any platform, check:
 
@@ -101,7 +120,7 @@ The coding agent ecosystem encompasses a spectrum of architectures ranging from 
 
 For air-gapped environments, strict data privacy requirements, or zero-marginal-cost development, developers pair local model runners like **[Ollama](https://ollama.com/)** with dedicated agent harnesses (detailed setup and hardware sizing are covered in [Section 21](#sec-ai-offline)):
 
-- **Terminal Orchestrators**: Harnesses like **[Aider](https://aider.chat/)** and **[OpenHands](https://github.com/All-Hands-AI/OpenHands)** (formerly OpenDevin) connect directly to Ollama endpoints running open-weight coding models (such as `Qwen2.5-Coder`, `DeepSeek-Coder-V2`, or `Llama 3.3`), managing git commits, multi-file edits, and automated test-and-repair loops.
+- **Terminal Orchestrators**: Harnesses like **[OpenCode](https://opencode.ai)** (see [Section 23](#sec-ai-opencode-ollama)), **[Aider](https://aider.chat/)**, and **[OpenHands](https://github.com/All-Hands-AI/OpenHands)** (formerly OpenDevin) connect directly to Ollama endpoints running open-weight coding models (such as `Qwen2.5-Coder`, `DeepSeek-Coder-V2`, or `Llama 3.3`), managing git commits, multi-file edits, and automated test-and-repair loops.
 - **Editor Integrations**: Extensions such as **[Continue](https://www.continue.dev/)** and **[CodeCompanion](https://github.com/olimorris/codecompanion.nvim)** embed local Ollama models directly into VS Code, JetBrains IDEs, and Neovim, providing inline autocompletion and interactive chat without transmitting code to cloud APIs.
 
 #### Comparative Taxonomy of Coding Agent Architectures
@@ -3633,7 +3652,7 @@ The Claude API has no Research endpoint. What it exposes is the [web search tool
 
 #### Gemini Deep Research
 
-[Deep Research in the Gemini app](https://support.google.com/gemini/answer/15719111) ([Google 2026d](#ref-gemini_deep_research_help)) searches Google by default, and you can add Gmail, Drive, uploaded files, and NotebookLM notebooks as sources. A report “usually takes about 5-10 minutes to generate”, longer for complex topics. The report can be exported to Google Docs or turned into an Audio Overview. All users can run reports; Google AI Pro and Ultra subscribers can generate them with the Pro model, and Ultra reports may include charts, diagrams, and interactive simulators.
+[Deep Research in the Gemini app](https://support.google.com/gemini/answer/15719111) ([Google 2026e](#ref-gemini_deep_research_help)) searches Google by default, and you can add Gmail, Drive, uploaded files, and NotebookLM notebooks as sources. A report “usually takes about 5-10 minutes to generate”, longer for complex topics. The report can be exported to Google Docs or turned into an Audio Overview. All users can run reports; Google AI Pro and Ultra subscribers can generate them with the Pro model, and Ultra reports may include charts, diagrams, and interactive simulators.
 
 Limits are compute-based rather than a per-report count ([Google 2026b](#ref-gemini_apps_limits)): the allowance refreshes every 5 hours up to a weekly cap, with AI Plus at 2x the free allowance, AI Pro at 4x, and AI Ultra at 5x or 20x the Pro allowance depending on the subscription. Deep Research is listed as available on every tier, but the same page notes that for accounts without a paid plan compute-heavy features like Deep Research “may be unavailable during periods of high demand”.
 
@@ -4359,13 +4378,13 @@ A central capability of the framework is decoupling agent roles from a single mo
 
 # 59 The OpenCode Ecosystem
 
-[OpenCode](https://opencode.ai) ([anomalyco 2026](#ref-opencode_repo)) is the open-source coding agent harness (MIT-licensed, about 206,000 GitHub stars, measured 2026-09-09) that the earlier OpenCode sections of this chapter build on: running it against local models ([Section 23](#sec-ai-opencode-ollama)), against OpenRouter ([Section 24](#sec-ai-opencode-openrouter)), and under the Oh My OpenCode multi-agent framework ([Section 58](#sec-ai-oh-my-opencode)). Around the harness itself sits a community ecosystem of plugins, clients, and agent bundles, which the OpenCode maintainers index on a single documentation page ([OpenCode 2026a](#ref-opencode_ecosystem)). This section maps that page (as of 2026-09-09) and calls out the entries most relevant to us. Where the site already covers a project, this section points there instead of repeating it.
+[OpenCode](https://opencode.ai) ([anomalyco 2026](#ref-opencode_repo)) is the open-source coding agent harness (MIT-licensed, about 206,000 GitHub stars, measured 2026-09-09) that the earlier OpenCode sections of this chapter build on: running it against local models ([Section 23](#sec-ai-opencode-ollama)), against OpenRouter ([Section 24](#sec-ai-opencode-openrouter)), and under the Oh My OpenCode multi-agent framework ([Section 58](#sec-ai-oh-my-opencode)). Around the harness itself sits a community ecosystem of plugins, clients, and agent bundles, which the OpenCode maintainers index on a single documentation page ([OpenCode 2026b](#ref-opencode_ecosystem)). This section maps that page (as of 2026-09-09) and calls out the entries most relevant to us. Where the site already covers a project, this section points there instead of repeating it.
 
 #### How the ecosystem is organized
 
-The ecosystem page groups its entries into three lists ([OpenCode 2026a](#ref-opencode_ecosystem)):
+The ecosystem page groups its entries into three lists ([OpenCode 2026b](#ref-opencode_ecosystem)):
 
-- **Plugins** (38 entries): JavaScript or TypeScript modules that OpenCode loads at startup and that hook into its lifecycle events (tool execution, file edits, session compaction, permissions, notifications, and so on). A plugin is named in the `plugin` key of `opencode.json` as an npm package, or dropped as a file into `.opencode/plugins/` (project) or `~/.config/opencode/plugins/` (global); npm packages are fetched automatically with Bun ([OpenCode 2026c](#ref-opencode_plugins)).
+- **Plugins** (38 entries): JavaScript or TypeScript modules that OpenCode loads at startup and that hook into its lifecycle events (tool execution, file edits, session compaction, permissions, notifications, and so on). A plugin is named in the `plugin` key of `opencode.json` as an npm package, or dropped as a file into `.opencode/plugins/` (project) or `~/.config/opencode/plugins/` (global); npm packages are fetched automatically with Bun ([OpenCode 2026d](#ref-opencode_plugins)).
 - **Projects** (11 entries): clients and integrations built on the OpenCode server API or SDK — editor front ends, web and desktop apps, a Discord bot, an Obsidian plugin, and an extension manager.
 - **Agents** (2 entries): bundles of agent definitions, prompts, and commands that reshape how OpenCode plans and executes work.
 
@@ -4439,8 +4458,8 @@ Four plugins do desktop notifications (`opencode-notifier`, 810 stars, is the mo
 
 The ecosystem page does not describe them, but two first-party paid services sit alongside the community projects:
 
-- **OpenCode Zen** ([OpenCode 2026d](#ref-opencode_zen)) is the maintainers’ own model gateway: a curated set of models tested against coding-agent workloads, billed pay-as-you-go per million tokens from a prepaid balance (with optional auto-reload, by default \$20 whenever the balance drops below \$5). As of 2026-09-09 it lists six free models under limited-time trials, including `Big Pickle`, `MiMo-V2.5 Free`, and `Nemotron 3 Ultra Free`, beside paid Claude, GPT, Gemini, Grok, Qwen, DeepSeek, Kimi, and GLM models.
-- **OpenCode Go** ([OpenCode 2026b](#ref-opencode_go)) is a \$10-per-month subscription to 30-plus open-weight coding models (Qwen, DeepSeek, Kimi, GLM, MiMo, Grok, and others) with usage caps expressed in dollar value: \$12 per five hours, \$30 per week, \$60 per month. When a cap is hit, an optional “Use balance” setting falls back to Zen credits. Only one member per workspace can hold the subscription.
+- **OpenCode Zen** ([OpenCode 2026e](#ref-opencode_zen)) is the maintainers’ own model gateway: a curated set of models tested against coding-agent workloads, billed pay-as-you-go per million tokens from a prepaid balance (with optional auto-reload, by default \$20 whenever the balance drops below \$5). As of 2026-09-09 it lists six free models under limited-time trials, including `Big Pickle`, `MiMo-V2.5 Free`, and `Nemotron 3 Ultra Free`, beside paid Claude, GPT, Gemini, Grok, Qwen, DeepSeek, Kimi, and GLM models.
+- **OpenCode Go** ([OpenCode 2026c](#ref-opencode_go)) is a \$10-per-month subscription to 30-plus open-weight coding models (Qwen, DeepSeek, Kimi, GLM, MiMo, Grok, and others) with usage caps expressed in dollar value: \$12 per five hours, \$30 per week, \$60 per month. When a cap is hit, an optional “Use balance” setting falls back to Zen credits. Only one member per workspace can hold the subscription.
 
 *Useful to us?* Yes; OpenCode Go is already one of the lab’s delegation budgets, and the Zen free tier is a zero-cost way to try a new open-weight model before routing work to it (compare the OpenRouter `:free` models in [Section 24](#sec-ai-opencode-openrouter)).
 
@@ -4558,6 +4577,8 @@ When selecting a collaborative workspace agent for academic and computational re
 
 Ali, Numman. 2026. *Opencode-Openai-Codex-Auth: Use Your ChatGPT Plus/Pro Subscription with OpenCode*. GitHub repository. <https://github.com/numman-ali/opencode-openai-codex-auth>.
 
+Amazon Web Services. 2026. *Kiro Documentation*. Documentation. <https://kiro.dev/docs/>.
+
 anomalyco. 2026. *OpenCode: The Open Source Coding Agent*. GitHub repository. <https://github.com/anomalyco/opencode>.
 
 Anthropic. 2026a. *Anthropics/Anthropic-Sdk-Python*. Software. <https://github.com/anthropics/anthropic-sdk-python>.
@@ -4616,9 +4637,15 @@ Belcak, Peter, Greg Heinrich, Shizhe Diao, et al. 2025. *Small Language Models A
 
 Card, Orson Scott. 1985. *Ender’s Game*. Novel; Tor Books. <https://en.wikipedia.org/wiki/Ender%27s_Game>.
 
+Cline. 2026. *Cline: AI Coding, Open Source and Open Choice*. Product page. <https://cline.bot/>.
+
 code-yeongyu. 2025. *My-Claude-Code-Harness*. Software. <https://github.com/code-yeongyu/my-claude-code-harness>.
 
+Cognition. 2026. *Introducing Devin*. Documentation. <https://docs.devin.ai/get-started/devin-intro>.
+
 Coto, Cedrick. 2026. *Aeris: Deterministic Cognitive Simulation Engine with Emergent Narrative*. Software. <https://github.com/Cedrick-Coto/Aeris>.
+
+Cursor. 2026. *Cloud Agents*. Documentation. <https://cursor.com/docs/cloud-agent>.
 
 Daytona. 2026. *Daytona Integrations: OpenCode Plugin*. GitHub repository. <https://github.com/daytona/integrations/tree/main/packages/opencode-plugin>.
 
@@ -4638,7 +4665,9 @@ Google. 2026b. *Gemini Apps Limits and Upgrades for Google AI Subscribers*. Gemi
 
 Google. 2026c. *Gemini Deep Research Agent*. Gemini API documentation. <https://ai.google.dev/gemini-api/docs/deep-research>.
 
-Google. 2026d. *Use Deep Research in Gemini Apps*. Gemini Apps Help. <https://support.google.com/gemini/answer/15719111>.
+Google. 2026d. *Getting Started with Jules*. Documentation. <https://jules.google.com/docs/>.
+
+Google. 2026e. *Use Deep Research in Gemini Apps*. Gemini Apps Help. <https://support.google.com/gemini/answer/15719111>.
 
 Heo, Yeachan. 2026. *Oh-My-Claudecode: Multi-Agent Orchestration for Claude Code*. Software. <https://github.com/yeachan-heo/oh-my-claudecode>.
 
@@ -4682,6 +4711,8 @@ NanoNets and Trail contributors. 2026. *Graft: Open-Source Context Layer for Cod
 
 Neural Nomads AI. 2026. *CodeNomad: The AI Coding Cockpit for OpenCode*. GitHub repository. <https://github.com/NeuralNomadsAI/CodeNomad>.
 
+Ollama. 2026. *Ollama*. Product page. <https://ollama.com/>.
+
 OpenAI. 2026a. *Codex Plugin for Claude Code*. Software. <https://github.com/openai/codex-plugin-cc>.
 
 OpenAI. 2026b. *Codex Pricing*. Documentation. <https://developers.openai.com/codex/pricing>.
@@ -4694,17 +4725,21 @@ OpenAI. 2026e. *Get Started with ChatGPT Work*. Documentation. <https://learn.ch
 
 OpenChamber. 2026. *OpenChamber: Agentic Development Environment for OpenCode*. GitHub repository. <https://github.com/openchamber/openchamber>.
 
-OpenCode. 2026a. *OpenCode Documentation: Ecosystem*. Documentation. <https://opencode.ai/docs/ecosystem/>.
+OpenCode. 2026a. *Intro: AI Coding Agent Built for the Terminal*. Documentation. <https://opencode.ai/docs/>.
 
-OpenCode. 2026b. *OpenCode Documentation: Go*. Documentation. <https://opencode.ai/docs/go/>.
+OpenCode. 2026b. *OpenCode Documentation: Ecosystem*. Documentation. <https://opencode.ai/docs/ecosystem/>.
 
-OpenCode. 2026c. *OpenCode Documentation: Plugins*. Documentation. <https://opencode.ai/docs/plugins/>.
+OpenCode. 2026c. *OpenCode Documentation: Go*. Documentation. <https://opencode.ai/docs/go/>.
 
-OpenCode. 2026d. *OpenCode Documentation: Zen*. Documentation. <https://opencode.ai/docs/zen/>.
+OpenCode. 2026d. *OpenCode Documentation: Plugins*. Documentation. <https://opencode.ai/docs/plugins/>.
+
+OpenCode. 2026e. *OpenCode Documentation: Zen*. Documentation. <https://opencode.ai/docs/zen/>.
 
 Opencode-DCP. 2026. *Opencode-Dynamic-Context-Pruning: Optimize Token Usage by Pruning Obsolete Tool Outputs*. GitHub repository. <https://github.com/Opencode-DCP/opencode-dynamic-context-pruning>.
 
 open-gsd. 2026. *GSD Core: Git. Ship. Done.* Software. <https://github.com/open-gsd/gsd-core>.
+
+OpenHands. 2026. *OpenHands Documentation: Introduction*. Documentation. <https://docs.openhands.dev/>.
 
 Perplexity. 2026a. *Sonar Deep Research*. Perplexity API documentation. <https://docs.perplexity.ai/docs/sonar/models/sonar-deep-research>.
 
@@ -4761,6 +4796,8 @@ Vincent, Jesse. 2026a. *Superpowers*. Software. <https://github.com/obra/superpo
 Vincent, Jesse. 2026b. *Superpowers: An Agentic Skills Framework and Software Development Methodology*. Software. <https://github.com/obra/superpowers>.
 
 *WarGames*. 1983. Film. <https://en.wikipedia.org/wiki/WarGames>.
+
+Warp. 2026. *Getting Started with Warp*. Documentation. <https://docs.warp.dev/>.
 
 Back to top
 
