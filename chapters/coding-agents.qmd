@@ -29,45 +29,9 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/catalog-coding-agents.qmd >}}
 
-# What are AI harnesses? {#sec-ai-harnesses}
-
-{{< include ai-tools/what-are-ai-harnesses.qmd >}}
-
-# Inside the Claude Code Harness {#sec-ai-claude-code-harness}
-
-{{< include ai-tools/claude-code-harness.qmd >}}
-
-# How Agents Are Structured and Implemented {#sec-ai-agent-implementation}
-
-{{< include ai-tools/how-agents-are-implemented.qmd >}}
-
-# How Harnesses and Agents Are Built {#sec-ai-harness-construction}
-
-{{< include ai-tools/how-harnesses-and-agents-are-built.qmd >}}
-
-# What Kind of Program Is an Agent? {#sec-ai-agent-program-kind}
-
-{{< include ai-tools/what-kind-of-program-is-an-agent.qmd >}}
-
-# How Does a Harness Relate to an Agent? {#sec-ai-harness-agent-relationship}
-
-{{< include ai-tools/harness-agent-relationship.qmd >}}
-
-# The Harness Landscape in 2026 {#sec-ai-harness-landscape}
-
-{{< include ai-tools/ai-harness-landscape.qmd >}}
-
-# Custom Harnesses and How to Build Our Own {#sec-ai-custom-harnesses}
-
-{{< include ai-tools/custom-harnesses.qmd >}}
-
 # Where Current Practice Is Discussed: Reddit Communities {#sec-ai-guidance-sources}
 
 {{< include ai-tools/ai-guidance-sources.qmd >}}
-
-# Thinking Machines Lab's Inkling Models {#sec-ai-thinking-machines-inkling}
-
-{{< include ai-tools/thinking-machines-inkling.qmd >}}
 
 # AI Agents and the Technological Singularity
 
@@ -81,6 +45,14 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/claude-usage-limit-fixes.qmd >}}
 
+# When to use a coding agent {#sec-ai-when-to-use}
+
+{{< include ai-tools/when-to-use-coding-agent.qmd >}}
+
+# Deep Research Modes {#sec-ai-research-modes}
+
+{{< include ai-tools/research-modes.qmd >}}
+
 # How to Work with Coding Agents
 
 {{< include ai-tools/how-to-work-with-agents.qmd >}}
@@ -88,6 +60,14 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 # Useful Prompt Formats
 
 {{< include ../shared/prompt-formats.md >}}
+
+# Editing with `.docx` files
+
+{{< include ai-tools/editing-with-docx-files.qmd >}}
+
+# Copilot Instructions for this Repository
+
+{{< include ai-tools/copilot-instructions-explanation.qmd >}}
 
 # Addressing Failing GitHub Actions Workflows {#sec-ai-addressing-failing-workflows}
 
@@ -108,198 +88,6 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 # Firewall and Network Configuration {#sec-ai-firewall}
 
 {{< include ai-tools/agents-firewall-config.qmd >}}
-
-# Running Coding Agents Offline {#sec-ai-offline}
-
-{{< include ai-tools/running-agents-offline.qmd >}}
-
-# Assessing Aeris and Graft {#sec-ai-aeris-and-graft}
-
-{{< include ai-tools/aeris-and-graft.qmd >}}
-
-# Connecting OpenCode to Local Models {#sec-ai-opencode-ollama}
-
-{{< include ai-tools/opencode-ollama.qmd >}}
-
-# Connecting OpenCode to OpenRouter {#sec-ai-opencode-openrouter}
-
-{{< include ai-tools/opencode-openrouter.qmd >}}
-
-# Running Claude Code with Non-Anthropic Models {#sec-ai-claude-code-other-models}
-
-{{< include ai-tools/claude-code-other-models.qmd >}}
-
-# Small, Local Models for Autonomous Agentic Coding {#sec-ai-small-local-models}
-
-{{< include ai-tools/small-local-models-agentic.qmd >}}
-
-# VoltAgent: TypeScript Agent Framework {#sec-ai-voltagent}
-
-{{< include ai-tools/voltagent.qmd >}}
-
-# Configuring GitHub Copilot Settings {#sec-ai-copilot-settings}
-
-{{< include ai-tools/copilot-settings.qmd >}}
-
-# Connecting VS Code to a Custom Model Endpoint (BYOK) {#sec-ai-byok-vscode}
-
-{{< include ai-tools/byok-vscode-databricks.qmd >}}
-
-# Configuring the Agent Environment
-
-{{< include ai-tools/copilot-setup-steps-config.qmd >}}
-
-# Agent Skills {#sec-ai-agent-skills}
-
-{{< include ai-tools/agent-skills.qmd >}}
-
-# Tessl: Skills Registry and CLI {#sec-ai-tessl}
-
-{{< include ai-tools/tessl.qmd >}}
-
-# The Posit Skill Collection {#sec-ai-posit-skills}
-
-{{< include ai-tools/posit-skills.qmd >}}
-
-# Posit AI Tooling on GitHub {#sec-ai-posit-dev-ai-repos}
-
-{{< include ai-tools/posit-dev-ai-repos.qmd >}}
-
-# Useful plugins {#sec-ai-useful-plugins}
-
-{{< include ai-tools/useful-plugins.qmd >}}
-
-# The plugin catalog {#sec-ai-plugin-catalog}
-
-{{< include ai-tools/plugin-catalog.qmd >}}
-
-# Customizing an Agent {#sec-ai-customization}
-
-{{< include ai-tools/customizing-agents.qmd >}}
-
-# How the Config Reaches a Machine {#sec-ai-config-install}
-
-{{< include ai-tools/claude-code-config-install.qmd >}}
-
-# Anthropic's Public Repositories {#sec-ai-anthropic-repos}
-
-{{< include ai-tools/anthropic-repos.qmd >}}
-
-# Claude Code Cloud Environments {#sec-ai-claude-cloud-env}
-
-{{< include ai-tools/claude-code-cloud-environments.qmd >}}
-
-# Using a ChatGPT Account for Codex Pull-Request Reviews {#sec-ai-codex-github-review}
-
-{{< include ai-tools/codex-github-code-review.qmd >}}
-
-# Where Pull-Request Review Lives in Claude Code Action {#sec-ai-claude-code-action-review}
-
-{{< include ai-tools/claude-code-action-review.qmd >}}
-
-# Gemini Review Action for GitHub Pull Requests {#sec-ai-gemini-review-action}
-
-{{< include ai-tools/gemini-review-action.qmd >}}
-
-# Auto-Review in Google Antigravity {#sec-ai-antigravity-auto-review}
-
-{{< include ai-tools/antigravity-auto-review.qmd >}}
-
-# Gemini Code Assist for Repository Code Review {#sec-ai-gemini-code-assist-review}
-
-{{< include ai-tools/gemini-code-assist-review.qmd >}}
-
-# PR-Agent: Open-Source Pull-Request Review Bot {#sec-ai-pr-agent}
-
-{{< include ai-tools/pr-agent.qmd >}}
-
-# How a Session Learns a PR Changed {#sec-ai-pr-activity-notifications}
-
-{{< include ai-tools/pr-activity-notifications.qmd >}}
-
-# When to use a coding agent {#sec-ai-when-to-use}
-
-{{< include ai-tools/when-to-use-coding-agent.qmd >}}
-
-# Deep Research Modes {#sec-ai-research-modes}
-
-{{< include ai-tools/research-modes.qmd >}}
-
-# Editing with `.docx` files
-
-{{< include ai-tools/editing-with-docx-files.qmd >}}
-
-# Hosted AI Agent Offices: Vestra and Similar {#sec-ai-agent-offices}
-
-{{< include ai-tools/ai-agent-offices.qmd >}}
-
-# Copilot Instructions for this Repository
-
-{{< include ai-tools/copilot-instructions-explanation.qmd >}}
-
-# Using Copilot Review Before Human Review
-
-{{< include ../shared/copilot-review-before-human.md >}}
-
-# Reviewing a Copilot PR You Didn't Create
-
-{{< include ai-tools/reviewing-copilot-prs.qmd >}}
-
-# Agent Sessions and Handoff in Visual Studio Code {#sec-ai-vscode-agent-sessions}
-
-{{< include ai-tools/vscode-agent-sessions.qmd >}}
-
-# Herdr: A Terminal Multiplexer for Coding Agents {#sec-ai-herdr}
-
-{{< include ai-tools/herdr.qmd >}}
-
-# Installing Claude Code on Windows {#sec-ai-claude-code-windows}
-
-{{< include ai-tools/installing-claude-code-windows.qmd >}}
-
-# Setting up MCP servers {#sec-ai-mcp-server-setup}
-
-{{< include ai-tools/mcp-server-setup.qmd >}}
-
-# Google Antigravity Python SDK {#sec-ai-antigravity-python-sdk}
-
-{{< include ai-tools/antigravity-python-sdk.qmd >}}
-
-# Unbounded Context with Magic Context {#sec-ai-magic-context}
-
-{{< include ai-tools/magic-context.qmd >}}
-
-# Spec-Driven Development with Conductor {#sec-ai-conductor-extension}
-
-{{< include ai-tools/conductor-extension.qmd >}}
-
-# Anatomy of Agent Plugins {#sec-ai-plugins-deep-dive}
-
-{{< include ai-tools/plugins-deep-dive.qmd >}}
-
-# Running Codex Inside Claude Code: the codex-plugin-cc Plugin {#sec-ai-codex-plugin-cc}
-
-{{< include ai-tools/codex-plugin-cc.qmd >}}
-
-# Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent {#sec-ai-oh-my-opencode}
-
-{{< include ai-tools/oh-my-opencode.qmd >}}
-
-# The OpenCode Ecosystem {#sec-ai-opencode-ecosystem}
-
-{{< include ai-tools/opencode-ecosystem.qmd >}}
-
-# Managing Gemini API Spend and Cost Optimization {#sec-ai-gemini-spend-management}
-
-{{< include ai-tools/gemini-spend-management.qmd >}}
-
-# Collaborative AI Workspaces: Claude Cowork and Gemini Spark {#sec-ai-collaborative-workspaces}
-
-{{< include ai-tools/collaborative-workspaces.qmd >}}
-
-# AI-Enabled Knowledge Workspaces: Notion and Alternatives {#sec-ai-knowledge-workspaces}
-
-{{< include ai-tools/ai-knowledge-workspaces.qmd >}}
 
 # References {.unnumbered}
 

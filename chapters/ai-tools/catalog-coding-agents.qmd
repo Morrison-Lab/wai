@@ -28,10 +28,10 @@ Key capabilities include:
 For air-gapped environments, strict data privacy requirements, or zero-marginal-cost
 development, developers pair local model runners like **[Ollama](https://ollama.com/)**
 with dedicated agent harnesses (detailed setup and hardware sizing are covered in
-@sec-ai-offline):
+[running agents offline](local-models.qmd#sec-ai-offline)):
 
 - **Terminal Orchestrators**:
-  Harnesses like **[OpenCode](https://opencode.ai)** (see @sec-ai-opencode-ollama),
+  Harnesses like **[OpenCode](https://opencode.ai)** (see [connecting OpenCode to local models](local-models.qmd#sec-ai-opencode-ollama)),
   **[Aider](https://aider.chat/)**, and **[OpenHands](https://github.com/All-Hands-AI/OpenHands)**
   (formerly OpenDevin) connect directly to Ollama endpoints running open-weight
   coding models (such as `Qwen2.5-Coder`, `DeepSeek-Coder-V2`, or `Llama 3.3`),
@@ -64,7 +64,7 @@ When deciding between cloud frontier agents and local open-weight deployments:
 2. **Confidentiality and Compliance**:
    For proprietary codebases with strict regulatory constraints (HIPAA, defense,
    or sensitive enterprise IP), local agents powered by Ollama and Hermes Agent
-   ensure that source code never leaves on-premises hardware (see @sec-ai-offline).
+   ensure that source code never leaves on-premises hardware (see [running agents offline](local-models.qmd#sec-ai-offline)).
 3. **Cost Predictability**:
    Local open-weight harnesses incur fixed hardware capital expense but zero marginal token costs,
    making them attractive for high-volume automated test-and-repair loops.

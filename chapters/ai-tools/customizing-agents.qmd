@@ -7,7 +7,7 @@ This section maps the whole surface.
 The mechanisms differ less in what you can write in them ---
 most are Markdown with a
 [YAML front matter](https://jekyllrb.com/docs/front-matter/) header,
-as @sec-ai-harness-construction describes ---
+as [harness construction](agent-architecture.qmd#sec-ai-harness-construction) describes ---
 than in **when they fire and who decides**.
 
 #### The Question That Picks the Mechanism
@@ -40,7 +40,7 @@ A rule you cannot afford to have ignored does not belong in a `CLAUDE.md`.
 `CLAUDE.md` and [`AGENTS.md`](https://agents.md/) are prose the harness loads at the
 start of a session,
 with no front matter and no schema
-(@sec-ai-harness-construction).
+([harness construction](agent-architecture.qmd#sec-ai-harness-construction)).
 
 Three properties matter when you write one:
 
@@ -144,7 +144,7 @@ a competitor's directory name.
 
 #### Subagents: Delegating to a Fresh Context
 
-@sec-ai-agent-implementation and @sec-ai-harness-agent-relationship cover
+[Agent implementation](agent-architecture.qmd#sec-ai-agent-implementation) and [harness relationship](agent-architecture.qmd#sec-ai-harness-agent-relationship) cover
 what a subagent *is* and how the harness runs one.
 The authoring question is narrower:
 a subagent is a single Markdown file with front matter
@@ -248,10 +248,10 @@ and always a candidate answer to "how do I let the agent query our issue tracker
 
 | Mechanism | Portable? | Evidence |
 |---|---|---|
-| Agent Skills (`SKILL.md`) | yes, in format | open standard with a published specification, adopted across Claude Code, Codex, Copilot, Cursor, and Google Antigravity (and legacy Gemini CLI; see @sec-ai-harness-landscape on Gemini CLI's sunset and folding into Antigravity CLI) |
-| `AGENTS.md` | yes, as an open specification | standardizes filename, location, and precedence across Codex, Google Antigravity (and legacy Gemini CLI; see @sec-ai-harness-landscape), Cursor, Aider, and Copilot (Claude Code reads `CLAUDE.md` by default, or imports `@AGENTS.md`) |
+| Agent Skills (`SKILL.md`) | yes, in format | open standard with a published specification, adopted across Claude Code, Codex, Copilot, Cursor, and Google Antigravity (and legacy Gemini CLI; see [the harness landscape](agent-architecture.qmd#sec-ai-harness-landscape) on Gemini CLI's sunset and folding into Antigravity CLI) |
+| `AGENTS.md` | yes, as an open specification | standardizes filename, location, and precedence across Codex, Google Antigravity (and legacy Gemini CLI; see [the harness landscape](agent-architecture.qmd#sec-ai-harness-landscape)), Cursor, Aider, and Copilot (Claude Code reads `CLAUDE.md` by default, or imports `@AGENTS.md`) |
 | MCP servers | yes | open protocol with multiple independent clients |
-| `CLAUDE.md` / `GEMINI.md` | by courtesy | vendor instruction files read by default in their respective environments (Claude Code and Google Antigravity; see @sec-ai-harness-landscape on the legacy Gemini CLI product folding into Antigravity CLI), and supported by courtesy in GitHub Copilot |
+| `CLAUDE.md` / `GEMINI.md` | by courtesy | vendor instruction files read by default in their respective environments (Claude Code and Google Antigravity; see [the harness landscape](agent-architecture.qmd#sec-ai-harness-landscape) on the legacy Gemini CLI product folding into Antigravity CLI), and supported by courtesy in GitHub Copilot |
 | Cursor Rules (`.cursor/rules/*.mdc`) | no | Markdown Cursor (`.mdc`) files with `alwaysApply` and `globs` frontmatter, scoped to Cursor |
 | `.github/copilot-instructions.md` | no | GitHub Copilot only |
 | `.github/instructions/*.instructions.md` | no | GitHub Copilot only, and not on every Copilot surface |

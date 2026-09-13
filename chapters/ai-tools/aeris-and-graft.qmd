@@ -121,7 +121,7 @@ Three things make it a good fit for a trial:
 - It wires into the agents the lab already uses
   (Claude Code, Codex, OpenCode, Gemini CLI, and Copilot)
   through their existing instruction files and an MCP server,
-  the mechanism @sec-ai-mcp-server-setup covers,
+  the mechanism [MCP server setup](agent-customization.qmd#sec-ai-mcp-server-setup) covers,
   so a trial adds no new harness.
 
 Check two things before adopting it lab-wide.
@@ -134,7 +134,7 @@ and the `init` step for Codex writes to user-level config outside the repository
 so start with the structural layer only and the Claude Code wiring only.
 The `graft init --dry-run` flag lists every file it would touch,
 which is the right first command.
-Graft is complementary to the memory tooling in @sec-ai-magic-context:
+Graft is complementary to the memory tooling in [Magic Context](agent-customization.qmd#sec-ai-magic-context):
 that section covers remembering what happened across sessions,
 whereas Graft covers what the code is,
 and the two do not overlap.

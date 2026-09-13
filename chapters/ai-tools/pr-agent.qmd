@@ -105,7 +105,7 @@ face challenges with these complex tasks"
 and recommends them for "experimentation and learning purposes (mainly for the ask command)" [@pr_agent_models].
 That note predates the current generation of open-weight coding models,
 so treat it as a prompt to test rather than as a verdict;
-@sec-ai-small-local-models covers what we have found local models can and cannot do.
+[small local models](local-models.qmd#sec-ai-small-local-models) covers what we have found local models can and cannot do.
 
 #### Deployment
 
@@ -175,7 +175,7 @@ What PR-Agent offers that none of the others do:
   whichever provider currently has spare quota,
   or at an Ollama model for a zero-cost pass on a private repository.
   For the lab's quota juggling
-  (@sec-ai-gemini-spend-management and @sec-ai-claude-code-other-models),
+  ([spend management](agent-customization.qmd#sec-ai-gemini-spend-management) and [other models](local-models.qmd#sec-ai-claude-code-other-models)),
   a reviewer whose model is a one-line config change is attractive.
 - **Structured output.**
   `/review` reports effort, risk, and a merge recommendation in a fixed format,

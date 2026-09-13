@@ -63,7 +63,7 @@ and adds:
 - a HUD status line, cost tracking, Discord/Telegram/Slack notifications,
   and a `tmux`-based mode that drives other vendors' CLIs as workers.
 
-It is the same family as the Oh My OpenCode project in @sec-ai-oh-my-opencode
+It is the same family as the Oh My OpenCode project in [Oh My OpenCode](agent-orchestration.qmd#sec-ai-oh-my-opencode)
 (the npm package is still named `oh-my-claude-sisyphus`),
 and by star count the most-used custom harness in this survey after Superpowers.
 
@@ -96,7 +96,7 @@ plus an npm CLI.
 **Useful to us?**
 The design principle is exactly the lab's own
 "deterministic tools over model judgment" rule
-(@sec-ai-customization):
+([customizing an agent](agent-customization.qmd#sec-ai-customization)):
 a CLI that rejects malformed plans before an LLM sees them
 is the kind of instrument our hooks already are for pushes and merges.
 The requirements interview is heavier than most of our tasks need,
@@ -152,7 +152,7 @@ which asks which of nine runtimes to target.
 
 **Useful to us?**
 The fresh-context-executor pattern is the same one
-@sec-orch-when recommends,
+[when orchestration helps](agent-orchestration.qmd#sec-orch-when) recommends,
 and `ai-config`'s `compress-session` and `handoff` skills
 play the role of `STATE.md`.
 GSD's contribution is having made the loop the default rather than an option.
@@ -181,7 +181,7 @@ Because it reads Claude Code skills and plugins,
 `ai-config` would largely carry over,
 so it is the cheapest way to run our configuration
 on a model or endpoint Claude Code cannot use
-(@sec-ai-claude-code-other-models covers the subscription restrictions that motivate this).
+([other models](local-models.qmd#sec-ai-claude-code-other-models) covers the subscription restrictions that motivate this).
 It is not a reason to leave Claude Code while Claude Code does what we need.
 
 #### The LangChain guide
@@ -224,7 +224,7 @@ shows the shape such personal setups take:
 plan-reviewer, executor, and librarian agents;
 hooks that inject language guidelines and run a linter;
 and `/planner`, `/execute`, `/commit`, and `/create-pr` commands.
-@sec-ai-guidance-sources lists the communities where these setups are discussed.
+[guidance sources](coding-agents.qmd#sec-ai-guidance-sources) lists the communities where these setups are discussed.
 
 #### What the projects have in common
 
@@ -249,7 +249,6 @@ nothing else in the surveyed runtimes is missing from the layer kind.
 `Morrison-Lab/ai-config` is already a custom harness of the layer kind,
 and a large one.
 On 2026-09-09 a local checkout held:
-
 - 191 skills;
 - 94 hook scripts,
   and a `hooks/hooks.json` with 55 registrations
@@ -257,7 +256,7 @@ On 2026-09-09 a local checkout held:
 - 8 subagent definitions (including the `adversarial-reviewer` that gates every push);
 - 131 shared prose fragments and 59 memory files;
 - a plugin manifest, so Claude Code and Cursor load it as a plugin
-  (@sec-ai-config-install explains how, and @sec-ai-customization what the corpus contains).
+  ([how config reaches a machine](agent-customization.qmd#sec-ai-config-install) explains how, and [customizing an agent](agent-customization.qmd#sec-ai-customization) what the corpus contains).
 
 It already implements all five common moves:
 the bootstrap is `CLAUDE.md` and `AGENTS.md`,

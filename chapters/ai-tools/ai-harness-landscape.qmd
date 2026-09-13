@@ -1,5 +1,5 @@
 @sec-ai-harnesses explains what a harness is,
-and @sec-ai-coding-agent-platforms lists common platforms as a starting point.
+and [coding-agent platforms](coding-agents.qmd#sec-ai-coding-agent-platforms) lists common platforms as a starting point.
 This section is the wider map:
 which harnesses exist as of August 2026,
 how they group,
@@ -132,7 +132,7 @@ The 2026 signature of open-source use is bring-your-own-key,
 with two friction points worth knowing.
 Anthropic restricted third-party harnesses' use of flat-rate Claude subscriptions in April 2026,
 which pushed some of those users onto extra-usage or per-token billing
-(@sec-ai-claude-code-other-models covers the same rule from the Claude Code side),
+([other models](local-models.qmd#sec-ai-claude-code-other-models) covers the same rule from the Claude Code side),
 and OpenCode lost Claude Pro and Max login access after a dispute with Anthropic.
 
 #### Local-model coding
@@ -140,7 +140,7 @@ and OpenCode lost Claude Pro and Max login access after a dispute with Anthropic
 Local coding has matured to the point where the strongest open-weight models compete on the standard benchmarks.
 The community favorites for consumer hardware are the Qwen, Devstral, Gemma, and DeepSeek families,
 and the typical stack pairs OpenCode or Aider with a local OpenAI-compatible endpoint.
-@sec-ai-offline and @sec-ai-small-local-models cover the mechanics and the model choice.
+[Running coding agents offline](local-models.qmd#sec-ai-offline) and [small local models](local-models.qmd#sec-ai-small-local-models) cover the mechanics and the model choice.
 
 #### Beyond coding: general agent frameworks
 

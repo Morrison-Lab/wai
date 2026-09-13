@@ -17,12 +17,12 @@ The following catalog is a starting point rather than an endorsement:
 | [Cursor](https://www.cursor.com/) [@cursor_cloud_agents] | IDE and cloud agents | Edit interactively with path-scoped `.cursor/rules` context, or hand a task to a cloud agent that pushes a branch |
 | [Aider](https://aider.chat/) | Command line | Pair locally with explicit files and Git commits |
 | [GitKraken Kepler](https://gitkraken.com/kepler) | Agentic development environment (desktop) | Start a Task from an issue, PR, or idea; run multiple agents in parallel isolated worktrees via reusable Actions; review per-branch diffs and open PRs |
-| [OpenCode](https://opencode.ai) [@opencode_docs] | Terminal, desktop app, and IDE extension | Bring your own model provider (including local endpoints; see @sec-ai-opencode-ollama) and edit the local checkout |
+| [OpenCode](https://opencode.ai) [@opencode_docs] | Terminal, desktop app, and IDE extension | Bring your own model provider (including local endpoints; see [connecting OpenCode to local models](local-models.qmd#sec-ai-opencode-ollama)) and edit the local checkout |
 | [Cline](https://cline.bot/) [@cline_site] | VS Code extension, CLI, and SDK | Plan, then act with per-step approval; bring your own key, including Ollama |
 | [Kiro](https://kiro.dev/) [@kiro_docs] (AWS) | IDE, CLI, web, and mobile | Spec-driven tasks locally, or delegate a web task that opens a pull request |
 | [Warp](https://docs.warp.dev/) [@warp_docs] | Terminal app, standalone CLI, and cloud agents | Approve actions locally, or trigger cloud agents from Slack, Linear, or GitHub webhooks |
 | [OpenHands](https://docs.openhands.dev/) [@openhands_docs] | Browser client, managed cloud, self-hosted backend, and CLI | Run headless or hosted; self-host when code must stay on your infrastructure |
-| [Devin](https://devin.ai/) [@devin_docs] (Cognition) | Cloud agent and desktop editor | Delegate a task to an isolated cloud machine and review the pull request (see @sec-ai-harness-landscape) |
+| [Devin](https://devin.ai/) [@devin_docs] (Cognition) | Cloud agent and desktop editor | Delegate a task to an isolated cloud machine and review the pull request (see [the harness landscape](agent-architecture.qmd#sec-ai-harness-landscape)) |
 | [Ollama](https://ollama.com/) [@ollama_site] | Local model runner (not an agent) | Serve open-weight models to any of the harnesses above (see @sec-ai-ollama-agents) |
 
 Kepler is not an agent itself but an orchestration layer.
@@ -62,7 +62,7 @@ and how its work comes back to you.
   and the agent inherits whatever credentials and network access your shell has,
   which is why @sec-ai-best-practices asks for approval gates and a sandbox.
   Pairing one of these with Ollama keeps the model local too [@ollama_site],
-  at the cost of the hardware described in @sec-ai-offline.
+  at the cost of the hardware described in [running agents offline](local-models.qmd#sec-ai-offline).
 - **Orchestration layer.**
   Kepler, Kiro Crew, and the Cline Kanban surface do not add a model of their own;
   they run several of the agents above in parallel worktrees or sessions
@@ -76,10 +76,10 @@ Claude Code, Codex, Cursor, Kiro, and Warp each offer a local surface and a host
 Check the execution model of the specific surface you enable.
 The Windsurf editor is a naming trap of the same kind:
 `windsurf.com` now redirects to Devin Desktop,
-Cognition's rebranding of that editor (measured 2026-09-09; see @sec-ai-harness-landscape).
+Cognition's rebranding of that editor (measured 2026-09-09; see [the harness landscape](agent-architecture.qmd#sec-ai-harness-landscape)).
 
 For licensing, token-cost characteristics, and a decision table for choosing among these tools,
-see @sec-ai-harness-landscape;
+see [the harness landscape](agent-architecture.qmd#sec-ai-harness-landscape);
 for the open-weight and fully local end of the spectrum,
 see @sec-ai-catalog-coding-agents.
 

@@ -1,0 +1,52 @@
+---
+title: "Local Models and Offline Agents"
+format:
+  html: default
+  revealjs:
+    output-file: local-models-slides.html
+  pdf:
+    output-file: local-models-handout.pdf
+  docx:
+    output-file: local-models.docx
+---
+
+Cloud model providers offer state-of-the-art capability,
+but privacy constraints, HIPAA data handling, air-gapped environments,
+and cost considerations often require running models locally or offline.
+This chapter covers running coding agents without outside network calls,
+connecting open harnesses to local Ollama and OpenRouter endpoints,
+steering Claude Code with non-Anthropic models,
+and evaluating small local models for autonomous coding loops.
+
+# Running Coding Agents Offline {#sec-ai-offline}
+
+{{< include ai-tools/running-agents-offline.qmd >}}
+
+# Assessing Aeris and Graft {#sec-ai-aeris-and-graft}
+
+{{< include ai-tools/aeris-and-graft.qmd >}}
+
+# Connecting OpenCode to Local Models {#sec-ai-opencode-ollama}
+
+{{< include ai-tools/opencode-ollama.qmd >}}
+
+# Connecting OpenCode to OpenRouter {#sec-ai-opencode-openrouter}
+
+{{< include ai-tools/opencode-openrouter.qmd >}}
+
+# Running Claude Code with Non-Anthropic Models {#sec-ai-claude-code-other-models}
+
+{{< include ai-tools/claude-code-other-models.qmd >}}
+
+# Small, Local Models for Autonomous Agentic Coding {#sec-ai-small-local-models}
+
+{{< include ai-tools/small-local-models-agentic.qmd >}}
+
+# Thinking Machines Lab's Inkling Models {#sec-ai-thinking-machines-inkling}
+
+{{< include ai-tools/thinking-machines-inkling.qmd >}}
+
+# References {.unnumbered}
+
+::: {#refs}
+:::

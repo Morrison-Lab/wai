@@ -110,7 +110,7 @@ with a waitlist and no published pricing (measured 2026-09-09) [@herdr].
 #### Useful to us?
 
 Herdr overlaps with two things the lab already does
-(@sec-orch-baseline):
+([our orchestration baseline](agent-orchestration.qmd#sec-orch-baseline)):
 running several Claude Code sessions in parallel,
 and isolating each one in its own git worktree.
 It does not replace either.

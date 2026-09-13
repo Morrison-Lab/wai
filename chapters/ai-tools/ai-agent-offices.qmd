@@ -179,7 +179,7 @@ Their value is in gluing SaaS business tools together
 (CRM, inbox, calendar, Slack) for people who do not write code.
 Our work lives in Git repositories, R and Python environments,
 and Quarto documents,
-where the coding agents in @sec-ai-catalog-coding-agents
+where the coding agents in [the agent catalog](coding-agents.qmd#sec-ai-catalog-coding-agents)
 and the collaborative workspace agents in @sec-ai-collaborative-workspaces
 already reach the files directly.
 

@@ -1,0 +1,67 @@
+---
+title: "Agent and Harness Architecture"
+format:
+  html: default
+  revealjs:
+    output-file: agent-architecture-slides.html
+  pdf:
+    output-file: agent-architecture-handout.pdf
+  docx:
+    output-file: agent-architecture.docx
+---
+
+Behind every coding agent is a system architecture:
+a model, an execution loop, tool definitions, and a *harness*
+that manages context, permissions, and session state.
+This chapter covers how coding agents and harnesses are structured,
+how they run under the hood,
+and how the open and commercial harness landscape looks in 2026.
+
+# What are AI harnesses? {#sec-ai-harnesses}
+
+{{< include ai-tools/what-are-ai-harnesses.qmd >}}
+
+# Inside the Claude Code Harness {#sec-ai-claude-code-harness}
+
+{{< include ai-tools/claude-code-harness.qmd >}}
+
+# How Agents Are Structured and Implemented {#sec-ai-agent-implementation}
+
+{{< include ai-tools/how-agents-are-implemented.qmd >}}
+
+# How Harnesses and Agents Are Built {#sec-ai-harness-construction}
+
+{{< include ai-tools/how-harnesses-and-agents-are-built.qmd >}}
+
+# What Kind of Program Is an Agent? {#sec-ai-agent-program-kind}
+
+{{< include ai-tools/what-kind-of-program-is-an-agent.qmd >}}
+
+# How Does a Harness Relate to an Agent? {#sec-ai-harness-agent-relationship}
+
+{{< include ai-tools/harness-agent-relationship.qmd >}}
+
+# The Harness Landscape in 2026 {#sec-ai-harness-landscape}
+
+{{< include ai-tools/ai-harness-landscape.qmd >}}
+
+# Custom Harnesses and How to Build Our Own {#sec-ai-custom-harnesses}
+
+{{< include ai-tools/custom-harnesses.qmd >}}
+
+# The OpenCode Ecosystem {#sec-ai-opencode-ecosystem}
+
+{{< include ai-tools/opencode-ecosystem.qmd >}}
+
+# VoltAgent: TypeScript Agent Framework {#sec-ai-voltagent}
+
+{{< include ai-tools/voltagent.qmd >}}
+
+# Anthropic's Public Repositories {#sec-ai-anthropic-repos}
+
+{{< include ai-tools/anthropic-repos.qmd >}}
+
+# References {.unnumbered}
+
+::: {#refs}
+:::

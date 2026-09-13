@@ -1,9 +1,9 @@
 [OpenCode](https://opencode.ai) [@opencode_repo]
 is the open-source coding agent harness (MIT-licensed, about 206,000 GitHub stars, measured 2026-09-09)
-that the earlier OpenCode sections of this chapter build on:
-running it against local models (@sec-ai-opencode-ollama),
-against OpenRouter (@sec-ai-opencode-openrouter),
-and under the Oh My OpenCode multi-agent framework (@sec-ai-oh-my-opencode).
+that the earlier OpenCode sections of this site build on:
+running it against local models ([connecting OpenCode to local models](local-models.qmd#sec-ai-opencode-ollama)),
+against OpenRouter ([connecting OpenCode to OpenRouter](local-models.qmd#sec-ai-opencode-openrouter)),
+and under the Oh My OpenCode multi-agent framework ([Oh My OpenCode](agent-orchestration.qmd#sec-ai-oh-my-opencode)).
 Around the harness itself sits a community ecosystem of plugins, clients, and agent bundles,
 which the OpenCode maintainers index on a single documentation page [@opencode_ecosystem].
 This section maps that page (as of 2026-09-09) and calls out the entries most relevant to us.
@@ -37,7 +37,7 @@ these projects are independent, and most carry an explicit
 Listing on the ecosystem page is a courtesy index, not an endorsement or a security review.
 Every plugin runs with the same permissions as OpenCode itself,
 so treat adding one the way you would treat adding any unaudited dependency
-(see @sec-ai-benefits-hazards).
+(see [benefits and hazards](coding-agents.qmd#sec-ai-benefits-hazards)).
 
 #### Notable plugins
 
@@ -117,7 +117,7 @@ The Codex and Gemini bridges are less clearly prohibited but share the fragility
 
 - [`oh-my-opencode`](https://github.com/code-yeongyu/oh-my-openagent)
   (now `oh-my-openagent`; about 68,800 stars; release `v5.0.0-beta.51` on 2026-09-09).
-  Covered in @sec-ai-oh-my-opencode.
+  Covered in [Oh My OpenCode](agent-orchestration.qmd#sec-ai-oh-my-opencode).
 - [`opencode-workspace`](https://github.com/kdcokenny/opencode-workspace) [@opencode_workspace]
   (MIT; 586 stars; no tagged release).
   A one-install bundle of 16 components:
@@ -142,7 +142,7 @@ The Codex and Gemini bridges are less clearly prohibited but share the fragility
   *Useful to us?* Possibly `octto`, which does for OpenCode what `AskUserQuestion` does in Claude Code.
 - [`opencode-conductor`](https://github.com/derekbar90/opencode-conductor)
   (Apache-2.0; 129 stars; last push 2026-03-02)
-  ports the Context, Spec, Plan, Implement lifecycle described in @sec-ai-conductor-extension to OpenCode.
+  ports the Context, Spec, Plan, Implement lifecycle described in [Conductor extension](agent-customization.qmd#sec-ai-conductor-extension) to OpenCode.
   *Useful to us?* Only if that lifecycle is adopted; the port looks dormant.
 - [`plannotator`](https://github.com/backnotprop/plannotator)
   (Apache-2.0; about 8,600 stars; release `v0.27.12` on 2026-09-03)
@@ -220,7 +220,7 @@ Vendor plugins from JFrog, Firecrawl, and Tavily wrap their own CLIs.
   sharing skills, MCP servers, and connected services across tools and machines.
   Code outside `ee/` is MIT; the organizational control plane under `ee/` uses a separate license
   that is free for up to five users.
-  *Useful to us?* Compare against the collaborative workspaces in @sec-ai-collaborative-workspaces;
+  *Useful to us?* Compare against the collaborative workspaces in [collaborative workspaces](grok-bot-and-alternatives.qmd#sec-ai-collaborative-workspaces);
   the five-user free tier fits a lab, and the open core makes it auditable.
 - [`opencode.nvim`](https://github.com/nickjvandyke/opencode.nvim) [@opencode_nvim]
   (Nick van Dyke; MIT; about 3,800 stars; release `v1.0.0` on 2026-08-20)
@@ -250,7 +250,7 @@ Vendor plugins from JFrog, Firecrawl, and Tavily wrap their own CLIs.
   and components are copied into `.opencode/` (the shadcn model) rather than hidden in dependencies,
   with SHA verification of what is installed.
   *Useful to us?* Yes, if we standardize an OpenCode profile for the lab;
-  it is the closest thing to the plugin marketplace we use for Claude Code (@sec-ai-plugins-deep-dive).
+  it is the closest thing to the plugin marketplace we use for Claude Code ([plugins deep dive](agent-customization.qmd#sec-ai-plugins-deep-dive)).
 - [`ai-sdk-provider-opencode-sdk`](https://github.com/ben-vargas/ai-sdk-provider-opencode-sdk)
   (MIT; 116 stars) exposes OpenCode's configured providers to the Vercel AI SDK,
   and [`opencode-plugin-template`](https://github.com/zenobi-us/opencode-plugin-template) (archived)
@@ -265,7 +265,7 @@ Vendor plugins from JFrog, Firecrawl, and Tavily wrap their own CLIs.
 - [`agentic`](https://github.com/Cluster444/agentic)
   (MIT; 638 stars; last push 2025-09-02) is a context-engineering toolkit that appears dormant.
 
-*Useful to us?* `OpenAgentsControl` overlaps heavily with Oh My OpenCode (@sec-ai-oh-my-opencode) and `opencode-workspace`;
+*Useful to us?* `OpenAgentsControl` overlaps heavily with Oh My OpenCode ([Oh My OpenCode](agent-orchestration.qmd#sec-ai-oh-my-opencode)) and `opencode-workspace`;
 pick one such harness rather than layering them.
 
 #### OpenCode Zen and OpenCode Go
@@ -287,14 +287,14 @@ The ecosystem page does not describe them, but two first-party paid services sit
 
 *Useful to us?* Yes; OpenCode Go is already one of the lab's delegation budgets,
 and the Zen free tier is a zero-cost way to try a new open-weight model before routing work to it
-(compare the OpenRouter `:free` models in @sec-ai-opencode-openrouter).
+(compare the OpenRouter `:free` models in [OpenRouter](local-models.qmd#sec-ai-opencode-openrouter)).
 
 #### Summary
 
 | Need | Start with | Also see |
 |---|---|---|
 | Graphical or remote front end | `CodeNomad`, `OpenChamber` | `portal`, `OpenWork` |
-| Multi-agent orchestration | Oh My OpenCode (@sec-ai-oh-my-opencode) | `opencode-workspace`, `OpenAgentsControl` |
+| Multi-agent orchestration | Oh My OpenCode ([Oh My OpenCode](agent-orchestration.qmd#sec-ai-oh-my-opencode)) | `opencode-workspace`, `OpenAgentsControl` |
 | Cheaper tokens | OpenCode Go, Zen free models | `opencode-dynamic-context-pruning` |
 | Isolation per task | `opencode-worktree`, `opencode-devcontainers` | `opencode-daytona` |
 | Redaction of sensitive data | `opencode-vibeguard` | (none) |

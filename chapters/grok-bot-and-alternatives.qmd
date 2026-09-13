@@ -80,8 +80,8 @@ The pieces that matter as a yardstick here are:
   [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config):
   skills, hooks, and memories that we install once
   and expect a session to load
-  ([how the config reaches a machine](coding-agents.qmd#sec-ai-config-install);
-  [customizing an agent](coding-agents.qmd#sec-ai-customization)).
+  ([how the config reaches a machine](agent-customization.qmd#sec-ai-config-install);
+  [customizing an agent](agent-customization.qmd#sec-ai-customization)).
 - **GitHub as the review surface**:
   work returns as a branch or pull request,
   with human approval before merge.
@@ -455,6 +455,18 @@ None of these replaces the coding-agent platforms in
 They are teammates-with-computers and knowledge-work desktops.
 The portable lab config still lives in `ai-config`,
 and the review surface is still GitHub.
+
+# Collaborative AI Workspaces: Claude Cowork and Gemini Spark {#sec-ai-collaborative-workspaces}
+
+{{< include ai-tools/collaborative-workspaces.qmd >}}
+
+# Hosted AI Agent Offices: Vestra and Similar {#sec-ai-agent-offices}
+
+{{< include ai-tools/ai-agent-offices.qmd >}}
+
+# AI-Enabled Knowledge Workspaces: Notion and Alternatives {#sec-ai-knowledge-workspaces}
+
+{{< include ai-tools/ai-knowledge-workspaces.qmd >}}
 
 # References {.unnumbered}
 

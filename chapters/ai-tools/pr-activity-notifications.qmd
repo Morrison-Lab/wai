@@ -45,7 +45,7 @@ by removing its watching label on the pull request.
 **The tool does not exist on a locally-run GitHub MCP server.**
 Workflow guidance written for remote or web sessions names it freely,
 which strands anyone following that guidance from a local harness.
-@sec-ai-mcp-server-setup covers the local analogues to reach for instead.
+[MCP server setup](agent-customization.qmd#sec-ai-mcp-server-setup) covers the local analogues to reach for instead.
 
 **Webhook delivery is also not exhaustive**,
 which is the failure mode most likely to be mistaken for "nothing has happened".
@@ -83,7 +83,7 @@ Three properties of that panel surprise people:
   spawns a web session with **Auto-fix CI & address comments** already on.
   There is no equivalent shortcut for **Auto-merge when ready**.
 
-See @sec-ai-claude-cloud-env for the web-session context these run in.
+See [Claude Code cloud environments](agent-customization.qmd#sec-ai-claude-cloud-env) for the web-session context these run in.
 
 #### The instruction template is boilerplate
 

@@ -117,7 +117,7 @@ even though the framework around them is MIT-licensed.
 #### Useful to us?
 
 Probably not as a replacement for what we already run.
-Our orchestration baseline (@sec-orch-baseline)
+Our orchestration baseline ([our orchestration baseline](agent-orchestration.qmd#sec-orch-baseline))
 is Claude Code subagents, the `Workflow` fan-out tool,
 and git worktrees,
 driven from R and Python repositories.
@@ -148,7 +148,7 @@ Where it could earn a place:
   The same OpenTelemetry traces can go to Langfuse or MLflow instead,
   so the viewer does not lock us in.
 
-The comparison table in @sec-orch-comparison
+The comparison table in [the comparison table](agent-orchestration.qmd#sec-orch-comparison)
 covers three other orchestrators and does not include VoltAgent.
 On that table's dimensions, VoltAgent would read as:
 

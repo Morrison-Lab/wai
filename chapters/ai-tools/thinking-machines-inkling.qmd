@@ -107,8 +107,8 @@ for transcription-plus-reasoning pipelines as well as coding.
 
 As a coding-agent backend,
 Inkling is one more open-weight option alongside the models
-in @sec-ai-catalog-coding-agents,
-reachable through Databricks (@sec-ai-byok-vscode)
+in [the agent catalog](coding-agents.qmd#sec-ai-catalog-coding-agents),
+reachable through Databricks ([custom model endpoints](agent-customization.qmd#sec-ai-byok-vscode))
 or, when a host lists it there, OpenRouter (@sec-ai-opencode-openrouter).
 Its reported SWE-Bench and Terminal Bench scores are competitive
 but not ahead of the closed models we already pay for,
