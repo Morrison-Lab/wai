@@ -249,6 +249,7 @@ nothing else in the surveyed runtimes is missing from the layer kind.
 `Morrison-Lab/ai-config` is already a custom harness of the layer kind,
 and a large one.
 On 2026-09-09 a local checkout held:
+
 - 191 skills;
 - 94 hook scripts,
   and a `hooks/hooks.json` with 55 registrations

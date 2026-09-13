@@ -157,7 +157,7 @@ That is not Claude Code's install path.
 Grok Bot does not load the `~/.claude` symlink install,
 `CLAUDE.md` `@imports`, or Claude hooks/`hooks.json`.
 Cursor Cloud uses `.cursor/hooks.json` instead
-([how the config reaches a machine](coding-agents.qmd#sec-ai-config-install)).
+([how the config reaches a machine](agent-customization.qmd#sec-ai-config-install)).
 
 #### Approvals and the shared-computer boundary
 
@@ -395,7 +395,7 @@ they operate *your* machine under approvals.
 
 None of this loads `ai-config`.
 For repository work we already document Codex separately
-([Codex pull-request reviews](coding-agents.qmd#sec-ai-codex-github-review)).
+([Codex pull-request reviews](pr-workflow-with-agents.qmd#sec-ai-codex-github-review)).
 Do not add ChatGPT Work as a lab-wide tool
 unless a project is already inside that workspace
 and the data-handling rules for that workspace are acceptable.
