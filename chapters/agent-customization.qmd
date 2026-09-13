@@ -1,0 +1,114 @@
+---
+title: "Configuring and Extending Agents"
+format:
+  html: default
+  revealjs:
+    output-file: agent-customization-slides.html
+  pdf:
+    output-file: agent-customization-handout.pdf
+  docx:
+    output-file: agent-customization.docx
+---
+
+Coding agents adapt to a project through configuration files,
+instruction prompts, tool definitions, and plugins.
+This chapter explains how to configure agent environments,
+install project-level instructions,
+author and share Agent Skills (`SKILL.md`),
+connect external capabilities via the Model Context Protocol (MCP),
+structure agent plugins,
+and use advanced developer extensions like Magic Context, Conductor,
+and the Antigravity Python SDK.
+
+# Configuring GitHub Copilot Settings {#sec-ai-copilot-settings}
+
+{{< include ai-tools/copilot-settings.qmd >}}
+
+# Connecting VS Code to a Custom Model Endpoint (BYOK) {#sec-ai-byok-vscode}
+
+{{< include ai-tools/byok-vscode-databricks.qmd >}}
+
+# Configuring the Agent Environment
+
+{{< include ai-tools/copilot-setup-steps-config.qmd >}}
+
+# Agent Sessions and Handoff in Visual Studio Code {#sec-ai-vscode-agent-sessions}
+
+{{< include ai-tools/vscode-agent-sessions.qmd >}}
+
+# Installing Claude Code on Windows {#sec-ai-claude-code-windows}
+
+{{< include ai-tools/installing-claude-code-windows.qmd >}}
+
+# Herdr: A Terminal Multiplexer for Coding Agents {#sec-ai-herdr}
+
+{{< include ai-tools/herdr.qmd >}}
+
+# Customizing an Agent {#sec-ai-customization}
+
+{{< include ai-tools/customizing-agents.qmd >}}
+
+# How the Config Reaches a Machine {#sec-ai-config-install}
+
+{{< include ai-tools/claude-code-config-install.qmd >}}
+
+# Agent Skills {#sec-ai-agent-skills}
+
+{{< include ai-tools/agent-skills.qmd >}}
+
+# Tessl: Skills Registry and CLI {#sec-ai-tessl}
+
+{{< include ai-tools/tessl.qmd >}}
+
+# The Posit Skill Collection {#sec-ai-posit-skills}
+
+{{< include ai-tools/posit-skills.qmd >}}
+
+# Posit AI Tooling on GitHub {#sec-ai-posit-dev-ai-repos}
+
+{{< include ai-tools/posit-dev-ai-repos.qmd >}}
+
+# Useful plugins {#sec-ai-useful-plugins}
+
+{{< include ai-tools/useful-plugins.qmd >}}
+
+# The plugin catalog {#sec-ai-plugin-catalog}
+
+{{< include ai-tools/plugin-catalog.qmd >}}
+
+# Running Codex Inside Claude Code: the codex-plugin-cc Plugin {#sec-ai-codex-plugin-cc}
+
+{{< include ai-tools/codex-plugin-cc.qmd >}}
+
+# Anatomy of Agent Plugins {#sec-ai-plugins-deep-dive}
+
+{{< include ai-tools/plugins-deep-dive.qmd >}}
+
+# Setting up MCP servers {#sec-ai-mcp-server-setup}
+
+{{< include ai-tools/mcp-server-setup.qmd >}}
+
+# Google Antigravity Python SDK {#sec-ai-antigravity-python-sdk}
+
+{{< include ai-tools/antigravity-python-sdk.qmd >}}
+
+# Unbounded Context with Magic Context {#sec-ai-magic-context}
+
+{{< include ai-tools/magic-context.qmd >}}
+
+# Spec-Driven Development with Conductor {#sec-ai-conductor-extension}
+
+{{< include ai-tools/conductor-extension.qmd >}}
+
+# Managing Gemini API Spend and Cost Optimization {#sec-ai-gemini-spend-management}
+
+{{< include ai-tools/gemini-spend-management.qmd >}}
+
+# Claude Code Cloud Environments {#sec-ai-claude-cloud-env}
+
+{{< include ai-tools/claude-code-cloud-environments.qmd >}}
+
+# References {.unnumbered}
+
+::: {#refs}
+:::

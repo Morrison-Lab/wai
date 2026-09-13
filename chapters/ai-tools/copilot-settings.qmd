@@ -200,7 +200,7 @@ These settings control where and how Copilot integrates into your development en
 - *What it does*: Delegate tasks to Copilot coding agent in repositories where it is enabled
 - *Pros*: Autonomous multi-file edits, can execute complex refactoring, runs tests and fixes issues
 - *Cons*: Requires careful oversight, can make unwanted changes if instructions unclear
-- *Recommendation*: **Enable** (see @sec-ai-best-practices for safe usage guidelines)
+- *Recommendation*: **Enable** (see [best practices](coding-agents.qmd#sec-ai-best-practices) for safe usage guidelines)
 
 **Copilot Memory (Preview):**
 
@@ -274,4 +274,4 @@ For lab members, we recommend the following configuration:
 Following these guidelines will help establish an effective Copilot configuration.
 The key is to enable features that add value to your workflow
 while maintaining awareness that AI assistance requires validation
-(see @sec-ai-best-practices).
+(see [best practices](coding-agents.qmd#sec-ai-best-practices)).

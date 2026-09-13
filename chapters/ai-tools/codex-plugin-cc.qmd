@@ -143,7 +143,7 @@ the skill keeps Claude as the integrator that assembles Codex's parts,
 while the plugin's result-handling skill tells Claude to relay Codex's answer
 and stop.
 
-**Codex as a GitHub reviewer** (@sec-ai-codex-github-review).
+**Codex as a GitHub reviewer** ([Codex GitHub review](pr-workflow-with-agents.qmd#sec-ai-codex-github-review)).
 That path runs through Codex Cloud and posts a review on the pull request,
 so it needs a connected repository and a workspace that permits Codex Cloud.
 `/codex:review` runs locally against the checkout instead,
@@ -181,5 +181,5 @@ Three cautions apply:
 For fan-out work, structured output, or anything a script needs to consume,
 the `delegate-to-codex` skill remains the right tool.
 For pull-request reviews that must be visible to other contributors,
-the GitHub integration in @sec-ai-codex-github-review remains the right tool.
+the GitHub integration in [Codex GitHub review](pr-workflow-with-agents.qmd#sec-ai-codex-github-review) remains the right tool.
 See @sec-ai-useful-plugins for the rest of the plugins the lab has evaluated.

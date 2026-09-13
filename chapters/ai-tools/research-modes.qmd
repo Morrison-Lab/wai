@@ -209,7 +209,7 @@ or a check on what a regulator or funding agency currently requires.
 The modes read many more pages than a coding agent will in one turn,
 they hand back citations you can audit,
 and several export straight into the document formats we already draft in
-(see @sec-ai-collaborative-workspaces for the workspace side).
+(see [collaborative workspaces](grok-bot-and-alternatives.qmd#sec-ai-collaborative-workspaces) for the workspace side).
 Researcher is the odd one out:
 its value is reading your own institution's email and files,
 which none of the others can see,
@@ -229,7 +229,7 @@ Two cautions carry across all five:
   Monthly caps of 25 (Copilot) or compute pools that refresh every 5 hours (Gemini)
   mean a research mode is not a tool to leave running in a loop.
   For batch or scheduled research, use the API routes,
-  and budget them like any other agent spend (@sec-ai-gemini-spend-management).
+  and budget them like any other agent spend ([spend management](agent-customization.qmd#sec-ai-gemini-spend-management)).
 - **A cited report is not a verified one.**
   Every mode cites, and none checks that the cited page supports the sentence.
   Spot-check the citations you intend to reuse before they reach a manuscript,

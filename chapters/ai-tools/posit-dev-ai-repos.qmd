@@ -87,4 +87,4 @@ and it is still marked experimental.
 The Python packages (`chatlas`, `raghilda`) duplicate R tools the lab already prefers.
 Positron Assistant is configured through Positron rather than through these repositories;
 see @sec-ai-copilot-settings for its OpenAI setup
-and @sec-ai-offline for running it against Ollama.
+and [running agents offline](local-models.qmd#sec-ai-offline) for running it against Ollama.

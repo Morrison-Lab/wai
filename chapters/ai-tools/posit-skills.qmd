@@ -77,7 +77,7 @@ and `new-work` / `working-on` keep a per-task tracking document
 where the lab uses the issue tracker and a session notebook.
 The `github` skills likewise overlap with the lab's own
 [pull-request workflow](pr-workflow-with-agents.qmd)
-and with the review setup in @sec-ai-claude-code-action-review,
+and with the review setup in [Claude Code Action review](pr-workflow-with-agents.qmd#sec-ai-claude-code-action-review),
 so both categories are worth reading for ideas
 rather than installing alongside that tooling.
 The contribution guidance in the repository recommends Anthropic's `skill-creator` skill for authoring new skills.

@@ -235,7 +235,7 @@ context (`InstructionsLoaded`, `PreCompact`, `PostCompact`),
 and several more.
 A `PreToolUse` hook that exits with code 2 blocks the call,
 and a hook's JSON output can deny, add context, or rewrite the tool's input.
-This is the mechanism @sec-ai-customization calls "the part the model cannot talk its way around",
+This is the mechanism [customizing an agent](agent-customization.qmd#sec-ai-customization) calls "the part the model cannot talk its way around",
 and it is the right home for any rule that must hold regardless of what the prompt says ---
 including a rule that the prompt itself has been told to contradict.
 `InstructionsLoaded` is also the only documented way to log exactly which instruction files a session loaded and when [@claude_code_memory].
@@ -263,12 +263,12 @@ run through the built-in `Skill` tool rather than as a tool of its own [@claude_
 Only skill *descriptions* sit in the startup context;
 the body loads when the skill is invoked,
 and a skill marked `disable-model-invocation: true` stays out of context entirely until you type its slash command [@claude_code_context_window].
-@sec-ai-agent-skills covers the format.
+[Agent Skills](agent-customization.qmd#sec-ai-agent-skills) covers the format.
 A plugin bundles skills, agents, hooks, MCP and LSP server configurations, background monitors, and default settings into one directory with a `.claude-plugin/plugin.json` manifest,
 namespaces its skills as `/plugin-name:skill`,
 and can be loaded from a marketplace, from a local path with `--plugin-dir`, or from the user's skills directory [@claude_code_plugins].
-@sec-ai-plugins-deep-dive dissects the bundle,
-and @sec-ai-config-install describes how the lab's own plugin reaches a machine.
+[Plugins deep dive](agent-customization.qmd#sec-ai-plugins-deep-dive) dissects the bundle,
+and [how config reaches a machine](agent-customization.qmd#sec-ai-config-install) describes how the lab's own plugin reaches a machine.
 
 #### MCP servers (documented)
 
@@ -278,7 +278,7 @@ loading each on demand through `ToolSearch`;
 `ENABLE_TOOL_SEARCH=false` loads everything up front [@claude_code_context_window].
 That deferral is why a session can carry dozens of servers without paying their schema cost on every turn.
 Two dedicated tools, `ListMcpResourcesTool` and `ReadMcpResourceTool`, expose server resources as well as tools [@claude_code_tools_reference].
-@sec-ai-mcp-server-setup covers registration and its failure modes.
+[MCP server setup](agent-customization.qmd#sec-ai-mcp-server-setup) covers registration and its failure modes.
 
 #### Memory and `CLAUDE.md` loading (documented)
 

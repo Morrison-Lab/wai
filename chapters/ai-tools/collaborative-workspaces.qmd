@@ -54,7 +54,7 @@ Similar collaborative workspace paradigms have emerged across other frontier eco
   interactive targeted edits, and multi-file artifact tracking.
 - **Cursor and Google Antigravity Agent Workspaces**:
   Developer-centric workspace agents providing multi-agent delegation, worktree isolation,
-  and structured planning workflows (such as Conductor extension spec-driven development, @sec-ai-conductor-extension).
+  and structured planning workflows (such as Conductor extension spec-driven development, [Conductor extension](agent-customization.qmd#sec-ai-conductor-extension)).
 - **Notion AI and Microsoft Copilot Studio**:
   Enterprise knowledge graph agents designed for querying organizational wikis
   and automating business process workflows.

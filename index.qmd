@@ -35,16 +35,28 @@ as best practices and capabilities continue to evolve.
   responsibility for validation, disclosure, attribution, and using AI for
   journal articles
 - [**Coding Agents**](chapters/coding-agents.qmd):
-  what language models, coding agents, and harnesses are; how to work with
-  them; benefits, hazards, and best practices; and configuring your
-  environment
+  what language models and coding agents are; platforms and catalogs;
+  when and how to work with them; prompt formats; and benefits, hazards,
+  and best practices
+- [**Agent and Harness Architecture**](chapters/agent-architecture.qmd):
+  how harnesses, agent execution loops, and runtime environments are
+  engineered, and the 2026 harness landscape
+- [**Configuring and Extending Agents**](chapters/agent-customization.qmd):
+  configuring agent environments, instructions, Agent Skills (`SKILL.md`),
+  MCP servers, plugins, and developer extensions
+- [**Local Models and Offline Agents**](chapters/local-models.qmd):
+  running agents offline, connecting open harnesses to local Ollama and
+  OpenRouter endpoints, and evaluating small local models
 - [**Orchestrating Teams of Agents**](chapters/agent-orchestration.qmd):
   when running several agents at once is worth the cost, what we already use
-  for it, and how three outside orchestrators (Agent Teams, Inflexa, TORQCLAW)
-  compare
+  for it, outside orchestrators (Agent Teams, Inflexa, TORQCLAW, Oh My OpenCode),
+  and multi-agent frameworks
+- [**AI for Math and Statistics**](chapters/ai-for-math.qmd):
+  reasoning models for mathematics and statistics, formal proof assistants,
+  and benchmarks
 - [**Grok Bot and Alternatives**](chapters/grok-bot-and-alternatives.qmd):
-  persistent teammates with their own computer (Grok Bot, Rakazo, OpenClaw,
-  Claude Cowork, ChatGPT Work) and how they differ from our coding-agent stack
+  persistent teammates with their own computer (Grok Bot, Rakazo, OpenClaw),
+  collaborative workspaces (Claude Cowork, Gemini Spark), and hosted agent offices
 - [**Data Dictionaries for Humans and Agents**](chapters/data-dict.qmd):
   `data-dict.yaml` for making dataset context accessible to both humans and AI
   agents (see [data-dict.tidyverse.org](https://data-dict.tidyverse.org/))
@@ -55,8 +67,8 @@ as best practices and capabilities continue to evolve.
   visual, no-code canvas for 3,000+ apps, scenarios, and AI agents with Make
   Grid and MCP (see [make.com](https://www.make.com/en))
 - [**Pull-Request Workflow with Agents**](chapters/pr-workflow-with-agents.qmd):
-  filing issues, claiming work, and driving a pull request to a clean,
-  mergeable state
+  filing issues, claiming work, driving a pull request to a clean,
+  mergeable state, and agent-assisted automated code review
 
 The notes are available in multiple formats:
 

@@ -1,7 +1,7 @@
 Every lab that uses a coding agent for more than one-off edits
 eventually builds something around it:
 instruction files, then skills, then hooks, then scripts that watch pull requests.
-@sec-ai-customization maps those mechanisms one at a time.
+[Customizing an Agent](agent-customization.qmd#sec-ai-customization) maps those mechanisms one at a time.
 This section looks at the question from the other end:
 what does a *complete* layer look like when someone builds one deliberately,
 and how much of it does the lab actually need?
@@ -18,7 +18,7 @@ and the ladder discussed here is Citadel's own.
 
 #### What Citadel is
 
-Citadel is a plugin, not a harness (@sec-ai-harnesses).
+Citadel is a plugin, not a harness ([harnesses](agent-architecture.qmd#sec-ai-harnesses)).
 It installs into an existing Claude Code or Codex session through the
 runtime's plugin marketplace, pinned to a release tag,
 and then adds four things around the agent you already run [@citadel_repo]:
@@ -61,7 +61,7 @@ as a ladder, with the instruction to use the cheapest rung that fits:
 
 : Citadel's orchestration ladder, from the project's architecture document (measured 2026-09-09). {#tbl-citadel-ladder}
 
-A skill is a `SKILL.md` protocol file in the format @sec-ai-agent-skills describes,
+A skill is a `SKILL.md` protocol file in the format [Agent Skills](agent-customization.qmd#sec-ai-agent-skills) describes,
 loaded on demand and costing nothing when not loaded.
 Marshal chains skills inside one session.
 Archon runs a multi-session campaign whose state lives in a Markdown campaign file
@@ -84,7 +84,7 @@ without bypassing the approval or verification boundaries.
 
 The part of Citadel most relevant to the lab's own practice is
 how much of its policy is enforced rather than advised.
-@sec-ai-customization makes the point that an instruction file is context the model may ignore,
+[Customizing an Agent](agent-customization.qmd#sec-ai-customization) makes the point that an instruction file is context the model may ignore,
 and that a rule you cannot afford to have ignored belongs in a hook.
 Citadel takes that seriously in three layers [@citadel_architecture]:
 
@@ -140,7 +140,7 @@ the case for Citadel is governance and recoverability, not throughput.
 #### Where the lab sits and what the next level would take
 
 The lab's equivalent layer is [`Morrison-Lab/ai-config`](https://github.com/Morrison-Lab/ai-config),
-described in @sec-ai-customization's worked example.
+described in [customizing an agent](agent-customization.qmd#sec-ai-customization)'s worked example.
 On 2026-09-09 its `main` branch carried:
 
 - 190 skill directories

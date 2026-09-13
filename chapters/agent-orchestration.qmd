@@ -202,6 +202,10 @@ At most, its design documents are worth skimming
 as a catalog of agent-governance patterns.
 :::
 
+# Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent {#sec-ai-oh-my-opencode}
+
+{{< include ai-tools/oh-my-opencode.qmd >}}
+
 # Agent Orchestration Frameworks {#sec-orch-frameworks}
 
 The three projects above are finished tools.

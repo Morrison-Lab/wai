@@ -149,7 +149,7 @@ of what you shipped, what a session cost, and a project status page.
 `cwc-makers` sets up a hardware kit.
 
 Verdict: `learning-output-style` is a reasonable choice for a student who wants to learn a codebase rather than delegate it,
-per @sec-ai-when-to-use.
+per [when to use AI](coding-agents.qmd#sec-ai-when-to-use).
 `session-report` is useful when a quota question comes up.
 The rest are not relevant to lab work.
 
@@ -163,7 +163,7 @@ and messaging bridges for Discord, Telegram, and iMessage
 
 Verdict: `github` is the one that matters here;
 @sec-ai-mcp-server-setup covers configuring it,
-and @sec-ai-pr-activity-notifications what it adds.
+and [PR activity notifications](pr-workflow-with-agents.qmd#sec-ai-pr-activity-notifications) what it adds.
 `context7` (live library documentation lookup) is worth a try for Python and JavaScript work.
 Everything else depends on whether the lab uses the service.
 
@@ -222,7 +222,7 @@ and independent repositories, not that mirror.
 is the lab's own plugin.
 The copy Claude Code caches on one lab machine holds 198 skills and 90 hook scripts
 (measured 2026-09-09),
-plus memories and the `shared/` fragments this site vendors into @sec-fully-clean and its neighbours.
+plus memories and the `shared/` fragments this site vendors into [fully clean](pr-workflow-with-agents.qmd#sec-fully-clean) and its neighbours.
 It installs as a Claude Code plugin (`/plugin marketplace add Morrison-Lab/ai-config`),
 as a Cursor plugin,
 and via `bootstrap.sh` for Codex, Gemini CLI and Antigravity, VS Code Copilot, and OpenCode
@@ -311,7 +311,7 @@ Past that they answer different questions.
 Each iteration is triggered by something outside the agent
 (a review landing, a check turning red),
 it re-arms itself with a timer rather than a `Stop` hook,
-and its terminal condition is @sec-fully-clean,
+and its terminal condition is [fully clean](pr-workflow-with-agents.qmd#sec-fully-clean),
 which an agent cannot declare about itself.
 `ralph-loop` has no reviewer in the loop at all;
 its judge is whichever tests the prompt tells it to run.
