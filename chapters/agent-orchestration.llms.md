@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-10 20:52:53 (PDT)
+Last modified: 2026-09-13 00:11:34 (PDT)
 
 A single coding agent works one problem at a time. *Orchestration* is the step up from that: running several agents at once and coordinating their work. This chapter explains when orchestration is worth the added cost, describes what our lab already uses for it, evaluates three outside “agent orchestrator” projects that lab members have asked about, and surveys the general-purpose orchestration frameworks a lab could build its own agent systems on.
 
@@ -64,7 +64,42 @@ As of August 2026 it is a single-author, early-stage project (a few stars, a com
 >
 > TORQCLAW fails three ways for our purposes. It is unlicensed, so we cannot legally build on it. It is domain-agnostic agent *infrastructure*, not tooling for our research. And the governance ideas it centers on, approval gates, capability scoping, and cost limits, we already implement directly through Claude Code permissions and hooks, MCP scoping, and the `Workflow` tool’s token budgets. At most, its design documents are worth skimming as a catalog of agent-governance patterns.
 
-# 6 Agent Orchestration Frameworks
+# 6 Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent
+
+[`code-yeongyu/oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent) (originally published as **Oh My OpenCode** or `omo`, with community forks such as [`opensoft/oh-my-opencode`](https://github.com/opensoft/oh-my-opencode)) is an open-source multi-agent orchestration framework and plugin for AI coding agent harnesses (including OpenCode and OpenAI Codex CLI) with over 65,000 GitHub stars (measured 2026-09-01). Inspired by modular terminal configuration frameworks (such as [Oh My Zsh](https://ohmyz.sh/)), it expands single-agent coding into a specialized multi-agent system with automated model routing and background task execution.
+
+#### Hub-and-spoke agent architecture
+
+Rather than relying on a single generalist agent to perform all research, design, coding, and review steps, the framework implements a hub-and-spoke delegation model with specialized agent personas:
+
+- **Sisyphus (Primary Orchestrator & Task Lead)**: Acts as the lead coordinator that breaks complex user requests into discrete work packages, delegates subtasks to specialized agents, and aggregates results into a coherent solution.
+- **Prometheus (Strategic Planner)**: Interviews the user to clarify scope and ambiguities, formulating detailed implementation plans before code modifications begin.
+- **Metis (Pre-Planning Gap Analyzer)**: Conducts pre-planning analysis alongside Prometheus to identify hidden requirements, ambiguities, and potential failure points before plans are finalized.
+- **Momus (Plan Reviewer)**: Validates proposed execution plans against clarity, verification, and context criteria before execution.
+- **Atlas (Plan Executor)**: Executes approved Prometheus plans step-by-step, managing task progress and session continuity across execution sessions.
+- **Hephaestus (Autonomous Deep Worker)**: Specializes in autonomous architectural refactoring and complex multi-file debugging.
+- **Oracle (Architecture & Debugging Consultant)**: Serves as a read-only architecture and deep debugging consultant, analyzing system design trade-offs and diagnosing subtle runtime failures.
+- **Librarian (Documentation & Code Search)**: Conducts targeted external documentation lookups and code search to supply focused context without bloating the orchestrator’s context window.
+- **Explore (Codebase Navigation & Fast Grep)**: Specializes in fast pattern searches, codebase navigation, and file structure discovery.
+
+#### Heterogeneous model routing
+
+A central capability of the framework is decoupling agent roles from a single model provider. Developers can route distinct tasks to the model family best suited for each workload:
+
+- **High-reasoning tiers** (such as Anthropic Claude Sonnet or Opus) for architectural planning and deep refactoring.
+- **High-throughput models** (such as OpenAI GPT models) for rapid code generation and unit testing.
+- **Large-context models** (such as Google Gemini) for extensive repository research and multi-file context indexing.
+
+#### Operational capabilities
+
+| Dimension | Standard OpenCode | Oh My OpenCode / Oh My OpenAgent |
+|----|----|----|
+| **Agent topology** | Single sequential agent loop | Hub-and-spoke multi-agent team |
+| **Model routing** | Single active model per session | Dynamic per-agent model assignment |
+| **Execution monitoring** | Standard terminal output | Interactive `tmux`-backed session management |
+| **Extensibility** | Individual plugins and MCPs | Curated bundle of tools, agents, and MCP integrations |
+
+# 7 Agent Orchestration Frameworks
 
 The three projects above are finished tools. The projects in this section are *frameworks*: software libraries for building your own multi-agent system from agents, tools, and a control flow that you write in code. They matter to us for a different reason. Nobody in the lab is asking to run `AutoGen`; the question is whether any of these libraries would let us build something our Claude Code stack cannot.
 
@@ -72,7 +107,7 @@ Every framework below shares one property worth stating up front. Each is a Pyth
 
 Star counts, release versions, and dates in this section were read from the GitHub API on 2026-09-09 and will drift.
 
-## 6.1 Microsoft AutoGen
+## 7.1 Microsoft AutoGen
 
 [AutoGen](https://microsoft.github.io/autogen/stable/) ([Microsoft 2026b](#ref-autogen_docs)) is Microsoft’s original multi-agent framework, and the one issue \#101 named first. Its current design is layered:
 
@@ -89,7 +124,7 @@ The decisive fact is on its own README (measured 2026-09-09): AutoGen is in **ma
 >
 > AutoGen is the best-known name on this list and is no longer where its own authors want new work to go. Its group-chat orchestration is what our subagents and `Workflow` fan-out already give us, without a Python application to maintain. If any Microsoft framework is worth watching, it is the successor.
 
-## 6.2 Microsoft Agent Framework
+## 7.2 Microsoft Agent Framework
 
 The [Microsoft Agent Framework](https://github.com/microsoft/agent-framework) ([Microsoft 2026d](#ref-microsoft_agent_framework)) merges AutoGen with Semantic Kernel, Microsoft’s earlier .NET-first library, into one production-oriented framework for Python and .NET, with a separate Go SDK. Orchestration is expressed as **graph-based workflows** with built-in sequential, concurrent, handoff, and group-collaboration patterns, plus checkpoints, streaming, human-in-the-loop steps, and `OpenTelemetry` tracing. Agents can also be declared in YAML. It is under the **MIT** license, has about 13,400 stars, and released `python-1.17.0` on 2026-09-03 (measured 2026-09-09).
 
@@ -97,7 +132,7 @@ The [Microsoft Agent Framework](https://github.com/microsoft/agent-framework) ([
 >
 > It is the framework to name if someone asks “what replaced AutoGen?”, and its workflow patterns are a clean catalog of the orchestration shapes that also appear in our `Workflow` tool. But its hosting story centers on Microsoft Foundry and Azure, which we do not use, and the general Python-layer cost applies.
 
-## 6.3 LangGraph
+## 7.3 LangGraph
 
 [LangGraph](https://docs.langchain.com/oss/python/langgraph/overview) ([LangChain 2026b](#ref-langgraph_docs)) is LangChain Inc.’s “low-level orchestration framework and runtime for building, managing, and deploying long-running, stateful agents.” Orchestration is a **graph**: you write nodes (a model call, a tool, or plain deterministic code), connect them with edges, including conditional ones, and share a typed state object between them. The runtime adds checkpoints, so a run can be paused, resumed, or replayed, interrupts for human-in-the-loop approval, and durable execution for long tasks. It is available in Python and JavaScript, can be used without the wider LangChain library, and integrates with LangSmith for tracing and hosted deployment ([LangChain 2026a](#ref-langgraph_repo)). The code is under the **MIT** license, has about 41,300 stars, and releases are tagged per package (the most recent, `sdk==0.4.4`, on 2026-08-27; measured 2026-09-09).
 
@@ -105,7 +140,7 @@ The [Microsoft Agent Framework](https://github.com/microsoft/agent-framework) ([
 >
 > LangGraph is the most general and least opinionated framework here, and its checkpoint-and-resume model is the right design for a long analysis pipeline that must survive interruption. That is the one case where a lab member might reach for it: a durable, multi-step Python pipeline with human sign-off in the middle. For coordinating coding agents on a repository, which is what we actually do, it duplicates what Claude Code and the `Workflow` tool already provide.
 
-## 6.4 CrewAI
+## 7.4 CrewAI
 
 [CrewAI](https://docs.crewai.com/en/introduction) ([CrewAI 2026b](#ref-crewai_docs)) organizes agents by **role**. A *crew* is a set of agents, each with a role, goal, and tools, working through a list of tasks either sequentially or under a manager agent (the hierarchical process), delegating to each other as they see fit ([CrewAI 2026a](#ref-crewai_repo)). A *flow* is the newer, event-driven layer that manages state and decides when to run which crew. It is Python-only, under the **MIT** license, has about 58,300 stars, and released version `1.15.20` on 2026-09-04 (measured 2026-09-09). The open-source library sits under a commercial platform for deploying and monitoring crews.
 
@@ -113,7 +148,7 @@ The [Microsoft Agent Framework](https://github.com/microsoft/agent-framework) ([
 >
 > The role-playing metaphor is easy to start with and is the same thing our subagent definitions do (a reviewer role, a search role, a verification role), with less control over what each agent may touch. Nothing here is missing from our stack.
 
-## 6.5 OpenAI Agents SDK
+## 7.5 OpenAI Agents SDK
 
 The [OpenAI Agents SDK](https://github.com/openai/openai-agents-python) ([OpenAI 2026](#ref-openai_agents_sdk)) is a deliberately small framework built around a few primitives: agents, **handoff** between agents, agents used as tools, guardrails on input and output, sessions for conversation history, human-in-the-loop hooks, and tracing. Newer additions include sandbox agents that work inside a container over long tasks. Despite the name, it is provider-agnostic and works with any Chat Completions-compatible model and “100+ other LLMs”. It is Python (3.10 or later), with a separate TypeScript package, under the **MIT** license, with about 29,300 stars and version `v0.22.2` released on 2026-09-09 (measured the same day).
 
@@ -121,7 +156,7 @@ The [OpenAI Agents SDK](https://github.com/openai/openai-agents-python) ([OpenAI
 >
 > This is the OpenAI-side counterpart to Anthropic’s Claude Agent SDK, and it would matter only if we built automation around Codex rather than Claude Code. Its handoff and guardrail design is worth reading as a reference, since it is the simplest statement of those ideas on this list.
 
-## 6.6 Google Agent Development Kit
+## 7.6 Google Agent Development Kit
 
 Google’s [Agent Development Kit](https://github.com/google/adk-python) ([Google 2026](#ref-google_adk)) (ADK) is a “code-first Python framework for building, evaluating, and deploying” agents. Version 2.0 expresses orchestration two ways: a graph-based **workflow runtime** (routing, fan-out and fan-in, loops, retries, nested workflows, human-in-the-loop) and a **task API** for structured delegation between agents arranged in hierarchies. It is optimized for Gemini but model-agnostic, ships ports for Java, Kotlin, Go, and TypeScript, and deploys to Cloud Run or Vertex AI Agent Engine. It is under the **Apache-2.0** license, has about 21,500 stars, and released `v2.8.0` on 2026-08-26 on a roughly two-week cadence (measured 2026-09-09).
 
@@ -129,7 +164,7 @@ Google’s [Agent Development Kit](https://github.com/google/adk-python) ([Googl
 >
 > ADK is the most complete of the vendor frameworks on paper, and the least relevant to us in practice: its strengths are Gemini and Google Cloud deployment, neither of which we use.
 
-## 6.7 Others
+## 7.7 Others
 
 Several more frameworks come up in the same conversations. None changes the verdicts above, so they get one line each (stars and dates measured 2026-09-09):
 
@@ -140,7 +175,7 @@ Several more frameworks come up in the same conversations. None changes the verd
 - [`CAMEL`](https://github.com/camel-ai/camel) ([CAMEL-AI 2026](#ref-camel_ai)): a research-oriented multi-agent framework; Apache-2.0, Python, about 17,700 stars.
 - `VoltAgent`: a TypeScript framework, tracked separately in issue \#45 of this site’s repository.
 
-# 7 Comparison
+# 8 Comparison
 
 The table below places the three outside tools against our current stack. “Relevance to us” is the bottom line and follows directly from the rows above it.
 
@@ -155,9 +190,9 @@ The table below places the three outside tools against our current stack. “Rel
 | Local-first | Yes | Yes | Yes | Yes (Ollama, cloud fallback) |
 | Relevance to us | The baseline | Try it | Evaluate it | Pass; reference only |
 
-The frameworks in [Section 6](#sec-orch-frameworks) do not fit this table, because they are libraries rather than tools: each would be a column only after we had built something with it. Measured against the same “Relevance to us” row, they land together at “reference only”, with LangGraph the one to read first if a durable Python pipeline with human sign-off ever becomes a lab need.
+The frameworks in [Section 7](#sec-orch-frameworks) do not fit this table, because they are libraries rather than tools: each would be a column only after we had built something with it. Measured against the same “Relevance to us” row, they land together at “reference only”, with LangGraph the one to read first if a durable Python pipeline with human sign-off ever becomes a lab need.
 
-# 8 Recommendation
+# 9 Recommendation
 
 For the lab, as of September 2026:
 
@@ -167,7 +202,7 @@ For the lab, as of September 2026:
 
 - **Pass on TORQCLAW** for adoption. It is unlicensed, off-domain, and centered on governance we already have.
 
-- **Build nothing on the orchestration frameworks** in [Section 6](#sec-orch-frameworks) until a concrete need appears that Claude Code cannot meet; read the LangGraph documentation as the reference design if one does.
+- **Build nothing on the orchestration frameworks** in [Section 7](#sec-orch-frameworks) until a concrete need appears that Claude Code cannot meet; read the LangGraph documentation as the reference design if one does.
 
 None of these replaces our current Claude Code and `ai-config` practice. Agent Teams extends it, Inflexa is a candidate research tool alongside it, and TORQCLAW is, for now, only a reference.
 

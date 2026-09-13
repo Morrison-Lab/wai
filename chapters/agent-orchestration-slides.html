@@ -261,7 +261,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-09-10 20:52:53 (PDT)</p>
+  <p class="date">Last modified: 2026-09-13 00:11:34 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -382,8 +382,74 @@
 </div>
 </section></section>
 <section>
-<section id="sec-orch-frameworks" class="title-slide slide level1 center" data-number="6">
-<h1><span class="header-section-number">6</span> Agent Orchestration Frameworks</h1>
+<section id="sec-ai-oh-my-opencode" class="title-slide slide level1 center" data-number="6">
+<h1><span class="header-section-number">6</span> Multi-Agent Orchestration with Oh My OpenCode / Oh My OpenAgent</h1>
+
+</section>
+<section class="slide level2">
+
+<p><a href="https://github.com/code-yeongyu/oh-my-openagent"><code>code-yeongyu/oh-my-openagent</code></a> (originally published as <strong>Oh My OpenCode</strong> or <code>omo</code>, with community forks such as <a href="https://github.com/opensoft/oh-my-opencode"><code>opensoft/oh-my-opencode</code></a>) is an open-source multi-agent orchestration framework and plugin for AI coding agent harnesses (including OpenCode and OpenAI Codex CLI) with over 65,000 GitHub stars (measured 2026-09-01). Inspired by modular terminal configuration frameworks (such as <a href="https://ohmyz.sh/">Oh My Zsh</a>), it expands single-agent coding into a specialized multi-agent system with automated model routing and background task execution.</p>
+<h4 id="hub-and-spoke-agent-architecture">Hub-and-spoke agent architecture</h4>
+<p>Rather than relying on a single generalist agent to perform all research, design, coding, and review steps, the framework implements a hub-and-spoke delegation model with specialized agent personas:</p>
+<ul>
+<li><strong>Sisyphus (Primary Orchestrator &amp; Task Lead)</strong>: Acts as the lead coordinator that breaks complex user requests into discrete work packages, delegates subtasks to specialized agents, and aggregates results into a coherent solution.</li>
+<li><strong>Prometheus (Strategic Planner)</strong>: Interviews the user to clarify scope and ambiguities, formulating detailed implementation plans before code modifications begin.</li>
+<li><strong>Metis (Pre-Planning Gap Analyzer)</strong>: Conducts pre-planning analysis alongside Prometheus to identify hidden requirements, ambiguities, and potential failure points before plans are finalized.</li>
+<li><strong>Momus (Plan Reviewer)</strong>: Validates proposed execution plans against clarity, verification, and context criteria before execution.</li>
+<li><strong>Atlas (Plan Executor)</strong>: Executes approved Prometheus plans step-by-step, managing task progress and session continuity across execution sessions.</li>
+<li><strong>Hephaestus (Autonomous Deep Worker)</strong>: Specializes in autonomous architectural refactoring and complex multi-file debugging.</li>
+<li><strong>Oracle (Architecture &amp; Debugging Consultant)</strong>: Serves as a read-only architecture and deep debugging consultant, analyzing system design trade-offs and diagnosing subtle runtime failures.</li>
+<li><strong>Librarian (Documentation &amp; Code Search)</strong>: Conducts targeted external documentation lookups and code search to supply focused context without bloating the orchestrator’s context window.</li>
+<li><strong>Explore (Codebase Navigation &amp; Fast Grep)</strong>: Specializes in fast pattern searches, codebase navigation, and file structure discovery.</li>
+</ul>
+<h4 id="heterogeneous-model-routing">Heterogeneous model routing</h4>
+<p>A central capability of the framework is decoupling agent roles from a single model provider. Developers can route distinct tasks to the model family best suited for each workload:</p>
+<ul>
+<li><strong>High-reasoning tiers</strong> (such as Anthropic Claude Sonnet or Opus) for architectural planning and deep refactoring.</li>
+<li><strong>High-throughput models</strong> (such as OpenAI GPT models) for rapid code generation and unit testing.</li>
+<li><strong>Large-context models</strong> (such as Google Gemini) for extensive repository research and multi-file context indexing.</li>
+</ul>
+<h4 id="operational-capabilities">Operational capabilities</h4>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dimension</th>
+<th>Standard OpenCode</th>
+<th>Oh My OpenCode / Oh My OpenAgent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Agent topology</strong></td>
+<td>Single sequential agent loop</td>
+<td>Hub-and-spoke multi-agent team</td>
+</tr>
+<tr class="even">
+<td><strong>Model routing</strong></td>
+<td>Single active model per session</td>
+<td>Dynamic per-agent model assignment</td>
+</tr>
+<tr class="odd">
+<td><strong>Execution monitoring</strong></td>
+<td>Standard terminal output</td>
+<td>Interactive <code>tmux</code>-backed session management</td>
+</tr>
+<tr class="even">
+<td><strong>Extensibility</strong></td>
+<td>Individual plugins and MCPs</td>
+<td>Curated bundle of tools, agents, and MCP integrations</td>
+</tr>
+</tbody>
+</table>
+</section></section>
+<section>
+<section id="sec-orch-frameworks" class="title-slide slide level1 center" data-number="7">
+<h1><span class="header-section-number">7</span> Agent Orchestration Frameworks</h1>
 
 </section>
 <section class="slide level2">
@@ -392,8 +458,8 @@
 <p>Every framework below shares one property worth stating up front. Each is a Python (or TypeScript, or .NET) library for writing an <em>application</em> that calls model APIs directly. Our workflow instead orchestrates a coding agent from the outside, through Claude Code’s subagents, <code>Workflow</code> fan-out, hooks, and Git worktrees, and our research code is in R and Quarto. None of these frameworks has an R interface, so adopting one would add a Python application layer between us and the models, and that layer would need its own maintenance. That cost is the yardstick for every verdict here.</p>
 <p>Star counts, release versions, and dates in this section were read from the GitHub API on 2026-09-09 and will drift.</p>
 </section>
-<section id="sec-orch-autogen" class="slide level2" data-number="6.1">
-<h2><span class="header-section-number">6.1</span> Microsoft AutoGen</h2>
+<section id="sec-orch-autogen" class="slide level2" data-number="7.1">
+<h2><span class="header-section-number">7.1</span> Microsoft AutoGen</h2>
 </section>
 <section class="slide level2">
 
@@ -420,8 +486,8 @@
 </div>
 </div>
 </section>
-<section id="sec-orch-maf" class="slide level2" data-number="6.2">
-<h2><span class="header-section-number">6.2</span> Microsoft Agent Framework</h2>
+<section id="sec-orch-maf" class="slide level2" data-number="7.2">
+<h2><span class="header-section-number">7.2</span> Microsoft Agent Framework</h2>
 </section>
 <section class="slide level2">
 
@@ -440,8 +506,8 @@
 </div>
 </div>
 </section>
-<section id="sec-orch-langgraph" class="slide level2" data-number="6.3">
-<h2><span class="header-section-number">6.3</span> LangGraph</h2>
+<section id="sec-orch-langgraph" class="slide level2" data-number="7.3">
+<h2><span class="header-section-number">7.3</span> LangGraph</h2>
 </section>
 <section class="slide level2">
 
@@ -460,8 +526,8 @@
 </div>
 </div>
 </section>
-<section id="sec-orch-crewai" class="slide level2" data-number="6.4">
-<h2><span class="header-section-number">6.4</span> CrewAI</h2>
+<section id="sec-orch-crewai" class="slide level2" data-number="7.4">
+<h2><span class="header-section-number">7.4</span> CrewAI</h2>
 </section>
 <section class="slide level2">
 
@@ -480,8 +546,8 @@
 </div>
 </div>
 </section>
-<section id="sec-orch-openai-agents" class="slide level2" data-number="6.5">
-<h2><span class="header-section-number">6.5</span> OpenAI Agents SDK</h2>
+<section id="sec-orch-openai-agents" class="slide level2" data-number="7.5">
+<h2><span class="header-section-number">7.5</span> OpenAI Agents SDK</h2>
 </section>
 <section class="slide level2">
 
@@ -500,8 +566,8 @@
 </div>
 </div>
 </section>
-<section id="sec-orch-adk" class="slide level2" data-number="6.6">
-<h2><span class="header-section-number">6.6</span> Google Agent Development Kit</h2>
+<section id="sec-orch-adk" class="slide level2" data-number="7.6">
+<h2><span class="header-section-number">7.6</span> Google Agent Development Kit</h2>
 </section>
 <section class="slide level2">
 
@@ -520,8 +586,8 @@
 </div>
 </div>
 </section>
-<section id="sec-orch-others" class="slide level2" data-number="6.7">
-<h2><span class="header-section-number">6.7</span> Others</h2>
+<section id="sec-orch-others" class="slide level2" data-number="7.7">
+<h2><span class="header-section-number">7.7</span> Others</h2>
 </section>
 <section class="slide level2">
 
@@ -536,8 +602,8 @@
 </ul>
 </section></section>
 <section>
-<section id="sec-orch-comparison" class="title-slide slide level1 center" data-number="7">
-<h1><span class="header-section-number">7</span> Comparison</h1>
+<section id="sec-orch-comparison" class="title-slide slide level1 center" data-number="8">
+<h1><span class="header-section-number">8</span> Comparison</h1>
 
 </section>
 <section class="slide level2">
@@ -619,11 +685,11 @@
 </tr>
 </tbody>
 </table>
-<p>The frameworks in <a href="#/sec-orch-frameworks" class="quarto-xref">Section&nbsp;6</a> do not fit this table, because they are libraries rather than tools: each would be a column only after we had built something with it. Measured against the same “Relevance to us” row, they land together at “reference only”, with LangGraph the one to read first if a durable Python pipeline with human sign-off ever becomes a lab need.</p>
+<p>The frameworks in <a href="#/sec-orch-frameworks" class="quarto-xref">Section&nbsp;7</a> do not fit this table, because they are libraries rather than tools: each would be a column only after we had built something with it. Measured against the same “Relevance to us” row, they land together at “reference only”, with LangGraph the one to read first if a durable Python pipeline with human sign-off ever becomes a lab need.</p>
 </section></section>
 <section>
-<section id="sec-orch-recommendation" class="title-slide slide level1 center" data-number="8">
-<h1><span class="header-section-number">8</span> Recommendation</h1>
+<section id="sec-orch-recommendation" class="title-slide slide level1 center" data-number="9">
+<h1><span class="header-section-number">9</span> Recommendation</h1>
 
 </section>
 <section class="slide level2">
@@ -633,7 +699,7 @@
 <li><p><strong>Try Agent Teams</strong> on a research or review task where parallel, arguing agents would beat one agent working alone. It is native to our tooling and the cheapest to experiment with, as long as the token cost is watched.</p></li>
 <li><p><strong>Evaluate Inflexa</strong> on a real dataset. It is the most domain-aligned option and openly licensed, and even if we do not adopt it, its provenance-and-sandbox design informs our own reproducibility work.</p></li>
 <li><p><strong>Pass on TORQCLAW</strong> for adoption. It is unlicensed, off-domain, and centered on governance we already have.</p></li>
-<li><p><strong>Build nothing on the orchestration frameworks</strong> in <a href="#/sec-orch-frameworks" class="quarto-xref">Section&nbsp;6</a> until a concrete need appears that Claude Code cannot meet; read the LangGraph documentation as the reference design if one does.</p></li>
+<li><p><strong>Build nothing on the orchestration frameworks</strong> in <a href="#/sec-orch-frameworks" class="quarto-xref">Section&nbsp;7</a> until a concrete need appears that Claude Code cannot meet; read the LangGraph documentation as the reference design if one does.</p></li>
 </ul>
 <p>None of these replaces our current Claude Code and <code>ai-config</code> practice. Agent Teams extends it, Inflexa is a candidate research tool alongside it, and TORQCLAW is, for now, only a reference.</p>
 </section></section>

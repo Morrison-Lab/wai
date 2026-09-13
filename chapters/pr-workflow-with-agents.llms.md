@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-10 20:52:53 (PDT)
+Last modified: 2026-09-13 00:11:34 (PDT)
 
 The practices below apply whether you are driving an agent’s work or doing the work yourself. They keep parallel sessions from colliding and keep a pull request moving toward a clean, mergeable state.
 
@@ -1769,6 +1769,571 @@ Automated review is a filter, not a substitute for this stance. Those tools miss
 
 [Claude Code’s `/autofix-pr`](https://code.claude.com/docs/en/commands#autofix-pr) watches the current branch’s pull request from Claude Code on the web and pushes fixes when CI fails or reviewers leave comments. It detects the open PR from your checked-out branch via `gh pr view`; to watch a different PR, check out its branch first. By default it fixes every CI failure and review comment; pass a prompt to scope it, for example `/autofix-pr only fix lint and type errors`. It requires the `gh` CLI and access to Claude Code on the web. A Marketplace action at [pr-autofix-with-claude-code](https://github.com/marketplace/actions/pr-autofix-with-claude-code) offers the same capability as a GitHub Action.
 
+# 9 Using Copilot Review Before Human Review
+
+Before requesting review from other humans, **always have Copilot review your pull request first**—even if Copilot created the PR itself. AI review provides fast, thorough feedback that helps catch issues before involving human reviewers, saving everyone time and improving code quality.
+
+**Why review with Copilot first:**
+
+- **AI has more bandwidth**: Copilot can review code immediately without competing priorities
+- **Catch common issues early**: Copilot excels at identifying bugs, logic errors, security vulnerabilities, and style inconsistencies
+- **Improve human review quality**: When humans review cleaner code, they can focus on higher-level concerns like design and architecture rather than basic issues
+- **Learn from feedback**: Even experienced developers benefit from Copilot’s perspective on best practices and potential improvements
+- **Growing capabilities**: AI review capabilities continue to improve over time, making this investment increasingly valuable
+
+**Copilot review workflow:**
+
+1.  **Assign Copilot as a reviewer**: On your pull request page, assign Copilot to review the PR the same way you would assign any other reviewer. Click “Reviewers” in the right sidebar and select Copilot from the list.
+
+2.  **Review Copilot’s comments**: Once Copilot completes its review, carefully examine each comment. For each comment, decide whether you agree with the suggestion:
+
+    - **If the comment is correct**: Address it by making code changes yourself or ask Copilot to apply the fix using GitHub’s suggestion features
+    - **If the comment is incorrect or not applicable**: Dismiss the comment with an explanation for why it doesn’t apply
+    - **If you’re uncertain**: Seek a second opinion from a human reviewer or do additional research
+
+3.  **Request another Copilot review**: After addressing or dismissing all comments, request another review from Copilot. This creates an iterative improvement process.
+
+4.  **Iterate until satisfied**: Repeat the review-and-address cycle until Copilot stops providing valuable suggestions. This typically takes 1-3 iterations depending on the complexity of the changes.
+
+5.  **Request human review**: Only after you’ve addressed Copilot’s feedback should you request review from human team members. At this point, the code should be in better shape, allowing human reviewers to focus on higher-level concerns.
+
+**Important considerations:**
+
+- **Copilot isn’t perfect**: AI review can produce false positives or miss important issues. Always apply your own judgment when evaluating Copilot’s suggestions.
+- **Don’t blindly accept all suggestions**: Some of Copilot’s recommendations may not fit your specific context or requirements. It’s perfectly appropriate to dismiss comments that don’t apply.
+- **Human review remains essential**: Copilot review supplements but does not replace human code review. Humans bring domain knowledge, understanding of business requirements, and judgment about trade-offs that AI cannot replicate.
+- **Document dismissals**: When dismissing Copilot comments, briefly explain why. This helps human reviewers understand your reasoning and can serve as documentation for future reference.
+
+**For pull request authors:**
+
+Even if you’re highly experienced, treating Copilot review as a required pre-review step helps maintain code quality and makes the best use of everyone’s time. The few minutes spent on Copilot review often save hours of back-and-forth with human reviewers.
+
+**For human reviewers:**
+
+When you receive a PR for review, check whether the author has completed the Copilot review process. If Copilot hasn’t reviewed the PR yet, consider asking the author to complete that step first before you invest time in review. This ensures you’re reviewing code that has already been through initial automated quality checks.
+
+# 10 Reviewing a Copilot PR You Didn’t Create
+
+When reviewing a pull request where someone else prompted Copilot to make changes, follow these guidelines to avoid confusion and ensure smooth collaboration:
+
+**Understanding PR roles:**
+
+The general PR roles (issue creator, author, reviewer, merger, assignee, and PR steward) are described in the [UCD-SERG Lab Manual’s GitHub chapter](https://ucd-serg.github.io/lab-manual/github.html#sec-pr-roles). Copilot-assisted workflows add two more:
+
+- **PR prompter**: Assigns a developer (human or AI) to start working on a PR, often by assigning an issue to Copilot. The PR prompter is sometimes the same person as the issue creator, but is often a project maintainer who reviews and triages external issue reports. When Copilot creates commits, both Copilot and the prompter are listed as co-authors. Typically the PR prompter becomes the PR manager.
+- **PR manager**: Supervises and guides the PR authors, assigns reviewers, and controls the PR workflow, deciding when and how Copilot makes additional changes. The PR manager can hand off this role to someone else.
+
+**The scenario:**
+
+- One team member (the “PR prompter”) assigned Copilot to work on an issue or explicitly prompted Copilot to start working
+- The prompter may or may not be the same person who originally created the issue
+  - In projects with a user base, users often submit issues (bug reports, feature requests)
+  - A project maintainer then steps in, adds their perspective, and assigns the issue to Copilot
+  - In this case, the maintainer who assigned Copilot is the prompter, not the original issue creator
+- Copilot created the PR with the prompter as co-author
+- The prompter (now acting as PR manager) requested your review
+- Copilot may have also automatically reviewed the PR
+
+**As a non-manager reviewer, your role is to provide feedback, not to directly initiate more work by Copilot.** The PR manager should remain in control of when and how Copilot makes additional changes.
+
+**Recommended review workflow:**
+
+1.  **Use “Comment” or “Request changes” based on the severity of issues**:
+    - Use **“Comment”** for suggestions, questions, or minor issues that don’t block merging
+    - Use **“Request changes”** for significant issues that must be addressed before merging
+    - Both options allow you to provide feedback without directly triggering Copilot
+2.  **Don’t ask Copilot to make changes directly**:
+    - Avoid using features that would trigger Copilot to start working immediately
+    - Let the PR manager decide whether to ask Copilot to address your comments or make changes themselves
+3.  **Write clear, actionable comments**:
+    - Explain what needs to change and why
+    - Suggest specific solutions when appropriate
+    - The PR manager will decide how to address your feedback
+
+**For PR managers:**
+
+After receiving reviews from other team members:
+
+1.  **Review all comments carefully**:
+    - Decide which comments you agree with
+    - Dismiss or respond to comments you don’t entirely agree with
+    - This ensures Copilot only addresses feedback you’ve validated
+2.  **Choose how to address valid feedback**:
+    - **Option A**: Make the changes yourself (faster for simple fixes)
+    - **Option B**: Ask Copilot to address the feedback (better for complex changes)
+    - **Option C**: Add your own review summarizing which comments Copilot should address, then ask Copilot to respond to the open comment threads
+3.  **Maintain clear communication**:
+    - Let reviewers know how you plan to address their feedback
+    - Mark conversations as resolved after addressing them
+    - Request re-review from humans after Copilot makes significant changes
+    - Update the PR’s “Assignees” field to reflect who is currently responsible for the PR
+
+**Transferring the PR manager role:**
+
+The original PR manager can hand over a PR to another person, who then becomes the new PR manager with control over Copilot’s work on that PR. This might be useful when:
+
+- The original PR manager is unavailable or on leave
+- Someone with different expertise needs to guide the remaining work
+- Responsibilities are being redistributed within the team
+
+To transfer the PR manager role:
+
+1.  The original PR manager should clearly communicate the handover to all reviewers
+2.  The new PR manager should review the PR’s history and any open feedback
+3.  The new PR manager should take over responding to Copilot and managing future iterations
+4.  The team should update the PR’s “Assignees” field and comments or description to reflect the current PR manager
+
+This workflow ensures the PR manager maintains control over the development process while benefiting from collaborative human review and Copilot’s implementation capabilities.
+
+# 11 Using a ChatGPT Account for Codex Pull-Request Reviews
+
+OpenAI Codex can act as a reviewer on GitHub pull requests. The native integration uses the Codex service connected to a ChatGPT workspace and posts a standard GitHub review through the Codex connector bot. It does not require you to build a separate GitHub Action.
+
+#### Prerequisites
+
+The native reviewer depends on **Codex Cloud**. Before it can review a repository, you need:
+
+- Codex Cloud enabled for your active ChatGPT workspace;
+- the repository connected to Codex Cloud;
+- access to the Codex code-review settings; and
+- GitHub push or admin permission if you want to configure automatic reviews.
+
+An `AGENTS.md` file is optional, but it lets the reviewer follow repository-specific guidance.
+
+#### Requesting and automating reviews
+
+After an administrator or repository owner connects the repository and enables code review in Codex settings, request a review by adding this comment to a pull request:
+
+``` text
+@codex review
+```
+
+You can add a one-off focus to the same comment, for example:
+
+``` text
+@codex review for security regressions and missing tests
+```
+
+Where the workspace configuration permits it, Codex can also review new pull requests automatically. In GitHub, the general code review reports only high-priority P0 and P1 findings to keep its comments focused.
+
+A separate **Security Review** (research preview) is a deeper pass on security-specific risks. Request it with `@codex security review`. It can overlap with the general review’s security findings.
+
+#### When an administrator has disabled Codex Cloud
+
+The message **“Your admin has turned off Codex Cloud”** is a workspace-policy restriction, not a GitHub repository error. The native `@codex review` bot cannot run because GitHub reviews execute through Codex Cloud. Local Codex use can continue. Run `/review` against a checked-out diff in any of:
+
+- the Codex app
+- the IDE composer
+- the CLI
+
+That is a local review. It does not post a GitHub review and does not create an always-on GitHub bot.
+
+Resolve the restriction in one of these ways:
+
+- A workspace administrator can enable Codex Cloud in the workspace’s admin permissions.
+- A user can connect a *personal* repository from a personal workspace that permits Codex Cloud. Do not use a personal workspace to connect organization-owned repositories — that bypasses the workspace policy your administrator set and moves the code outside your organization’s controls.
+- If cloud access must remain disabled, use the local `/review` path above.
+
+GitHub organizations may separately require an owner to approve the repository connection. Changing that authorization does not override a ChatGPT workspace policy; both sides must permit the integration.
+
+#### Native review versus API-backed automation
+
+Do not confuse the native integration with a custom GitHub Action that calls an OpenAI model. The native reviewer is configured through Codex and the linked ChatGPT workspace. A custom action instead needs API credentials and uses API billing and limits. It also requires you to implement:
+
+- the review prompt
+- permissions
+- comment-posting behavior
+
+Do not copy personal ChatGPT or Codex login credentials into CI secrets.
+
+#### Adding repository-specific review rules
+
+Codex reads applicable `AGENTS.md` files. Put broad guidance in the repository root and narrower guidance in a file closer to the code it governs. Review-only guidance belongs under a `## Code Review Rules` heading:
+
+``` markdown
+## Code Review Rules
+
+- Flag schema changes that are not backward compatible.
+  A safe migration must support both deployed application versions.
+- Flag behavior changes without a regression test.
+```
+
+Keep deterministic formatting and lint checks in continuous integration. Code-review guidance should:
+
+- focus on consequential behavior
+- state the safe alternative or exception
+- remain concise enough to apply consistently
+
+Codex review is an additional signal; it does not replace:
+
+- tests
+- branch protection
+- required human approval
+
+For current setup details, see OpenAI’s [GitHub code-review documentation](https://learn.chatgpt.com/docs/third-party/github).
+
+# 12 Where Pull-Request Review Lives in Claude Code Action
+
+A common question about [`anthropics/claude-code-action`](https://github.com/anthropics/claude-code-action) is where its pull-request review lives. The answer is surprising: **there is no dedicated review action.** The repository publishes one general-purpose top-level action, and “review” is a *prompt* you pass it, not a separate artifact.
+
+All claims below were surveyed against that repository at `main` (measured 2026-08-25; paths can move).
+
+#### One action, many behaviors
+
+The published action is [`action.yml`](https://github.com/anthropics/claude-code-action/blob/main/action.yml). It is a single composite action whose one external step installs Bun, and its description reads: “Flexible GitHub automation platform with Claude. Auto-detects mode based on event type: PR reviews, `@claude` mentions, or custom automation.”
+
+What selects the behavior is the `prompt` input:
+
+- A workflow triggered by comments containing `@claude` gets the interactive agent mode.
+- A workflow that supplies an explicit review prompt gets a one-shot reviewer.
+- The same action also handles issue triage and other automation, which is why one top-level action covers every behavior.
+
+A second directory in the repository, [`base-action/`](https://github.com/anthropics/claude-code-action/tree/main/base-action), is easy to mistake for a delegation target. It is not one: it holds a lower-level building block, developed in-tree and mirrored automatically to its own repository, [`anthropics/claude-code-base-action`](https://github.com/anthropics/claude-code-base-action). Consumers reference the mirror, not the in-repo path.
+
+#### Where the repository reviews its own PRs
+
+- [`.github/workflows/claude-review.yml`](https://github.com/anthropics/claude-code-action/blob/main/.github/workflows/claude-review.yml) is the reviewer. It triggers on `pull_request: opened`, skips fork PRs (they cannot mint the OpenID Connect (OIDC) token used for authentication), and calls `anthropics/claude-code-action@v1` with the prompt `/review-pr REPO: ... PR_NUMBER: ...`.
+
+- [`.claude/commands/review-pr.md`](https://github.com/anthropics/claude-code-action/blob/main/.claude/commands/review-pr.md) defines what `/review-pr` does. It fans out to five reviewer subagents, defined under [`.claude/agents/`](https://github.com/anthropics/claude-code-action/tree/main/.claude/agents):
+
+  - code quality
+  - performance
+  - test coverage
+  - documentation accuracy
+  - security
+
+  Each subagent is told to report only noteworthy feedback. The command then reviews that feedback and posts only the findings it also deems noteworthy — inline comments for specific issues, top-level comments for general observations or praise.
+
+- [`examples/pr-review-comprehensive.yml`](https://github.com/anthropics/claude-code-action/blob/main/examples/pr-review-comprehensive.yml) plus two filtered variants (by author and by path) are copy-paste templates for adding review to another repository.
+
+#### Adding review to your own repository
+
+Copy one of the `examples/pr-review-*.yml` files into your repository’s `.github/workflows/`, then provide credentials. The examples authenticate with an `ANTHROPIC_API_KEY` secret; the upstream repository’s own workflows instead use Workload Identity Federation inputs (`anthropic_federation_rule_id`, `anthropic_organization_id`, `anthropic_service_account_id`) to exchange the workflow’s OIDC token for a short-lived API token. Either route works; the federation route avoids a long-lived static key in CI.
+
+The example’s prompt is the customization point. It is ordinary prose naming focus areas, so you edit it the way you would edit any review checklist.
+
+#### Reviewer versus `@claude` agent
+
+Do not confuse the review workflow with [`.github/workflows/claude.yml`](https://github.com/anthropics/claude-code-action/blob/main/.github/workflows/claude.yml), the interactive agent. They share one underlying action but differ in trigger surface:
+
+|  | `claude-review.yml` | `claude.yml` |
+|----|----|----|
+| Fires on | PR opened | comments, reviews, or issues containing `@claude` |
+| Behavior | one-shot review | open-ended agent session |
+| Writes code | no | yes |
+
+This distinction explains a common debugging dead end: “`@claude` answered my comment, so why did nobody review the pull request?” Mention-triggered activity never runs the reviewer; only the `pull_request`-triggered workflow does.
+
+#### Relation to Codex native review
+
+This is the Claude-side counterpart to [using a ChatGPT account for Codex pull-request reviews](#sec-ai-codex-github-review). Codex ships a hosted native reviewer configured through the ChatGPT workspace, with no workflow file. Claude Code’s reviewer is the opposite trade: you own a workflow file and supply API credentials, but the prompt, tools, model, and triggering events are all visible and editable in your repository.
+
+# 13 Gemini Review Action for GitHub Pull Requests
+
+[`derailed-dash/gemini-review-action`](https://github.com/derailed-dash/gemini-review-action) is an open-source GitHub Action that provides automated code reviews on pull requests and automated triage on issues using Google’s Gemini models (measured 2026-08-31; repository at `v1.6.6`).
+
+#### Key capabilities
+
+The action operates as a composite GitHub Action designed to run directly in CI pipelines. Notable features include:
+
+- **Model selection and defaults**: Defaults to `gemini-3.7-flash`, configurable via the `gemini_model` input.
+- **Dual authentication modes**: Supports standard API key authentication via the `gemini_api_key` input, as well as keyless Google Cloud Workload Identity Federation (WIF) by running `google-github-actions/auth` beforehand and setting `GOOGLE_GENAI_USE_VERTEXAI`, `GOOGLE_CLOUD_PROJECT`, and `GOOGLE_CLOUD_LOCATION` environment variables.
+- **Hybrid codebase context enrichment**: Beyond analyzing git diffs, the action indexes repository context (structure, declarations, and key files) to assess pull requests against surrounding architecture.
+- **Structured output and GitHub suggestions**: Generates line-level review comments formatted as GitHub suggestion blocks so contributors can apply suggested fixes directly in the GitHub UI.
+- **Dynamic skill loading**: Can load domain-specific or project-specific instructions from `.agents/skills/` or custom directories, aligning reviews with existing repository skills.
+- **Cost telemetry and context caching**: Emits token usage reports and estimated costs per run, leveraging Gemini’s prompt and context caching to reduce API spend on repetitive large-context reviews.
+
+#### Basic workflow configuration
+
+To add Gemini code review to a repository, create `.github/workflows/gemini-review.yml`:
+
+``` yaml
+name: Gemini Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Gemini Code Review
+        uses: derailed-dash/gemini-review-action@v1
+        with:
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          gemini_model: gemini-3.7-flash
+```
+
+#### Comparison with native review integrations
+
+Like [Claude Code Action](#sec-ai-claude-code-action-review), `derailed-dash/gemini-review-action` gives the repository owner full visibility over workflow triggers, authentication methods, and review prompts. In contrast to hosted review offerings that require platform-level permissions across an entire organization, this GitHub Action operates per-repository with credentials scoped to GitHub Actions secrets or Google Cloud IAM roles.
+
+# 14 Auto-Review in Google Antigravity
+
+Issue \#109 asked whether Google Antigravity has an auto-review mode, prompted by a Reddit thread in the `r/google_antigravity` community. Reddit refuses requests from the machines this site is built on, so the thread itself could not be read (measured 2026-09-10); this section answers the question from the product’s own documentation instead and says where the lab’s practice fills the gap.
+
+#### What the product offers
+
+Antigravity has two things that look like review, and neither is an automatic review of your code.
+
+- **Artifact review** is a gate on the agent’s own plans. The Artifact Review Policy setting, in the Agent tab of the Settings pane, offers “Request Review (Recommended)”, which pauses the agent and waits for you to approve its implementation plan or diff, and “Always Proceed”, which skips the pause and lets the agent run without manual verification ([Google 2026a](#ref-antigravity_docs_artifact_review)). Neither option makes a reviewer read the change: one asks a human to, and the other asks nobody to.
+- **Review Changes** is a diff pane. Once the agent starts writing code, a Review Changes button in the Agent panel’s bottom toolbar opens a pane where you scroll through every change made in the conversation and leave comments on file diffs for the agent to act on ([Google 2026b](#ref-antigravity_docs_review_changes)). The documentation describes it as a human reading the agent’s work, not the agent reviewing its own.
+
+So the direct answer is no: as documented on 2026-09-10, Antigravity ships human-in-the-loop review of what the agent did, and an “always proceed” switch that removes even that. An automatic second opinion on a pull request has to be built.
+
+#### Building one with the Antigravity SDK
+
+Google’s own example is a GitHub Actions workflow that runs an Antigravity agent as an adversarial pull-request reviewer ([Samborski 2026](#ref-samborski_antigravity_pr_reviewer)). It triggers on pull-request `opened` and `reopened` events, and on an `@agy /review` comment for manual runs; it uses the `run-agy-sdk` composite action with a managed agent whose system instructions cast it as a code auditor; it runs on the Actions runner itself, where the SDK can start Docker-based MCP servers for file access and PR commenting; and it deliberately limits the agent to reading files and posting comments, with reviews restricted to maintainers on non-fork pull requests. That is the same shape as the Claude Code Action review in [Section 12](#sec-ai-claude-code-action-review) and the Gemini review action in [Section 13](#sec-ai-gemini-review-action): review is a CI job that a PR event starts, not a mode inside the editor.
+
+#### What the lab does
+
+The lab already built this once. `Morrison-Lab/ai-config` carries an `agy-review-workflow` skill and a reusable `antigravity-code-review.yml` workflow in `Morrison-Lab/gha` that posted a review, a security audit, and a set of generated tests on every pull request. That route ran on prepaid API credits, and it was retired on 2026-08-20 after a dispatched run ended with the credits depleted; the skill now documents itself as history and points cross-vendor second opinions at Codex instead (see [Section 11](#sec-ai-codex-github-review)).
+
+The Antigravity command-line program, `agy`, is a separate lane and still works. Its headless form, `agy --print "<prompt>"`, answers a single prompt on standard output under the subscription’s own quota (measured 2026-09-09). Quote the prompt so the shell passes it as one argument, and put it directly after `--print`: on this machine, placing another flag between the two made `agy` treat that flag as the prompt. The lab uses it as a local adversarial reviewer before a push: pipe the branch diff into a prompt that asks for factual errors, unsupported claims, broken cross-references, and style violations, and ends with a one-word verdict. Because `agy --print` cannot read files or the network in that mode, the diff has to be pasted into the prompt text itself. That is a pre-push check, not a PR bot, so the PR-side review stays with the Claude and Copilot reviewers the repositories already run.
+
+#### Useful to us? Yes, as a local second opinion
+
+- **Use** `agy --print` for a cheap, cross-vendor pre-push review when Claude quota is the scarce resource, which was the situation on 2026-09-09.
+- **Do not** re-enable the API-credit workflow; it costs money the lab has stopped budgeting for, and a dispatch that fails leaves a red check no reviewer can clear.
+- **Do not** read “Always Proceed” as an auto-review mode. It is the opposite: it removes the only review step the editor has.
+
+# 15 Gemini Code Assist for Repository Code Review
+
+Google Cloud provides a native code-review capability through [Gemini Code Assist](https://docs.cloud.google.com/gemini/docs/code-review/review-repo-code) (measured 2026-08-31; documentation in Enterprise preview). Unlike GitHub Actions that run inside individual repository workflows, Gemini Code Assist operates as a managed service connected at the organization or repository level.
+
+#### Architecture and setup
+
+Gemini Code Assist connects to GitHub, GitHub Enterprise Cloud, or GitHub Enterprise Server through Google Cloud Developer Connect:
+
+- **Connection host**: Repositories connect via Developer Connect connections provisioned in Google Cloud region `us-east1`.
+- **Console enablement**: Code review is enabled through the Google Cloud Agents & Tools Console (under **Code review** in the Gemini Cloud Assist navigation).
+- **Automated triggers**: Once connected, Gemini automatically generates pull-request summaries and posts line-level review comments when pull requests are opened or updated.
+- **Interactive commands**: Reviewers and authors can trigger on-demand reviews or ask questions by posting a comment starting with `@gemini-code-assist` or `/gemini` directly in the pull-request thread.
+
+#### Review scope and security boundaries
+
+Gemini Code Assist enforces several deliberate boundaries on review scope:
+
+- **Workflow file exclusion**: Files under `.github/workflows/` are explicitly excluded from reviews to prevent automated agents from analyzing or suggesting edits to CI credentials and pipeline definitions.
+- **Style and policy customization**: Repositories can provide custom review guidelines and coding standards configured centrally in the Google Cloud Console, applying uniform review standards across multiple connected repositories.
+- **Enterprise governance**: Because access is managed through Google Cloud IAM and Developer Connect, organization administrators can enable or disable reviews across projects without checking workflow files into individual repositories.
+
+#### Trade-offs versus Action-based reviews
+
+| Dimension | Gemini Code Assist | [Gemini Review Action](#sec-ai-gemini-review-action) / [Claude Code Action](#sec-ai-claude-code-action-review) |
+|----|----|----|
+| **Hosting** | Managed Google Cloud service | GitHub Actions runner |
+| **Configuration** | Google Cloud Console & Developer Connect | In-repo `.github/workflows/*.yml` |
+| **Workflow maintenance** | Zero workflow files in repository | Repository owns workflow YAML and prompts |
+| **Interactive mode** | Built-in `/gemini` comment tags | Configurable via `@claude` or Action triggers |
+| **Credential location** | Google Cloud IAM & Developer Connect token | GitHub Secrets or Workload Identity Federation |
+
+# 16 PR-Agent: Open-Source Pull-Request Review Bot
+
+[PR-Agent](https://github.com/The-PR-Agent/pr-agent) ([The PR Agent 2026h](#ref-pr_agent_repo)) is an open-source pull-request review bot. It runs one large-language-model call per command, posts the result as a pull-request comment or review, and works against several git forges with any model that LiteLLM can reach. All claims below were checked against the repository at `main`, its release list, and the documentation site at <https://docs.pr-agent.ai/> (measured 2026-09-09; the latest release was `v0.45.0`, published 2026-09-05).
+
+#### History and ownership
+
+PR-Agent began at CodiumAI, later renamed Qodo, and its hosted enterprise edition was sold as Qodo Merge. In 2026 Qodo donated the open-source project to the community. The repository now lives in the `The-PR-Agent` GitHub organization, has an external maintainer, and its README says it “is currently in the process of being donated to an open-source foundation” ([The PR Agent 2026h](#ref-pr_agent_repo)). Qodo Merge was rebranded as Qodo 2.0, a separate hosted product.
+
+The README is emphatic that the two are not the same thing: the repository “is not the Qodo offering for open-source projects”, and PR-Agent is “a community-maintained legacy project of Qodo” ([The PR Agent 2026h](#ref-pr_agent_repo)). Qodo remains the project’s gold sponsor. Read the documentation with that split in mind: pages that describe a hosted app or a free tier for open-source projects are describing Qodo’s product, while PR-Agent itself is software you run.
+
+The Docker images moved with the ownership. Releases `0.34.2` and later are published under `pragent/pr-agent`; the older `codiumai/pr-agent` namespace is a frozen archive ([The PR Agent 2026h](#ref-pr_agent_repo)).
+
+#### Commands
+
+Every command is a slash comment on the pull request or a subcommand of the `pr-agent` command-line tool. The four core commands ([The PR Agent 2026a](#ref-pr_agent_docs)):
+
+- `/describe` generates a title, type, summary, code walk-through, and labels.
+- `/review` generates a review covering possible issues, security concerns, tests, and an estimate of review effort. The review can also rate risk, recommend whether to merge, list the files a human should read first, and check the change against a linked GitHub or Jira ticket ([The PR Agent 2026g](#ref-pr_agent_review)).
+- `/improve` posts actionable code suggestions, which the forge can render as one-click suggestion blocks.
+- `/ask "..."` answers a free-text question about the whole PR or about specific lines.
+
+Six further commands (`/add_docs`, `/generate_labels`, `/similar_issue`, `/help`, `/help_docs`, and `/update_changelog`) round out the set. `/help_docs` is disabled as of `v0.36.1` pending a fix for a credential-exposure issue ([The PR Agent 2026h](#ref-pr_agent_repo)).
+
+Each command is a single model call, which the README describes as “~30 seconds, low cost” ([The PR Agent 2026h](#ref-pr_agent_repo)). Large diffs are handled by a compression strategy rather than by a multi-step agent loop: deletion-only hunks are dropped, deleted files are collapsed into a list, and remaining files are added in order of size until the prompt approaches the model’s token limit ([The PR Agent 2026f](#ref-pr_agent_compression)). Files that do not fit are named but not shown to the model. `v0.45.0` adds an opt-in large-diff chunking mode for `/review` that splits a diff across several calls and merges the results.
+
+Behavior is configured in a `.pr_agent.toml` file at the repository root, or by environment variables using dotted keys such as `pr_reviewer.extra_instructions` and `config.model` ([The PR Agent 2026c](#ref-pr_agent_automation)). Each tool has an `extra_instructions` field for free-text review guidance, and `/review` has `require_*` switches (`require_security_review`, `require_tests_review`, and so on) that turn individual sections on or off ([The PR Agent 2026g](#ref-pr_agent_review)).
+
+#### Supported forges and models
+
+PR-Agent supports five forges:
+
+- GitHub
+- GitLab
+- Bitbucket
+- Azure DevOps
+- Gitea
+
+Most commands work on all five; the documentation keeps a per-forge feature matrix, and a few commands (such as `/similar_issue`) are GitHub-only ([The PR Agent 2026a](#ref-pr_agent_docs)).
+
+Models are bring-your-own. PR-Agent calls models through LiteLLM, so any provider LiteLLM supports can be selected by setting `config.model` ([The PR Agent 2026d](#ref-pr_agent_models)). Named providers include OpenAI, Azure OpenAI, Anthropic, Google (AI Studio and Vertex AI), Amazon Bedrock, DeepSeek, Mistral, Groq, xAI, OpenRouter, and local servers such as Ollama and vLLM. Further keys let you route work to different models: `config.model_weak` for lighter commands (`/describe`, `/ask`, `/update_changelog`), `config.fallback_models` for retries, and a `[model_routing]` table that picks a model by diff size ([The PR Agent 2026d](#ref-pr_agent_models)).
+
+Local models work but come with a warning. The model-configuration page says that “most open-source models currently available (as of January 2025) face challenges with these complex tasks” and recommends them for “experimentation and learning purposes (mainly for the ask command)” ([The PR Agent 2026d](#ref-pr_agent_models)). That note predates the current generation of open-weight coding models, so treat it as a prompt to test rather than as a verdict; [small local models](../chapters/local-models.llms.md#sec-ai-small-local-models) covers what we have found local models can and cannot do.
+
+#### Deployment
+
+There is no hosted PR-Agent service. Every route runs the software on infrastructure you control ([The PR Agent 2026e](#ref-pr_agent_github_install)):
+
+- **GitHub Action** (the README’s recommended route). A workflow that `uses: the-pr-agent/pr-agent@main` with `OPENAI_KEY` (or another provider’s key) and `GITHUB_TOKEN` in `env`, triggered on `pull_request` and `issue_comment` events. `github_action_config.auto_review`, `auto_describe`, and `auto_improve` choose which commands run automatically when a PR opens, and the `issue_comment` trigger enables slash commands.
+- **Self-hosted GitHub App**. A webhook server (the `pr-agent:github_app` Docker target) registered as a GitHub App with pull-request, issue-comment, and metadata permissions. The documentation covers running it as an AWS Lambda function and sizing the `gunicorn` workers. Equivalent webhook servers exist for GitLab and Gitea.
+- **Command line**. `pip install pr-agent`, then `pr-agent --pr_url <url> review` runs a command against an existing PR from your own machine.
+- **Docker**. Versioned images under `pragent/pr-agent` back all of the above.
+
+The README’s data-privacy section says only that a self-hosted PR-Agent with your own OpenAI key “is between you and OpenAI” ([The PR Agent 2026h](#ref-pr_agent_repo)). That is the whole privacy story: no third party sees the diff except the model provider you chose.
+
+#### License and the hosted-versus-open split
+
+The code is MIT-licensed, with the 2026 copyright held by “The PR Agent” ([The PR Agent 2026b](#ref-pr_agent_license)). The current documentation no longer marks individual commands as open-source or hosted-only: after the donation, everything at `docs.pr-agent.ai` describes the open-source tool, and the hosted features moved to Qodo’s own product and documentation. Older blog posts and third-party guides still refer to “PR-Agent Pro” or “Qodo Merge” feature tiers; those describe the product that became Qodo 2.0, not the repository reviewed here.
+
+#### Useful to us?
+
+The lab already runs four pull-request reviewers, so the question is what PR-Agent adds. The comparison uses the same axes as the other review sections:
+
+| Dimension | PR-Agent | [Claude Code Action](#sec-ai-claude-code-action-review) | [Codex review](#sec-ai-codex-github-review) | [Gemini Review Action](#sec-ai-gemini-review-action) | [Gemini Code Assist](#sec-ai-gemini-code-assist-review) |
+|----|----|----|----|----|----|
+| **Source** | Open (MIT) | Open action, closed model | Closed | Open | Closed |
+| **Hosting** | Actions runner or your own webhook server | Actions runner | OpenAI-hosted | Actions runner | Google-hosted |
+| **Model** | Any via LiteLLM, including local | Claude only | OpenAI only | Gemini only | Gemini only |
+| **Forges** | GitHub, GitLab, Bitbucket, Azure DevOps, Gitea | GitHub | GitHub | GitHub | GitHub |
+| **Billing** | Your API key (or free with a local model) | Anthropic API key or federation | ChatGPT workspace | Gemini API key or Google Cloud | Google Cloud |
+| **Review depth** | One model call per command over a compressed diff | Agentic; five reviewer subagents with repository access | Hosted agent | One call with repository context indexing | Managed service |
+| **Interactive** | `/ask`, `/review`, and other slash comments | `@claude` mention (separate workflow) | `@codex review` | Triggered by workflow events | `/gemini` comments |
+| **Customization** | `.pr_agent.toml`, `extra_instructions`, prompts in repo | Review prompt in the workflow file | `AGENTS.md` review rules | Skills directory | Google Cloud Console |
+
+What PR-Agent offers that none of the others do:
+
+- **Model independence.** It is the only reviewer here that can be pointed at whichever provider currently has spare quota, or at an Ollama model for a zero-cost pass on a private repository. For the lab’s quota juggling ([spend management](../chapters/agent-customization.llms.md#sec-ai-gemini-spend-management) and [other models](../chapters/local-models.llms.md#sec-ai-claude-code-other-models)), a reviewer whose model is a one-line config change is attractive.
+- **Structured output.** `/review` reports effort, risk, and a merge recommendation in a fixed format, which a script can parse. The other reviewers produce prose.
+- **GitLab and other forges.** Only PR-Agent covers repositories outside GitHub, which matters if a collaborator hosts code elsewhere.
+
+What it lacks:
+
+- **Depth.** A single call over a pruned diff cannot follow a symbol into a file the diff did not touch. The Claude Code Action reviewer runs as an agent with the repository checked out, so it can. For the review standard the lab’s ARDI loop expects (see [Section 12](#sec-ai-claude-code-action-review)), PR-Agent is a first pass, not a replacement.
+- **A stable maintainer story.** The project changed hands in 2026, its README says a foundation transfer is still in progress, and one command is disabled pending a security fix. Release cadence remains weekly (five releases between 2026-08-01 and 2026-09-05), so the project is active, but the governance is newer than the code.
+- **Another bot in the thread.** Each added reviewer costs a review round per push and a comment the ARDI loop has to triage. Adding a fifth reviewer only pays off if it catches something the other four miss.
+
+A reasonable trial is one repository, the GitHub Action route, `auto_review` on and `auto_describe` and `auto_improve` off, with `config.model` set to whichever provider has spare quota that month. If its `/review` findings overlap the Claude reviewer’s after a few weeks, turn it off; if it catches something distinct, keep it as the cheap first pass.
+
+# 17 How a Session Learns a PR Changed
+
+A coding-agent session that is watching a pull request does not poll it. Something wakes the session when the pull request changes, and in Claude Code that “something” is one of **two separate channels**.
+
+The distinction matters for a practical reason: **the agent can turn one of them on and off, and cannot touch the other.** So “stop watching this PR” is a request an agent can satisfy for one channel and can only decline for the other.
+
+Both arrive the same way — mid-turn, alongside the next tool result, the same delivery mechanism as a background task notification — so they are easy to mistake for each other. They are distinguishable by the tag wrapping them.
+
+|  | `<github-webhook-activity>` | `<ci-monitor-event>` |
+|----|----|----|
+| Turned on by | the agent, via a tool call | a human, via a checkbox |
+| Turned off by | the agent, via a tool call | a human, via the same checkbox |
+| Available in | a session with the **remote/hosted** GitHub MCP server (not a local one) | Claude Code on the web only |
+| Carries | comments, CI results, reviews, mergeability notices | the new comment, plus a fixed instruction template |
+
+#### The channel an agent controls
+
+`subscribe_pr_activity` and `unsubscribe_pr_activity` are ordinary tool calls, taking an owner, a repository, and a pull-request number. Subscribing delivers that pull request’s activity into the conversation as `<github-webhook-activity>` messages until the session unsubscribes, or the pull request merges or closes.
+
+Two caveats are worth knowing before relying on it.
+
+**A successful subscribe does not guarantee delivery.** If a PR Steward agent already holds the watch on that pull request, the call still succeeds — but this session receives nothing. The tool result says so in as many words, so read the result rather than the exit status. Taking over the watch requires opting the steward out first, by removing its watching label on the pull request.
+
+**The tool does not exist on a locally-run GitHub MCP server.** Workflow guidance written for remote or web sessions names it freely, which strands anyone following that guidance from a local harness. [MCP server setup](../chapters/agent-customization.llms.md#sec-ai-mcp-server-setup) covers the local analogues to reach for instead.
+
+**Webhook delivery is also not exhaustive**, which is the failure mode most likely to be mistaken for “nothing has happened”. CI *successes*, new pushes, and merge-conflict transitions can arrive late or not at all. A session that treats silence as “still green” will sit indefinitely on a pull request that has gone stale or conflicted, so a subscription is a supplement to periodically re-reading the pull request’s real state, not a replacement for it.
+
+#### The channel only a human controls
+
+Claude Code on the web shows a per-pull-request **CI monitoring** panel in the session sidebar, with two checkboxes: **Auto-fix CI & address comments** and **Auto-merge when ready**.
+
+Ticking the first is what starts `<ci-monitor-event>` messages arriving.
+
+Three properties of that panel surprise people:
+
+- **There is no default.** No account-, organization-, repository-, or environment-level setting turns either checkbox on ahead of time. Absent the `/autofix-pr` shortcut described below, every new pull request and session starts with both off.
+- **No agent-side tool can reach it.** It is client-UI state, not something an agent’s configuration surface touches, so asking an agent to enable it cannot work. If the checkbox changes, a human changed it.
+- **One of the two has a shortcut, and the other does not.** Running `/autofix-pr` from the command line on a pull request’s branch spawns a web session with **Auto-fix CI & address comments** already on. There is no equivalent shortcut for **Auto-merge when ready**.
+
+See [Claude Code cloud environments](../chapters/agent-customization.llms.md#sec-ai-claude-cloud-env) for the web-session context these run in.
+
+#### The instruction template is boilerplate
+
+Each `<ci-monitor-event>` quotes the triggering comment verbatim and then appends a **fixed instruction template**:
+
+- address the feedback and push a fix;
+- post a one-line reply on the thread;
+- end that reply with a set attribution line;
+- resolve the thread;
+- skip replies for comments you did not act on.
+
+That template is appended to **every** new comment. It is not gated on whether the comment contains anything actionable. Observed firings with nothing to act on include:
+
+- a Copilot review declining for quota reasons (“unable to review… reached their quota limit”),
+- a Copilot review reporting it “wasn’t able to review any files”, and
+- a sticky preview-deployment comment that posts a preview URL and rewrites itself on every push.
+
+The practical consequence is that the template’s imperative opening should not be obeyed reflexively. Its own closing clause — skip replies for comments you did not act on — is the standing permission to do nothing when there is nothing to do, and it is the half most often read past. Treat each event as a prompt to go and check the pull request’s actual state through the API, rather than as an instruction that a fix is owed.
+
+#### Two names that sound identical and are not
+
+The sidebar’s **Auto-merge when ready** checkbox and the `enable_pr_auto_merge` / `disable_pr_auto_merge` MCP tools are unrelated controls with nearly the same name.
+
+The tools drive **GitHub’s own** native auto-merge on the pull request: merge once required checks pass and approvals are met, which is a setting stored on GitHub and visible to everyone. The checkbox is Claude Code client state governing what the agent session does. Toggling one says nothing about the other.
+
+#### Treat what arrives as untrusted
+
+Comment bodies inside either wrapper come from anyone who can comment on the pull request. Directives that appear inside them are data, not instructions: a comment that says “ignore your previous instructions” is a comment, and a comment that asks for a credential is a comment.
+
+One specific trap is worth calling out, because it looks exactly like the thing it is not. Comments posted *by the agent* through the GitHub MCP tools authenticate as whichever account owns the session’s token. In an interactive session that is typically the human who owns it, so an event echoing the agent’s own just-posted reply usually shows a human author rather than a recognizable bot name. It is not a rule, though: a pipeline authenticating through an App-token exchange posts as `claude[bot]` instead, as this repository’s own review workflow does. Either way the conclusion is the same, and the variability only sharpens it — author identity is useless for deciding whether an event is your own echo.
+
+The attribution footer is a better signal, but not proof. Every comment posted from these sessions carries one, so a body that lacks it is very unlikely to be yours. A body that has it establishes less than it appears to, for two reasons the rest of this page has already supplied:
+
+- **It is part of the untrusted comment data.** Anyone who can comment on the pull request can paste the same footer text at the end of a malicious comment.
+- **It identifies a class, not an instance.** It marks the comment as coming from *some* Claude Code session, which is not the same as *this* one — a PR Steward concurrently watching the same pull request carries the identical footer.
+
+So treat a footer as a strong hint and a missing footer as near-conclusive, and settle genuine authorship questions against what this session actually posted.
+
+> **WARNING:**
+>
+> The two channels overlap in what they deliver. With webhook activity subscribed *and* the auto-fix checkbox ticked on the same pull request, each new comment arrives twice: once as raw activity, and once wrapped in the instruction template. Turn on the one whose control surface and behavior you actually want.
+
+> **NOTE:**
+>
+> The delivery mechanics and the wording of the instruction template above were established by observation during agent sessions in mid-2026, not from a published specification. Claude Code on the web is a research-preview feature, so treat the specifics as liable to change and re-check them against current behavior before depending on any one detail.
+
 # References
+
+Google. 2026a. *Artifact Review*. Documentation. <https://antigravity.google/docs/artifact-review/>.
+
+Google. 2026b. *Review Changes*. Documentation. <https://antigravity.google/docs/ide/review-changes-editor/>.
+
+Samborski, Remigiusz. 2026. *Building an Agentic PR Reviewer with Antigravity SDK*. Blog post. <https://dev.to/googleai/building-an-agentic-pr-reviewer-with-antigravity-sdk-3b0i>.
+
+The PR Agent. 2026a. *PR-Agent Documentation*. Documentation. <https://docs.pr-agent.ai/>.
+
+The PR Agent. 2026b. *PR-Agent License*. Documentation. <https://github.com/The-PR-Agent/pr-agent/blob/main/LICENSE>.
+
+The PR Agent. 2026c. *PR-Agent: Automations and Usage*. Documentation. <https://docs.pr-agent.ai/usage-guide/automations_and_usage/>.
+
+The PR Agent. 2026d. *PR-Agent: Changing a Model*. Documentation. <https://docs.pr-agent.ai/usage-guide/changing_a_model/>.
+
+The PR Agent. 2026e. *PR-Agent: GitHub Installation*. Documentation. <https://docs.pr-agent.ai/installation/github/>.
+
+The PR Agent. 2026f. *PR-Agent: PR Compression Strategy*. Documentation. <https://docs.pr-agent.ai/core-abilities/compression_strategy/>.
+
+The PR Agent. 2026g. *PR-Agent: Review Tool*. Documentation. <https://docs.pr-agent.ai/tools/review/>.
+
+The PR Agent. 2026h. *PR-Agent: The Original Open-Source PR Reviewer*. Software. <https://github.com/The-PR-Agent/pr-agent>.
 
 Back to top
