@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-13 00:01:52 (PDT)
+Last modified: 2026-09-13 00:08:52 (PDT)
 
 Behind every coding agent is a system architecture: a model, an execution loop, tool definitions, and a *harness* that manages context, permissions, and session state. This chapter covers how coding agents and harnesses are structured, how they run under the hood, and how the open and commercial harness landscape looks in 2026.
 
@@ -554,7 +554,13 @@ The runtime-kind projects add the loop itself, the permission model, and provide
 
 #### How we would build our own
 
-`Morrison-Lab/ai-config` is already a custom harness of the layer kind, and a large one. On 2026-09-09 a local checkout held: - 191 skills; - 94 hook scripts, and a `hooks/hooks.json` with 55 registrations (30 `PreToolUse`, 10 `UserPromptSubmit`, and 15 `Stop`); - 8 subagent definitions (including the `adversarial-reviewer` that gates every push); - 131 shared prose fragments and 59 memory files; - a plugin manifest, so Claude Code and Cursor load it as a plugin ([how config reaches a machine](../chapters/agent-customization.llms.md#sec-ai-config-install) explains how, and [customizing an agent](../chapters/agent-customization.llms.md#sec-ai-customization) what the corpus contains).
+`Morrison-Lab/ai-config` is already a custom harness of the layer kind, and a large one. On 2026-09-09 a local checkout held:
+
+- 191 skills;
+- 94 hook scripts, and a `hooks/hooks.json` with 55 registrations (30 `PreToolUse`, 10 `UserPromptSubmit`, and 15 `Stop`);
+- 8 subagent definitions (including the `adversarial-reviewer` that gates every push);
+- 131 shared prose fragments and 59 memory files;
+- a plugin manifest, so Claude Code and Cursor load it as a plugin ([how config reaches a machine](../chapters/agent-customization.llms.md#sec-ai-config-install) explains how, and [customizing an agent](../chapters/agent-customization.llms.md#sec-ai-customization) what the corpus contains).
 
 It already implements all five common moves: the bootstrap is `CLAUDE.md` and `AGENTS.md`, planning goes through issue-first and `st`, fresh-context workers are the `Agent` and `Workflow` calls, independent verification is the adversarial-reviewer subagent, and the deterministic gates are the hooks. So “building our own” means three concrete things, in order:
 

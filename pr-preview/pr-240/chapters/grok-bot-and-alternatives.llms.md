@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-13 00:01:52 (PDT)
+Last modified: 2026-09-13 00:08:52 (PDT)
 
 Coding agents edit a checkout and return a branch or pull request ([coding-agent platforms](../chapters/coding-agents.llms.md#sec-ai-coding-agent-platforms)). *Grok Bot-style* products are a different shape: a named, persistent teammate with its own computer, so it can click through apps and websites the way a person would and keep going after you close your laptop. This chapter reviews [Grok Bot](https://docs.x.ai/grok-bot/overview) and the alternatives we could verify from primary sources, including [Rakazo](https://github.com/elie222/rakazo).
 
@@ -61,7 +61,7 @@ Grok Bot has its own in-app skill and routine objects ([xAI 2026e](#ref-grok_bot
 
 A Bot can own up to 50 routines. Background routines can run while the laptop is closed. A test run performs *real* work.
 
-Those objects are Grok Bot’s product surface. They are not a substitute for the lab `ai-config` corpus. Because Grok Bot signs in with a Cursor account, a session can still load that corpus as a **Cursor plugin** (skills, user-global rules, and commands from [`.cursor-plugin/plugin.json`](https://github.com/Morrison-Lab/ai-config)): the same plugin path this lab’s Cursor sessions already use. That is not Claude Code’s install path. Grok Bot does not load the `~/.claude` symlink install, `CLAUDE.md` `@imports`, or Claude hooks/`hooks.json`. Cursor Cloud uses `.cursor/hooks.json` instead ([how the config reaches a machine](../chapters/coding-agents.llms.md#sec-ai-config-install)).
+Those objects are Grok Bot’s product surface. They are not a substitute for the lab `ai-config` corpus. Because Grok Bot signs in with a Cursor account, a session can still load that corpus as a **Cursor plugin** (skills, user-global rules, and commands from [`.cursor-plugin/plugin.json`](https://github.com/Morrison-Lab/ai-config)): the same plugin path this lab’s Cursor sessions already use. That is not Claude Code’s install path. Grok Bot does not load the `~/.claude` symlink install, `CLAUDE.md` `@imports`, or Claude hooks/`hooks.json`. Cursor Cloud uses `.cursor/hooks.json` instead ([how the config reaches a machine](../chapters/agent-customization.llms.md#sec-ai-config-install)).
 
 #### Approvals and the shared-computer boundary
 
@@ -143,7 +143,7 @@ That last point is the lab-config trap: Cowork is the same vendor family as our 
 >
 > ChatGPT Work is the OpenAI analog of “hand it a job and come back.” Cloud Work is the closest OpenAI match to Grok Bot’s laptop-closed computer. Local Work and Codex Computer Use are closer to Cowork: they operate *your* machine under approvals.
 >
-> None of this loads `ai-config`. For repository work we already document Codex separately ([Codex pull-request reviews](../chapters/coding-agents.llms.md#sec-ai-codex-github-review)). Do not add ChatGPT Work as a lab-wide tool unless a project is already inside that workspace and the data-handling rules for that workspace are acceptable.
+> None of this loads `ai-config`. For repository work we already document Codex separately ([Codex pull-request reviews](../chapters/pr-workflow-with-agents.llms.md#sec-ai-codex-github-review)). Do not add ChatGPT Work as a lab-wide tool unless a project is already inside that workspace and the data-handling rules for that workspace are acceptable.
 
 # 8 Comparison
 
