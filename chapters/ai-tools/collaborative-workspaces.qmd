@@ -52,9 +52,11 @@ Similar collaborative workspace paradigms have emerged across other frontier eco
   [ChatGPT Work](https://learn.chatgpt.com/docs/get-started-with-work) [@chatgpt_work]
   (see @sec-chatgpt-work) and Canvas provide side-by-side document and code editing with inline line-level revisions,
   interactive targeted edits, and multi-file artifact tracking.
-- **Cursor and Google Antigravity Agent Workspaces**:
+- **Cursor, Google Antigravity, and OpenChamber Agent Workspaces**:
   Developer-centric workspace agents providing multi-agent delegation, worktree isolation,
-  and structured planning workflows (such as Conductor extension spec-driven development, [Conductor extension](agent-customization.qmd#sec-ai-conductor-extension)).
+  structured planning workflows (such as Conductor extension spec-driven development, [Conductor extension](agent-customization.qmd#sec-ai-conductor-extension)),
+  and multi-model parallel execution ([OpenChamber](https://openchamber.dev/) [@openchamber]).
+
 - **Notion AI and Microsoft Copilot Studio**:
   Enterprise knowledge graph agents designed for querying organizational wikis
   and automating business process workflows.
