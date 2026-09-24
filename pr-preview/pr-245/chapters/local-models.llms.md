@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-24 15:45:50 (PDT)
+Last modified: 2026-09-24 15:52:30 (PDT)
 
 Cloud model providers offer state-of-the-art capability, but privacy constraints, HIPAA data handling, air-gapped environments, and cost considerations often require running models locally or offline. This chapter covers running coding agents without outside network calls, connecting open harnesses to local Ollama and OpenRouter endpoints, steering Claude Code with non-Anthropic models, and evaluating small local models for autonomous coding loops.
 

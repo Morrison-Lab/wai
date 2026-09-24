@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-24 15:45:50 (PDT)
+Last modified: 2026-09-24 15:52:30 (PDT)
 
 Coding agents edit a checkout and return a branch or pull request ([coding-agent platforms](../chapters/coding-agents.llms.md#sec-ai-coding-agent-platforms)). *Grok Bot-style* products are a different shape: a named, persistent teammate with its own computer, so it can click through apps and websites the way a person would and keep going after you close your laptop. This chapter reviews [Grok Bot](https://docs.x.ai/grok-bot/overview) and the alternatives we could verify from primary sources, including [Rakazo](https://github.com/elie222/rakazo).
 
@@ -200,9 +200,7 @@ The 2026 AI ecosystem has expanded beyond reactive chat windows and command-line
 Similar collaborative workspace paradigms have emerged across other frontier ecosystems:
 
 - **ChatGPT Work and OpenAI Canvas**: [ChatGPT Work](https://learn.chatgpt.com/docs/get-started-with-work) ([OpenAI 2026](#ref-chatgpt_work)) (see [Section 7](#sec-chatgpt-work)) and Canvas provide side-by-side document and code editing with inline line-level revisions, interactive targeted edits, and multi-file artifact tracking.
-
 - **Cursor, Google Antigravity, and OpenChamber Agent Workspaces**: Developer-centric workspace agents providing multi-agent delegation, worktree isolation, structured planning workflows (such as Conductor extension spec-driven development, [Conductor extension](../chapters/agent-customization.llms.md#sec-ai-conductor-extension)), and multi-model parallel execution ([OpenChamber](https://openchamber.dev/) ([OpenChamber 2026](#ref-openchamber))).
-
 - **Notion AI and Microsoft Copilot Studio**: Enterprise knowledge graph agents designed for querying organizational wikis and automating business process workflows.
 
 #### Comparative Taxonomy of Workspace Agents
