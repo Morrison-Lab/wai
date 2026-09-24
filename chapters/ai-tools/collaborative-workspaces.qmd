@@ -62,7 +62,7 @@ Similar collaborative workspace paradigms have emerged across other frontier eco
 
 #### Comparative Taxonomy of Workspace Agents
 
-| Dimension | Claude Cowork | Gemini Spark | OpenAI Canvas / ChatGPT Work | Developer Workspace Agents (Antigravity / Cursor) |
+| Dimension | Claude Cowork | Gemini Spark | OpenAI Canvas / ChatGPT Work | Developer Workspace Agents (Antigravity / Cursor / OpenChamber) |
 |---|---|---|---|---|
 | **Primary Architecture** | Desktop-native (sandboxed) | Cloud-native (always-on) | Cloud web interactive | Desktop IDE / CLI workspace |
 | **Execution Lifetime** | Active session / local machine | 24/7 continuous cloud | Interactive turn-by-turn | Session-scoped multi-agent |
