@@ -211,12 +211,12 @@ Vendor plugins from JFrog, Firecrawl, and Tavily wrap their own CLIs.
   An agentic development environment built on top of the OpenCode SDK.
   It splits execution across a self-hosted instance (`openchamber`) running on a machine you control
   (local workstation, Linux box, or server) and client interfaces across desktop apps
-  (macOS, Windows, Linux, and extensions for VS Code, Cursor, Windsurf, and Trae),
+  (macOS, Windows, Linux, and editor integrations across VS Code, Cursor, Windsurf, and Trae),
   browsers, and mobile (iOS beta, Android, and PWA).
   Remote connectivity uses an end-to-end encrypted "Private Relay" paired via QR code
   without exposing inbound ports or maintaining public tunnels.
   Core workflow stages include starting from GitHub issues/PRs or Linear tickets with session goals and recurring schedules;
-  running tasks across up to five models in parallel (each in its own git worktree) with interactive browser verification
+  running tasks across up to five models in parallel (with optional per-model git worktree isolation) with interactive browser verification
   and multi-model fusion (combining the strongest parts of competing completions);
   and reviewing changes through ordered, step-by-step diff walkthroughs with red CI results routed directly back to the generating agent.
   Like CodeNomad it uses OpenCode as the underlying engine and is not affiliated with the OpenCode team.
