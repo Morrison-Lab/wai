@@ -207,12 +207,12 @@ Vendor plugins from JFrog, Firecrawl, and Tavily wrap their own CLIs.
   *Useful to us?* Yes, as the most complete graphical front end for OpenCode
   and a plausible answer to "I want several OpenCode sessions side by side without `tmux`".
 - [`OpenChamber`](https://openchamber.dev/) ([GitHub](https://github.com/openchamber/openchamber)) [@openchamber]
-  (now under its own organization; MIT; about 10,500 stars; release `v1.22.2` on 2026-09-05).
+  (now under its own organization; MIT; about 10,500 stars; release `v2.0.1` on 2026-09-24).
   An agentic development environment built on top of the OpenCode SDK.
   It splits execution across a self-hosted instance (`openchamber`) running on a machine you control
   (local workstation, Linux box, or server) and client interfaces across desktop apps
   (macOS, Windows, Linux, and extensions for VS Code, Cursor, Windsurf, and Trae),
-  browsers, and mobile (iOS beta and PWA).
+  browsers, and mobile (iOS beta, Android, and PWA).
   Remote connectivity uses an end-to-end encrypted "Private Relay" paired via QR code
   without exposing inbound ports or maintaining public tunnels.
   Core workflow stages include starting from GitHub issues/PRs or Linear tickets with session goals and recurring schedules;
@@ -222,7 +222,6 @@ Vendor plugins from JFrog, Firecrawl, and Tavily wrap their own CLIs.
   Like CodeNomad it uses OpenCode as the underlying engine and is not affiliated with the OpenCode team.
   *Useful to us?* Yes; the multi-model parallel run and worktree isolation mirror our own practices,
   and Private Relay enables headless server agent monitoring from mobile or browser without exposing ports.
-
 - [`OpenWork`](https://github.com/different-ai/openwork) [@openwork]
   (different-ai; about 23,400 stars; release `v0.18.44` on 2026-09-09).
   Positions itself as "an open-source alternative to Claude Cowork and Codex" for macOS, Windows, and Linux,

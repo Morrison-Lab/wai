@@ -56,7 +56,6 @@ Similar collaborative workspace paradigms have emerged across other frontier eco
   Developer-centric workspace agents providing multi-agent delegation, worktree isolation,
   structured planning workflows (such as Conductor extension spec-driven development, [Conductor extension](agent-customization.qmd#sec-ai-conductor-extension)),
   and multi-model parallel execution ([OpenChamber](https://openchamber.dev/) [@openchamber]).
-
 - **Notion AI and Microsoft Copilot Studio**:
   Enterprise knowledge graph agents designed for querying organizational wikis
   and automating business process workflows.
