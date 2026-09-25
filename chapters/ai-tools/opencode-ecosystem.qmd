@@ -215,10 +215,10 @@ Vendor plugins from JFrog, Firecrawl, and Tavily wrap their own CLIs.
   browsers, and mobile (iOS beta, Android, and PWA).
   Remote connectivity uses an end-to-end encrypted "Private Relay" paired via QR code
   without exposing inbound ports or maintaining public tunnels.
-  Core workflow stages include starting from GitHub issues/PRs or Linear tickets with session goals and recurring schedules;
-  running tasks across up to five models in parallel (each in its own session, with optional worktree isolation per the repository README) with interactive browser verification
-  and multi-model fusion (combining the strongest parts of competing completions);
-  and reviewing changes through ordered, step-by-step diff walkthroughs with red CI results routed directly back to the generating agent.
+  Users can start sessions from GitHub issues/PRs or Linear tickets with session goals and recurring schedules,
+  run tasks across up to five models in parallel (each in its own session, with optional worktree isolation per the repository README)
+  with interactive browser verification and multi-model fusion,
+  and inspect changes through ordered diff walkthroughs while attaching failed CI checks or review comments directly to the agent's chat context.
   Like CodeNomad it uses OpenCode as the underlying engine and is not affiliated with the OpenCode team.
   *Useful to us?* Yes; the multi-model parallel run and worktree isolation mirror our own practices,
   and Private Relay enables headless server agent monitoring from mobile or browser without exposing ports.
