@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-24 17:01:53 (PDT)
+Last modified: 2026-09-24 17:09:11 (PDT)
 
 Coding agents edit a checkout and return a branch or pull request ([coding-agent platforms](../chapters/coding-agents.llms.md#sec-ai-coding-agent-platforms)). *Grok Bot-style* products are a different shape: a named, persistent teammate with its own computer, so it can click through apps and websites the way a person would and keep going after you close your laptop. This chapter reviews [Grok Bot](https://docs.x.ai/grok-bot/overview) and the alternatives we could verify from primary sources, including [Rakazo](https://github.com/elie222/rakazo).
 
@@ -200,15 +200,15 @@ The 2026 AI ecosystem has expanded beyond reactive chat windows and command-line
 Similar collaborative workspace paradigms have emerged across other frontier ecosystems:
 
 - **ChatGPT Work and OpenAI Canvas**: [ChatGPT Work](https://learn.chatgpt.com/docs/get-started-with-work) ([OpenAI 2026](#ref-chatgpt_work)) (see [Section 7](#sec-chatgpt-work)) and Canvas provide side-by-side document and code editing with inline line-level revisions, interactive targeted edits, and multi-file artifact tracking.
-- **Cursor, Google Antigravity, and OpenChamber Agent Workspaces**: Developer-centric workspace agents providing multi-agent delegation, worktree isolation, structured planning workflows (such as Conductor extension spec-driven development, [Conductor extension](../chapters/agent-customization.llms.md#sec-ai-conductor-extension)), and multi-model parallel execution ([OpenChamber](https://openchamber.dev/) ([OpenChamber 2026](#ref-openchamber))).
+- **Cursor, Google Antigravity, and OpenChamber Agent Workspaces** ([OpenChamber 2026](#ref-openchamber)): Developer-centric workspace agents providing multi-agent delegation or parallel multi-model execution ([OpenChamber](https://openchamber.dev/) ([OpenChamber 2026](#ref-openchamber))), worktree isolation (dedicated or optional), and structured planning workflows (such as Conductor extension spec-driven development, [Conductor extension](../chapters/agent-customization.llms.md#sec-ai-conductor-extension)).
 - **Notion AI and Microsoft Copilot Studio**: Enterprise knowledge graph agents designed for querying organizational wikis and automating business process workflows.
 
 #### Comparative Taxonomy of Workspace Agents
 
-| Dimension | Claude Cowork | Gemini Spark | OpenAI Canvas / ChatGPT Work | Developer Workspace Agents (Antigravity / Cursor / OpenChamber) |
+| Dimension | Claude Cowork | Gemini Spark | OpenAI Canvas / ChatGPT Work | Developer Workspace Agents (Antigravity / Cursor / OpenChamber ([OpenChamber 2026](#ref-openchamber))) |
 |----|----|----|----|----|
 | **Primary Architecture** | Desktop-native (sandboxed) | Cloud-native (always-on) | Cloud web interactive | Desktop IDE / CLI workspace (self-hosted server for OpenChamber) |
-| **Execution Lifetime** | Active session / local machine | 24/7 continuous cloud | Interactive turn-by-turn | Session-scoped multi-agent |
+| **Execution Lifetime** | Active session / local machine | 24/7 continuous cloud | Interactive turn-by-turn | Session-scoped multi-agent / multi-model |
 | **Data Locality** | Local files (cloud sessions on some plans) | Google Workspace cloud | OpenAI cloud sandbox | Local repository worktrees (optional in OpenChamber) |
 | **Primary Domain** | File and document workflows | Cloud suite coordination | Document and text drafting | Codebase refactoring and review |
 | **Key Strength** | Local file privacy and tool use | Autonomous background monitoring | Real-time targeted line edits | Deterministic builds, tests, git workflows |
