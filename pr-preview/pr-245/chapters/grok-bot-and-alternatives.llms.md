@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-24 16:54:31 (PDT)
+Last modified: 2026-09-24 17:01:53 (PDT)
 
 Coding agents edit a checkout and return a branch or pull request ([coding-agent platforms](../chapters/coding-agents.llms.md#sec-ai-coding-agent-platforms)). *Grok Bot-style* products are a different shape: a named, persistent teammate with its own computer, so it can click through apps and websites the way a person would and keep going after you close your laptop. This chapter reviews [Grok Bot](https://docs.x.ai/grok-bot/overview) and the alternatives we could verify from primary sources, including [Rakazo](https://github.com/elie222/rakazo).
 
@@ -207,9 +207,9 @@ Similar collaborative workspace paradigms have emerged across other frontier eco
 
 | Dimension | Claude Cowork | Gemini Spark | OpenAI Canvas / ChatGPT Work | Developer Workspace Agents (Antigravity / Cursor / OpenChamber) |
 |----|----|----|----|----|
-| **Primary Architecture** | Desktop-native (sandboxed) | Cloud-native (always-on) | Cloud web interactive | Desktop IDE / CLI workspace |
+| **Primary Architecture** | Desktop-native (sandboxed) | Cloud-native (always-on) | Cloud web interactive | Desktop IDE / CLI workspace (self-hosted server for OpenChamber) |
 | **Execution Lifetime** | Active session / local machine | 24/7 continuous cloud | Interactive turn-by-turn | Session-scoped multi-agent |
-| **Data Locality** | Local files (cloud sessions on some plans) | Google Workspace cloud | OpenAI cloud sandbox | Local repository worktrees |
+| **Data Locality** | Local files (cloud sessions on some plans) | Google Workspace cloud | OpenAI cloud sandbox | Local repository worktrees (optional in OpenChamber) |
 | **Primary Domain** | File and document workflows | Cloud suite coordination | Document and text drafting | Codebase refactoring and review |
 | **Key Strength** | Local file privacy and tool use | Autonomous background monitoring | Real-time targeted line edits | Deterministic builds, tests, git workflows |
 
