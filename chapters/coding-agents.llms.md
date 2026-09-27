@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-26 19:26:49 (PDT)
+Last modified: 2026-09-27 01:26:56 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -85,7 +85,7 @@ Kepler is not an agent itself but an orchestration layer. It hosts agents you al
 The platforms above sort into three execution models (measured 2026-09-09). The model decides where your code is copied, what the agent can reach, and how its work comes back to you.
 
 - **Hosted sandbox.** The vendor provisions an isolated machine, clones the repository into it, and returns a branch or pull request. Jules clones the repository into a virtual machine and submits a pull request after you approve its plan ([Google 2026d](#ref-jules_docs)); Cursor cloud agents clone from GitHub, GitLab, Azure DevOps, or Bitbucket, work on a separate branch, and push it back ([Cursor 2026](#ref-cursor_cloud_agents)); Kiro web tasks and Warp cloud agents follow the same shape ([Amazon Web Services 2026](#ref-kiro_docs); [Warp 2026](#ref-warp_docs)), as do the Copilot coding agent, Codex cloud tasks, Devin, and OpenHands Cloud. Nothing runs on your machine, so the questions are what the sandbox can reach and whether the vendor’s retention terms suit the repository.
-- **Local checkout.** The agent runs on your workstation against the files already there, in a terminal (Claude Code, Codex CLI, OpenCode, Aider, Gemini CLI, Warp) or inside an editor (Cursor, Cline, Kiro, Copilot in VS Code). Code stays put, and the agent inherits whatever credentials and network access your shell has, which is why [Section 18](#sec-ai-best-practices) asks for approval gates and a sandbox. Pairing one of these with Ollama keeps the model local too ([Ollama 2026](#ref-ollama_site)), at the cost of the hardware described in [running agents offline](../chapters/local-models.llms.md#sec-ai-offline).
+- **Local checkout.** The agent runs on your workstation against the files already there, in a terminal (Claude Code, Codex CLI, OpenCode, Aider, Gemini CLI, Warp) or inside an editor (Cursor, Cline, Kiro, Copilot in VS Code). Code stays put, and the agent inherits whatever credentials and network access your shell has, which is why [Section 19](#sec-ai-best-practices) asks for approval gates and a sandbox. Pairing one of these with Ollama keeps the model local too ([Ollama 2026](#ref-ollama_site)), at the cost of the hardware described in [running agents offline](../chapters/local-models.llms.md#sec-ai-offline).
 - **Orchestration layer.** Kepler, Kiro Crew, and the Cline Kanban surface do not add a model of their own; they run several of the agents above in parallel worktrees or sessions and present the results for review. Reach for one only once a single agent is no longer the bottleneck ([when orchestration helps](../chapters/agent-orchestration.llms.md#sec-orch-when)).
 
 Several vendors now ship all three, so the platform name alone no longer tells you where the code goes: Claude Code, Codex, Cursor, Kiro, and Warp each offer a local surface and a hosted one. Check the execution model of the specific surface you enable. The Windsurf editor is a naming trap of the same kind: `windsurf.com` now redirects to Devin Desktop, Cognition’s rebranding of that editor (measured 2026-09-09; see [the harness landscape](../chapters/agent-architecture.llms.md#sec-ai-harness-landscape)).
@@ -347,7 +347,35 @@ The lab’s own measurement agrees with the video’s ranking. On 2026-09-09 a d
 
 Two of the fixes are not worth adopting as stated. The prompt-discipline block (fix 1) is a promotional download whose text the video withholds, and “terse answers, minimal file reading” conflicts with the lab’s review rules, which pay tokens for verification on purpose. And the MCP finding (fix 7) is one measurement on one build; re-measure it on your own setup before removing servers you rely on.
 
-# 9 Andrew Ng on Learning to Code in the Age of AI
+# 9 Delegating Bulk Judgments with Quicksilver
+
+[Issue \#247](https://github.com/Morrison-Lab/wai/issues/247) notes [Quicksilver](https://github.com/UditAkhourii/quicksilver), an open-source Claude Code skill and plugin authored by Udit Akhouri ([Akhouri 2026](#ref-akhouri_quicksilver)). Quicksilver addresses a central inefficiency in agent workflows: paying an expensive frontier model to skim hundreds of files, logs, or tickets just to determine which subset actually requires deep analysis.
+
+#### Delegating bulk judgment to lightweight models
+
+When asked questions such as “which files handle authentication?” or “which lines report errors?”, a frontier model typically reads every candidate file or log line into its context window. This process burns thousands of tokens on routine filtering, fills the context with irrelevant noise, and rapidly approaches session usage limits.
+
+Quicksilver restructures this workflow by routing candidate items to Jev, a lightweight model from TypeSafe designed for high-throughput System One judgment. Jev evaluates items in parallel and returns typed verdicts (boolean flags, categorical labels, or scores) in approximately one second at a fraction of frontier model pricing (\$0.042 per million input tokens, with free output tokens). Claude receives only a filtered shortlist of relevant items with confidence ratings, reserving its reasoning tokens for synthesis, refactoring, and code changes.
+
+#### Measured benchmark results
+
+On a benchmark of twelve real-world tasks across public datasets (including supercomputer logs, `Banking77` intent classification, UCI SMS spam, `SST-2` sentiment analysis, the Hono repository, and `lodash` source code) ([Akhouri 2026](#ref-akhouri_quicksilver)):
+
+- **Token reduction:** Claude token consumption was reduced by an average of 86 percent (median 82 percent).
+- **Execution speed:** Tasks involving needle-in-haystack search and log triage completed up to 20 times faster.
+- **Accuracy parity:** Quicksilver matched Claude’s baseline accuracy on 8 of the 12 evaluation tasks.
+
+#### Appropriate use cases and boundary conditions
+
+Quicksilver is most effective when tasks can be formulated as a narrow, typed judgment:
+
+- **Needle-in-haystack scans:** Locating relevant implementation files across a multi-hundred-file repository, pinpointing rare error signatures in multi-thousand-line server logs, or isolating target helper routines in large single-file modules.
+- **Structured ticket and log classification:** Categorizing user requests or triage items against closed label sets.
+- **Borderline case review:** Quicksilver flags ambiguous or borderline items (annotated with a question mark), enabling Claude to inspect only the uncertain cases rather than the entire corpus.
+
+Quicksilver is not intended for authoring code, complex multi-step reasoning, or tasks that deterministic tools like `grep` can answer directly.
+
+# 10 Andrew Ng on Learning to Code in the Age of AI
 
 [Issue \#244](https://github.com/Morrison-Lab/wai/issues/244) asked for a summary of a YouTube video, “Andrew Ng: One Skill to Stay Relevant in the Age of AI”, from the channel Stanford Online ([Stanford Online and Ng 2026](#ref-ng_one_skill_stay_relevant)). The video is an eighty-nine-second interview published on 2026-09-22, in which Andrew Ng (Adjunct Professor at Stanford University and founder of DeepLearning.AI) responds to the question: “What’s one skill professionals should start learning now if they want to stay relevant in the age of AI?”
 
@@ -368,13 +396,13 @@ In Ng’s view, AI-assisted coding transforms programming into a universal capab
 
 A prevalent piece of executive and business advice suggests that learning to code is a waste of time because AI will automate software development away. Ng argues that this perspective has the causality backwards. Rather than making programming obsolete, AI assistance has lowered the barrier to entry enough that coding is now practical for everyone to learn. The ability to specify logic, structure data, and guide an AI coding agent to produce tailored tools amplifies individual effectiveness in every profession.
 
-# 10 When to use a coding agent
+# 11 When to use a coding agent
 
 Coding agent sessions are currently[^1] considered “premium requests”, which are limited resources; see <https://github.com/features/copilot/plans> for details. So, use coding agents sparingly. Use them for complex changes that would be difficult or time-consuming for you to complete by hand. Coding agents also take time to get configured for work, every time you make a request. See <https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-environment#preinstalling-tools-or-dependencies-in-copilots-environment> for ways to reduce that startup time, but it will never be 0. If you can complete the task faster than the coding agent can, you should probably do it yourself. For example, when you have errors in the spell-check or lint workflows, you can often fix them faster than Copilot can. Similarly, when reviewing Copilot’s PRs, you can often make direct changes to the branch faster than you could write clear review comments and get Copilot to address them.
 
 Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.
 
-# 11 Deep Research Modes
+# 12 Deep Research Modes
 
 Every major assistant now ships a “deep research” mode: a long-running agent that plans a search strategy, runs dozens of queries, reads the results, and writes a cited report (measured 2026-09-09). These modes sit between a single web search and a coding agent. They do not edit files or run your code, but they read far more sources per question than a chat turn does, and they hand back something closer to a literature memo than an answer.
 
@@ -444,14 +472,14 @@ Yes, for a specific slice of work, and no as a substitute for the agents in [Sec
 
 Reach for a research mode when the question is about the world rather than about your repository: a literature scan before a grant section, a comparison of vendors or packages you have not yet chosen between, or a check on what a regulator or funding agency currently requires. The modes read many more pages than a coding agent will in one turn, they hand back citations you can audit, and several export straight into the document formats we already draft in (see [collaborative workspaces](../chapters/grok-bot-and-alternatives.llms.md#sec-ai-collaborative-workspaces) for the workspace side). Researcher is the odd one out: its value is reading your own institution’s email and files, which none of the others can see, and that is also why its output stays inside the Microsoft 365 boundary.
 
-Reach for a coding agent with web search instead when the answer must touch the code: a dependency upgrade that needs the changelog read *and* applied, a CI failure whose fix lives in a vendor’s docs, or anything where the deliverable is a diff rather than a memo. [Section 10](#sec-ai-when-to-use) covers that decision in general. A coding agent can also chain research and action in one run, whereas every research mode above stops at the report.
+Reach for a coding agent with web search instead when the answer must touch the code: a dependency upgrade that needs the changelog read *and* applied, a CI failure whose fix lives in a vendor’s docs, or anything where the deliverable is a diff rather than a memo. [Section 11](#sec-ai-when-to-use) covers that decision in general. A coding agent can also chain research and action in one run, whereas every research mode above stops at the report.
 
 Two cautions carry across all five:
 
 - **The limits are the product.** Monthly caps of 25 (Copilot) or compute pools that refresh every 5 hours (Gemini) mean a research mode is not a tool to leave running in a loop. For batch or scheduled research, use the API routes, and budget them like any other agent spend ([spend management](../chapters/agent-customization.llms.md#sec-ai-gemini-spend-management)).
 - **A cited report is not a verified one.** Every mode cites, and none checks that the cited page supports the sentence. Spot-check the citations you intend to reuse before they reach a manuscript, exactly as the fact-check rules in this manual require of any AI-drafted prose.
 
-# 12 How to Work with Coding Agents
+# 13 How to Work with Coding Agents
 
 Coding agents can be accessed through several interfaces, each with different trade-offs for task size, feedback speed, and collaboration style.
 
@@ -545,7 +573,7 @@ For more details and community discussion about this limitation, see:
 
 For detailed instructions, see [GitHub Copilot coding agent documentation](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent).
 
-# 13 Useful Prompt Formats
+# 14 Useful Prompt Formats
 
 When working with coding agents, using clear and specific prompts helps achieve better results. Here are some useful prompt formats that you can use when requesting assistance from coding agents:
 
@@ -600,7 +628,7 @@ When working with coding agents, using clear and specific prompts helps achieve 
 - **Set boundaries**: Specify what should or shouldn’t change
 - **Request validation**: Ask the agent to test or verify its changes when appropriate
 
-# 14 Editing with `.docx` files
+# 15 Editing with `.docx` files
 
 GitHub Copilot coding agents can read Microsoft Word (`.docx`) files, including tracked changes and comments. This enables a hybrid editing workflow where:
 
@@ -635,7 +663,7 @@ When opening DOCX files generated by Quarto (including this site), Microsoft Wor
 
 This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.
 
-# 15 Copilot Instructions for this Repository
+# 16 Copilot Instructions for this Repository
 
 A `.github/copilot-instructions.md` file contains repository-specific instructions and guidelines for GitHub Copilot coding agents. This file helps ensure that AI-generated contributions follow the project’s formatting standards, coding conventions, and documentation practices.
 
@@ -652,7 +680,7 @@ By having these instructions in `.github/copilot-instructions.md`, you ensure th
 
 See this repository’s own [`.github/copilot-instructions.md`](https://github.com/Morrison-Lab/wai/blob/main/.github/copilot-instructions.md) for a working example.
 
-# 16 Addressing Failing GitHub Actions Workflows
+# 17 Addressing Failing GitHub Actions Workflows
 
 When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix the issues. However, it’s important to use the right prompts depending on whether the problem is in your code or in the workflow configuration itself.
 
@@ -698,9 +726,9 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 > 3.  **Check** that no new secret access or command execution has been added
 > 4.  **Test** in a safe environment if possible
 >
-> See [Section 18](#sec-ai-best-practices) for more details on workflow file security.
+> See [Section 19](#sec-ai-best-practices) for more details on workflow file security.
 
-**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 10](#sec-ai-when-to-use) for more guidance.
+**When to do it yourself:** Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See [Section 11](#sec-ai-when-to-use) for more guidance.
 
 #### Scenario 3: Uncertain Which Scenario Applies
 
@@ -730,11 +758,11 @@ When GitHub Actions workflows fail, you can use Copilot to help diagnose and fix
 #### Additional Resources
 
 - See the [UCD-SERG Lab Manual’s continuous integration chapter](https://ucd-serg.github.io/lab-manual/continuous-integration.html) for setting up GitHub Actions workflows
-- See [Section 18](#sec-ai-best-practices) and [Section 17](#sec-ai-benefits-hazards) for security considerations with workflow files
-- See [Section 10](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
+- See [Section 19](#sec-ai-best-practices) and [Section 18](#sec-ai-benefits-hazards) for security considerations with workflow files
+- See [Section 11](#sec-ai-when-to-use) for guidance on when to use Copilot vs. fixing issues yourself
 - See the [GitHub Actions documentation](https://docs.github.com/en/actions) for workflow syntax and troubleshooting
 
-# 17 Benefits and Hazards
+# 18 Benefits and Hazards
 
 Coding agents are powerful programs that can work autonomously. They create pull requests that propose changes to the code in our repositories, potentially including their own configuration files and our automated workflows. They can work powerfully on our behalf, but they require careful oversight and control to ensure they serve our interests and that we understand the consequences of their actions.
 
@@ -785,7 +813,7 @@ However, coding agents also come with significant hazards:
 
 [Agents](https://en.wikipedia.org/wiki/Agent_(The_Matrix))
 
-# 18 Best Practices for Safe and Successful Use
+# 19 Best Practices for Safe and Successful Use
 
 To work with coding agents safely and successfully:
 
@@ -823,7 +851,7 @@ When using coding agents, work interactively with the AI suggestions: review, mo
 
 Remember: AI tools are assistants, not replacements for your expertise and judgment. The quality and correctness of your work remains your responsibility.
 
-# 19 Citadel and Levels of Claude Code Use
+# 20 Citadel and Levels of Claude Code Use
 
 Every lab that uses a coding agent for more than one-off edits eventually builds something around it: instruction files, then skills, then hooks, then scripts that watch pull requests. [Customizing an Agent](../chapters/agent-customization.llms.md#sec-ai-customization) maps those mechanisms one at a time. This section looks at the question from the other end: what does a *complete* layer look like when someone builds one deliberately, and how much of it does the lab actually need?
 
@@ -867,7 +895,7 @@ The part of Citadel most relevant to the lab’s own practice is how much of its
 - **A spawned judge**: a read-only `policy-enforcer` subagent that receives a proposed hard-to-reverse action and returns a structured allow-or-block verdict, with the most severe rule tier always blocking.
 - **Signed telemetry**: every event and artifact record carries a content hash, optionally an `HMAC` signature, and lineage fields linking runs, agents, and tasks.
 
-Verification reports one of four outcomes: passed, failed, blocked, or unknown. Missing evidence is never promoted to success. That is the same instinct as the first rule in [Section 18](#sec-ai-best-practices), never to assume an agent’s output is correct: an unknown that reads as a pass is worse than a failure you can see.
+Verification reports one of four outcomes: passed, failed, blocked, or unknown. Missing evidence is never promoted to success. That is the same instinct as the first rule in [Section 19](#sec-ai-best-practices), never to assume an agent’s output is correct: an unknown that reads as a pass is worse than a failure you can see.
 
 The project’s threat model ([Gammon 2026c](#ref-citadel_threat_model)) is equally plain about what it does not do. Citadel runs with whatever permissions the host runtime has; it is not a sandbox, it does not make an untrusted repository safe to run, and it does not claim to stop prompt injection. Its README says it “does not replace `CLAUDE.md`, `AGENTS.md`, branch protection, or human review” ([Gammon 2026d](#ref-citadel_repo)).
 
@@ -905,7 +933,7 @@ So the next rung, if the lab wants it, is not more skills. Concretely it would t
 
 None of that requires adopting Citadel. Installing it would add 2,031 files of plugin, four state directories to every repository it manages, and a single-maintainer dependency, in exchange for machinery the lab has mostly rebuilt in its own idiom. The more useful reading of Citadel is as a reference design: a worked answer to what each rung of the ladder costs and what state it needs, written by someone who then measured whether it helped and published the answer either way.
 
-# 20 Firewall and Network Configuration
+# 21 Firewall and Network Configuration
 
 Coding agents require specific network access to function properly. If a coding agent is running behind a corporate firewall or on a restricted network, you may need to configure allowlists to enable coding agent functionality.
 
@@ -1007,6 +1035,8 @@ For data science and R-focused repositories, we recommend adding the following U
 # References
 
 *2001: A Space Odyssey*. 1968. Film. <https://en.wikipedia.org/wiki/2001:_A_Space_Odyssey_(film)>.
+
+Akhouri, Udit. 2026. *Quicksilver: Claude Code Skill and Plugin for Bulk Judgment Delegation*. GitHub repository. <https://github.com/UditAkhourii/quicksilver>.
 
 Amazon Web Services. 2026. *Kiro Documentation*. Documentation. <https://kiro.dev/docs/>.
 
