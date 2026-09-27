@@ -330,7 +330,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-09-24 22:03:48 (PDT)</p>
+  <p class="date">Last modified: 2026-09-26 19:26:49 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -489,7 +489,7 @@
 <p>The platforms above sort into three execution models (measured 2026-09-09). The model decides where your code is copied, what the agent can reach, and how its work comes back to you.</p>
 <ul>
 <li><strong>Hosted sandbox.</strong> The vendor provisions an isolated machine, clones the repository into it, and returns a branch or pull request. Jules clones the repository into a virtual machine and submits a pull request after you approve its plan <span class="citation" data-cites="jules_docs">(<a href="#/references" role="doc-biblioref" onclick="">Google 2026d</a>)</span>; Cursor cloud agents clone from GitHub, GitLab, Azure DevOps, or Bitbucket, work on a separate branch, and push it back <span class="citation" data-cites="cursor_cloud_agents">(<a href="#/references" role="doc-biblioref" onclick="">Cursor 2026</a>)</span>; Kiro web tasks and Warp cloud agents follow the same shape <span class="citation" data-cites="kiro_docs warp_docs">(<a href="#/references" role="doc-biblioref" onclick="">Amazon Web Services 2026</a>; <a href="#/references" role="doc-biblioref" onclick="">Warp 2026</a>)</span>, as do the Copilot coding agent, Codex cloud tasks, Devin, and OpenHands Cloud. Nothing runs on your machine, so the questions are what the sandbox can reach and whether the vendor’s retention terms suit the repository.</li>
-<li><strong>Local checkout.</strong> The agent runs on your workstation against the files already there, in a terminal (Claude Code, Codex CLI, OpenCode, Aider, Gemini CLI, Warp) or inside an editor (Cursor, Cline, Kiro, Copilot in VS Code). Code stays put, and the agent inherits whatever credentials and network access your shell has, which is why <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;17</a> asks for approval gates and a sandbox. Pairing one of these with Ollama keeps the model local too <span class="citation" data-cites="ollama_site">(<a href="#/references" role="doc-biblioref" onclick="">Ollama 2026</a>)</span>, at the cost of the hardware described in <a href="../chapters/local-models.html#sec-ai-offline">running agents offline</a>.</li>
+<li><strong>Local checkout.</strong> The agent runs on your workstation against the files already there, in a terminal (Claude Code, Codex CLI, OpenCode, Aider, Gemini CLI, Warp) or inside an editor (Cursor, Cline, Kiro, Copilot in VS Code). Code stays put, and the agent inherits whatever credentials and network access your shell has, which is why <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;18</a> asks for approval gates and a sandbox. Pairing one of these with Ollama keeps the model local too <span class="citation" data-cites="ollama_site">(<a href="#/references" role="doc-biblioref" onclick="">Ollama 2026</a>)</span>, at the cost of the hardware described in <a href="../chapters/local-models.html#sec-ai-offline">running agents offline</a>.</li>
 <li><strong>Orchestration layer.</strong> Kepler, Kiro Crew, and the Cline Kanban surface do not add a model of their own; they run several of the agents above in parallel worktrees or sessions and present the results for review. Reach for one only once a single agent is no longer the bottleneck (<a href="../chapters/agent-orchestration.html#sec-orch-when">when orchestration helps</a>).</li>
 </ul>
 <p>Several vendors now ship all three, so the platform name alone no longer tells you where the code goes: Claude Code, Codex, Cursor, Kiro, and Warp each offer a local surface and a hosted one. Check the execution model of the specific surface you enable. The Windsurf editor is a naming trap of the same kind: <code>windsurf.com</code> now redirects to Devin Desktop, Cognition’s rebranding of that editor (measured 2026-09-09; see <a href="../chapters/agent-architecture.html#sec-ai-harness-landscape">the harness landscape</a>).</p>
@@ -1042,8 +1042,28 @@ Table&nbsp;6: Relative advantages of humans and Agents
 <p>Two of the fixes are not worth adopting as stated. The prompt-discipline block (fix 1) is a promotional download whose text the video withholds, and “terse answers, minimal file reading” conflicts with the lab’s review rules, which pay tokens for verification on purpose. And the MCP finding (fix 7) is one measurement on one build; re-measure it on your own setup before removing servers you rely on.</p>
 </section></section>
 <section>
-<section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="9">
-<h1><span class="header-section-number">9</span> When to use a coding agent</h1>
+<section id="sec-ai-andrew-ng-learning-to-code" class="title-slide slide level1 center" data-number="9">
+<h1><span class="header-section-number">9</span> Andrew Ng on Learning to Code in the Age of AI</h1>
+
+</section>
+<section class="slide level2">
+
+<p><a href="https://github.com/Morrison-Lab/wai/issues/244">Issue #244</a> asked for a summary of a YouTube video, “Andrew Ng: One Skill to Stay Relevant in the Age of AI”, from the channel Stanford Online <span class="citation" data-cites="ng_one_skill_stay_relevant">(<a href="#/references" role="doc-biblioref" onclick="">Stanford Online and Ng 2026</a>)</span>. The video is an eighty-nine-second interview published on 2026-09-22, in which Andrew Ng (Adjunct Professor at Stanford University and founder of DeepLearning.AI) responds to the question: “What’s one skill professionals should start learning now if they want to stay relevant in the age of AI?”</p>
+<h4 id="the-core-argument-everyone-should-learn-to-code">The core argument: everyone should learn to code</h4>
+<p>Ng opens with what he acknowledges is a controversial stance: everyone should learn to code. His thesis is that a noticeable productivity gap is already widening between professionals who can build custom software and those who cannot, across all organizational roles rather than only within software engineering.</p>
+<h4 id="directing-computers-vs.-writing-syntax-by-hand">Directing computers vs.&nbsp;writing syntax by hand</h4>
+<p>Crucially, Ng clarifies that learning to code does not mean typing out every line of syntax manually. He notes that he rarely writes code entirely by hand himself anymore. Instead, the enduring core skill is knowing how to instruct a computer with precision, and code remains the native language through which computers are directed.</p>
+<p>In Ng’s view, AI-assisted coding transforms programming into a universal capability:</p>
+<ul>
+<li><strong>Marketing without engineering bottlenecks:</strong> Top marketers no longer wait in an engineering backlog for a dedicated developer to build or update a website; they build and deploy what they need directly using AI assistance.</li>
+<li><strong>Recruiting with custom automation:</strong> Top recruiters write automated scripts to screen and parse resumes against specific role requirements instead of manually reviewing hundreds of candidates by hand.</li>
+</ul>
+<h4 id="countering-the-advice-to-abandon-coding">Countering the advice to abandon coding</h4>
+<p>A prevalent piece of executive and business advice suggests that learning to code is a waste of time because AI will automate software development away. Ng argues that this perspective has the causality backwards. Rather than making programming obsolete, AI assistance has lowered the barrier to entry enough that coding is now practical for everyone to learn. The ability to specify logic, structure data, and guide an AI coding agent to produce tailored tools amplifies individual effectiveness in every profession.</p>
+</section></section>
+<section>
+<section id="sec-ai-when-to-use" class="title-slide slide level1 center" data-number="10">
+<h1><span class="header-section-number">10</span> When to use a coding agent</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -1052,8 +1072,8 @@ Table&nbsp;6: Relative advantages of humans and Agents
 <p>Also, the less we practice, the weaker our skills get, and the harder it is for us to supervise the agents and make sure they are actually doing what we want them to do, the way we want them to do it. You should exercise your own coding skills regularly, just like you would for any other skill you want to maintain.</p>
 <aside><ol class="aside-footnotes"><li id="fn1"><p>2026-01-10</p></li></ol></aside></section></section>
 <section>
-<section id="sec-ai-research-modes" class="title-slide slide level1 center" data-number="10">
-<h1><span class="header-section-number">10</span> Deep Research Modes</h1>
+<section id="sec-ai-research-modes" class="title-slide slide level1 center" data-number="11">
+<h1><span class="header-section-number">11</span> Deep Research Modes</h1>
 
 </section>
 <section class="slide level2">
@@ -1169,7 +1189,7 @@ Table&nbsp;6: Relative advantages of humans and Agents
 <h4 id="useful-to-us">Useful to us?</h4>
 <p>Yes, for a specific slice of work, and no as a substitute for the agents in <a href="#/sec-ai-catalog-coding-agents" class="quarto-xref">Section&nbsp;4</a>.</p>
 <p>Reach for a research mode when the question is about the world rather than about your repository: a literature scan before a grant section, a comparison of vendors or packages you have not yet chosen between, or a check on what a regulator or funding agency currently requires. The modes read many more pages than a coding agent will in one turn, they hand back citations you can audit, and several export straight into the document formats we already draft in (see <a href="../chapters/grok-bot-and-alternatives.html#sec-ai-collaborative-workspaces">collaborative workspaces</a> for the workspace side). Researcher is the odd one out: its value is reading your own institution’s email and files, which none of the others can see, and that is also why its output stays inside the Microsoft 365 boundary.</p>
-<p>Reach for a coding agent with web search instead when the answer must touch the code: a dependency upgrade that needs the changelog read <em>and</em> applied, a CI failure whose fix lives in a vendor’s docs, or anything where the deliverable is a diff rather than a memo. <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;9</a> covers that decision in general. A coding agent can also chain research and action in one run, whereas every research mode above stops at the report.</p>
+<p>Reach for a coding agent with web search instead when the answer must touch the code: a dependency upgrade that needs the changelog read <em>and</em> applied, a CI failure whose fix lives in a vendor’s docs, or anything where the deliverable is a diff rather than a memo. <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;10</a> covers that decision in general. A coding agent can also chain research and action in one run, whereas every research mode above stops at the report.</p>
 <p>Two cautions carry across all five:</p>
 <ul>
 <li><strong>The limits are the product.</strong> Monthly caps of 25 (Copilot) or compute pools that refresh every 5 hours (Gemini) mean a research mode is not a tool to leave running in a loop. For batch or scheduled research, use the API routes, and budget them like any other agent spend (<a href="../chapters/agent-customization.html#sec-ai-gemini-spend-management">spend management</a>).</li>
@@ -1177,8 +1197,8 @@ Table&nbsp;6: Relative advantages of humans and Agents
 </ul>
 </section></section>
 <section>
-<section id="how-to-work-with-coding-agents" class="title-slide slide level1 center" data-number="11">
-<h1><span class="header-section-number">11</span> How to Work with Coding Agents</h1>
+<section id="how-to-work-with-coding-agents" class="title-slide slide level1 center" data-number="12">
+<h1><span class="header-section-number">12</span> How to Work with Coding Agents</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -1255,8 +1275,8 @@ Table&nbsp;6: Relative advantages of humans and Agents
 <p>For detailed instructions, see <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent">GitHub Copilot coding agent documentation</a>.</p>
 </section></section>
 <section>
-<section id="useful-prompt-formats" class="title-slide slide level1 center" data-number="12">
-<h1><span class="header-section-number">12</span> Useful Prompt Formats</h1>
+<section id="useful-prompt-formats" class="title-slide slide level1 center" data-number="13">
+<h1><span class="header-section-number">13</span> Useful Prompt Formats</h1>
 
 </section>
 <section class="slide level2">
@@ -1314,8 +1334,8 @@ Table&nbsp;6: Relative advantages of humans and Agents
 </ul>
 </section></section>
 <section>
-<section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="13">
-<h1><span class="header-section-number">13</span> Editing with <code>.docx</code> files</h1>
+<section id="editing-with-.docx-files" class="title-slide slide level1 center" data-number="14">
+<h1><span class="header-section-number">14</span> Editing with <code>.docx</code> files</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -1351,8 +1371,8 @@ Table&nbsp;6: Relative advantages of humans and Agents
 <p>This one-time step ensures that when collaborators open the file, they won’t see the “Document 1” warning and can immediately add comments and track changes without issues.</p>
 </section></section>
 <section>
-<section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="14">
-<h1><span class="header-section-number">14</span> Copilot Instructions for this Repository</h1>
+<section id="copilot-instructions-for-this-repository" class="title-slide slide level1 center" data-number="15">
+<h1><span class="header-section-number">15</span> Copilot Instructions for this Repository</h1>
 
 </section>
 <section class="slide level2">
@@ -1371,8 +1391,8 @@ Table&nbsp;6: Relative advantages of humans and Agents
 <p>See this repository’s own <a href="https://github.com/Morrison-Lab/wai/blob/main/.github/copilot-instructions.md"><code>.github/copilot-instructions.md</code></a> for a working example.</p>
 </section></section>
 <section>
-<section id="sec-ai-addressing-failing-workflows" class="title-slide slide level1 center" data-number="15">
-<h1><span class="header-section-number">15</span> Addressing Failing GitHub Actions Workflows</h1>
+<section id="sec-ai-addressing-failing-workflows" class="title-slide slide level1 center" data-number="16">
+<h1><span class="header-section-number">16</span> Addressing Failing GitHub Actions Workflows</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -1417,11 +1437,11 @@ Table&nbsp;6: Relative advantages of humans and Agents
 <li><strong>Check</strong> that no new secret access or command execution has been added</li>
 <li><strong>Test</strong> in a safe environment if possible</li>
 </ol>
-<p>See <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;17</a> for more details on workflow file security.</p>
+<p>See <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;18</a> for more details on workflow file security.</p>
 </div>
 </div>
 </div>
-<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;9</a> for more guidance.</p>
+<p><strong>When to do it yourself:</strong> Workflow syntax errors and configuration issues are often faster to fix manually than with Copilot, especially if you’re familiar with GitHub Actions. See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;10</a> for more guidance.</p>
 <h4 id="scenario-3-uncertain-which-scenario-applies">Scenario 3: Uncertain Which Scenario Applies</h4>
 <p><strong>When to use:</strong> You’re not sure whether the failure is due to code issues or workflow configuration problems.</p>
 <p><strong>Recommended approach:</strong></p>
@@ -1448,14 +1468,14 @@ Table&nbsp;6: Relative advantages of humans and Agents
 <h4 id="additional-resources">Additional Resources</h4>
 <ul>
 <li>See the <a href="https://ucd-serg.github.io/lab-manual/continuous-integration.html">UCD-SERG Lab Manual’s continuous integration chapter</a> for setting up GitHub Actions workflows</li>
-<li>See <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;17</a> and <a href="#/sec-ai-benefits-hazards" class="quarto-xref">Section&nbsp;16</a> for security considerations with workflow files</li>
-<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;9</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
+<li>See <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;18</a> and <a href="#/sec-ai-benefits-hazards" class="quarto-xref">Section&nbsp;17</a> for security considerations with workflow files</li>
+<li>See <a href="#/sec-ai-when-to-use" class="quarto-xref">Section&nbsp;10</a> for guidance on when to use Copilot vs.&nbsp;fixing issues yourself</li>
 <li>See the <a href="https://docs.github.com/en/actions">GitHub Actions documentation</a> for workflow syntax and troubleshooting</li>
 </ul>
 </section></section>
 <section>
-<section id="sec-ai-benefits-hazards" class="title-slide slide level1 center" data-number="16">
-<h1><span class="header-section-number">16</span> Benefits and Hazards</h1>
+<section id="sec-ai-benefits-hazards" class="title-slide slide level1 center" data-number="17">
+<h1><span class="header-section-number">17</span> Benefits and Hazards</h1>
 
 </section>
 <section class="slide level2">
@@ -1501,8 +1521,8 @@ Table&nbsp;6: Relative advantages of humans and Agents
 </div>
 </section></section>
 <section>
-<section id="sec-ai-best-practices" class="title-slide slide level1 center" data-number="17">
-<h1><span class="header-section-number">17</span> Best Practices for Safe and Successful Use</h1>
+<section id="sec-ai-best-practices" class="title-slide slide level1 center" data-number="18">
+<h1><span class="header-section-number">18</span> Best Practices for Safe and Successful Use</h1>
 
 </section>
 <section class="slide level2 scrollable">
@@ -1554,8 +1574,8 @@ Table&nbsp;6: Relative advantages of humans and Agents
 <p>Remember: AI tools are assistants, not replacements for your expertise and judgment. The quality and correctness of your work remains your responsibility.</p>
 </section></section>
 <section>
-<section id="sec-ai-citadel-and-maturity-levels" class="title-slide slide level1 center" data-number="18">
-<h1><span class="header-section-number">18</span> Citadel and Levels of Claude Code Use</h1>
+<section id="sec-ai-citadel-and-maturity-levels" class="title-slide slide level1 center" data-number="19">
+<h1><span class="header-section-number">19</span> Citadel and Levels of Claude Code Use</h1>
 
 </section>
 <section class="slide level2">
@@ -1640,7 +1660,7 @@ Table&nbsp;7: Citadel’s orchestration ladder, from the project’s architectur
 <li><strong>A spawned judge</strong>: a read-only <code>policy-enforcer</code> subagent that receives a proposed hard-to-reverse action and returns a structured allow-or-block verdict, with the most severe rule tier always blocking.</li>
 <li><strong>Signed telemetry</strong>: every event and artifact record carries a content hash, optionally an <code>HMAC</code> signature, and lineage fields linking runs, agents, and tasks.</li>
 </ul>
-<p>Verification reports one of four outcomes: passed, failed, blocked, or unknown. Missing evidence is never promoted to success. That is the same instinct as the first rule in <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;17</a>, never to assume an agent’s output is correct: an unknown that reads as a pass is worse than a failure you can see.</p>
+<p>Verification reports one of four outcomes: passed, failed, blocked, or unknown. Missing evidence is never promoted to success. That is the same instinct as the first rule in <a href="#/sec-ai-best-practices" class="quarto-xref">Section&nbsp;18</a>, never to assume an agent’s output is correct: an unknown that reads as a pass is worse than a failure you can see.</p>
 <p>The project’s threat model <span class="citation" data-cites="citadel_threat_model">(<a href="#/references" role="doc-biblioref" onclick="">Gammon 2026c</a>)</span> is equally plain about what it does not do. Citadel runs with whatever permissions the host runtime has; it is not a sandbox, it does not make an untrusted repository safe to run, and it does not claim to stop prompt injection. Its README says it “does not replace <code>CLAUDE.md</code>, <code>AGENTS.md</code>, branch protection, or human review” <span class="citation" data-cites="citadel_repo">(<a href="#/references" role="doc-biblioref" onclick="">Gammon 2026d</a>)</span>.</p>
 <h4 id="what-the-evidence-does-and-does-not-show">What the evidence does and does not show</h4>
 <p>Citadel is unusual among agent-tooling projects in publishing negative results beside positive ones <span class="citation" data-cites="citadel_experiments">(<a href="#/references" role="doc-biblioref" onclick="">Gammon 2026b</a>)</span>. Its README states that the first experiment “does not support a savings claim”: one baseline timeout drove the aggregate advantage, and removing that pair reversed the economic direction. An outside-authored holdout across 24 repositories verified 3 of 16 tasks for Citadel against 2 of 16 for direct Claude, at similar cost, and the author calls that a diagnostic rather than proof, because a 12.5% baseline is too weak to compare against. The deterministic results are stronger but narrower: journaled recovery produced zero duplicate side effects where a naive restart produced three, and a leased “deploy steward” eliminated every stale-head merge race that independent loops produced across 45 pull requests, under a generated workload in disposable repositories.</p>
@@ -1672,8 +1692,8 @@ Table&nbsp;7: Citadel’s orchestration ladder, from the project’s architectur
 <p>None of that requires adopting Citadel. Installing it would add 2,031 files of plugin, four state directories to every repository it manages, and a single-maintainer dependency, in exchange for machinery the lab has mostly rebuilt in its own idiom. The more useful reading of Citadel is as a reference design: a worked answer to what each rung of the ladder costs and what state it needs, written by someone who then measured whether it helped and published the answer either way.</p>
 </section></section>
 <section>
-<section id="sec-ai-firewall" class="title-slide slide level1 center" data-number="19">
-<h1><span class="header-section-number">19</span> Firewall and Network Configuration</h1>
+<section id="sec-ai-firewall" class="title-slide slide level1 center" data-number="20">
+<h1><span class="header-section-number">20</span> Firewall and Network Configuration</h1>
 
 </section>
 <section class="slide level2">
@@ -1907,6 +1927,9 @@ Perplexity. 2026b. <em>What Is Research Mode?</em> Help Center. <a href="https:/
 </div>
 <div id="ref-perplexity_advanced_deep_research" class="csl-entry" role="listitem">
 Perplexity. 2026c. <em>What’s New in Advanced Deep Research</em>. Help Center. <a href="https://www.perplexity.ai/help-center/en/articles/13600190-what-s-new-in-advanced-deep-research">https://www.perplexity.ai/help-center/en/articles/13600190-what-s-new-in-advanced-deep-research</a>.
+</div>
+<div id="ref-ng_one_skill_stay_relevant" class="csl-entry" role="listitem">
+Stanford Online, and Andrew Ng. 2026. <em>Andrew Ng: One Skill to Stay Relevant in the Age of AI</em>. Video. <a href="https://www.youtube.com/watch?v=HTlf3KNNez0">https://www.youtube.com/watch?v=HTlf3KNNez0</a>.
 </div>
 <div id="ref-terminator" class="csl-entry" role="listitem">
 <em>Terminator 3: Rise of the Machines</em>. 2003. Film. <a href="https://en.wikipedia.org/wiki/Terminator_3:_Rise_of_the_Machines">https://en.wikipedia.org/wiki/Terminator_3:_Rise_of_the_Machines</a>.
