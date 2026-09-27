@@ -30,7 +30,7 @@ In Ng's view, AI-assisted coding transforms programming into a universal capabil
   Top recruiters write automated scripts to screen and parse resumes against specific role requirements
   instead of manually reviewing hundreds of candidates by hand.
 
-#### Reframing the advice to abandon coding
+#### Countering the advice to abandon coding
 
 A prevalent piece of executive and business advice suggests that learning to code is a waste of time
 because AI will automate software development away.
