@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-27 01:13:30 (PDT)
+Last modified: 2026-09-27 01:22:27 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -359,7 +359,7 @@ Quicksilver restructures this workflow by routing candidate items to Jev, a ligh
 
 #### Measured benchmark results
 
-On a benchmark of twelve real-world tasks across public datasets (including supercomputer logs, Banking77 intent classification, UCI SMS spam, SST-2 sentiment analysis, the Hono repository, and `lodash` source code) ([Akhouri 2026](#ref-akhouri_quicksilver)):
+On a benchmark of twelve real-world tasks across public datasets (including supercomputer logs, `Banking77` intent classification, UCI SMS spam, `SST-2` sentiment analysis, the Hono repository, and `lodash` source code) ([Akhouri 2026](#ref-akhouri_quicksilver)):
 
 - **Token reduction:** Claude token consumption was reduced by an average of 86 percent (median 82 percent).
 - **Execution speed:** Tasks involving needle-in-haystack search and log triage completed up to 20 times faster.
