@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-26 19:07:13 (PDT)
+Last modified: 2026-09-26 19:19:16 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -364,7 +364,7 @@ In Ng’s view, AI-assisted coding transforms programming into a universal capab
 - **Marketing without engineering bottlenecks:** Top marketers no longer wait in an engineering backlog for a dedicated developer to build or update a website; they build and deploy what they need directly using AI assistance.
 - **Recruiting with custom automation:** Top recruiters write automated scripts to screen and parse resumes against specific role requirements instead of manually reviewing hundreds of candidates by hand.
 
-#### Reframing the advice to abandon coding
+#### Countering the advice to abandon coding
 
 A prevalent piece of executive and business advice suggests that learning to code is a waste of time because AI will automate software development away. Ng argues that this perspective has the causality backwards. Rather than making programming obsolete, AI assistance has lowered the barrier to entry enough that coding is now practical for everyone to learn. The ability to specify logic, structure data, and guide an AI coding agent to produce tailored tools amplifies individual effectiveness in every profession.
 
