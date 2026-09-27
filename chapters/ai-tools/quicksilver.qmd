@@ -22,7 +22,7 @@ reserving its reasoning tokens for synthesis, refactoring, and code changes.
 #### Measured benchmark results
 
 On a benchmark of twelve real-world tasks across public datasets
-(including supercomputer logs, Banking77 intent classification, UCI SMS spam, SST-2 sentiment analysis,
+(including supercomputer logs, `Banking77` intent classification, UCI SMS spam, `SST-2` sentiment analysis,
 the Hono repository, and `lodash` source code) [@akhouri_quicksilver]:
 
 - **Token reduction:**
