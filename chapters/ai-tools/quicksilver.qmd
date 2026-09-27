@@ -1,0 +1,49 @@
+[Issue #247](https://github.com/Morrison-Lab/wai/issues/247) notes
+[Quicksilver](https://github.com/UditAkhourii/quicksilver),
+an open-source Claude Code skill and plugin authored by Udit Akhouri [@akhouri_quicksilver].
+Quicksilver addresses a central inefficiency in agent workflows:
+paying an expensive frontier model to skim hundreds of files, logs, or tickets
+just to determine which subset actually requires deep analysis.
+
+#### Delegating bulk judgment to lightweight models
+
+When asked questions such as "which files handle authentication?" or "which lines report errors?",
+a frontier model typically reads every candidate file or log line into its context window.
+This process burns thousands of tokens on routine filtering, fills the context with irrelevant noise,
+and rapidly approaches session usage limits.
+
+Quicksilver restructures this workflow by routing candidate items to Jev,
+a lightweight model from TypeSafe designed for high-throughput System One judgment.
+Jev evaluates items in parallel and returns typed verdicts (boolean flags, categorical labels, or scores)
+in approximately one second at a fraction of frontier model pricing ($0.042 per million input tokens, with free output tokens).
+Claude receives only a filtered shortlist of relevant items with confidence ratings,
+reserving its reasoning tokens for synthesis, refactoring, and code changes.
+
+#### Measured benchmark results
+
+On a benchmark of twelve real-world tasks across public datasets
+(including supercomputer logs, `Banking77` intent classification, UCI SMS spam, `SST-2` sentiment analysis,
+the Hono repository, and `lodash` source code) [@akhouri_quicksilver]:
+
+- **Token reduction:**
+  Claude token consumption was reduced by an average of 86 percent (median 82 percent).
+- **Execution speed:**
+  Tasks involving needle-in-haystack search and log triage completed up to 20 times faster.
+- **Accuracy parity:**
+  Quicksilver matched Claude's baseline accuracy on 8 of the 12 evaluation tasks.
+
+#### Appropriate use cases and boundary conditions
+
+Quicksilver is most effective when tasks can be formulated as a narrow, typed judgment:
+
+- **Needle-in-haystack scans:**
+  Locating relevant implementation files across a multi-hundred-file repository,
+  pinpointing rare error signatures in multi-thousand-line server logs,
+  or isolating target helper routines in large single-file modules.
+- **Structured ticket and log classification:**
+  Categorizing user requests or triage items against closed label sets.
+- **Borderline case review:**
+  Quicksilver flags ambiguous or borderline items (annotated with a question mark),
+  enabling Claude to inspect only the uncertain cases rather than the entire corpus.
+
+Quicksilver is not intended for authoring code, complex multi-step reasoning, or tasks that deterministic tools like `grep` can answer directly.
