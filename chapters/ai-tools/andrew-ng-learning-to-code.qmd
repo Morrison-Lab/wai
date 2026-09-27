@@ -1,0 +1,41 @@
+[Issue #244](https://github.com/Morrison-Lab/wai/issues/244) asked for a summary of a YouTube video,
+"Andrew Ng: One Skill to Stay Relevant in the Age of AI",
+from the channel Stanford Online [@ng_one_skill_stay_relevant].
+The video is an eighty-nine-second interview published on 2026-09-22,
+in which Andrew Ng (Adjunct Professor at Stanford University and founder of DeepLearning.AI)
+responds to the question:
+"What's one skill professionals should start learning now if they want to stay relevant in the age of AI?"
+
+#### The core argument: everyone should learn to code
+
+Ng opens with what he acknowledges is a controversial stance:
+everyone should learn to code.
+His thesis is that a noticeable productivity gap is already widening
+between professionals who can build custom software and those who cannot,
+across all organizational roles rather than only within software engineering.
+
+#### Directing computers vs. writing syntax by hand
+
+Crucially, Ng clarifies that learning to code does not mean typing out every line of syntax manually.
+He notes that he rarely writes code entirely by hand himself anymore.
+Instead, the enduring core skill is knowing how to instruct a computer with precision,
+and code remains the native language through which computers are directed.
+
+In Ng's view, AI-assisted coding transforms programming into a universal capability:
+
+- **Marketing without engineering bottlenecks:**
+  Top marketers no longer wait in an engineering backlog for a dedicated developer to build or update a website;
+  they build and deploy what they need directly using AI assistance.
+- **Recruiting with custom automation:**
+  Top recruiters write automated scripts to screen and parse resumes against specific role requirements
+  instead of manually reviewing hundreds of candidates by hand.
+
+#### Reframing the advice to abandon coding
+
+A prevalent piece of executive and business advice suggests that learning to code is a waste of time
+because AI will automate software development away.
+Ng argues that this perspective has the causality backwards.
+Rather than making programming obsolete,
+AI assistance has lowered the barrier to entry enough that coding is now practical for everyone to learn.
+The ability to specify logic, structure data, and guide an AI coding agent to produce tailored tools
+amplifies individual effectiveness in every profession.

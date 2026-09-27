@@ -45,6 +45,10 @@ to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_developmen
 
 {{< include ai-tools/claude-usage-limit-fixes.qmd >}}
 
+# Andrew Ng on Learning to Code in the Age of AI {#sec-ai-andrew-ng-learning-to-code}
+
+{{< include ai-tools/andrew-ng-learning-to-code.qmd >}}
+
 # When to use a coding agent {#sec-ai-when-to-use}
 
 {{< include ai-tools/when-to-use-coding-agent.qmd >}}
