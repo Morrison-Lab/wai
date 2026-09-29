@@ -12,8 +12,8 @@ description: "Use when editing Quarto pages, chapters, slides, handouts, or narr
 - HTML output folds code by default (the site config sets `code-fold: true`
   with `code-tools: true`, as rme does). Keep the default when the *output*
   (plot, table) is the point and the code is incidental; set
-  `#| code-fold: false` on tutorial code, short examples, or chunks where the
-  console output is the main content.
+  `#| code-fold: false` on tutorial code, short examples, code that is the
+  main focus, or chunks where the console output is the main content.
 - Prefer chunk options as YAML-style `#|` directives, not inline
   `r, opt = val` arguments.
 - For a changed `.qmd` with R code, run

@@ -19,8 +19,9 @@ Review checklist:
    (`@fig-`, `@tbl-`, `@sec-`) resolve to defined labels.
 2. Lists of three or more items use bullets with a blank line above them.
 3. Code stays folded (the site default) where the *output* is the point, and
-   tutorial code sets `#| code-fold: false`; chunk options use `#|`
-   directives, not inline `r, opt = val`.
+   tutorial code, short examples, code that is the main focus, and chunks
+   whose console output is the main content set `#| code-fold: false`; chunk
+   options use `#|` directives, not inline `r, opt = val`.
 4. Narrative text does not hard-code computed values --- they are computed in a
    chunk and referenced with inline R.
 5. Citations and attribution are present where adapted content or factual
