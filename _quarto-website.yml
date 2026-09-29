@@ -170,9 +170,10 @@ format:
     anchor-sections: true
     toc-location: right
     toc-depth: 3
-    code-fold: false
+    code-fold: true
     code-tools: true
     code-link: true
+    code-summary: "Show R code"
     highlight-style: pygments
     lightbox: true
     link-external-icon: true
