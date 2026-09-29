@@ -22,6 +22,7 @@ filters:
   - equation-anchors
   - revealjs-level1-slide-breaks.lua
   - revealjs-html-links.lua
+  - d-morrison/code-language-labels
 
 format:
   pdf:
