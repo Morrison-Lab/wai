@@ -54,16 +54,16 @@ Always put a blank line before the start of a bullet-point list in markdown (`.m
 
 ### Code Folding
 
-Use `code-fold: true` for code chunks where the output is what's important to the narrative and not the code used to produce it. This allows readers to focus on the results while still having the option to view the code if they want to.
+HTML output folds code by default: the site config sets `code-fold: true` (with `code-tools: true`, so readers can show all code at once), as rme does. This allows readers to focus on the results while still having the option to view the code if they want to.
 
-**When to use `code-fold: true`:**
+**When to keep the default (folded):**
 
 - Visualization code where the plot/figure is the main point
 - Data preparation or cleaning code that produces a summary table
 - Long or complex code that would distract from the narrative
 - Code that generates output (plots, tables, results) that readers need to see
 
-**When NOT to use `code-fold: true`:**
+**When to set `#| code-fold: false`:**
 
 - Tutorial code where readers need to learn the syntax
 - Short, simple examples that are part of the explanation
@@ -74,15 +74,10 @@ Use `code-fold: true` for code chunks where the output is what's important to th
 
 ````markdown
 ```{{r}}
-#| code-fold: true
-#| fig-cap: "Relationship between weight and miles per gallon"
+#| code-fold: false
 
-library(ggplot2)
-ggplot(mtcars, aes(x = wt, y = mpg)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  theme_minimal() +
-  labs(x = "Weight (1000 lbs)", y = "Miles per Gallon")
+x <- c(1, 2, 3)
+mean(x)
 ```
 ````
 
