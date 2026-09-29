@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-28 22:28:52 (PDT)
+Last modified: 2026-09-28 22:33:57 (PDT)
 
 Behind every coding agent is a system architecture: a model, an execution loop, tool definitions, and a *harness* that manages context, permissions, and session state. This chapter covers how coding agents and harnesses are structured, how they run under the hood, and how the open and commercial harness landscape looks in 2026.
 
