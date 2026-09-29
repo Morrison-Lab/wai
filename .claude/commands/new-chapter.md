@@ -31,4 +31,4 @@ Style rules (from CLAUDE.md):
 
 - Blank line before every bullet list
 - Chunk options via `#|` directives, not inline `r, opt = val`
-- `code-fold: true` only when the output — not the code — is the point
+- Code folds by default; set `#| code-fold: false` when the code, not the output, is the point

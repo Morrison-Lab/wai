@@ -36,7 +36,7 @@ Authoritative style guide: [UCD-SERG Lab Manual](https://ucd-serg.github.io/lab-
 Mirrors [`.github/copilot-instructions.md`](.github/copilot-instructions.md). Key points:
 
 - **Lists of 3+ items**: use bullet lists rather than comma-separated prose. Always leave a blank line before a markdown bullet list (especially in `.qmd` files).
-- **Code chunks**: use `#| code-fold: true` when the *output* (plot, table) is the point and the code is incidental. Don't fold tutorial code, short examples, or chunks where the console output is the main content.
+- **Code chunks**: HTML output folds code by default (the site config sets `code-fold: true` with `code-tools: true`, as rme does). Keep the default when the *output* (plot, table) is the point and the code is incidental. Set `#| code-fold: false` on tutorial code, short examples, or chunks where the console output is the main content.
 - **R style**: respect `.lintr.R`. Run `lintr::lint_dir()` before declaring R changes done.
 - **Quarto chunks**: prefer chunk options as YAML-style `#|` directives, not as inline `r, opt = val` arguments.
 

@@ -9,9 +9,11 @@ description: "Use when editing Quarto pages, chapters, slides, handouts, or narr
 - Always leave a blank line before a markdown bullet list, and use a bullet
   list (not comma-separated prose) for three or more items.
 - Prefer Quarto div wrappers for new figures and tables.
-- Use `#| code-fold: true` on a chunk when the *output* (plot, table) is the
-  point and the code is incidental; do not fold tutorial code, short examples,
-  or chunks where the console output is the main content.
+- HTML output folds code by default (the site config sets `code-fold: true`
+  with `code-tools: true`, as rme does). Keep the default when the *output*
+  (plot, table) is the point and the code is incidental; set
+  `#| code-fold: false` on tutorial code, short examples, or chunks where the
+  console output is the main content.
 - Prefer chunk options as YAML-style `#|` directives, not inline
   `r, opt = val` arguments.
 - For a changed `.qmd` with R code, run
