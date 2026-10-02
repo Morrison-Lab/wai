@@ -14,3 +14,6 @@ _freeze/
 ^data-raw$
 ^\.quarto$
 ^scripts$
+^AGENTS\.md$
+^CLAUDE\.md$
+^\.claude$
