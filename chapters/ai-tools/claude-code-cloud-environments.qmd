@@ -59,8 +59,12 @@ edit its environment [@claude_code_cloud_environments]:
 
 Sessions already running in the environment
 pick up the new list within about a minute.
-GitHub traffic goes through a separate proxy
-and does not depend on this list.
+Git operations and GitHub API requests
+go through a separate GitHub proxy
+and do not depend on this list,
+but committed files fetched from `raw.githubusercontent.com`
+do depend on it
+[@claude_code_cloud_environments].
 
 These steps apply to environments you created yourself.
 An organization-shared environment opens read-only in the selector;
