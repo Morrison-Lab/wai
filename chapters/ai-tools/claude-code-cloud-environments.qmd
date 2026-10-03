@@ -42,32 +42,49 @@ run it from an interactive `claude` terminal session.
 
 #### Configuring network access for Claude cloud sessions {#sec-claude-network-access}
 
-To let a cloud session reach more than the default hosts,
-edit its environment:
+To let a cloud session reach hosts outside the default **Trusted** list,
+edit its environment [@claude_code_cloud_environments]:
 
-1. Open the environment menu in the session's title bar
-   and choose **Edit**.
-2. Under **Network access**, choose **Custom**.
-3. Paste the hosts into **Allowed domains**,
+1. Open the environment selector,
+   at [claude.ai/code](https://claude.ai/code)
+   or from the prompt box in the Desktop app,
+   and select **Cloud**.
+2. Hover over the environment
+   and select the settings icon on the right.
+3. Set **Network access** to **Custom**.
+4. Paste the hosts into **Allowed domains**,
    one per line.
-4. Keep the default list of package managers enabled,
+5. Check **Also include default list of common package managers**,
    so installs from CRAN, PyPI, and similar registries still work.
+
+Sessions already running in the environment
+pick up the new list within about a minute.
+GitHub traffic goes through a separate proxy
+and does not depend on this list.
+
+These steps apply to environments you created yourself.
+An organization-shared environment opens read-only in the selector;
+only an organization Owner can change its network access,
+from the **Cloud environments** page in admin settings.
+Each environment keeps its own list,
+so to give the whole lab one standard list,
+an Owner can create a shared environment
+with **Custom** access and that list
+[@claude_code_cloud_environments].
 
 The lab's list lives in
 [`claude-allowlist.txt`](https://github.com/Morrison-Lab/stats-allowlist/blob/main/claude-allowlist.txt)
-in [Morrison-Lab/stats-allowlist](https://github.com/Morrison-Lab/stats-allowlist).
+in [Morrison-Lab/stats-allowlist](https://github.com/Morrison-Lab/stats-allowlist)
+[@stats_allowlist].
 Editing that file does not change any environment by itself:
 after the file changes,
 paste the updated list into each environment that uses it.
-For the current steps,
-see [Network access](https://code.claude.com/docs/en/cloud-environments#network-access)
-in the Claude Code documentation.
 
 A leading `*.` matches subdomains only:
 
 - `*.example.org` matches `docs.example.org`
   but not `example.org`,
-  so a site often needs both entries.
+  so a site often needs both entries [@stats_allowlist].
 - A host already matched by a wildcard,
   such as `cloud.r-project.org` under `*.r-project.org`,
   needs no line of its own.
