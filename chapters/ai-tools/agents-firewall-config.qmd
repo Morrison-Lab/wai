@@ -51,8 +51,14 @@ The lab maintains its working allowlists in
   for Claude Code cloud sessions
   (see [Configuring network access for Claude cloud sessions](agent-customization.qmd#sec-claude-network-access))
 
-Treat those files as the source of truth,
-and add a host there when an agent's proxy refuses one it needs.
+Treat those files as the source of truth.
+When an agent's proxy refuses a host it needs:
+
+1. Add the host to the matching file.
+2. Apply the updated list to the agent itself:
+   the repository's "Coding agent" settings page for Copilot,
+   or the cloud environment for Claude.
+   Editing the file alone does not change what either agent can reach.
 The list below gives examples of useful hosts and what each one serves.
 It is not kept in sync with `allowlist.txt`,
 so check that file for the current entries.

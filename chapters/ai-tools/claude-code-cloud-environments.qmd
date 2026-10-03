@@ -98,7 +98,8 @@ A leading `*.` matches subdomains only:
 #### Choosing hosts to allow
 
 Every allowed host is a place the agent can send data to,
-or read instructions from.
+or read instructions from
+[@stats_allowlist_pr6].
 Prefer documentation, package registries, and publishers.
 Leave out:
 
