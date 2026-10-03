@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-09-28 23:45:28 (PDT)
+Last modified: 2026-10-03 11:30:33 (PDT)
 
 Coding agents adapt to a project through configuration files, instruction prompts, tool definitions, and plugins. This chapter explains how to configure agent environments, install project-level instructions, author and share Agent Skills (`SKILL.md`), connect external capabilities via the Model Context Protocol (MCP), structure agent plugins, and use advanced developer extensions like Magic Context, Conductor, and the Antigravity Python SDK.
 
