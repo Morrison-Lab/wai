@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-03 12:19:31 (PDT)
+Last modified: 2026-10-03 12:27:29 (PDT)
 
 [benchbook](https://github.com/Ulef1005/benchbook) is a plain-markdown, git-versioned personal wiki that an AI agent reads and writes under a written contract. Your AI keeps the wiki; you keep the rules.
 

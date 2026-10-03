@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-03 12:19:31 (PDT)
+Last modified: 2026-10-03 12:27:29 (PDT)
 
 Coding agents adapt to a project through configuration files, instruction prompts, tool definitions, and plugins. This chapter explains how to configure agent environments, install project-level instructions, author and share Agent Skills (`SKILL.md`), connect external capabilities via the Model Context Protocol (MCP), structure agent plugins, and use advanced developer extensions like Magic Context, Conductor, and the Antigravity Python SDK.
 
@@ -1796,9 +1796,9 @@ To let a cloud session reach hosts outside the default **Trusted** list, edit it
 2.  Hover over the environment and select the settings icon on the right.
 3.  Set **Network access** to **Custom**.
 4.  Paste the hosts into **Allowed domains**, one per line.
-5.  Check **Also include default list of common package managers**, so installs from CRAN, PyPI, and similar registries still work.
+5.  Check **Also include default list of common package managers**, to keep Anthropic’s default registries, such as PyPI. R repositories such as CRAN come from the lab’s list itself.
 
-Sessions already running in the environment pick up the new list within about a minute. GitHub traffic goes through a separate proxy and does not depend on this list.
+Sessions already running in the environment pick up the new list within about a minute. Git operations and GitHub API requests go through a separate GitHub proxy and do not depend on this list, but committed files fetched from `raw.githubusercontent.com` do depend on it ([Anthropic 2026d](#ref-claude_code_cloud_environments)).
 
 These steps apply to environments you created yourself. An organization-shared environment opens read-only in the selector; only an organization Owner can change its network access, from the **Cloud environments** page in admin settings. Each environment keeps its own list, so to give the whole lab one standard list, an Owner can create a shared environment with **Custom** access and that list ([Anthropic 2026d](#ref-claude_code_cloud_environments)).
 
