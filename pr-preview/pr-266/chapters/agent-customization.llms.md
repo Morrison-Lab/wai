@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-03 12:12:06 (PDT)
+Last modified: 2026-10-03 12:19:31 (PDT)
 
 Coding agents adapt to a project through configuration files, instruction prompts, tool definitions, and plugins. This chapter explains how to configure agent environments, install project-level instructions, author and share Agent Skills (`SKILL.md`), connect external capabilities via the Model Context Protocol (MCP), structure agent plugins, and use advanced developer extensions like Magic Context, Conductor, and the Antigravity Python SDK.
 
@@ -1252,7 +1252,7 @@ Plugin counts and names change weekly, so every figure below is stamped with the
 
 #### The three Anthropic marketplaces
 
-Anthropic runs three plugin catalogs for Claude Code, and they differ in who curates them ([Anthropic 2026d](#ref-claude_code_discover_plugins)):
+Anthropic runs three plugin catalogs for Claude Code, and they differ in who curates them ([Anthropic 2026e](#ref-claude_code_discover_plugins)):
 
 - **`claude-plugins-official`** ([`anthropics/claude-plugins-official`](https://github.com/anthropics/claude-plugins-official) ([Anthropic 2026b](#ref-claude_plugins_official))). Curated by Anthropic at its discretion; there is no application process. Claude Code registers it automatically the first time it starts interactively, so `/plugin install <name>@claude-plugins-official` works with no setup. Browse it with `/plugin` (the **Discover** tab) or at [claude.com/plugins](https://claude.com/plugins).
 - **`claude-community`** ([`anthropics/claude-plugins-community`](https://github.com/anthropics/claude-plugins-community) ([Anthropic 2026c](#ref-claude_plugins_community))). Third-party submissions that passed Anthropic’s automated validation and safety screening, each pinned to a commit SHA and synced nightly from the review pipeline. Added by hand: `/plugin marketplace add anthropics/claude-plugins-community`, then `/plugin install <name>@claude-community`. Pull requests against the mirror are closed automatically; submissions go through a form.
@@ -1275,7 +1275,7 @@ The 38 Anthropic-maintained plugins fall into five groups. The verdicts are for 
 
 ##### Code intelligence
 
-Twelve `*-lsp` plugins (`clangd`, `csharp`, `gopls`, `jdtls`, `kotlin`, `lua`, `php`, `pyright`, `ruby`, `rust-analyzer`, `swift`, `typescript`) connect a Language Server Protocol server so that Claude sees type errors and missing imports after every edit and can jump to definitions instead of grepping ([Anthropic 2026d](#ref-claude_code_discover_plugins)). The plugin does not install the language server binary; you do, and cloud sessions never start it.
+Twelve `*-lsp` plugins (`clangd`, `csharp`, `gopls`, `jdtls`, `kotlin`, `lua`, `php`, `pyright`, `ruby`, `rust-analyzer`, `swift`, `typescript`) connect a Language Server Protocol server so that Claude sees type errors and missing imports after every edit and can jump to definitions instead of grepping ([Anthropic 2026e](#ref-claude_code_discover_plugins)). The plugin does not install the language server binary; you do, and cloud sessions never start it.
 
 Verdict: `pyright-lsp` is worth installing wherever the lab writes Python. There is no R entry in the catalog (measured 2026-09-09), so R work gets no diagnostics from this route; the docs describe an `.lsp.json` for writing your own LSP plugin, which is the path if anyone wants to wire up R’s `languageserver`.
 
@@ -1313,7 +1313,7 @@ Verdict: `learning-output-style` is a reasonable choice for a student who wants 
 
 ##### External integrations
 
-The `external_plugins/` directory and many third-party entries bundle a pre-configured MCP server: `github`, `gitlab`, `atlassian`, `asana`, `linear`, `notion`, `figma`, `slack`, `sentry`, `vercel`, `firebase`, `supabase`, `context7`, `playwright`, `serena`, `terraform`, and messaging bridges for Discord, Telegram, and iMessage ([Anthropic 2026d](#ref-claude_code_discover_plugins)).
+The `external_plugins/` directory and many third-party entries bundle a pre-configured MCP server: `github`, `gitlab`, `atlassian`, `asana`, `linear`, `notion`, `figma`, `slack`, `sentry`, `vercel`, `firebase`, `supabase`, `context7`, `playwright`, `serena`, `terraform`, and messaging bridges for Discord, Telegram, and iMessage ([Anthropic 2026e](#ref-claude_code_discover_plugins)).
 
 Verdict: `github` is the one that matters here; [Section 17](#sec-ai-mcp-server-setup) covers configuring it, and [PR activity notifications](../chapters/pr-workflow-with-agents.llms.md#sec-ai-pr-activity-notifications) what it adds. `context7` (live library documentation lookup) is worth a try for Python and JavaScript work. Everything else depends on whether the lab uses the service.
 
@@ -1360,7 +1360,7 @@ The practical composition, as of 2026-09-09: `ai-config` as the base, `pyright-l
 
 #### What is `ralph-loop`, and is it `ardi`?
 
-`ralph-loop` (official marketplace; `ralph-wiggum` in the demo marketplace) packages Geoffrey Huntley’s “Ralph” technique ([Anthropic 2026e](#ref-ralph_loop_plugin); [Huntley 2025](#ref-ghuntley_ralph)). Ralph, in Huntley’s words, “is a Bash loop”:
+`ralph-loop` (official marketplace; `ralph-wiggum` in the demo marketplace) packages Geoffrey Huntley’s “Ralph” technique ([Anthropic 2026f](#ref-ralph_loop_plugin); [Huntley 2025](#ref-ghuntley_ralph)). Ralph, in Huntley’s words, “is a Bash loop”:
 
 ``` bash
 while :; do cat PROMPT.md | claude-code ; done
@@ -1368,7 +1368,7 @@ while :; do cat PROMPT.md | claude-code ; done
 
 The same prompt file is fed to a fresh agent run, over and over. Nothing changes between iterations except the repository: the previous run’s files, commits, and test results are what the next run reads. Tests supply the backpressure that keeps each pass honest, and the operator “tunes Ralph by adding a sign” to the prompt when a failure pattern shows up ([Huntley 2025](#ref-ghuntley_ralph)). Huntley says it works best on greenfield projects, one task per loop ([Huntley 2025](#ref-ghuntley_ralph)).
 
-The plugin moves that loop inside a single Claude Code session. `/ralph-loop "<prompt>" --max-iterations <n> --completion-promise "<text>"` installs a `Stop` hook that intercepts the agent’s attempt to end the turn and feeds the same prompt back, until the agent’s output contains the completion-promise string exactly, or the iteration cap is hit, or you run `/cancel-ralph` ([Anthropic 2026e](#ref-ralph_loop_plugin)). The caveats in the README are the important part: the promise is an exact-string match, so it cannot distinguish “done” from “blocked”, and `--max-iterations` (unlimited by default) is the only real safety net. It lists tasks needing human judgment, one-shot operations, unclear success criteria, and production debugging as cases where not to use it.
+The plugin moves that loop inside a single Claude Code session. `/ralph-loop "<prompt>" --max-iterations <n> --completion-promise "<text>"` installs a `Stop` hook that intercepts the agent’s attempt to end the turn and feeds the same prompt back, until the agent’s output contains the completion-promise string exactly, or the iteration cap is hit, or you run `/cancel-ralph` ([Anthropic 2026f](#ref-ralph_loop_plugin)). The caveats in the README are the important part: the promise is an exact-string match, so it cannot distinguish “done” from “blocked”, and `--max-iterations` (unlimited by default) is the only real safety net. It lists tasks needing human judgment, one-shot operations, unclear success criteria, and production debugging as cases where not to use it.
 
 So: is it like `ardi`? Both are loops that refuse to let the agent stop early, and both rely on a `Stop`-time mechanism (`ai-config`’s own `Stop` hooks are what block a placeholder reply or an empty promise). Past that they answer different questions.
 
@@ -1790,18 +1790,23 @@ The `/remote-env` slash command sets **which configured environment is the defau
 
 #### Configuring network access for Claude cloud sessions
 
-To let a cloud session reach more than the default hosts, edit its environment:
+To let a cloud session reach hosts outside the default **Trusted** list, edit its environment ([Anthropic 2026d](#ref-claude_code_cloud_environments)):
 
-1.  Open the environment menu in the session’s title bar and choose **Edit**.
-2.  Under **Network access**, choose **Custom**.
-3.  Paste the hosts into **Allowed domains**, one per line.
-4.  Keep the default list of package managers enabled, so installs from CRAN, PyPI, and similar registries still work.
+1.  Open the environment selector, at [claude.ai/code](https://claude.ai/code) or from the prompt box in the Desktop app, and select **Cloud**.
+2.  Hover over the environment and select the settings icon on the right.
+3.  Set **Network access** to **Custom**.
+4.  Paste the hosts into **Allowed domains**, one per line.
+5.  Check **Also include default list of common package managers**, so installs from CRAN, PyPI, and similar registries still work.
 
-The lab’s list lives in [`claude-allowlist.txt`](https://github.com/Morrison-Lab/stats-allowlist/blob/main/claude-allowlist.txt) in [Morrison-Lab/stats-allowlist](https://github.com/Morrison-Lab/stats-allowlist). Editing that file does not change any environment by itself: after the file changes, paste the updated list into each environment that uses it. For the current steps, see [Network access](https://code.claude.com/docs/en/cloud-environments#network-access) in the Claude Code documentation.
+Sessions already running in the environment pick up the new list within about a minute. GitHub traffic goes through a separate proxy and does not depend on this list.
+
+These steps apply to environments you created yourself. An organization-shared environment opens read-only in the selector; only an organization Owner can change its network access, from the **Cloud environments** page in admin settings. Each environment keeps its own list, so to give the whole lab one standard list, an Owner can create a shared environment with **Custom** access and that list ([Anthropic 2026d](#ref-claude_code_cloud_environments)).
+
+The lab’s list lives in [`claude-allowlist.txt`](https://github.com/Morrison-Lab/stats-allowlist/blob/main/claude-allowlist.txt) in [Morrison-Lab/stats-allowlist](https://github.com/Morrison-Lab/stats-allowlist) ([Morrison Lab 2026c](#ref-stats_allowlist)). Editing that file does not change any environment by itself: after the file changes, paste the updated list into each environment that uses it.
 
 A leading `*.` matches subdomains only:
 
-- `*.example.org` matches `docs.example.org` but not `example.org`, so a site often needs both entries.
+- `*.example.org` matches `docs.example.org` but not `example.org`, so a site often needs both entries ([Morrison Lab 2026c](#ref-stats_allowlist)).
 - A host already matched by a wildcard, such as `cloud.r-project.org` under `*.r-project.org`, needs no line of its own.
 
 > **WARNING:**
@@ -1827,9 +1832,11 @@ Anthropic. 2026b. *Claude Code Plugins Official Marketplace*. Software. <https:/
 
 Anthropic. 2026c. *Claude Plugins Community Marketplace*. Software. <https://github.com/anthropics/claude-plugins-community>.
 
-Anthropic. 2026d. *Discover and Install Prebuilt Plugins Through Marketplaces*. Documentation. <https://code.claude.com/docs/en/discover-plugins>.
+Anthropic. 2026d. *Configure Cloud Environments*. Documentation. <https://code.claude.com/docs/en/cloud-environments>.
 
-Anthropic. 2026e. *Ralph Loop Plugin*. Documentation. <https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/plugins/ralph-loop/README.md>.
+Anthropic. 2026e. *Discover and Install Prebuilt Plugins Through Marketplaces*. Documentation. <https://code.claude.com/docs/en/discover-plugins>.
+
+Anthropic. 2026f. *Ralph Loop Plugin*. Documentation. <https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/plugins/ralph-loop/README.md>.
 
 Coles, Matt. 2026. *Herding Parallel Agents on a Remote Box with Herdr*. Blog post. <https://coles.codes/posts/herding-agents-with-herdr/>.
 
@@ -1866,6 +1873,8 @@ Konur, Yigit. 2026. *Awesome-Herdr: A Curated Guide to the Herdr Ecosystem*. Git
 Morrison Lab. 2026a. *Ai-Config: Portable AI Agent Config*. Software. <https://github.com/Morrison-Lab/ai-config>.
 
 Morrison Lab. 2026b. *Delegate-to-Codex: Run Heavy Sidecar Work on Codex, Not Claude*. Documentation. <https://github.com/Morrison-Lab/ai-config/blob/main/skills/delegate-to-codex/SKILL.md>.
+
+Morrison Lab. 2026c. *Stats-Allowlist: Network Allowlists for AI Coding Agents*. GitHub repository. <https://github.com/Morrison-Lab/stats-allowlist>.
 
 OpenAI. 2026a. *Codex Plugin for Claude Code*. Software. <https://github.com/openai/codex-plugin-cc>.
 
