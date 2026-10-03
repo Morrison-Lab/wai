@@ -55,7 +55,8 @@ edit its environment [@claude_code_cloud_environments]:
 4. Paste the hosts into **Allowed domains**,
    one per line.
 5. Check **Also include default list of common package managers**,
-   so installs from CRAN, PyPI, and similar registries still work.
+   to keep Anthropic's default registries, such as PyPI.
+   R repositories such as CRAN come from the lab's list itself.
 
 Sessions already running in the environment
 pick up the new list within about a minute.
