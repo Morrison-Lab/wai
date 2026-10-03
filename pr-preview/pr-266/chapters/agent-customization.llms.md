@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-03 12:35:20 (PDT)
+Last modified: 2026-10-03 15:16:41 (PDT)
 
 Coding agents adapt to a project through configuration files, instruction prompts, tool definitions, and plugins. This chapter explains how to configure agent environments, install project-level instructions, author and share Agent Skills (`SKILL.md`), connect external capabilities via the Model Context Protocol (MCP), structure agent plugins, and use advanced developer extensions like Magic Context, Conductor, and the Antigravity Python SDK.
 
@@ -1802,16 +1802,16 @@ Sessions already running in the environment pick up the new list within about a 
 
 These steps apply to environments you created yourself. An organization-shared environment opens read-only in the selector; only an organization Owner can change its network access, from the **Cloud environments** page in admin settings. Each environment keeps its own list, so to give the whole lab one standard list, an Owner can create a shared environment with **Custom** access and that list ([Anthropic 2026d](#ref-claude_code_cloud_environments)).
 
-The lab’s list lives in [`claude-allowlist.txt`](https://github.com/Morrison-Lab/stats-allowlist/blob/main/claude-allowlist.txt) in [Morrison-Lab/stats-allowlist](https://github.com/Morrison-Lab/stats-allowlist) ([Morrison Lab 2026c](#ref-stats_allowlist)). Editing that file does not change any environment by itself: after the file changes, paste the updated list into each environment that uses it.
+The lab’s list lives in [`claude-allowlist.txt`](https://github.com/Morrison-Lab/stats-allowlist/blob/main/claude-allowlist.txt) in [Morrison-Lab/stats-allowlist](https://github.com/Morrison-Lab/stats-allowlist) ([Morrison Lab 2026d](#ref-stats_allowlist)). Editing that file does not change any environment by itself: after the file changes, paste the updated list into each environment that uses it.
 
 A leading `*.` matches subdomains only:
 
-- `*.example.org` matches `docs.example.org` but not `example.org`, so a site often needs both entries ([Morrison Lab 2026c](#ref-stats_allowlist)).
+- `*.example.org` matches `docs.example.org` but not `example.org`, so a site often needs both entries ([Morrison Lab 2026d](#ref-stats_allowlist)).
 - A host already matched by a wildcard, such as `cloud.r-project.org` under `*.r-project.org`, needs no line of its own.
 
 > **WARNING:**
 >
-> Every allowed host is a place the agent can send data to, or read instructions from. Prefer documentation, package registries, and publishers. Leave out:
+> Every allowed host is a place the agent can send data to, or read instructions from ([Morrison Lab 2026c](#ref-stats_allowlist_pr6)). Prefer documentation, package registries, and publishers. Leave out:
 >
 > - Sites that accept anonymous writes, such as Google Forms (`docs.google.com`, `forms.gle`), which an agent could be steered into using to send repository contents out.
 > - Sites dominated by user posts, such as Reddit, which are a common source of planted instructions and add little for statistics work.
@@ -1874,7 +1874,9 @@ Morrison Lab. 2026a. *Ai-Config: Portable AI Agent Config*. Software. <https://g
 
 Morrison Lab. 2026b. *Delegate-to-Codex: Run Heavy Sidecar Work on Codex, Not Claude*. Documentation. <https://github.com/Morrison-Lab/ai-config/blob/main/skills/delegate-to-codex/SKILL.md>.
 
-Morrison Lab. 2026c. *Stats-Allowlist: Network Allowlists for AI Coding Agents*. GitHub repository. <https://github.com/Morrison-Lab/stats-allowlist>.
+Morrison Lab. 2026c. *Merge Additional Hosts into Claude Allowlist; Prune Redundant and Risky Entries*. GitHub pull request. <https://github.com/Morrison-Lab/stats-allowlist/pull/6>.
+
+Morrison Lab. 2026d. *Stats-Allowlist: Network Allowlists for AI Coding Agents*. GitHub repository. <https://github.com/Morrison-Lab/stats-allowlist>.
 
 OpenAI. 2026a. *Codex Plugin for Claude Code*. Software. <https://github.com/openai/codex-plugin-cc>.
 
