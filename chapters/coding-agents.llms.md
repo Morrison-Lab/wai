@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-03 11:30:33 (PDT)
+Last modified: 2026-10-03 15:28:00 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -968,6 +968,18 @@ For more information, see [Customizing or disabling the firewall for GitHub Copi
 
 #### Recommended URLs for Data Science Repositories
 
+The lab maintains its working allowlists in [Morrison-Lab/stats-allowlist](https://github.com/Morrison-Lab/stats-allowlist) ([Morrison Lab 2026](#ref-stats_allowlist)):
+
+- [`allowlist.txt`](https://github.com/Morrison-Lab/stats-allowlist/blob/main/allowlist.txt) for the Copilot coding agent
+- [`claude-allowlist.txt`](https://github.com/Morrison-Lab/stats-allowlist/blob/main/claude-allowlist.txt) for Claude Code cloud sessions (see [Configuring network access for Claude cloud sessions](../chapters/agent-customization.llms.md#sec-claude-network-access))
+
+Treat those files as the source of truth. When an agent’s proxy refuses a host it needs:
+
+1.  Add the host to the matching file.
+2.  Apply the updated list to the agent itself: the repository’s “Coding agent” settings page for Copilot, or the cloud environment for Claude. Editing the file alone does not change what either agent can reach.
+
+The list below gives examples of useful hosts and what each one serves. It is not kept in sync with `allowlist.txt`, so check that file for the current entries.
+
 For data science and R-focused repositories, we recommend adding the following URLs to your Copilot allowlist. These sites are safe, reputable sources of documentation and packages that coding agents may need to access:
 
 **R Package Documentation and Ecosystems:**
@@ -1095,6 +1107,8 @@ Microsoft. 2026c. *Get Started with Researcher in Microsoft 365 Copilot*. Micros
 Microsoft. 2026d. *Microsoft Copilot Researcher Agent Frequently Asked Questions*. Microsoft Learn. <https://learn.microsoft.com/en-us/copilot/microsoft-365/faq-researcher>.
 
 Microsoft. 2026e. *What Is Researcher Agent in Microsoft Copilot?* Microsoft Learn. <https://learn.microsoft.com/en-us/microsoft-365/copilot/researcher-agent>.
+
+Morrison Lab. 2026. *Stats-Allowlist: Network Allowlists for AI Coding Agents*. GitHub repository. <https://github.com/Morrison-Lab/stats-allowlist>.
 
 Ollama. 2026. *Ollama*. Product page. <https://ollama.com/>.
 
