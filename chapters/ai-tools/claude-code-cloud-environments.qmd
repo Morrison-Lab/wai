@@ -40,6 +40,60 @@ use the web interface at [claude.ai/code](https://claude.ai/code).
 Because `/remote-env` opens an interactive panel,
 run it from an interactive `claude` terminal session.
 
+#### Configuring network access for Claude cloud sessions {#sec-claude-network-access}
+
+To let a cloud session reach more than the default hosts,
+edit its environment:
+
+1. Open the environment menu in the session's title bar
+   and choose **Edit**.
+2. Under **Network access**, choose **Custom**.
+3. Paste the hosts into **Allowed domains**,
+   one per line.
+4. Keep the default list of package managers enabled,
+   so installs from CRAN, PyPI, and similar registries still work.
+
+The lab's list lives in
+[`claude-allowlist.txt`](https://github.com/Morrison-Lab/stats-allowlist/blob/main/claude-allowlist.txt)
+in [Morrison-Lab/stats-allowlist](https://github.com/Morrison-Lab/stats-allowlist).
+Editing that file does not change any environment by itself:
+after the file changes,
+paste the updated list into each environment that uses it.
+For the current steps,
+see [Network access](https://code.claude.com/docs/en/cloud-environments#network-access)
+in the Claude Code documentation.
+
+A leading `*.` matches subdomains only:
+
+- `*.example.org` matches `docs.example.org`
+  but not `example.org`,
+  so a site often needs both entries.
+- A host already matched by a wildcard,
+  such as `cloud.r-project.org` under `*.r-project.org`,
+  needs no line of its own.
+
+::: {.callout-warning}
+#### Choosing hosts to allow
+
+Every allowed host is a place the agent can send data to,
+or read instructions from.
+Prefer documentation, package registries, and publishers.
+Leave out:
+
+- Sites that accept anonymous writes,
+  such as Google Forms (`docs.google.com`, `forms.gle`),
+  which an agent could be steered into using to send repository contents out.
+- Sites dominated by user posts,
+  such as Reddit,
+  which are a common source of planted instructions
+  and add little for statistics work.
+
+Hosts where anyone can publish,
+such as `*.github.io` and `*.githubusercontent.com`,
+are often needed for package installs and documentation;
+allow them knowingly.
+:::
+
 ::: {.callout-note}
 #### Availability
 

@@ -41,6 +41,19 @@ see [Customizing or disabling the firewall for GitHub Copilot coding agent](http
 
 #### Recommended URLs for Data Science Repositories
 
+The lab maintains its working allowlists in
+[Morrison-Lab/stats-allowlist](https://github.com/Morrison-Lab/stats-allowlist):
+
+- [`allowlist.txt`](https://github.com/Morrison-Lab/stats-allowlist/blob/main/allowlist.txt)
+  for the Copilot coding agent
+- [`claude-allowlist.txt`](https://github.com/Morrison-Lab/stats-allowlist/blob/main/claude-allowlist.txt)
+  for Claude Code cloud sessions
+  (see [Configuring network access for Claude cloud sessions](agent-customization.qmd#sec-claude-network-access))
+
+Treat those files as the source of truth,
+and add a host there when an agent's proxy refuses one it needs.
+The list below explains the core entries.
+
 For data science and R-focused repositories,
 we recommend adding the following URLs to your Copilot allowlist.
 These sites are safe,
