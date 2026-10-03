@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-03 15:16:41 (PDT)
+Last modified: 2026-10-03 15:21:21 (PDT)
 
 [AI-powered coding assistants](https://en.wikipedia.org/wiki/AI-assisted_software_development) can dramatically accelerate and improve your work, but they require careful and responsible use. Lab members who use AI tools must adhere to the following guidelines.
 

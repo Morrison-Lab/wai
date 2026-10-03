@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-03 15:16:41 (PDT)
+Last modified: 2026-10-03 15:21:21 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -976,7 +976,9 @@ The lab maintains its working allowlists in [Morrison-Lab/stats-allowlist](https
 Treat those files as the source of truth. When an agent’s proxy refuses a host it needs:
 
 1.  Add the host to the matching file.
-2.  Apply the updated list to the agent itself: the repository’s “Coding agent” settings page for Copilot, or the cloud environment for Claude. Editing the file alone does not change what either agent can reach. The list below gives examples of useful hosts and what each one serves. It is not kept in sync with `allowlist.txt`, so check that file for the current entries.
+2.  Apply the updated list to the agent itself: the repository’s “Coding agent” settings page for Copilot, or the cloud environment for Claude. Editing the file alone does not change what either agent can reach.
+
+The list below gives examples of useful hosts and what each one serves. It is not kept in sync with `allowlist.txt`, so check that file for the current entries.
 
 For data science and R-focused repositories, we recommend adding the following URLs to your Copilot allowlist. These sites are safe, reputable sources of documentation and packages that coding agents may need to access:
 
