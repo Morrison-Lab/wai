@@ -53,7 +53,9 @@ The lab maintains its working allowlists in
 
 Treat those files as the source of truth,
 and add a host there when an agent's proxy refuses one it needs.
-The list below explains the core entries.
+The list below gives examples of useful hosts and what each one serves.
+It is not kept in sync with `allowlist.txt`,
+so check that file for the current entries.
 
 For data science and R-focused repositories,
 we recommend adding the following URLs to your Copilot allowlist.
