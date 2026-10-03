@@ -40,6 +40,83 @@ use the web interface at [claude.ai/code](https://claude.ai/code).
 Because `/remote-env` opens an interactive panel,
 run it from an interactive `claude` terminal session.
 
+#### Configuring network access for Claude cloud sessions {#sec-claude-network-access}
+
+To let a cloud session reach hosts outside the default **Trusted** list,
+edit its environment [@claude_code_cloud_environments]:
+
+1. Open the environment selector,
+   at [claude.ai/code](https://claude.ai/code)
+   or from the prompt box in the Desktop app,
+   and select **Cloud**.
+2. Hover over the environment
+   and select the settings icon on the right.
+3. Set **Network access** to **Custom**.
+4. Paste the hosts into **Allowed domains**,
+   one per line.
+5. Check **Also include default list of common package managers**,
+   to keep Anthropic's default registries, such as PyPI.
+   R repositories such as CRAN come from the lab's list itself.
+
+Sessions already running in the environment
+pick up the new list within about a minute.
+Git operations and GitHub API requests
+go through a separate GitHub proxy
+and do not depend on this list,
+but committed files fetched from `raw.githubusercontent.com`
+do depend on it
+[@claude_code_cloud_environments].
+
+These steps apply to environments you created yourself.
+An organization-shared environment opens read-only in the selector;
+only an organization Owner can change its network access,
+from the **Cloud environments** page in admin settings.
+Each environment keeps its own list,
+so to give the whole lab one standard list,
+an Owner can create a shared environment
+with **Custom** access and that list
+[@claude_code_cloud_environments].
+
+The lab's list lives in
+[`claude-allowlist.txt`](https://github.com/Morrison-Lab/stats-allowlist/blob/main/claude-allowlist.txt)
+in [Morrison-Lab/stats-allowlist](https://github.com/Morrison-Lab/stats-allowlist)
+[@stats_allowlist].
+Editing that file does not change any environment by itself:
+after the file changes,
+paste the updated list into each environment that uses it.
+
+A leading `*.` matches subdomains only:
+
+- `*.example.org` matches `docs.example.org`
+  but not `example.org`,
+  so a site often needs both entries [@stats_allowlist].
+- A host already matched by a wildcard,
+  such as `cloud.r-project.org` under `*.r-project.org`,
+  needs no line of its own.
+
+::: {.callout-warning}
+#### Choosing hosts to allow
+
+Every allowed host is a place the agent can send data to,
+or read instructions from
+[@stats_allowlist_pr6].
+Prefer documentation, package registries, and publishers.
+Leave out:
+
+- Sites that accept anonymous writes,
+  such as Google Forms (`docs.google.com`, `forms.gle`),
+  which an agent could be steered into using to send repository contents out.
+- Sites dominated by user posts,
+  such as Reddit,
+  which are a common source of planted instructions
+  and add little for statistics work.
+
+Hosts where anyone can publish,
+such as `*.github.io` and `*.githubusercontent.com`,
+are often needed for package installs and documentation;
+allow them knowingly.
+:::
+
 ::: {.callout-note}
 #### Availability
 
