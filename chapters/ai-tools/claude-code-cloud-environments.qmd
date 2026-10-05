@@ -176,6 +176,19 @@ edit your user settings, `~/.claude/settings.json`
    By default, when the sandbox cannot start,
    Claude Code runs commands without it.
 
+These are user-level defaults,
+and a project's own `.claude/settings.json` or `.claude/settings.local.json` can change them
+[@claude_code_settings]:
+
+- A single value set there, such as `sandbox.enabled`, overrides yours,
+  so an old `sandbox.enabled: false` in a project turns the sandbox off for it.
+- A list set there, such as `allowedDomains`, is combined with yours.
+  With `strictAllowlist` in your user settings,
+  Claude Code v2.1.285 or later ignores a project's `allowedDomains` entries
+  [@claude_code_sandboxing].
+
+Check a project's settings before relying on this for an unattended run.
+
 `jq` turns a downloaded copy of the
 [raw file](https://raw.githubusercontent.com/Morrison-Lab/stats-allowlist/main/claude-allowlist.txt)
 into the array for step 2:
