@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-05 14:26:32 (PDT)
+Last modified: 2026-10-05 14:34:23 (PDT)
 
 Coding agents adapt to a project through configuration files, instruction prompts, tool definitions, and plugins. This chapter explains how to configure agent environments, install project-level instructions, author and share Agent Skills (`SKILL.md`), connect external capabilities via the Model Context Protocol (MCP), structure agent plugins, and use advanced developer extensions like Magic Context, Conductor, and the Antigravity Python SDK.
 
@@ -1834,6 +1834,7 @@ A local session that runs without prompts, such as in auto mode, where a classif
 2.  Set `sandbox.network.allowedDomains` to the entries of [`claude-allowlist.txt`](https://github.com/Morrison-Lab/stats-allowlist/blob/main/claude-allowlist.txt), as a JSON array of strings. The sandbox accepts the same leading `*.` wildcards.
 3.  Set `sandbox.network.strictAllowlist` to `true` (Claude Code v2.1.219 or later). Without it, `allowedDomains` only pre-approves hosts: any other host gets a prompt in the default mode, is refused in auto mode unless the command names it, and is allowed without a prompt in `bypassPermissions` mode.
 4.  Set `sandbox.allowUnsandboxedCommands` to `false`, so that a blocked command cannot retry outside the sandbox.
+5.  Set `sandbox.failIfUnavailable` to `true`. By default, when the sandbox cannot start, Claude Code runs commands without it.
 
 `jq` turns a downloaded copy of the [raw file](https://raw.githubusercontent.com/Morrison-Lab/stats-allowlist/main/claude-allowlist.txt) into the array for step 2:
 
@@ -1841,7 +1842,7 @@ A local session that runs without prompts, such as in auto mode, where a classif
 jq -R . claude-allowlist.txt | jq -s .
 ```
 
-The sandbox covers shell commands only. Built-in tools such as `WebFetch` follow permission rules instead, so neither `allowedDomains` nor `strictAllowlist` limits them ([Anthropic 2026f](#ref-claude_code_sandboxing)).
+The sandbox runs on macOS, Linux, and WSL2. On native Windows, Claude Code runs shell commands without the sandbox, and with step 5 set it refuses to start instead, so run Claude Code inside WSL2 to use these settings (see [Section 5](#sec-ai-claude-code-windows)) ([Anthropic 2026f](#ref-claude_code_sandboxing)). The sandbox covers shell commands only. Built-in tools such as `WebFetch` follow permission rules instead, so neither `allowedDomains` nor `strictAllowlist` limits them ([Anthropic 2026f](#ref-claude_code_sandboxing)).
 
 To read a site left off the lab’s list, such as a Reddit thread, use a local session where you approve the fetch, rather than a cloud environment where every session could reach the site. Answer the prompt with **Yes**, not **Yes, and don’t ask again**: the second saves a permanent allow rule for that domain, which the sandbox also honors ([Anthropic 2026e](#ref-claude_code_permissions), [2026f](#ref-claude_code_sandboxing)).
 
