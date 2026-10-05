@@ -172,6 +172,9 @@ edit your user settings, `~/.claude/settings.json`
    and is allowed without a prompt in `bypassPermissions` mode.
 4. Set `sandbox.allowUnsandboxedCommands` to `false`,
    so that a blocked command cannot retry outside the sandbox.
+5. Set `sandbox.failIfUnavailable` to `true`.
+   By default, when the sandbox cannot start,
+   Claude Code runs commands without it.
 
 `jq` turns a downloaded copy of the
 [raw file](https://raw.githubusercontent.com/Morrison-Lab/stats-allowlist/main/claude-allowlist.txt)
@@ -181,6 +184,12 @@ into the array for step 2:
 jq -R . claude-allowlist.txt | jq -s .
 ```
 
+The sandbox runs on macOS, Linux, and WSL2.
+On native Windows, Claude Code runs shell commands without the sandbox,
+and with step 5 set it refuses to start instead,
+so run Claude Code inside WSL2 to use these settings
+(see @sec-ai-claude-code-windows)
+[@claude_code_sandboxing].
 The sandbox covers shell commands only.
 Built-in tools such as `WebFetch` follow permission rules instead,
 so neither `allowedDomains` nor `strictAllowlist` limits them
