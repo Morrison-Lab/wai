@@ -188,6 +188,11 @@ and a project's own `.claude/settings.json` or `.claude/settings.local.json` can
   [@claude_code_sandboxing].
 
 Check a project's settings before relying on this for an unattended run.
+The minimum versions named here come from the sandboxing documentation
+as read on 2026-10-05
+[@claude_code_sandboxing];
+run `claude --version` and check the current documentation
+before relying on them.
 
 `jq` turns a downloaded copy of the
 [raw file](https://raw.githubusercontent.com/Morrison-Lab/stats-allowlist/main/claude-allowlist.txt)
