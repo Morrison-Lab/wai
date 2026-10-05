@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-05 03:10:24 (PDT)
+Last modified: 2026-10-05 16:02:17 (PDT)
 
 Coding agents adapt to a project through configuration files, instruction prompts, tool definitions, and plugins. This chapter explains how to configure agent environments, install project-level instructions, author and share Agent Skills (`SKILL.md`), connect external capabilities via the Model Context Protocol (MCP), structure agent plugins, and use advanced developer extensions like Magic Context, Conductor, and the Antigravity Python SDK.
 
@@ -1252,7 +1252,7 @@ Plugin counts and names change weekly, so every figure below is stamped with the
 
 #### The three Anthropic marketplaces
 
-Anthropic runs three plugin catalogs for Claude Code, and they differ in who curates them ([Anthropic 2026e](#ref-claude_code_discover_plugins)):
+Anthropic runs three plugin catalogs for Claude Code, and they differ in who curates them ([Anthropic 2026g](#ref-claude_code_discover_plugins)):
 
 - **`claude-plugins-official`** ([`anthropics/claude-plugins-official`](https://github.com/anthropics/claude-plugins-official) ([Anthropic 2026b](#ref-claude_plugins_official))). Curated by Anthropic at its discretion; there is no application process. Claude Code registers it automatically the first time it starts interactively, so `/plugin install <name>@claude-plugins-official` works with no setup. Browse it with `/plugin` (the **Discover** tab) or at [claude.com/plugins](https://claude.com/plugins).
 - **`claude-community`** ([`anthropics/claude-plugins-community`](https://github.com/anthropics/claude-plugins-community) ([Anthropic 2026c](#ref-claude_plugins_community))). Third-party submissions that passed Anthropic’s automated validation and safety screening, each pinned to a commit SHA and synced nightly from the review pipeline. Added by hand: `/plugin marketplace add anthropics/claude-plugins-community`, then `/plugin install <name>@claude-community`. Pull requests against the mirror are closed automatically; submissions go through a form.
@@ -1275,7 +1275,7 @@ The 38 Anthropic-maintained plugins fall into five groups. The verdicts are for 
 
 ##### Code intelligence
 
-Twelve `*-lsp` plugins (`clangd`, `csharp`, `gopls`, `jdtls`, `kotlin`, `lua`, `php`, `pyright`, `ruby`, `rust-analyzer`, `swift`, `typescript`) connect a Language Server Protocol server so that Claude sees type errors and missing imports after every edit and can jump to definitions instead of grepping ([Anthropic 2026e](#ref-claude_code_discover_plugins)). The plugin does not install the language server binary; you do, and cloud sessions never start it.
+Twelve `*-lsp` plugins (`clangd`, `csharp`, `gopls`, `jdtls`, `kotlin`, `lua`, `php`, `pyright`, `ruby`, `rust-analyzer`, `swift`, `typescript`) connect a Language Server Protocol server so that Claude sees type errors and missing imports after every edit and can jump to definitions instead of grepping ([Anthropic 2026g](#ref-claude_code_discover_plugins)). The plugin does not install the language server binary; you do, and cloud sessions never start it.
 
 Verdict: `pyright-lsp` is worth installing wherever the lab writes Python. There is no R entry in the catalog (measured 2026-09-09), so R work gets no diagnostics from this route; the docs describe an `.lsp.json` for writing your own LSP plugin, which is the path if anyone wants to wire up R’s `languageserver`.
 
@@ -1313,7 +1313,7 @@ Verdict: `learning-output-style` is a reasonable choice for a student who wants 
 
 ##### External integrations
 
-The `external_plugins/` directory and many third-party entries bundle a pre-configured MCP server: `github`, `gitlab`, `atlassian`, `asana`, `linear`, `notion`, `figma`, `slack`, `sentry`, `vercel`, `firebase`, `supabase`, `context7`, `playwright`, `serena`, `terraform`, and messaging bridges for Discord, Telegram, and iMessage ([Anthropic 2026e](#ref-claude_code_discover_plugins)).
+The `external_plugins/` directory and many third-party entries bundle a pre-configured MCP server: `github`, `gitlab`, `atlassian`, `asana`, `linear`, `notion`, `figma`, `slack`, `sentry`, `vercel`, `firebase`, `supabase`, `context7`, `playwright`, `serena`, `terraform`, and messaging bridges for Discord, Telegram, and iMessage ([Anthropic 2026g](#ref-claude_code_discover_plugins)).
 
 Verdict: `github` is the one that matters here; [Section 17](#sec-ai-mcp-server-setup) covers configuring it, and [PR activity notifications](../chapters/pr-workflow-with-agents.llms.md#sec-ai-pr-activity-notifications) what it adds. `context7` (live library documentation lookup) is worth a try for Python and JavaScript work. Everything else depends on whether the lab uses the service.
 
@@ -1360,7 +1360,7 @@ The practical composition, as of 2026-09-09: `ai-config` as the base, `pyright-l
 
 #### What is `ralph-loop`, and is it `ardi`?
 
-`ralph-loop` (official marketplace; `ralph-wiggum` in the demo marketplace) packages Geoffrey Huntley’s “Ralph” technique ([Anthropic 2026f](#ref-ralph_loop_plugin); [Huntley 2025](#ref-ghuntley_ralph)). Ralph, in Huntley’s words, “is a Bash loop”:
+`ralph-loop` (official marketplace; `ralph-wiggum` in the demo marketplace) packages Geoffrey Huntley’s “Ralph” technique ([Anthropic 2026h](#ref-ralph_loop_plugin); [Huntley 2025](#ref-ghuntley_ralph)). Ralph, in Huntley’s words, “is a Bash loop”:
 
 ``` bash
 while :; do cat PROMPT.md | claude-code ; done
@@ -1368,7 +1368,7 @@ while :; do cat PROMPT.md | claude-code ; done
 
 The same prompt file is fed to a fresh agent run, over and over. Nothing changes between iterations except the repository: the previous run’s files, commits, and test results are what the next run reads. Tests supply the backpressure that keeps each pass honest, and the operator “tunes Ralph by adding a sign” to the prompt when a failure pattern shows up ([Huntley 2025](#ref-ghuntley_ralph)). Huntley says it works best on greenfield projects, one task per loop ([Huntley 2025](#ref-ghuntley_ralph)).
 
-The plugin moves that loop inside a single Claude Code session. `/ralph-loop "<prompt>" --max-iterations <n> --completion-promise "<text>"` installs a `Stop` hook that intercepts the agent’s attempt to end the turn and feeds the same prompt back, until the agent’s output contains the completion-promise string exactly, or the iteration cap is hit, or you run `/cancel-ralph` ([Anthropic 2026f](#ref-ralph_loop_plugin)). The caveats in the README are the important part: the promise is an exact-string match, so it cannot distinguish “done” from “blocked”, and `--max-iterations` (unlimited by default) is the only real safety net. It lists tasks needing human judgment, one-shot operations, unclear success criteria, and production debugging as cases where not to use it.
+The plugin moves that loop inside a single Claude Code session. `/ralph-loop "<prompt>" --max-iterations <n> --completion-promise "<text>"` installs a `Stop` hook that intercepts the agent’s attempt to end the turn and feeds the same prompt back, until the agent’s output contains the completion-promise string exactly, or the iteration cap is hit, or you run `/cancel-ralph` ([Anthropic 2026h](#ref-ralph_loop_plugin)). The caveats in the README are the important part: the promise is an exact-string match, so it cannot distinguish “done” from “blocked”, and `--max-iterations` (unlimited by default) is the only real safety net. It lists tasks needing human judgment, one-shot operations, unclear success criteria, and production debugging as cases where not to use it.
 
 So: is it like `ardi`? Both are loops that refuse to let the agent stop early, and both rely on a `Stop`-time mechanism (`ai-config`’s own `Stop` hooks are what block a placeholder reply or an empty promise). Past that they answer different questions.
 
@@ -1824,6 +1824,35 @@ A leading `*.` matches subdomains only:
 
 For details, see the [Claude Code on the web documentation](https://code.claude.com/docs/en/claude-code-on-the-web) and the [slash command reference](https://code.claude.com/docs/en/commands).
 
+#### Network access for local sessions
+
+Unlike a cloud session, a local Claude Code session has no network allowlist by default. What protects it is you: in the default permission mode, Claude Code asks before each shell command, apart from a built-in set of read-only commands, and before each web fetch to a domain outside a built-in set of approved documentation sites ([Anthropic 2026e](#ref-claude_code_permissions)). That protection lasts only while someone answers the prompts; a cloud session, which can run with no one watching, relies on its allowlist instead.
+
+A local session that runs without prompts, such as in auto mode, where a classifier reviews actions instead of you ([Anthropic 2026e](#ref-claude_code_permissions)), needs a network boundary of its own. Claude Code’s sandbox provides one for shell commands, but it is off by default ([Anthropic 2026f](#ref-claude_code_sandboxing)). To turn it on for every project, with the lab’s list, edit your user settings, `~/.claude/settings.json` ([Anthropic 2026f](#ref-claude_code_sandboxing)):
+
+1.  Set `sandbox.enabled` to `true`. Running `/sandbox` in a session instead saves the setting to that project’s `.claude/settings.local.json` only.
+2.  Set `sandbox.network.allowedDomains` to the entries of [`claude-allowlist.txt`](https://github.com/Morrison-Lab/stats-allowlist/blob/main/claude-allowlist.txt), as a JSON array of strings. The sandbox accepts the same leading `*.` wildcards.
+3.  Set `sandbox.network.strictAllowlist` to `true` (Claude Code v2.1.219 or later). Without it, `allowedDomains` only pre-approves hosts: any other host gets a prompt in the default mode, is refused in auto mode unless the command names it, and is allowed without a prompt in `bypassPermissions` mode.
+4.  Set `sandbox.allowUnsandboxedCommands` to `false`, so that a blocked command cannot retry outside the sandbox.
+5.  Set `sandbox.failIfUnavailable` to `true`. By default, when the sandbox cannot start, Claude Code runs commands without it.
+
+These are user-level defaults, and a project’s own `.claude/settings.json` or `.claude/settings.local.json` can change them ([Anthropic 2026i](#ref-claude_code_settings)):
+
+- A single value set there, such as `sandbox.enabled`, overrides yours, so an old `sandbox.enabled: false` in a project turns the sandbox off for it.
+- A list set there, such as `allowedDomains`, is combined with yours. With `strictAllowlist` in your user settings, Claude Code v2.1.285 or later ignores a project’s `allowedDomains` entries ([Anthropic 2026f](#ref-claude_code_sandboxing)).
+
+Check a project’s settings before relying on this for an unattended run. The minimum versions named here come from the sandboxing documentation as read on 2026-10-05 ([Anthropic 2026f](#ref-claude_code_sandboxing)); run `claude --version` and check the current documentation before relying on them.
+
+`jq` turns a downloaded copy of the [raw file](https://raw.githubusercontent.com/Morrison-Lab/stats-allowlist/main/claude-allowlist.txt) into the array for step 2:
+
+``` bash
+jq -R . claude-allowlist.txt | jq -s .
+```
+
+The sandbox runs on macOS, Linux, and WSL2. On native Windows, Claude Code runs shell commands without the sandbox, and with step 5 set it refuses to start instead, so run Claude Code inside WSL2 to use these settings (see [Section 5](#sec-ai-claude-code-windows)) ([Anthropic 2026f](#ref-claude_code_sandboxing)). The sandbox covers shell commands only. Built-in tools such as `WebFetch` follow permission rules instead, so neither `allowedDomains` nor `strictAllowlist` limits them ([Anthropic 2026f](#ref-claude_code_sandboxing)).
+
+To read a site left off the lab’s list, such as a Reddit thread, use a local session where you approve the fetch, rather than a cloud environment where every session could reach the site. Answer the prompt with **Yes**, not **Yes, and don’t ask again**: the second saves a permanent allow rule for that domain, which the sandbox also honors ([Anthropic 2026e](#ref-claude_code_permissions), [2026f](#ref-claude_code_sandboxing)).
+
 # References
 
 Anthropic. 2026a. *Claude Code Plugins Directory*. Software. <https://github.com/anthropics/claude-code/tree/main/plugins>.
@@ -1834,9 +1863,15 @@ Anthropic. 2026c. *Claude Plugins Community Marketplace*. Software. <https://git
 
 Anthropic. 2026d. *Configure Cloud Environments*. Documentation. <https://code.claude.com/docs/en/cloud-environments>.
 
-Anthropic. 2026e. *Discover and Install Prebuilt Plugins Through Marketplaces*. Documentation. <https://code.claude.com/docs/en/discover-plugins>.
+Anthropic. 2026e. *Configure Permissions*. Documentation. <https://code.claude.com/docs/en/permissions>.
 
-Anthropic. 2026f. *Ralph Loop Plugin*. Documentation. <https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/plugins/ralph-loop/README.md>.
+Anthropic. 2026f. *Configure the Sandboxed Bash Tool*. Documentation. <https://code.claude.com/docs/en/sandboxing>.
+
+Anthropic. 2026g. *Discover and Install Prebuilt Plugins Through Marketplaces*. Documentation. <https://code.claude.com/docs/en/discover-plugins>.
+
+Anthropic. 2026h. *Ralph Loop Plugin*. Documentation. <https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/plugins/ralph-loop/README.md>.
+
+Anthropic. 2026i. *Settings Files and Precedence*. Documentation. <https://code.claude.com/docs/en/settings>.
 
 Coles, Matt. 2026. *Herding Parallel Agents on a Remote Box with Herdr*. Blog post. <https://coles.codes/posts/herding-agents-with-herdr/>.
 

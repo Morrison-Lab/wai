@@ -135,6 +135,16 @@ div.csl-indent {
 <link href="../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 <script src="../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 <style>
+div.callout-cor.callout {
+  border-left-color: #00838F;
+}
+div.callout-cor.callout-style-default .callout-header {
+  background-color: rgba(0, 131, 143, 0.13);
+}
+div.callout-cor .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-cor.callout-style-default .callout-icon::before, div.callout-cor.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%2300838F" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
 div.callout-proof.callout {
   border-left-color: #37474F;
 }
@@ -144,46 +154,6 @@ div.callout-proof.callout-style-default .callout-header {
 div.callout-proof .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
 div.callout-proof.callout-style-default .callout-icon::before, div.callout-proof.callout-titled .callout-icon::before {
   background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%2337474F" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
-}
-div.callout-lem.callout {
-  border-left-color: #1565C0;
-}
-div.callout-lem.callout-style-default .callout-header {
-  background-color: rgba(21, 101, 192, 0.13);
-}
-div.callout-lem .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
-div.callout-lem.callout-style-default .callout-icon::before, div.callout-lem.callout-titled .callout-icon::before {
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%231565C0" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
-}
-div.callout-exr.callout {
-  border-left-color: #FFA500;
-}
-div.callout-exr.callout-style-default .callout-header {
-  background-color: rgba(255, 165, 0, 0.13);
-}
-div.callout-exr .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
-div.callout-exr.callout-style-default .callout-icon::before, div.callout-exr.callout-titled .callout-icon::before {
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23FFA500" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
-}
-div.callout-solution.callout {
-  border-left-color: #4E342E;
-}
-div.callout-solution.callout-style-default .callout-header {
-  background-color: rgba(78, 52, 46, 0.13);
-}
-div.callout-solution .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
-div.callout-solution.callout-style-default .callout-icon::before, div.callout-solution.callout-titled .callout-icon::before {
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%234E342E" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
-}
-div.callout-def.callout {
-  border-left-color: #1B5E20;
-}
-div.callout-def.callout-style-default .callout-header {
-  background-color: rgba(27, 94, 32, 0.13);
-}
-div.callout-def .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
-div.callout-def.callout-style-default .callout-icon::before, div.callout-def.callout-titled .callout-icon::before {
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%231B5E20" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
 }
 div.callout-remark.callout {
   border-left-color: #AD1457;
@@ -195,25 +165,15 @@ div.callout-remark .callout-toggle::before {  background-image: url('data:image/
 div.callout-remark.callout-style-default .callout-icon::before, div.callout-remark.callout-titled .callout-icon::before {
   background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23AD1457" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
 }
-div.callout-exm.callout {
-  border-left-color: #6A1B9A;
+div.callout-solution.callout {
+  border-left-color: #4E342E;
 }
-div.callout-exm.callout-style-default .callout-header {
-  background-color: rgba(106, 27, 154, 0.13);
+div.callout-solution.callout-style-default .callout-header {
+  background-color: rgba(78, 52, 46, 0.13);
 }
-div.callout-exm .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
-div.callout-exm.callout-style-default .callout-icon::before, div.callout-exm.callout-titled .callout-icon::before {
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%236A1B9A" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
-}
-div.callout-cor.callout {
-  border-left-color: #00838F;
-}
-div.callout-cor.callout-style-default .callout-header {
-  background-color: rgba(0, 131, 143, 0.13);
-}
-div.callout-cor .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
-div.callout-cor.callout-style-default .callout-icon::before, div.callout-cor.callout-titled .callout-icon::before {
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%2300838F" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+div.callout-solution .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-solution.callout-style-default .callout-icon::before, div.callout-solution.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%234E342E" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
 }
 div.callout-cnj.callout {
   border-left-color: #558B2F;
@@ -234,6 +194,46 @@ div.callout-prp.callout-style-default .callout-header {
 div.callout-prp .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
 div.callout-prp.callout-style-default .callout-icon::before, div.callout-prp.callout-titled .callout-icon::before {
   background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23827717" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+div.callout-lem.callout {
+  border-left-color: #1565C0;
+}
+div.callout-lem.callout-style-default .callout-header {
+  background-color: rgba(21, 101, 192, 0.13);
+}
+div.callout-lem .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-lem.callout-style-default .callout-icon::before, div.callout-lem.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%231565C0" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+div.callout-def.callout {
+  border-left-color: #1B5E20;
+}
+div.callout-def.callout-style-default .callout-header {
+  background-color: rgba(27, 94, 32, 0.13);
+}
+div.callout-def .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-def.callout-style-default .callout-icon::before, div.callout-def.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%231B5E20" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+div.callout-exr.callout {
+  border-left-color: #FFA500;
+}
+div.callout-exr.callout-style-default .callout-header {
+  background-color: rgba(255, 165, 0, 0.13);
+}
+div.callout-exr .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-exr.callout-style-default .callout-icon::before, div.callout-exr.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23FFA500" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
+}
+div.callout-exm.callout {
+  border-left-color: #6A1B9A;
+}
+div.callout-exm.callout-style-default .callout-header {
+  background-color: rgba(106, 27, 154, 0.13);
+}
+div.callout-exm .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-exm.callout-style-default .callout-icon::before, div.callout-exm.callout-titled .callout-icon::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%236A1B9A" class="bi bi-exclamation-triangle" viewBox="0 0 16 16"><path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>');
 }
 </style>
 
@@ -580,7 +580,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified: 2026-10-05 03:10:24 (PDT)</p>
+      <p class="date">Last modified: 2026-10-05 16:02:17 (PDT)</p>
     </div>
   </div>
   
@@ -2141,7 +2141,7 @@ Note
 <p>Plugin counts and names change weekly, so every figure below is stamped with the date it was read. The anatomy of a plugin bundle (skills, hooks, MCP servers, agents, commands) is <a href="#sec-ai-plugins-deep-dive" class="quarto-xref">Section&nbsp;16</a>; this section assumes it.</p>
 <section id="the-three-anthropic-marketplaces" class="level4">
 <h4 class="anchored" data-anchor-id="the-three-anthropic-marketplaces">The three Anthropic marketplaces</h4>
-<p>Anthropic runs three plugin catalogs for Claude Code, and they differ in who curates them <span class="citation" data-cites="claude_code_discover_plugins">(<a href="#ref-claude_code_discover_plugins" role="doc-biblioref">Anthropic 2026e</a>)</span>:</p>
+<p>Anthropic runs three plugin catalogs for Claude Code, and they differ in who curates them <span class="citation" data-cites="claude_code_discover_plugins">(<a href="#ref-claude_code_discover_plugins" role="doc-biblioref">Anthropic 2026g</a>)</span>:</p>
 <ul>
 <li><strong><code>claude-plugins-official</code></strong> (<a href="https://github.com/anthropics/claude-plugins-official"><code>anthropics/claude-plugins-official</code></a> <span class="citation" data-cites="claude_plugins_official">(<a href="#ref-claude_plugins_official" role="doc-biblioref">Anthropic 2026b</a>)</span>). Curated by Anthropic at its discretion; there is no application process. Claude Code registers it automatically the first time it starts interactively, so <code>/plugin install &lt;name&gt;@claude-plugins-official</code> works with no setup. Browse it with <code>/plugin</code> (the <strong>Discover</strong> tab) or at <a href="https://claude.com/plugins">claude.com/plugins</a>.</li>
 <li><strong><code>claude-community</code></strong> (<a href="https://github.com/anthropics/claude-plugins-community"><code>anthropics/claude-plugins-community</code></a> <span class="citation" data-cites="claude_plugins_community">(<a href="#ref-claude_plugins_community" role="doc-biblioref">Anthropic 2026c</a>)</span>). Third-party submissions that passed Anthropic’s automated validation and safety screening, each pinned to a commit SHA and synced nightly from the review pipeline. Added by hand: <code>/plugin marketplace add anthropics/claude-plugins-community</code>, then <code>/plugin install &lt;name&gt;@claude-community</code>. Pull requests against the mirror are closed automatically; submissions go through a form.</li>
@@ -2163,7 +2163,7 @@ Note
 <p>The 38 Anthropic-maintained plugins fall into five groups. The verdicts are for this lab’s work (R packages, Quarto sites, Python and shell tooling, GitHub pull requests), not for software teams in general.</p>
 <section id="code-intelligence" class="level5">
 <h5 class="anchored" data-anchor-id="code-intelligence">Code intelligence</h5>
-<p>Twelve <code>*-lsp</code> plugins (<code>clangd</code>, <code>csharp</code>, <code>gopls</code>, <code>jdtls</code>, <code>kotlin</code>, <code>lua</code>, <code>php</code>, <code>pyright</code>, <code>ruby</code>, <code>rust-analyzer</code>, <code>swift</code>, <code>typescript</code>) connect a Language Server Protocol server so that Claude sees type errors and missing imports after every edit and can jump to definitions instead of grepping <span class="citation" data-cites="claude_code_discover_plugins">(<a href="#ref-claude_code_discover_plugins" role="doc-biblioref">Anthropic 2026e</a>)</span>. The plugin does not install the language server binary; you do, and cloud sessions never start it.</p>
+<p>Twelve <code>*-lsp</code> plugins (<code>clangd</code>, <code>csharp</code>, <code>gopls</code>, <code>jdtls</code>, <code>kotlin</code>, <code>lua</code>, <code>php</code>, <code>pyright</code>, <code>ruby</code>, <code>rust-analyzer</code>, <code>swift</code>, <code>typescript</code>) connect a Language Server Protocol server so that Claude sees type errors and missing imports after every edit and can jump to definitions instead of grepping <span class="citation" data-cites="claude_code_discover_plugins">(<a href="#ref-claude_code_discover_plugins" role="doc-biblioref">Anthropic 2026g</a>)</span>. The plugin does not install the language server binary; you do, and cloud sessions never start it.</p>
 <p>Verdict: <code>pyright-lsp</code> is worth installing wherever the lab writes Python. There is no R entry in the catalog (measured 2026-09-09), so R work gets no diagnostics from this route; the docs describe an <code>.lsp.json</code> for writing your own LSP plugin, which is the path if anyone wants to wire up R’s <code>languageserver</code>.</p>
 </section>
 <section id="development-workflows" class="level5">
@@ -2201,7 +2201,7 @@ Note
 </section>
 <section id="external-integrations" class="level5">
 <h5 class="anchored" data-anchor-id="external-integrations">External integrations</h5>
-<p>The <code>external_plugins/</code> directory and many third-party entries bundle a pre-configured MCP server: <code>github</code>, <code>gitlab</code>, <code>atlassian</code>, <code>asana</code>, <code>linear</code>, <code>notion</code>, <code>figma</code>, <code>slack</code>, <code>sentry</code>, <code>vercel</code>, <code>firebase</code>, <code>supabase</code>, <code>context7</code>, <code>playwright</code>, <code>serena</code>, <code>terraform</code>, and messaging bridges for Discord, Telegram, and iMessage <span class="citation" data-cites="claude_code_discover_plugins">(<a href="#ref-claude_code_discover_plugins" role="doc-biblioref">Anthropic 2026e</a>)</span>.</p>
+<p>The <code>external_plugins/</code> directory and many third-party entries bundle a pre-configured MCP server: <code>github</code>, <code>gitlab</code>, <code>atlassian</code>, <code>asana</code>, <code>linear</code>, <code>notion</code>, <code>figma</code>, <code>slack</code>, <code>sentry</code>, <code>vercel</code>, <code>firebase</code>, <code>supabase</code>, <code>context7</code>, <code>playwright</code>, <code>serena</code>, <code>terraform</code>, and messaging bridges for Discord, Telegram, and iMessage <span class="citation" data-cites="claude_code_discover_plugins">(<a href="#ref-claude_code_discover_plugins" role="doc-biblioref">Anthropic 2026g</a>)</span>.</p>
 <p>Verdict: <code>github</code> is the one that matters here; <a href="#sec-ai-mcp-server-setup" class="quarto-xref">Section&nbsp;17</a> covers configuring it, and <a href="../chapters/pr-workflow-with-agents.html#sec-ai-pr-activity-notifications">PR activity notifications</a> what it adds. <code>context7</code> (live library documentation lookup) is worth a try for Python and JavaScript work. Everything else depends on whether the lab uses the service.</p>
 </section>
 </section>
@@ -2245,10 +2245,10 @@ Note
 </section>
 <section id="what-is-ralph-loop-and-is-it-ardi" class="level4">
 <h4 class="anchored" data-anchor-id="what-is-ralph-loop-and-is-it-ardi">What is <code>ralph-loop</code>, and is it <code>ardi</code>?</h4>
-<p><code>ralph-loop</code> (official marketplace; <code>ralph-wiggum</code> in the demo marketplace) packages Geoffrey Huntley’s “Ralph” technique <span class="citation" data-cites="ralph_loop_plugin ghuntley_ralph">(<a href="#ref-ralph_loop_plugin" role="doc-biblioref">Anthropic 2026f</a>; <a href="#ref-ghuntley_ralph" role="doc-biblioref">Huntley 2025</a>)</span>. Ralph, in Huntley’s words, “is a Bash loop”:</p>
+<p><code>ralph-loop</code> (official marketplace; <code>ralph-wiggum</code> in the demo marketplace) packages Geoffrey Huntley’s “Ralph” technique <span class="citation" data-cites="ralph_loop_plugin ghuntley_ralph">(<a href="#ref-ralph_loop_plugin" role="doc-biblioref">Anthropic 2026h</a>; <a href="#ref-ghuntley_ralph" role="doc-biblioref">Huntley 2025</a>)</span>. Ralph, in Huntley’s words, “is a Bash loop”:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="bu">:</span><span class="kw">;</span> <span class="cf">do</span> <span class="fu">cat</span> PROMPT.md <span class="kw">|</span> <span class="ex">claude-code</span> <span class="kw">;</span> <span class="cf">done</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The same prompt file is fed to a fresh agent run, over and over. Nothing changes between iterations except the repository: the previous run’s files, commits, and test results are what the next run reads. Tests supply the backpressure that keeps each pass honest, and the operator “tunes Ralph by adding a sign” to the prompt when a failure pattern shows up <span class="citation" data-cites="ghuntley_ralph">(<a href="#ref-ghuntley_ralph" role="doc-biblioref">Huntley 2025</a>)</span>. Huntley says it works best on greenfield projects, one task per loop <span class="citation" data-cites="ghuntley_ralph">(<a href="#ref-ghuntley_ralph" role="doc-biblioref">Huntley 2025</a>)</span>.</p>
-<p>The plugin moves that loop inside a single Claude Code session. <code>/ralph-loop "&lt;prompt&gt;" --max-iterations &lt;n&gt; --completion-promise "&lt;text&gt;"</code> installs a <code>Stop</code> hook that intercepts the agent’s attempt to end the turn and feeds the same prompt back, until the agent’s output contains the completion-promise string exactly, or the iteration cap is hit, or you run <code>/cancel-ralph</code> <span class="citation" data-cites="ralph_loop_plugin">(<a href="#ref-ralph_loop_plugin" role="doc-biblioref">Anthropic 2026f</a>)</span>. The caveats in the README are the important part: the promise is an exact-string match, so it cannot distinguish “done” from “blocked”, and <code>--max-iterations</code> (unlimited by default) is the only real safety net. It lists tasks needing human judgment, one-shot operations, unclear success criteria, and production debugging as cases where not to use it.</p>
+<p>The plugin moves that loop inside a single Claude Code session. <code>/ralph-loop "&lt;prompt&gt;" --max-iterations &lt;n&gt; --completion-promise "&lt;text&gt;"</code> installs a <code>Stop</code> hook that intercepts the agent’s attempt to end the turn and feeds the same prompt back, until the agent’s output contains the completion-promise string exactly, or the iteration cap is hit, or you run <code>/cancel-ralph</code> <span class="citation" data-cites="ralph_loop_plugin">(<a href="#ref-ralph_loop_plugin" role="doc-biblioref">Anthropic 2026h</a>)</span>. The caveats in the README are the important part: the promise is an exact-string match, so it cannot distinguish “done” from “blocked”, and <code>--max-iterations</code> (unlimited by default) is the only real safety net. It lists tasks needing human judgment, one-shot operations, unclear success criteria, and production debugging as cases where not to use it.</p>
 <p>So: is it like <code>ardi</code>? Both are loops that refuse to let the agent stop early, and both rely on a <code>Stop</code>-time mechanism (<code>ai-config</code>’s own <code>Stop</code> hooks are what block a placeholder reply or an empty promise). Past that they answer different questions.</p>
 <table class="caption-top table">
 <colgroup>
@@ -2809,6 +2809,28 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </div>
 <p>For details, see the <a href="https://code.claude.com/docs/en/claude-code-on-the-web">Claude Code on the web documentation</a> and the <a href="https://code.claude.com/docs/en/commands">slash command reference</a>.</p>
 </section>
+<section id="sec-claude-local-network" class="level4">
+<h4 class="anchored" data-anchor-id="sec-claude-local-network">Network access for local sessions</h4>
+<p>Unlike a cloud session, a local Claude Code session has no network allowlist by default. What protects it is you: in the default permission mode, Claude Code asks before each shell command, apart from a built-in set of read-only commands, and before each web fetch to a domain outside a built-in set of approved documentation sites <span class="citation" data-cites="claude_code_permissions">(<a href="#ref-claude_code_permissions" role="doc-biblioref">Anthropic 2026e</a>)</span>. That protection lasts only while someone answers the prompts; a cloud session, which can run with no one watching, relies on its allowlist instead.</p>
+<p>A local session that runs without prompts, such as in auto mode, where a classifier reviews actions instead of you <span class="citation" data-cites="claude_code_permissions">(<a href="#ref-claude_code_permissions" role="doc-biblioref">Anthropic 2026e</a>)</span>, needs a network boundary of its own. Claude Code’s sandbox provides one for shell commands, but it is off by default <span class="citation" data-cites="claude_code_sandboxing">(<a href="#ref-claude_code_sandboxing" role="doc-biblioref">Anthropic 2026f</a>)</span>. To turn it on for every project, with the lab’s list, edit your user settings, <code>~/.claude/settings.json</code> <span class="citation" data-cites="claude_code_sandboxing">(<a href="#ref-claude_code_sandboxing" role="doc-biblioref">Anthropic 2026f</a>)</span>:</p>
+<ol type="1">
+<li>Set <code>sandbox.enabled</code> to <code>true</code>. Running <code>/sandbox</code> in a session instead saves the setting to that project’s <code>.claude/settings.local.json</code> only.</li>
+<li>Set <code>sandbox.network.allowedDomains</code> to the entries of <a href="https://github.com/Morrison-Lab/stats-allowlist/blob/main/claude-allowlist.txt"><code>claude-allowlist.txt</code></a>, as a JSON array of strings. The sandbox accepts the same leading <code>*.</code> wildcards.</li>
+<li>Set <code>sandbox.network.strictAllowlist</code> to <code>true</code> (Claude Code v2.1.219 or later). Without it, <code>allowedDomains</code> only pre-approves hosts: any other host gets a prompt in the default mode, is refused in auto mode unless the command names it, and is allowed without a prompt in <code>bypassPermissions</code> mode.</li>
+<li>Set <code>sandbox.allowUnsandboxedCommands</code> to <code>false</code>, so that a blocked command cannot retry outside the sandbox.</li>
+<li>Set <code>sandbox.failIfUnavailable</code> to <code>true</code>. By default, when the sandbox cannot start, Claude Code runs commands without it.</li>
+</ol>
+<p>These are user-level defaults, and a project’s own <code>.claude/settings.json</code> or <code>.claude/settings.local.json</code> can change them <span class="citation" data-cites="claude_code_settings">(<a href="#ref-claude_code_settings" role="doc-biblioref">Anthropic 2026i</a>)</span>:</p>
+<ul>
+<li>A single value set there, such as <code>sandbox.enabled</code>, overrides yours, so an old <code>sandbox.enabled: false</code> in a project turns the sandbox off for it.</li>
+<li>A list set there, such as <code>allowedDomains</code>, is combined with yours. With <code>strictAllowlist</code> in your user settings, Claude Code v2.1.285 or later ignores a project’s <code>allowedDomains</code> entries <span class="citation" data-cites="claude_code_sandboxing">(<a href="#ref-claude_code_sandboxing" role="doc-biblioref">Anthropic 2026f</a>)</span>.</li>
+</ul>
+<p>Check a project’s settings before relying on this for an unattended run. The minimum versions named here come from the sandboxing documentation as read on 2026-10-05 <span class="citation" data-cites="claude_code_sandboxing">(<a href="#ref-claude_code_sandboxing" role="doc-biblioref">Anthropic 2026f</a>)</span>; run <code>claude --version</code> and check the current documentation before relying on them.</p>
+<p><code>jq</code> turns a downloaded copy of the <a href="https://raw.githubusercontent.com/Morrison-Lab/stats-allowlist/main/claude-allowlist.txt">raw file</a> into the array for step 2:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jq</span> <span class="at">-R</span> . claude-allowlist.txt <span class="kw">|</span> <span class="ex">jq</span> <span class="at">-s</span> .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The sandbox runs on macOS, Linux, and WSL2. On native Windows, Claude Code runs shell commands without the sandbox, and with step 5 set it refuses to start instead, so run Claude Code inside WSL2 to use these settings (see <a href="#sec-ai-claude-code-windows" class="quarto-xref">Section&nbsp;5</a>) <span class="citation" data-cites="claude_code_sandboxing">(<a href="#ref-claude_code_sandboxing" role="doc-biblioref">Anthropic 2026f</a>)</span>. The sandbox covers shell commands only. Built-in tools such as <code>WebFetch</code> follow permission rules instead, so neither <code>allowedDomains</code> nor <code>strictAllowlist</code> limits them <span class="citation" data-cites="claude_code_sandboxing">(<a href="#ref-claude_code_sandboxing" role="doc-biblioref">Anthropic 2026f</a>)</span>.</p>
+<p>To read a site left off the lab’s list, such as a Reddit thread, use a local session where you approve the fetch, rather than a cloud environment where every session could reach the site. Answer the prompt with <strong>Yes</strong>, not <strong>Yes, and don’t ask again</strong>: the second saves a permanent allow rule for that domain, which the sandbox also honors <span class="citation" data-cites="claude_code_permissions claude_code_sandboxing">(<a href="#ref-claude_code_permissions" role="doc-biblioref">Anthropic 2026e</a>, <a href="#ref-claude_code_sandboxing" role="doc-biblioref">2026f</a>)</span>.</p>
+</section>
 </section>
 <section id="references" class="level1 unnumbered">
 <h1 class="unnumbered">References</h1>
@@ -2825,11 +2847,20 @@ Anthropic. 2026c. <em>Claude Plugins Community Marketplace</em>. Software. <a hr
 <div id="ref-claude_code_cloud_environments" class="csl-entry" role="listitem">
 Anthropic. 2026d. <em>Configure Cloud Environments</em>. Documentation. <a href="https://code.claude.com/docs/en/cloud-environments">https://code.claude.com/docs/en/cloud-environments</a>.
 </div>
+<div id="ref-claude_code_permissions" class="csl-entry" role="listitem">
+Anthropic. 2026e. <em>Configure Permissions</em>. Documentation. <a href="https://code.claude.com/docs/en/permissions">https://code.claude.com/docs/en/permissions</a>.
+</div>
+<div id="ref-claude_code_sandboxing" class="csl-entry" role="listitem">
+Anthropic. 2026f. <em>Configure the Sandboxed <span>Bash</span> Tool</em>. Documentation. <a href="https://code.claude.com/docs/en/sandboxing">https://code.claude.com/docs/en/sandboxing</a>.
+</div>
 <div id="ref-claude_code_discover_plugins" class="csl-entry" role="listitem">
-Anthropic. 2026e. <em>Discover and Install Prebuilt Plugins Through Marketplaces</em>. Documentation. <a href="https://code.claude.com/docs/en/discover-plugins">https://code.claude.com/docs/en/discover-plugins</a>.
+Anthropic. 2026g. <em>Discover and Install Prebuilt Plugins Through Marketplaces</em>. Documentation. <a href="https://code.claude.com/docs/en/discover-plugins">https://code.claude.com/docs/en/discover-plugins</a>.
 </div>
 <div id="ref-ralph_loop_plugin" class="csl-entry" role="listitem">
-Anthropic. 2026f. <em>Ralph Loop Plugin</em>. Documentation. <a href="https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/plugins/ralph-loop/README.md">https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/plugins/ralph-loop/README.md</a>.
+Anthropic. 2026h. <em>Ralph Loop Plugin</em>. Documentation. <a href="https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/plugins/ralph-loop/README.md">https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/plugins/ralph-loop/README.md</a>.
+</div>
+<div id="ref-claude_code_settings" class="csl-entry" role="listitem">
+Anthropic. 2026i. <em>Settings Files and Precedence</em>. Documentation. <a href="https://code.claude.com/docs/en/settings">https://code.claude.com/docs/en/settings</a>.
 </div>
 <div id="ref-coles_herdr" class="csl-entry" role="listitem">
 Coles, Matt. 2026. <em>Herding Parallel Agents on a Remote Box with Herdr</em>. Blog post. <a href="https://coles.codes/posts/herding-agents-with-herdr/">https://coles.codes/posts/herding-agents-with-herdr/</a>.
@@ -3682,120 +3713,120 @@ window.addEventListener("load", alignEquationAnchorsWithDefault);
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Configuring and Extending Agents"</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co">  html: default</span></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="co">  revealjs:</span></span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="co">    output-file: agent-customization-slides.html</span></span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="co">  pdf:</span></span>
-<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a><span class="co">    output-file: agent-customization-handout.pdf</span></span>
-<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="co">  docx:</span></span>
-<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a><span class="co">    output-file: agent-customization.docx</span></span>
-<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>Coding agents adapt to a project through configuration files,</span>
-<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>instruction prompts, tool definitions, and plugins.</span>
-<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>This chapter explains how to configure agent environments,</span>
-<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>install project-level instructions,</span>
-<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>author and share Agent Skills (<span class="in">`SKILL.md`</span>),</span>
-<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>connect external capabilities via the Model Context Protocol (MCP),</span>
-<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>structure agent plugins,</span>
-<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>and use advanced developer extensions like Magic Context, Conductor,</span>
-<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>and the Antigravity Python SDK.</span>
-<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a><span class="fu"># Configuring GitHub Copilot Settings {#sec-ai-copilot-settings}</span></span>
-<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/copilot-settings.qmd &gt;}}</span>
-<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a><span class="fu"># Connecting VS Code to a Custom Model Endpoint (BYOK) {#sec-ai-byok-vscode}</span></span>
-<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/byok-vscode-databricks.qmd &gt;}}</span>
-<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a><span class="fu"># Configuring the Agent Environment</span></span>
-<span id="cb39-32"><a href="#cb39-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/copilot-setup-steps-config.qmd &gt;}}</span>
-<span id="cb39-34"><a href="#cb39-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-35"><a href="#cb39-35" aria-hidden="true" tabindex="-1"></a><span class="fu"># Agent Sessions and Handoff in Visual Studio Code {#sec-ai-vscode-agent-sessions}</span></span>
-<span id="cb39-36"><a href="#cb39-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-37"><a href="#cb39-37" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/vscode-agent-sessions.qmd &gt;}}</span>
-<span id="cb39-38"><a href="#cb39-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-39"><a href="#cb39-39" aria-hidden="true" tabindex="-1"></a><span class="fu"># Installing Claude Code on Windows {#sec-ai-claude-code-windows}</span></span>
-<span id="cb39-40"><a href="#cb39-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-41"><a href="#cb39-41" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/installing-claude-code-windows.qmd &gt;}}</span>
-<span id="cb39-42"><a href="#cb39-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-43"><a href="#cb39-43" aria-hidden="true" tabindex="-1"></a><span class="fu"># Herdr: A Terminal Multiplexer for Coding Agents {#sec-ai-herdr}</span></span>
-<span id="cb39-44"><a href="#cb39-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-45"><a href="#cb39-45" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/herdr.qmd &gt;}}</span>
-<span id="cb39-46"><a href="#cb39-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-47"><a href="#cb39-47" aria-hidden="true" tabindex="-1"></a><span class="fu"># Customizing an Agent {#sec-ai-customization}</span></span>
-<span id="cb39-48"><a href="#cb39-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-49"><a href="#cb39-49" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/customizing-agents.qmd &gt;}}</span>
-<span id="cb39-50"><a href="#cb39-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-51"><a href="#cb39-51" aria-hidden="true" tabindex="-1"></a><span class="fu"># How the Config Reaches a Machine {#sec-ai-config-install}</span></span>
-<span id="cb39-52"><a href="#cb39-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-53"><a href="#cb39-53" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/claude-code-config-install.qmd &gt;}}</span>
-<span id="cb39-54"><a href="#cb39-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-55"><a href="#cb39-55" aria-hidden="true" tabindex="-1"></a><span class="fu"># Agent Skills {#sec-ai-agent-skills}</span></span>
-<span id="cb39-56"><a href="#cb39-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-57"><a href="#cb39-57" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/agent-skills.qmd &gt;}}</span>
-<span id="cb39-58"><a href="#cb39-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-59"><a href="#cb39-59" aria-hidden="true" tabindex="-1"></a><span class="fu"># Tessl: Skills Registry and CLI {#sec-ai-tessl}</span></span>
-<span id="cb39-60"><a href="#cb39-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-61"><a href="#cb39-61" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/tessl.qmd &gt;}}</span>
-<span id="cb39-62"><a href="#cb39-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-63"><a href="#cb39-63" aria-hidden="true" tabindex="-1"></a><span class="fu"># The Posit Skill Collection {#sec-ai-posit-skills}</span></span>
-<span id="cb39-64"><a href="#cb39-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-65"><a href="#cb39-65" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/posit-skills.qmd &gt;}}</span>
-<span id="cb39-66"><a href="#cb39-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-67"><a href="#cb39-67" aria-hidden="true" tabindex="-1"></a><span class="fu"># Posit AI Tooling on GitHub {#sec-ai-posit-dev-ai-repos}</span></span>
-<span id="cb39-68"><a href="#cb39-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-69"><a href="#cb39-69" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/posit-dev-ai-repos.qmd &gt;}}</span>
-<span id="cb39-70"><a href="#cb39-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-71"><a href="#cb39-71" aria-hidden="true" tabindex="-1"></a><span class="fu"># Useful plugins {#sec-ai-useful-plugins}</span></span>
-<span id="cb39-72"><a href="#cb39-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-73"><a href="#cb39-73" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/useful-plugins.qmd &gt;}}</span>
-<span id="cb39-74"><a href="#cb39-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-75"><a href="#cb39-75" aria-hidden="true" tabindex="-1"></a><span class="fu"># The plugin catalog {#sec-ai-plugin-catalog}</span></span>
-<span id="cb39-76"><a href="#cb39-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-77"><a href="#cb39-77" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/plugin-catalog.qmd &gt;}}</span>
-<span id="cb39-78"><a href="#cb39-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-79"><a href="#cb39-79" aria-hidden="true" tabindex="-1"></a><span class="fu"># Running Codex Inside Claude Code: the codex-plugin-cc Plugin {#sec-ai-codex-plugin-cc}</span></span>
-<span id="cb39-80"><a href="#cb39-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-81"><a href="#cb39-81" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/codex-plugin-cc.qmd &gt;}}</span>
-<span id="cb39-82"><a href="#cb39-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-83"><a href="#cb39-83" aria-hidden="true" tabindex="-1"></a><span class="fu"># Anatomy of Agent Plugins {#sec-ai-plugins-deep-dive}</span></span>
-<span id="cb39-84"><a href="#cb39-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-85"><a href="#cb39-85" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/plugins-deep-dive.qmd &gt;}}</span>
-<span id="cb39-86"><a href="#cb39-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-87"><a href="#cb39-87" aria-hidden="true" tabindex="-1"></a><span class="fu"># Setting up MCP servers {#sec-ai-mcp-server-setup}</span></span>
-<span id="cb39-88"><a href="#cb39-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-89"><a href="#cb39-89" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/mcp-server-setup.qmd &gt;}}</span>
-<span id="cb39-90"><a href="#cb39-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-91"><a href="#cb39-91" aria-hidden="true" tabindex="-1"></a><span class="fu"># Google Antigravity Python SDK {#sec-ai-antigravity-python-sdk}</span></span>
-<span id="cb39-92"><a href="#cb39-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-93"><a href="#cb39-93" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/antigravity-python-sdk.qmd &gt;}}</span>
-<span id="cb39-94"><a href="#cb39-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-95"><a href="#cb39-95" aria-hidden="true" tabindex="-1"></a><span class="fu"># Unbounded Context with Magic Context {#sec-ai-magic-context}</span></span>
-<span id="cb39-96"><a href="#cb39-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-97"><a href="#cb39-97" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/magic-context.qmd &gt;}}</span>
-<span id="cb39-98"><a href="#cb39-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-99"><a href="#cb39-99" aria-hidden="true" tabindex="-1"></a><span class="fu"># Spec-Driven Development with Conductor {#sec-ai-conductor-extension}</span></span>
-<span id="cb39-100"><a href="#cb39-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-101"><a href="#cb39-101" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/conductor-extension.qmd &gt;}}</span>
-<span id="cb39-102"><a href="#cb39-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-103"><a href="#cb39-103" aria-hidden="true" tabindex="-1"></a><span class="fu"># Managing Gemini API Spend and Cost Optimization {#sec-ai-gemini-spend-management}</span></span>
-<span id="cb39-104"><a href="#cb39-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-105"><a href="#cb39-105" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/gemini-spend-management.qmd &gt;}}</span>
-<span id="cb39-106"><a href="#cb39-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-107"><a href="#cb39-107" aria-hidden="true" tabindex="-1"></a><span class="fu"># Claude Code Cloud Environments {#sec-ai-claude-cloud-env}</span></span>
-<span id="cb39-108"><a href="#cb39-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-109"><a href="#cb39-109" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/claude-code-cloud-environments.qmd &gt;}}</span>
-<span id="cb39-110"><a href="#cb39-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-111"><a href="#cb39-111" aria-hidden="true" tabindex="-1"></a><span class="fu"># References {.unnumbered}</span></span>
-<span id="cb39-112"><a href="#cb39-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-113"><a href="#cb39-113" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb39-114"><a href="#cb39-114" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Configuring and Extending Agents"</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co">  html: default</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="co">  revealjs:</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="co">    output-file: agent-customization-slides.html</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="co">  pdf:</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="co">    output-file: agent-customization-handout.pdf</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="co">  docx:</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a><span class="co">    output-file: agent-customization.docx</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>Coding agents adapt to a project through configuration files,</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>instruction prompts, tool definitions, and plugins.</span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>This chapter explains how to configure agent environments,</span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>install project-level instructions,</span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>author and share Agent Skills (<span class="in">`SKILL.md`</span>),</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>connect external capabilities via the Model Context Protocol (MCP),</span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>structure agent plugins,</span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>and use advanced developer extensions like Magic Context, Conductor,</span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>and the Antigravity Python SDK.</span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a><span class="fu"># Configuring GitHub Copilot Settings {#sec-ai-copilot-settings}</span></span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/copilot-settings.qmd &gt;}}</span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a><span class="fu"># Connecting VS Code to a Custom Model Endpoint (BYOK) {#sec-ai-byok-vscode}</span></span>
+<span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/byok-vscode-databricks.qmd &gt;}}</span>
+<span id="cb40-30"><a href="#cb40-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-31"><a href="#cb40-31" aria-hidden="true" tabindex="-1"></a><span class="fu"># Configuring the Agent Environment</span></span>
+<span id="cb40-32"><a href="#cb40-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-33"><a href="#cb40-33" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/copilot-setup-steps-config.qmd &gt;}}</span>
+<span id="cb40-34"><a href="#cb40-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-35"><a href="#cb40-35" aria-hidden="true" tabindex="-1"></a><span class="fu"># Agent Sessions and Handoff in Visual Studio Code {#sec-ai-vscode-agent-sessions}</span></span>
+<span id="cb40-36"><a href="#cb40-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-37"><a href="#cb40-37" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/vscode-agent-sessions.qmd &gt;}}</span>
+<span id="cb40-38"><a href="#cb40-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-39"><a href="#cb40-39" aria-hidden="true" tabindex="-1"></a><span class="fu"># Installing Claude Code on Windows {#sec-ai-claude-code-windows}</span></span>
+<span id="cb40-40"><a href="#cb40-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-41"><a href="#cb40-41" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/installing-claude-code-windows.qmd &gt;}}</span>
+<span id="cb40-42"><a href="#cb40-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-43"><a href="#cb40-43" aria-hidden="true" tabindex="-1"></a><span class="fu"># Herdr: A Terminal Multiplexer for Coding Agents {#sec-ai-herdr}</span></span>
+<span id="cb40-44"><a href="#cb40-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-45"><a href="#cb40-45" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/herdr.qmd &gt;}}</span>
+<span id="cb40-46"><a href="#cb40-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-47"><a href="#cb40-47" aria-hidden="true" tabindex="-1"></a><span class="fu"># Customizing an Agent {#sec-ai-customization}</span></span>
+<span id="cb40-48"><a href="#cb40-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-49"><a href="#cb40-49" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/customizing-agents.qmd &gt;}}</span>
+<span id="cb40-50"><a href="#cb40-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-51"><a href="#cb40-51" aria-hidden="true" tabindex="-1"></a><span class="fu"># How the Config Reaches a Machine {#sec-ai-config-install}</span></span>
+<span id="cb40-52"><a href="#cb40-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-53"><a href="#cb40-53" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/claude-code-config-install.qmd &gt;}}</span>
+<span id="cb40-54"><a href="#cb40-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-55"><a href="#cb40-55" aria-hidden="true" tabindex="-1"></a><span class="fu"># Agent Skills {#sec-ai-agent-skills}</span></span>
+<span id="cb40-56"><a href="#cb40-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-57"><a href="#cb40-57" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/agent-skills.qmd &gt;}}</span>
+<span id="cb40-58"><a href="#cb40-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-59"><a href="#cb40-59" aria-hidden="true" tabindex="-1"></a><span class="fu"># Tessl: Skills Registry and CLI {#sec-ai-tessl}</span></span>
+<span id="cb40-60"><a href="#cb40-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-61"><a href="#cb40-61" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/tessl.qmd &gt;}}</span>
+<span id="cb40-62"><a href="#cb40-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-63"><a href="#cb40-63" aria-hidden="true" tabindex="-1"></a><span class="fu"># The Posit Skill Collection {#sec-ai-posit-skills}</span></span>
+<span id="cb40-64"><a href="#cb40-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-65"><a href="#cb40-65" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/posit-skills.qmd &gt;}}</span>
+<span id="cb40-66"><a href="#cb40-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-67"><a href="#cb40-67" aria-hidden="true" tabindex="-1"></a><span class="fu"># Posit AI Tooling on GitHub {#sec-ai-posit-dev-ai-repos}</span></span>
+<span id="cb40-68"><a href="#cb40-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-69"><a href="#cb40-69" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/posit-dev-ai-repos.qmd &gt;}}</span>
+<span id="cb40-70"><a href="#cb40-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-71"><a href="#cb40-71" aria-hidden="true" tabindex="-1"></a><span class="fu"># Useful plugins {#sec-ai-useful-plugins}</span></span>
+<span id="cb40-72"><a href="#cb40-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-73"><a href="#cb40-73" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/useful-plugins.qmd &gt;}}</span>
+<span id="cb40-74"><a href="#cb40-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-75"><a href="#cb40-75" aria-hidden="true" tabindex="-1"></a><span class="fu"># The plugin catalog {#sec-ai-plugin-catalog}</span></span>
+<span id="cb40-76"><a href="#cb40-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-77"><a href="#cb40-77" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/plugin-catalog.qmd &gt;}}</span>
+<span id="cb40-78"><a href="#cb40-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-79"><a href="#cb40-79" aria-hidden="true" tabindex="-1"></a><span class="fu"># Running Codex Inside Claude Code: the codex-plugin-cc Plugin {#sec-ai-codex-plugin-cc}</span></span>
+<span id="cb40-80"><a href="#cb40-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-81"><a href="#cb40-81" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/codex-plugin-cc.qmd &gt;}}</span>
+<span id="cb40-82"><a href="#cb40-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-83"><a href="#cb40-83" aria-hidden="true" tabindex="-1"></a><span class="fu"># Anatomy of Agent Plugins {#sec-ai-plugins-deep-dive}</span></span>
+<span id="cb40-84"><a href="#cb40-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-85"><a href="#cb40-85" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/plugins-deep-dive.qmd &gt;}}</span>
+<span id="cb40-86"><a href="#cb40-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-87"><a href="#cb40-87" aria-hidden="true" tabindex="-1"></a><span class="fu"># Setting up MCP servers {#sec-ai-mcp-server-setup}</span></span>
+<span id="cb40-88"><a href="#cb40-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-89"><a href="#cb40-89" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/mcp-server-setup.qmd &gt;}}</span>
+<span id="cb40-90"><a href="#cb40-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-91"><a href="#cb40-91" aria-hidden="true" tabindex="-1"></a><span class="fu"># Google Antigravity Python SDK {#sec-ai-antigravity-python-sdk}</span></span>
+<span id="cb40-92"><a href="#cb40-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-93"><a href="#cb40-93" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/antigravity-python-sdk.qmd &gt;}}</span>
+<span id="cb40-94"><a href="#cb40-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-95"><a href="#cb40-95" aria-hidden="true" tabindex="-1"></a><span class="fu"># Unbounded Context with Magic Context {#sec-ai-magic-context}</span></span>
+<span id="cb40-96"><a href="#cb40-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-97"><a href="#cb40-97" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/magic-context.qmd &gt;}}</span>
+<span id="cb40-98"><a href="#cb40-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-99"><a href="#cb40-99" aria-hidden="true" tabindex="-1"></a><span class="fu"># Spec-Driven Development with Conductor {#sec-ai-conductor-extension}</span></span>
+<span id="cb40-100"><a href="#cb40-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-101"><a href="#cb40-101" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/conductor-extension.qmd &gt;}}</span>
+<span id="cb40-102"><a href="#cb40-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-103"><a href="#cb40-103" aria-hidden="true" tabindex="-1"></a><span class="fu"># Managing Gemini API Spend and Cost Optimization {#sec-ai-gemini-spend-management}</span></span>
+<span id="cb40-104"><a href="#cb40-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-105"><a href="#cb40-105" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/gemini-spend-management.qmd &gt;}}</span>
+<span id="cb40-106"><a href="#cb40-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-107"><a href="#cb40-107" aria-hidden="true" tabindex="-1"></a><span class="fu"># Claude Code Cloud Environments {#sec-ai-claude-cloud-env}</span></span>
+<span id="cb40-108"><a href="#cb40-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-109"><a href="#cb40-109" aria-hidden="true" tabindex="-1"></a>{{&lt; include ai-tools/claude-code-cloud-environments.qmd &gt;}}</span>
+<span id="cb40-110"><a href="#cb40-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-111"><a href="#cb40-111" aria-hidden="true" tabindex="-1"></a><span class="fu"># References {.unnumbered}</span></span>
+<span id="cb40-112"><a href="#cb40-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-113"><a href="#cb40-113" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb40-114"><a href="#cb40-114" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
