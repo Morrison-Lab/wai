@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-05 02:23:42 (PDT)
+Last modified: 2026-10-05 02:39:24 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -1018,10 +1018,10 @@ For data science and R-focused repositories, we recommend adding the following U
 
 **GitHub Organizations (for package repositories):**
 
-- `github.com/tidyverse/*` - Tidyverse package source code
-- `github.com/r-lib/*` - R-lib package source code
-- `github.com/rstudio/*` - RStudio package source code
-- `github.com/ropensci/*` - rOpenSci package source code
+- `https://github.com/tidyverse/` - Tidyverse package source code
+- `https://github.com/r-lib/` - R-lib package source code
+- `https://github.com/rstudio/` - RStudio package source code
+- `https://github.com/ropensci/` - rOpenSci package source code
 
 > **TIP:**
 >
@@ -1041,7 +1041,7 @@ For data science and R-focused repositories, we recommend adding the following U
 > - They are widely used in the R community
 > - They focus on documentation and package distribution
 >
-> Reputable does not mean that every page on a host is vetted. Every allowed host is a place the agent can send data to, or read instructions from ([Morrison Lab 2026a](#ref-stats_allowlist_pr6)). Claude’s allowlist takes one domain per line ([Anthropic 2026a](#ref-claude_code_cloud_environments)). A path entry such as `github.com/tidyverse/*` cannot be expressed there; allowing GitHub means allowing all of `github.com`. Copilot can limit a URL entry to a path and the paths below it ([GitHub 2026a](#ref-copilot_agent_firewall)), so an entry for one GitHub organization still covers that organization’s issues and pull requests, including comments from other users. Any GitHub user or organization can publish a site at `<owner>.github.io` ([GitHub 2026b](#ref-github_pages_about)), so a `*.github.io` entry opens sites that anyone can publish, while `rstudio.github.io` serves only the `rstudio` organization’s sites. Anyone can edit Wikipedia ([Wikipedia contributors 2026](#ref-wikipedia_about)). These hosts are often needed for package installs and documentation; allow them knowingly (see [Configuring network access for Claude cloud sessions](../chapters/agent-customization.llms.md#sec-claude-network-access)).
+> Reputable does not mean that every page on a host is vetted. Every allowed host is a place the agent can send data to, or read instructions from ([Morrison Lab 2026a](#ref-stats_allowlist_pr6)). Claude’s allowlist takes one domain per line ([Anthropic 2026a](#ref-claude_code_cloud_environments)). A path entry such as `https://github.com/tidyverse/` cannot be expressed there; allowing GitHub means allowing all of `github.com`. Copilot accepts such a URL and limits it to that path and the paths below it ([GitHub 2026a](#ref-copilot_agent_firewall)), so an entry for one GitHub organization still covers that organization’s issues and pull requests, including comments from other users. Any GitHub user or organization can publish a site at `<owner>.github.io` ([GitHub 2026b](#ref-github_pages_about)), so a `*.github.io` entry opens sites that anyone can publish, while `rstudio.github.io` serves only the `rstudio` organization’s sites. Anyone can edit Wikipedia ([Wikipedia contributors 2026](#ref-wikipedia_about)). These hosts are often needed for package installs and documentation; allow them knowingly (see [Configuring network access for Claude cloud sessions](../chapters/agent-customization.llms.md#sec-claude-network-access)).
 
 # References
 
