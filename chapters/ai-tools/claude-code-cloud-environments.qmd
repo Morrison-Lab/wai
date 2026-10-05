@@ -131,3 +131,66 @@ Availability and behavior may change.
 For details,
 see the [Claude Code on the web documentation](https://code.claude.com/docs/en/claude-code-on-the-web)
 and the [slash command reference](https://code.claude.com/docs/en/commands).
+
+#### Network access for local sessions {#sec-claude-local-network}
+
+Unlike a cloud session,
+a local Claude Code session has no network allowlist by default.
+What protects it is you:
+in the default permission mode,
+Claude Code asks before each shell command,
+apart from a built-in set of read-only commands,
+and before each web fetch to a domain outside a built-in set of approved documentation sites
+[@claude_code_permissions].
+That protection lasts only while someone answers the prompts;
+a cloud session, which can run with no one watching,
+relies on its allowlist instead.
+
+A local session that runs without prompts,
+such as in auto mode, where a classifier reviews actions instead of you
+[@claude_code_permissions],
+needs a network boundary of its own.
+Claude Code's sandbox provides one for shell commands,
+but it is off by default
+[@claude_code_sandboxing].
+To turn it on for every project, with the lab's list,
+edit your user settings, `~/.claude/settings.json`
+[@claude_code_sandboxing]:
+
+1. Set `sandbox.enabled` to `true`.
+   Running `/sandbox` in a session instead saves the setting
+   to that project's `.claude/settings.local.json` only.
+2. Set `sandbox.network.allowedDomains` to the entries of
+   [`claude-allowlist.txt`](https://github.com/Morrison-Lab/stats-allowlist/blob/main/claude-allowlist.txt),
+   as a JSON array of strings.
+   The sandbox accepts the same leading `*.` wildcards.
+3. Set `sandbox.network.strictAllowlist` to `true`
+   (Claude Code v2.1.219 or later).
+   Without it, `allowedDomains` only pre-approves hosts:
+   any other host gets a prompt in the default mode,
+   is refused in auto mode unless the command names it,
+   and is allowed without a prompt in `bypassPermissions` mode.
+4. Set `sandbox.allowUnsandboxedCommands` to `false`,
+   so that a blocked command cannot retry outside the sandbox.
+
+`jq` turns a downloaded copy of the
+[raw file](https://raw.githubusercontent.com/Morrison-Lab/stats-allowlist/main/claude-allowlist.txt)
+into the array for step 2:
+
+```bash
+jq -R . claude-allowlist.txt | jq -s .
+```
+
+The sandbox covers shell commands only.
+Built-in tools such as `WebFetch` follow permission rules instead,
+so neither `allowedDomains` nor `strictAllowlist` limits them
+[@claude_code_sandboxing].
+
+To read a site left off the lab's list,
+such as a Reddit thread,
+use a local session where you approve the fetch,
+rather than a cloud environment where every session could reach the site.
+Answer the prompt with **Yes**, not **Yes, and don't ask again**:
+the second saves a permanent allow rule for that domain,
+which the sandbox also honors
+[@claude_code_permissions; @claude_code_sandboxing].
