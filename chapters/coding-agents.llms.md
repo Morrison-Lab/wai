@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-03 15:28:00 (PDT)
+Last modified: 2026-10-05 03:10:24 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -418,11 +418,11 @@ For each we record what it does, which plans include it and with what limits, ho
 
 #### Claude Research
 
-[Research](https://support.claude.com/en/articles/11088861-use-research-on-claude) ([Anthropic 2026a](#ref-claude_research_help)) is available on the paid Claude plans (Pro, Max, Team, and Enterprise) in the web, desktop, and mobile apps. Web search must be switched on for Research to work. Claude runs a chain of searches that build on each other and returns an answer with inline citations. Anthropic’s guidance on choosing between web search, extended thinking, and Research ([Anthropic 2026c](#ref-claude_research_when)) places Research at “five or more tool calls over 1-3 minutes”, with web search for one- or two-query lookups and extended thinking for reasoning that needs no new information.
+[Research](https://support.claude.com/en/articles/11088861-use-research-on-claude) ([Anthropic 2026b](#ref-claude_research_help)) is available on the paid Claude plans (Pro, Max, Team, and Enterprise) in the web, desktop, and mobile apps. Web search must be switched on for Research to work. Claude runs a chain of searches that build on each other and returns an answer with inline citations. Anthropic’s guidance on choosing between web search, extended thinking, and Research ([Anthropic 2026d](#ref-claude_research_when)) places Research at “five or more tool calls over 1-3 minutes”, with web search for one- or two-query lookups and extended thinking for reasoning that needs no new information.
 
-Research draws on the same connectors as the rest of the app: when Gmail, Google Calendar, and Google Docs are connected, it searches those alongside the web ([Anthropic 2026a](#ref-claude_research_help)). There is no separate Research quota; runs count against the plan’s ordinary conversation limits, and the help page warns that a run “may consume limits faster” because it retrieves many sources.
+Research draws on the same connectors as the rest of the app: when Gmail, Google Calendar, and Google Docs are connected, it searches those alongside the web ([Anthropic 2026b](#ref-claude_research_help)). There is no separate Research quota; runs count against the plan’s ordinary conversation limits, and the help page warns that a run “may consume limits faster” because it retrieves many sources.
 
-The Claude API has no Research endpoint. What it exposes is the [web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool) ([Anthropic 2026b](#ref-claude_web_search_tool)): a server-side tool that searches, returns results with citations, and can be capped with `max_uses` or restricted to `allowed_domains`. It is billed at \$10 per 1,000 searches plus token costs. A multi-search research loop over that tool is something you build, not something you call.
+The Claude API has no Research endpoint. What it exposes is the [web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool) ([Anthropic 2026c](#ref-claude_web_search_tool)): a server-side tool that searches, returns results with citations, and can be capped with `max_uses` or restricted to `allowed_domains`. It is billed at \$10 per 1,000 searches plus token costs. A multi-search research loop over that tool is something you build, not something you call.
 
 #### Gemini Deep Research
 
@@ -968,7 +968,7 @@ For more information, see [Customizing or disabling the firewall for GitHub Copi
 
 #### Recommended URLs for Data Science Repositories
 
-The lab maintains its working allowlists in [Morrison-Lab/stats-allowlist](https://github.com/Morrison-Lab/stats-allowlist) ([Morrison Lab 2026](#ref-stats_allowlist)):
+The lab maintains its working allowlists in [Morrison-Lab/stats-allowlist](https://github.com/Morrison-Lab/stats-allowlist) ([Morrison Lab 2026b](#ref-stats_allowlist)):
 
 - [`allowlist.txt`](https://github.com/Morrison-Lab/stats-allowlist/blob/main/allowlist.txt) for the Copilot coding agent
 - [`claude-allowlist.txt`](https://github.com/Morrison-Lab/stats-allowlist/blob/main/claude-allowlist.txt) for Claude Code cloud sessions (see [Configuring network access for Claude cloud sessions](../chapters/agent-customization.llms.md#sec-claude-network-access))
@@ -980,7 +980,7 @@ Treat those files as the source of truth. When an agent’s proxy refuses a host
 
 The list below gives examples of useful hosts and what each one serves. It is not kept in sync with `allowlist.txt`, so check that file for the current entries.
 
-For data science and R-focused repositories, we recommend adding the following URLs to your Copilot allowlist. These sites are safe, reputable sources of documentation and packages that coding agents may need to access:
+For data science and R-focused repositories, we recommend adding the following URLs to your Copilot allowlist. These sites are reputable sources of documentation and packages that coding agents may need to access:
 
 **R Package Documentation and Ecosystems:**
 
@@ -1018,10 +1018,10 @@ For data science and R-focused repositories, we recommend adding the following U
 
 **GitHub Organizations (for package repositories):**
 
-- `github.com/tidyverse/*` - Tidyverse package source code
-- `github.com/r-lib/*` - R-lib package source code
-- `github.com/rstudio/*` - RStudio package source code
-- `github.com/ropensci/*` - rOpenSci package source code
+- `https://github.com/tidyverse/` - Tidyverse package source code
+- `https://github.com/r-lib/` - R-lib package source code
+- `https://github.com/rstudio/` - RStudio package source code
+- `https://github.com/ropensci/` - rOpenSci package source code
 
 > **TIP:**
 >
@@ -1035,14 +1035,13 @@ For data science and R-focused repositories, we recommend adding the following U
 
 > **NOTE:**
 >
-> All URLs listed here are:
+> The hosts listed here are reputable documentation and package sources:
 >
-> - Maintained by reputable organizations (Tidyverse, RStudio/Posit, R Core Team, rOpenSci)
-> - Widely used in the R community
-> - Focused on documentation and package distribution
-> - Safe for coding agents to access
+> - Most are run by established R projects and organizations (Tidyverse, RStudio/Posit, R Core Team, rOpenSci)
+> - They are widely used in the R community
+> - They focus on documentation and package distribution
 >
-> These sites do not host user-generated content or allow arbitrary code execution, making them appropriate for inclusion in your allowlist.
+> Reputable does not mean that every page on a host is vetted. Every allowed host is a place the agent can send data to, or read instructions from ([Morrison Lab 2026a](#ref-stats_allowlist_pr6)). Claude’s allowlist takes one domain per line ([Anthropic 2026a](#ref-claude_code_cloud_environments)). A path entry such as `https://github.com/tidyverse/` cannot be expressed there; allowing GitHub means allowing all of `github.com`. Copilot accepts such a URL and limits it to that path and the paths below it ([GitHub 2026a](#ref-copilot_agent_firewall)), so an entry for one GitHub organization still covers that organization’s issues and pull requests, including comments from other users. Any GitHub user or organization can publish a site at `<owner>.github.io` ([GitHub 2026b](#ref-github_pages_about)), so a `*.github.io` entry opens sites that anyone can publish, while `rstudio.github.io` serves only the `rstudio` organization’s sites. Anyone can edit Wikipedia ([Wikipedia contributors 2026](#ref-wikipedia_about)). These hosts are often needed for package installs and documentation; allow them knowingly (see [Configuring network access for Claude cloud sessions](../chapters/agent-customization.llms.md#sec-claude-network-access)).
 
 # References
 
@@ -1052,11 +1051,13 @@ Akhouri, Udit. 2026. *Quicksilver: Claude Code Skill and Plugin for Bulk Judgmen
 
 Amazon Web Services. 2026. *Kiro Documentation*. Documentation. <https://kiro.dev/docs/>.
 
-Anthropic. 2026a. *Use Research on Claude*. Help Center. <https://support.claude.com/en/articles/11088861-use-research-on-claude>.
+Anthropic. 2026a. *Configure Cloud Environments*. Documentation. <https://code.claude.com/docs/en/cloud-environments>.
 
-Anthropic. 2026b. *Web Search Tool*. Documentation. <https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool>.
+Anthropic. 2026b. *Use Research on Claude*. Help Center. <https://support.claude.com/en/articles/11088861-use-research-on-claude>.
 
-Anthropic. 2026c. *When Should i Use Web Search, Extended Thinking, and Research?* Help Center. <https://support.claude.com/en/articles/11095361-when-should-i-use-web-search-extended-thinking-and-research>.
+Anthropic. 2026c. *Web Search Tool*. Documentation. <https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool>.
+
+Anthropic. 2026d. *When Should i Use Web Search, Extended Thinking, and Research?* Help Center. <https://support.claude.com/en/articles/11095361-when-should-i-use-web-search-extended-thinking-and-research>.
 
 Asimov, Isaac. 1950. *I, Robot*. Novel; Gnome Press. <https://search.library.ucdavis.edu/permalink/01UCD_INST/9fle3i/alma990000226350403126>.
 
@@ -1081,6 +1082,10 @@ Gammon, Seth. 2026b. *Citadel Proof Experiments*. Documentation. <https://github
 Gammon, Seth. 2026c. *Citadel Threat Model*. Documentation. <https://github.com/SethGammon/Citadel/blob/main/THREAT_MODEL.md>.
 
 Gammon, Seth. 2026d. *Citadel: An Open-Source Operating Layer for Claude Code and OpenAI Codex*. GitHub repository. <https://github.com/SethGammon/Citadel>.
+
+GitHub. 2026a. *Customizing or Disabling the Firewall for GitHub Copilot Coding Agent*. Documentation. <https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-firewall>.
+
+GitHub. 2026b. *What Is GitHub Pages?* Documentation. <https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages>.
 
 Google. 2026a. *Deep Research Max: A Step Change for Autonomous Research Agents*. The Keyword (blog). <https://blog.google/innovation-and-ai/models-and-research/gemini-models/next-generation-gemini-deep-research/>.
 
@@ -1108,7 +1113,9 @@ Microsoft. 2026d. *Microsoft Copilot Researcher Agent Frequently Asked Questions
 
 Microsoft. 2026e. *What Is Researcher Agent in Microsoft Copilot?* Microsoft Learn. <https://learn.microsoft.com/en-us/microsoft-365/copilot/researcher-agent>.
 
-Morrison Lab. 2026. *Stats-Allowlist: Network Allowlists for AI Coding Agents*. GitHub repository. <https://github.com/Morrison-Lab/stats-allowlist>.
+Morrison Lab. 2026a. *Merge Additional Hosts into Claude Allowlist; Prune Redundant and Risky Entries*. GitHub pull request. <https://github.com/Morrison-Lab/stats-allowlist/pull/6>.
+
+Morrison Lab. 2026b. *Stats-Allowlist: Network Allowlists for AI Coding Agents*. GitHub repository. <https://github.com/Morrison-Lab/stats-allowlist>.
 
 Ollama. 2026. *Ollama*. Product page. <https://ollama.com/>.
 
@@ -1135,6 +1142,8 @@ Stanford Online, and Andrew Ng. 2026. *Andrew Ng: One Skill to Stay Relevant in 
 *WarGames*. 1983. Film. <https://en.wikipedia.org/wiki/WarGames>.
 
 Warp. 2026. *Getting Started with Warp*. Documentation. <https://docs.warp.dev/>.
+
+Wikipedia contributors. 2026. *Wikipedia:about*. Wikipedia. <https://en.wikipedia.org/wiki/Wikipedia:About>.
 
 Back to top
 

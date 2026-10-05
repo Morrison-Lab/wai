@@ -331,7 +331,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-10-03 15:28:00 (PDT)</p>
+  <p class="date">Last modified: 2026-10-05 03:10:24 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -1117,9 +1117,9 @@ Table&nbsp;6: Relative advantages of humans and Agents
 </ul>
 <p>For each we record what it does, which plans include it and with what limits, how long a run takes, what the output looks like, which connected sources it can read, and whether the same capability is reachable from an API. All figures are as published on 2026-09-09; vendors change plan limits often, so re-check before relying on one.</p>
 <h4 id="claude-research">Claude Research</h4>
-<p><a href="https://support.claude.com/en/articles/11088861-use-research-on-claude">Research</a> <span class="citation" data-cites="claude_research_help">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026a</a>)</span> is available on the paid Claude plans (Pro, Max, Team, and Enterprise) in the web, desktop, and mobile apps. Web search must be switched on for Research to work. Claude runs a chain of searches that build on each other and returns an answer with inline citations. Anthropic’s guidance on choosing between web search, extended thinking, and Research <span class="citation" data-cites="claude_research_when">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026c</a>)</span> places Research at “five or more tool calls over 1-3 minutes”, with web search for one- or two-query lookups and extended thinking for reasoning that needs no new information.</p>
-<p>Research draws on the same connectors as the rest of the app: when Gmail, Google Calendar, and Google Docs are connected, it searches those alongside the web <span class="citation" data-cites="claude_research_help">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026a</a>)</span>. There is no separate Research quota; runs count against the plan’s ordinary conversation limits, and the help page warns that a run “may consume limits faster” because it retrieves many sources.</p>
-<p>The Claude API has no Research endpoint. What it exposes is the <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool">web search tool</a> <span class="citation" data-cites="claude_web_search_tool">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026b</a>)</span>: a server-side tool that searches, returns results with citations, and can be capped with <code>max_uses</code> or restricted to <code>allowed_domains</code>. It is billed at $10 per 1,000 searches plus token costs. A multi-search research loop over that tool is something you build, not something you call.</p>
+<p><a href="https://support.claude.com/en/articles/11088861-use-research-on-claude">Research</a> <span class="citation" data-cites="claude_research_help">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026b</a>)</span> is available on the paid Claude plans (Pro, Max, Team, and Enterprise) in the web, desktop, and mobile apps. Web search must be switched on for Research to work. Claude runs a chain of searches that build on each other and returns an answer with inline citations. Anthropic’s guidance on choosing between web search, extended thinking, and Research <span class="citation" data-cites="claude_research_when">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026d</a>)</span> places Research at “five or more tool calls over 1-3 minutes”, with web search for one- or two-query lookups and extended thinking for reasoning that needs no new information.</p>
+<p>Research draws on the same connectors as the rest of the app: when Gmail, Google Calendar, and Google Docs are connected, it searches those alongside the web <span class="citation" data-cites="claude_research_help">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026b</a>)</span>. There is no separate Research quota; runs count against the plan’s ordinary conversation limits, and the help page warns that a run “may consume limits faster” because it retrieves many sources.</p>
+<p>The Claude API has no Research endpoint. What it exposes is the <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool">web search tool</a> <span class="citation" data-cites="claude_web_search_tool">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026c</a>)</span>: a server-side tool that searches, returns results with citations, and can be capped with <code>max_uses</code> or restricted to <code>allowed_domains</code>. It is billed at $10 per 1,000 searches plus token costs. A multi-search research loop over that tool is something you build, not something you call.</p>
 <h4 id="gemini-deep-research">Gemini Deep Research</h4>
 <p><a href="https://support.google.com/gemini/answer/15719111">Deep Research in the Gemini app</a> <span class="citation" data-cites="gemini_deep_research_help">(<a href="#/references" role="doc-biblioref" onclick="">Google 2026e</a>)</span> searches Google by default, and you can add Gmail, Drive, uploaded files, and NotebookLM notebooks as sources. A report “usually takes about 5-10 minutes to generate”, longer for complex topics. The report can be exported to Google Docs or turned into an Audio Overview. All users can run reports; Google AI Pro and Ultra subscribers can generate them with the Pro model, and Ultra reports may include charts, diagrams, and interactive simulators.</p>
 <p>Limits are compute-based rather than a per-report count <span class="citation" data-cites="gemini_apps_limits">(<a href="#/references" role="doc-biblioref" onclick="">Google 2026b</a>)</span>: the allowance refreshes every 5 hours up to a weekly cap, with AI Plus at 2x the free allowance, AI Pro at 4x, and AI Ultra at 5x or 20x the Pro allowance depending on the subscription. Deep Research is listed as available on every tier, but the same page notes that for accounts without a paid plan compute-heavy features like Deep Research “may be unavailable during periods of high demand”.</p>
@@ -1752,7 +1752,7 @@ Table&nbsp;7: Citadel’s orchestration ladder, from the project’s architectur
 <p>If a coding agent’s request is blocked by the firewall, a warning will be added to the pull request or comment, detailing the blocked address and the command that triggered it.</p>
 <p>For more information, see <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-firewall">Customizing or disabling the firewall for GitHub Copilot coding agent</a>.</p>
 <h4 id="recommended-urls-for-data-science-repositories">Recommended URLs for Data Science Repositories</h4>
-<p>The lab maintains its working allowlists in <a href="https://github.com/Morrison-Lab/stats-allowlist">Morrison-Lab/stats-allowlist</a> <span class="citation" data-cites="stats_allowlist">(<a href="#/references" role="doc-biblioref" onclick="">Morrison Lab 2026</a>)</span>:</p>
+<p>The lab maintains its working allowlists in <a href="https://github.com/Morrison-Lab/stats-allowlist">Morrison-Lab/stats-allowlist</a> <span class="citation" data-cites="stats_allowlist">(<a href="#/references" role="doc-biblioref" onclick="">Morrison Lab 2026b</a>)</span>:</p>
 <ul>
 <li><a href="https://github.com/Morrison-Lab/stats-allowlist/blob/main/allowlist.txt"><code>allowlist.txt</code></a> for the Copilot coding agent</li>
 <li><a href="https://github.com/Morrison-Lab/stats-allowlist/blob/main/claude-allowlist.txt"><code>claude-allowlist.txt</code></a> for Claude Code cloud sessions (see <a href="../chapters/agent-customization.html#sec-claude-network-access">Configuring network access for Claude cloud sessions</a>)</li>
@@ -1763,7 +1763,7 @@ Table&nbsp;7: Citadel’s orchestration ladder, from the project’s architectur
 <li>Apply the updated list to the agent itself: the repository’s “Coding agent” settings page for Copilot, or the cloud environment for Claude. Editing the file alone does not change what either agent can reach.</li>
 </ol>
 <p>The list below gives examples of useful hosts and what each one serves. It is not kept in sync with <code>allowlist.txt</code>, so check that file for the current entries.</p>
-<p>For data science and R-focused repositories, we recommend adding the following URLs to your Copilot allowlist. These sites are safe, reputable sources of documentation and packages that coding agents may need to access:</p>
+<p>For data science and R-focused repositories, we recommend adding the following URLs to your Copilot allowlist. These sites are reputable sources of documentation and packages that coding agents may need to access:</p>
 <p><strong>R Package Documentation and Ecosystems:</strong></p>
 <ul>
 <li><code>tidyverse.org</code> - <a href="https://tidyverse.org/"><code>{tidyverse}</code></a> package documentation and learning resources</li>
@@ -1800,10 +1800,10 @@ Table&nbsp;7: Citadel’s orchestration ladder, from the project’s architectur
 </ul>
 <p><strong>GitHub Organizations (for package repositories):</strong></p>
 <ul>
-<li><code>github.com/tidyverse/*</code> - Tidyverse package source code</li>
-<li><code>github.com/r-lib/*</code> - R-lib package source code</li>
-<li><code>github.com/rstudio/*</code> - RStudio package source code</li>
-<li><code>github.com/ropensci/*</code> - rOpenSci package source code</li>
+<li><code>https://github.com/tidyverse/</code> - Tidyverse package source code</li>
+<li><code>https://github.com/r-lib/</code> - R-lib package source code</li>
+<li><code>https://github.com/rstudio/</code> - RStudio package source code</li>
+<li><code>https://github.com/ropensci/</code> - rOpenSci package source code</li>
 </ul>
 <div class="callout callout-tip callout-titled callout-style-default">
 <div class="callout-body">
@@ -1833,14 +1833,13 @@ Table&nbsp;7: Citadel’s orchestration ladder, from the project’s architectur
 <p><strong>Safety of These URLs</strong></p>
 </div>
 <div class="callout-content">
-<p>All URLs listed here are:</p>
+<p>The hosts listed here are reputable documentation and package sources:</p>
 <ul>
-<li>Maintained by reputable organizations (Tidyverse, RStudio/Posit, R Core Team, rOpenSci)</li>
-<li>Widely used in the R community</li>
-<li>Focused on documentation and package distribution</li>
-<li>Safe for coding agents to access</li>
+<li>Most are run by established R projects and organizations (Tidyverse, RStudio/Posit, R Core Team, rOpenSci)</li>
+<li>They are widely used in the R community</li>
+<li>They focus on documentation and package distribution</li>
 </ul>
-<p>These sites do not host user-generated content or allow arbitrary code execution, making them appropriate for inclusion in your allowlist.</p>
+<p>Reputable does not mean that every page on a host is vetted. Every allowed host is a place the agent can send data to, or read instructions from <span class="citation" data-cites="stats_allowlist_pr6">(<a href="#/references" role="doc-biblioref" onclick="">Morrison Lab 2026a</a>)</span>. Claude’s allowlist takes one domain per line <span class="citation" data-cites="claude_code_cloud_environments">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026a</a>)</span>. A path entry such as <code>https://github.com/tidyverse/</code> cannot be expressed there; allowing GitHub means allowing all of <code>github.com</code>. Copilot accepts such a URL and limits it to that path and the paths below it <span class="citation" data-cites="copilot_agent_firewall">(<a href="#/references" role="doc-biblioref" onclick="">GitHub 2026a</a>)</span>, so an entry for one GitHub organization still covers that organization’s issues and pull requests, including comments from other users. Any GitHub user or organization can publish a site at <code>&lt;owner&gt;.github.io</code> <span class="citation" data-cites="github_pages_about">(<a href="#/references" role="doc-biblioref" onclick="">GitHub 2026b</a>)</span>, so a <code>*.github.io</code> entry opens sites that anyone can publish, while <code>rstudio.github.io</code> serves only the <code>rstudio</code> organization’s sites. Anyone can edit Wikipedia <span class="citation" data-cites="wikipedia_about">(<a href="#/references" role="doc-biblioref" onclick="">Wikipedia contributors 2026</a>)</span>. These hosts are often needed for package installs and documentation; allow them knowingly (see <a href="../chapters/agent-customization.html#sec-claude-network-access">Configuring network access for Claude cloud sessions</a>).</p>
 </div>
 </div>
 </div>
@@ -1862,14 +1861,17 @@ Akhouri, Udit. 2026. <em>Quicksilver: Claude Code Skill and Plugin for Bulk Judg
 <div id="ref-kiro_docs" class="csl-entry" role="listitem">
 Amazon Web Services. 2026. <em>Kiro Documentation</em>. Documentation. <a href="https://kiro.dev/docs/">https://kiro.dev/docs/</a>.
 </div>
+<div id="ref-claude_code_cloud_environments" class="csl-entry" role="listitem">
+Anthropic. 2026a. <em>Configure Cloud Environments</em>. Documentation. <a href="https://code.claude.com/docs/en/cloud-environments">https://code.claude.com/docs/en/cloud-environments</a>.
+</div>
 <div id="ref-claude_research_help" class="csl-entry" role="listitem">
-Anthropic. 2026a. <em>Use Research on Claude</em>. Help Center. <a href="https://support.claude.com/en/articles/11088861-use-research-on-claude">https://support.claude.com/en/articles/11088861-use-research-on-claude</a>.
+Anthropic. 2026b. <em>Use Research on Claude</em>. Help Center. <a href="https://support.claude.com/en/articles/11088861-use-research-on-claude">https://support.claude.com/en/articles/11088861-use-research-on-claude</a>.
 </div>
 <div id="ref-claude_web_search_tool" class="csl-entry" role="listitem">
-Anthropic. 2026b. <em>Web Search Tool</em>. Documentation. <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool">https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool</a>.
+Anthropic. 2026c. <em>Web Search Tool</em>. Documentation. <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool">https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool</a>.
 </div>
 <div id="ref-claude_research_when" class="csl-entry" role="listitem">
-Anthropic. 2026c. <em>When Should i Use Web Search, Extended Thinking, and Research?</em> Help Center. <a href="https://support.claude.com/en/articles/11095361-when-should-i-use-web-search-extended-thinking-and-research">https://support.claude.com/en/articles/11095361-when-should-i-use-web-search-extended-thinking-and-research</a>.
+Anthropic. 2026d. <em>When Should i Use Web Search, Extended Thinking, and Research?</em> Help Center. <a href="https://support.claude.com/en/articles/11095361-when-should-i-use-web-search-extended-thinking-and-research">https://support.claude.com/en/articles/11095361-when-should-i-use-web-search-extended-thinking-and-research</a>.
 </div>
 <div id="ref-i_robot" class="csl-entry" role="listitem">
 Asimov, Isaac. 1950. <em>I, Robot</em>. Novel; Gnome Press. <a href="https://search.library.ucdavis.edu/permalink/01UCD_INST/9fle3i/alma990000226350403126">https://search.library.ucdavis.edu/permalink/01UCD_INST/9fle3i/alma990000226350403126</a>.
@@ -1906,6 +1908,12 @@ Gammon, Seth. 2026c. <em>Citadel Threat Model</em>. Documentation. <a href="http
 </div>
 <div id="ref-citadel_repo" class="csl-entry" role="listitem">
 Gammon, Seth. 2026d. <em>Citadel: An Open-Source Operating Layer for Claude Code and OpenAI Codex</em>. GitHub repository. <a href="https://github.com/SethGammon/Citadel">https://github.com/SethGammon/Citadel</a>.
+</div>
+<div id="ref-copilot_agent_firewall" class="csl-entry" role="listitem">
+GitHub. 2026a. <em>Customizing or Disabling the Firewall for <span>GitHub Copilot</span> Coding Agent</em>. Documentation. <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-firewall">https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/customize-the-agent-firewall</a>.
+</div>
+<div id="ref-github_pages_about" class="csl-entry" role="listitem">
+GitHub. 2026b. <em>What Is <span>GitHub</span> Pages?</em> Documentation. <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages">https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages</a>.
 </div>
 <div id="ref-gemini_deep_research_max" class="csl-entry" role="listitem">
 Google. 2026a. <em>Deep Research Max: A Step Change for Autonomous Research Agents</em>. The Keyword (blog). <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/next-generation-gemini-deep-research/">https://blog.google/innovation-and-ai/models-and-research/gemini-models/next-generation-gemini-deep-research/</a>.
@@ -1946,8 +1954,11 @@ Microsoft. 2026d. <em>Microsoft Copilot Researcher Agent Frequently Asked Questi
 <div id="ref-ms_researcher_overview" class="csl-entry" role="listitem">
 Microsoft. 2026e. <em>What Is Researcher Agent in Microsoft Copilot?</em> Microsoft Learn. <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/researcher-agent">https://learn.microsoft.com/en-us/microsoft-365/copilot/researcher-agent</a>.
 </div>
+<div id="ref-stats_allowlist_pr6" class="csl-entry" role="listitem">
+Morrison Lab. 2026a. <em>Merge Additional Hosts into Claude Allowlist; Prune Redundant and Risky Entries</em>. GitHub pull request. <a href="https://github.com/Morrison-Lab/stats-allowlist/pull/6">https://github.com/Morrison-Lab/stats-allowlist/pull/6</a>.
+</div>
 <div id="ref-stats_allowlist" class="csl-entry" role="listitem">
-Morrison Lab. 2026. <em>Stats-Allowlist: Network Allowlists for AI Coding Agents</em>. GitHub repository. <a href="https://github.com/Morrison-Lab/stats-allowlist">https://github.com/Morrison-Lab/stats-allowlist</a>.
+Morrison Lab. 2026b. <em>Stats-Allowlist: Network Allowlists for AI Coding Agents</em>. GitHub repository. <a href="https://github.com/Morrison-Lab/stats-allowlist">https://github.com/Morrison-Lab/stats-allowlist</a>.
 </div>
 <div id="ref-ollama_site" class="csl-entry" role="listitem">
 Ollama. 2026. <em>Ollama</em>. Product page. <a href="https://ollama.com/">https://ollama.com/</a>.
@@ -1987,6 +1998,9 @@ Stanford Online, and Andrew Ng. 2026. <em>Andrew Ng: One Skill to Stay Relevant 
 </div>
 <div id="ref-warp_docs" class="csl-entry" role="listitem">
 Warp. 2026. <em>Getting Started with Warp</em>. Documentation. <a href="https://docs.warp.dev/">https://docs.warp.dev/</a>.
+</div>
+<div id="ref-wikipedia_about" class="csl-entry" role="listitem">
+Wikipedia contributors. 2026. <em>Wikipedia:about</em>. Wikipedia. <a href="https://en.wikipedia.org/wiki/Wikipedia:About">https://en.wikipedia.org/wiki/Wikipedia:About</a>.
 </div>
 </div>
 
