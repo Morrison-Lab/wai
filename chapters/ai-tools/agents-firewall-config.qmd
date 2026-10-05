@@ -141,14 +141,16 @@ Claude's allowlist takes one domain per line
 [@claude_code_cloud_environments].
 A path entry such as `github.com/tidyverse/*` cannot be expressed there;
 allowing GitHub means allowing all of `github.com`.
-Copilot can limit a URL entry to a path
+Copilot can limit a URL entry to a path and the paths below it
 [@copilot_agent_firewall],
-but even a GitHub entry limited to one organization
-can reach content that other users publish,
-such as issues and pull request comments.
+so an entry for one GitHub organization
+still covers that organization's issues and pull requests,
+including comments from other users.
 Any GitHub user or organization can publish a site at `<owner>.github.io`
 [@github_pages_about],
-and anyone can edit Wikipedia [@wikipedia_about].
+so a `*.github.io` entry opens sites that anyone can publish,
+while `rstudio.github.io` serves only the `rstudio` organization's sites.
+Anyone can edit Wikipedia [@wikipedia_about].
 These hosts are often needed for package installs and documentation;
 allow them knowingly
 (see [Configuring network access for Claude cloud sessions](agent-customization.qmd#sec-claude-network-access)).
