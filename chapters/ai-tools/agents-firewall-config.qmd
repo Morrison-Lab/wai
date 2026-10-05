@@ -66,8 +66,7 @@ so check that file for the current entries.
 
 For data science and R-focused repositories,
 we recommend adding the following URLs to your Copilot allowlist.
-These sites are safe,
-reputable sources of documentation and packages
+These sites are reputable sources of documentation and packages
 that coding agents may need to access:
 
 **R Package Documentation and Ecosystems:**
@@ -106,10 +105,10 @@ that coding agents may need to access:
 
 **GitHub Organizations (for package repositories):**
 
-- `github.com/tidyverse/*` - Tidyverse package source code
-- `github.com/r-lib/*` - R-lib package source code
-- `github.com/rstudio/*` - RStudio package source code
-- `github.com/ropensci/*` - rOpenSci package source code
+- `https://github.com/tidyverse/` - Tidyverse package source code
+- `https://github.com/r-lib/` - R-lib package source code
+- `https://github.com/rstudio/` - RStudio package source code
+- `https://github.com/ropensci/` - rOpenSci package source code
 
 ::: {.callout-tip}
 #### When to Add These URLs
@@ -127,14 +126,33 @@ rather than adding all URLs at once.
 ::: {.callout-note}
 #### Safety of These URLs
 
-All URLs listed here are:
+The hosts listed here are reputable documentation and package sources:
 
-- Maintained by reputable organizations (Tidyverse, RStudio/Posit, R Core Team, rOpenSci)
-- Widely used in the R community
-- Focused on documentation and package distribution
-- Safe for coding agents to access
+- Most are run by established R projects and organizations
+  (Tidyverse, RStudio/Posit, R Core Team, rOpenSci)
+- They are widely used in the R community
+- They focus on documentation and package distribution
 
-These sites do not host user-generated content
-or allow arbitrary code execution,
-making them appropriate for inclusion in your allowlist.
+Reputable does not mean that every page on a host is vetted.
+Every allowed host is a place the agent can send data to,
+or read instructions from
+[@stats_allowlist_pr6].
+Claude's allowlist takes one domain per line
+[@claude_code_cloud_environments].
+A path entry such as `https://github.com/tidyverse/` cannot be expressed there;
+allowing GitHub means allowing all of `github.com`.
+Copilot accepts such a URL
+and limits it to that path and the paths below it
+[@copilot_agent_firewall],
+so an entry for one GitHub organization
+still covers that organization's issues and pull requests,
+including comments from other users.
+Any GitHub user or organization can publish a site at `<owner>.github.io`
+[@github_pages_about],
+so a `*.github.io` entry opens sites that anyone can publish,
+while `rstudio.github.io` serves only the `rstudio` organization's sites.
+Anyone can edit Wikipedia [@wikipedia_about].
+These hosts are often needed for package installs and documentation;
+allow them knowingly
+(see [Configuring network access for Claude cloud sessions](agent-customization.qmd#sec-claude-network-access)).
 :::
