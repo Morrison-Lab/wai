@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-05 14:52:58 (PDT)
+Last modified: 2026-10-05 15:09:19 (PDT)
 
 Coding agents adapt to a project through configuration files, instruction prompts, tool definitions, and plugins. This chapter explains how to configure agent environments, install project-level instructions, author and share Agent Skills (`SKILL.md`), connect external capabilities via the Model Context Protocol (MCP), structure agent plugins, and use advanced developer extensions like Magic Context, Conductor, and the Antigravity Python SDK.
 
@@ -1841,7 +1841,7 @@ These are user-level defaults, and a project’s own `.claude/settings.json` or 
 - A single value set there, such as `sandbox.enabled`, overrides yours, so an old `sandbox.enabled: false` in a project turns the sandbox off for it.
 - A list set there, such as `allowedDomains`, is combined with yours. With `strictAllowlist` in your user settings, Claude Code v2.1.285 or later ignores a project’s `allowedDomains` entries ([Anthropic 2026f](#ref-claude_code_sandboxing)).
 
-Check a project’s settings before relying on this for an unattended run.
+Check a project’s settings before relying on this for an unattended run. The minimum versions named here come from the sandboxing documentation as read on 2026-10-05 ([Anthropic 2026f](#ref-claude_code_sandboxing)); run `claude --version` and check the current documentation before relying on them.
 
 `jq` turns a downloaded copy of the [raw file](https://raw.githubusercontent.com/Morrison-Lab/stats-allowlist/main/claude-allowlist.txt) into the array for step 2:
 
