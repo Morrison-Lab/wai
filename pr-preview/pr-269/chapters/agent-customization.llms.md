@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-05 14:34:23 (PDT)
+Last modified: 2026-10-05 14:52:58 (PDT)
 
 Coding agents adapt to a project through configuration files, instruction prompts, tool definitions, and plugins. This chapter explains how to configure agent environments, install project-level instructions, author and share Agent Skills (`SKILL.md`), connect external capabilities via the Model Context Protocol (MCP), structure agent plugins, and use advanced developer extensions like Magic Context, Conductor, and the Antigravity Python SDK.
 
@@ -1836,6 +1836,13 @@ A local session that runs without prompts, such as in auto mode, where a classif
 4.  Set `sandbox.allowUnsandboxedCommands` to `false`, so that a blocked command cannot retry outside the sandbox.
 5.  Set `sandbox.failIfUnavailable` to `true`. By default, when the sandbox cannot start, Claude Code runs commands without it.
 
+These are user-level defaults, and a project’s own `.claude/settings.json` or `.claude/settings.local.json` can change them ([Anthropic 2026i](#ref-claude_code_settings)):
+
+- A single value set there, such as `sandbox.enabled`, overrides yours, so an old `sandbox.enabled: false` in a project turns the sandbox off for it.
+- A list set there, such as `allowedDomains`, is combined with yours. With `strictAllowlist` in your user settings, Claude Code v2.1.285 or later ignores a project’s `allowedDomains` entries ([Anthropic 2026f](#ref-claude_code_sandboxing)).
+
+Check a project’s settings before relying on this for an unattended run.
+
 `jq` turns a downloaded copy of the [raw file](https://raw.githubusercontent.com/Morrison-Lab/stats-allowlist/main/claude-allowlist.txt) into the array for step 2:
 
 ``` bash
@@ -1863,6 +1870,8 @@ Anthropic. 2026f. *Configure the Sandboxed Bash Tool*. Documentation. <https://c
 Anthropic. 2026g. *Discover and Install Prebuilt Plugins Through Marketplaces*. Documentation. <https://code.claude.com/docs/en/discover-plugins>.
 
 Anthropic. 2026h. *Ralph Loop Plugin*. Documentation. <https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/plugins/ralph-loop/README.md>.
+
+Anthropic. 2026i. *Settings Files and Precedence*. Documentation. <https://code.claude.com/docs/en/settings>.
 
 Coles, Matt. 2026. *Herding Parallel Agents on a Remote Box with Herdr*. Blog post. <https://coles.codes/posts/herding-agents-with-herdr/>.
 
