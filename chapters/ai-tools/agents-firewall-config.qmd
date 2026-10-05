@@ -105,10 +105,10 @@ that coding agents may need to access:
 
 **GitHub Organizations (for package repositories):**
 
-- `github.com/tidyverse/*` - Tidyverse package source code
-- `github.com/r-lib/*` - R-lib package source code
-- `github.com/rstudio/*` - RStudio package source code
-- `github.com/ropensci/*` - rOpenSci package source code
+- `https://github.com/tidyverse/` - Tidyverse package source code
+- `https://github.com/r-lib/` - R-lib package source code
+- `https://github.com/rstudio/` - RStudio package source code
+- `https://github.com/ropensci/` - rOpenSci package source code
 
 ::: {.callout-tip}
 #### When to Add These URLs
@@ -139,9 +139,10 @@ or read instructions from
 [@stats_allowlist_pr6].
 Claude's allowlist takes one domain per line
 [@claude_code_cloud_environments].
-A path entry such as `github.com/tidyverse/*` cannot be expressed there;
+A path entry such as `https://github.com/tidyverse/` cannot be expressed there;
 allowing GitHub means allowing all of `github.com`.
-Copilot can limit a URL entry to a path and the paths below it
+Copilot accepts such a URL
+and limits it to that path and the paths below it
 [@copilot_agent_firewall],
 so an entry for one GitHub organization
 still covers that organization's issues and pull requests,
