@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-05 16:02:17 (PDT)
+Last modified: 2026-10-06 01:42:34 (PDT)
 
 Behind every coding agent is a system architecture: a model, an execution loop, tool definitions, and a *harness* that manages context, permissions, and session state. This chapter covers how coding agents and harnesses are structured, how they run under the hood, and how the open and commercial harness landscape looks in 2026.
 
@@ -33,26 +33,26 @@ Most coding-agent harnesses — including the [GitHub Copilot coding agent](http
 
 # 2 Inside the Claude Code Harness
 
-[Section 1](#sec-ai-harnesses) describes the layers most coding-agent harnesses share, and [Section 6](#sec-ai-harness-agent-relationship) sketches the loop that runs inside them. This section walks through those layers for the harness the lab uses most, [Claude Code](https://code.claude.com/docs/en/overview), and says for each one what Anthropic documents, what the community has inferred from the shipped program, and what remains unknown (measured 2026-09-09). Anthropic’s own description is short: Claude Code is the “agentic harness” around the model, supplying “the tools, context management, and execution environment that turn a language model into a capable coding agent” ([Anthropic 2026w](#ref-claude_code_how_it_works)). The sections below take those three things in turn.
+[Section 1](#sec-ai-harnesses) describes the layers most coding-agent harnesses share, and [Section 6](#sec-ai-harness-agent-relationship) sketches the loop that runs inside them. This section walks through those layers for the harness the lab uses most, [Claude Code](https://code.claude.com/docs/en/overview), and says for each one what Anthropic documents, what the community has inferred from the shipped program, and what remains unknown (measured 2026-09-09). Anthropic’s own description is short: Claude Code is the “agentic harness” around the model, supplying “the tools, context management, and execution environment that turn a language model into a capable coding agent” ([Anthropic 2026y](#ref-claude_code_how_it_works)). The sections below take those three things in turn.
 
 The distinction between documented and inferred matters here more than usual. Claude Code is proprietary, and since mid-2026 it ships as a single compiled executable rather than readable JavaScript ([anthropics/claude-code contributors 2026b](#ref-claude_code_issue_80988)), so everything not in Anthropic’s documentation comes from people running `strings` on the binary, reading the compiled function bodies, or intercepting its network traffic. Those readings are checkable but fragile: the build tool renames every internal function on every release, and a behaviour observed in one build may be gone in the next. Treat the inferred claims as a snapshot, and re-verify against the build you are running before relying on one.
 
 #### The loop and the tool registry (documented)
 
-The core of the harness is the loop described in [Section 5](#sec-ai-agent-program-kind): the model produces a tool call, the harness runs the matching handler, and the result goes back into the conversation. Anthropic describes the same loop as three blended phases — gather context, take action, verify results — and stresses that the model, not the harness, decides which tool to call next ([Anthropic 2026w](#ref-claude_code_how_it_works)).
+The core of the harness is the loop described in [Section 5](#sec-ai-agent-program-kind): the model produces a tool call, the harness runs the matching handler, and the result goes back into the conversation. Anthropic describes the same loop as three blended phases — gather context, take action, verify results — and stresses that the model, not the harness, decides which tool to call next ([Anthropic 2026y](#ref-claude_code_how_it_works)).
 
-The built-in tools are the registry the loop dispatches against. As of September 2026 the tools reference lists more than forty of them ([Anthropic 2026y](#ref-claude_code_tools_reference)). The ones a lab member sees every day are:
+The built-in tools are the registry the loop dispatches against. As of September 2026 the tools reference lists more than forty of them ([Anthropic 2026aa](#ref-claude_code_tools_reference)). The ones a lab member sees every day are:
 
 - **File and search tools**: `Read`, `Edit`, `Write`, `Glob`, `Grep`, `NotebookEdit`, and `LSP` for language-server code intelligence.
 - **Execution tools**: `Bash`, `PowerShell`, and `Monitor`, which streams a background command’s output lines back to the model.
 - **Orchestration tools**: `Agent` (spawns a subagent), `Skill` (runs a skill), `SendMessage` and `ListAgents` (agent teams), the `Task*` family (a session task list), `CronCreate` and `ScheduleWakeup` (timers), and `ToolSearch` (loads deferred tool schemas on demand).
 - **Interaction tools**: `AskUserQuestion`, `EnterPlanMode` and `ExitPlanMode`, `EnterWorktree` and `ExitWorktree`, `Artifact`, and `SendUserFile`.
 
-Each tool is a schema the model sees plus a handler it does not, exactly as [Section 4](#sec-ai-harness-construction) describes. The tool names double as the vocabulary of the permission system, hook matchers, and subagent tool lists, so a rule written as `Bash(git *)` refers to the same `Bash` entry the model calls ([Anthropic 2026y](#ref-claude_code_tools_reference)). MCP servers (below) extend this registry without changing its shape.
+Each tool is a schema the model sees plus a handler it does not, exactly as [Section 4](#sec-ai-harness-construction) describes. The tool names double as the vocabulary of the permission system, hook matchers, and subagent tool lists, so a rule written as `Bash(git *)` refers to the same `Bash` entry the model calls ([Anthropic 2026aa](#ref-claude_code_tools_reference)). MCP servers (below) extend this registry without changing its shape.
 
 #### The system prompt: what is public and what is not
 
-Anthropic does not publish Claude Code’s system prompt. What the documentation does describe is the *startup context*: everything already in the model’s window before you type a word. The context-window page walks through it in order ([Anthropic 2026u](#ref-claude_code_context_window)):
+Anthropic does not publish Claude Code’s system prompt. What the documentation does describe is the *startup context*: everything already in the model’s window before you type a word. The context-window page walks through it in order ([Anthropic 2026w](#ref-claude_code_context_window)):
 
 - the system prompt itself, including an output style and any `--append-system-prompt` text, which “both go into the system prompt the same way”;
 - an environment block (working directory, platform, shell, whether this is a git repository), with git branch, status, and recent commits loaded “as a separate block at the very end of the system prompt”;
@@ -60,9 +60,9 @@ Anthropic does not publish Claude Code’s system prompt. What the documentation
 - one-line skill descriptions, so the model knows what it can invoke;
 - your `CLAUDE.md` files and the first 200 lines of auto memory.
 
-One documented detail changes how the rest of this section reads: `CLAUDE.md` content “is delivered as a user message after the system prompt, not as part of the system prompt itself” ([Anthropic 2026x](#ref-claude_code_memory)). So the layered picture is harness-authored system prompt first, then your instructions, then the conversation. The same page is candid that the harness “treats them as context, not enforced configuration”: a `CLAUDE.md` instruction is prose the model may weigh against other prose, and anything that must hold regardless goes in a permission rule or a hook.
+One documented detail changes how the rest of this section reads: `CLAUDE.md` content “is delivered as a user message after the system prompt, not as part of the system prompt itself” ([Anthropic 2026z](#ref-claude_code_memory)). So the layered picture is harness-authored system prompt first, then your instructions, then the conversation. The same page is candid that the harness “treats them as context, not enforced configuration”: a `CLAUDE.md` instruction is prose the model may weigh against other prose, and anything that must hold regardless goes in a permission rule or a hook.
 
-Three documented levers reach the system prompt directly ([Anthropic 2026s](#ref-claude_code_env_vars)):
+Three documented levers reach the system prompt directly ([Anthropic 2026u](#ref-claude_code_env_vars)):
 
 - `--append-system-prompt` adds text to it for one invocation.
 - `CLAUDE_CODE_SIMPLE_SYSTEM_PROMPT=1` requests “a shorter system prompt and abbreviated tool descriptions”, and `0` opts out “even on models where the experiment or server configuration would otherwise enable it” — the documentation’s own acknowledgment that the prompt varies by model and by server-side configuration.
@@ -74,9 +74,9 @@ What the community has inferred is the prompt’s internal structure. Binary ana
 
 `heron_brook` is not a feature. It is the internal name of one system-prompt section, and its story is the clearest public window into how the harness’s prompt is controlled. The name follows the pattern of every Claude Code feature flag: a `tengu_` prefix (the product’s internal code name, per one community catalog of the binary’s strings ([wtfwhs 2026](#ref-tengu_decoded))) followed by an auto-generated `adjective_noun` pair that carries no meaning of its own. `tengu_fennel_godwit`, mentioned below, is the same kind of name. Anthropic’s only public statement touching the section is the short reply quoted below.
 
-**May 2026: the slot appears.** Claude Code 2.1.150 shipped with a changelog entry reading, in full, “Internal infrastructure improvements (no user-facing changes)” ([Anthropic 2026n](#ref-claude_code_changelog)). Within days a user reported that the build added a function reading a string from two network-backed sources — the `client_data` field of the `/api/claude_cli/bootstrap` response, and a GrowthBook feature flag named `tengu_heron_brook` that refreshes every 60 seconds — and inserting it verbatim as a system-prompt section ([anthropics/claude-code contributors 2026a](#ref-claude_code_issue_62061)). The same finding reached Hacker News under the title “Claude Code now allows Anthropic to remotely inject system prompts” ([matheusmoreira 2026](#ref-hn_claude_code_remote_prompts)). An Anthropic engineer replied on the issue that the company “sometimes run\[s\] experiments on changes to our system prompt so that we can evaluate how a change impacts quality before fully rolling it out”, that users can opt out with `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1` and `DISABLE_GROWTHBOOK=1`, and that Claude Code should not be used through an untrusted proxy ([anthropics/claude-code contributors 2026a](#ref-claude_code_issue_62061)). The issue was closed. A separate HackerOne report on the same channel was closed as *Informative*, with Anthropic’s security team stating that TLS is the integrity boundary and no response signing is planned ([cnighswonger 2026](#ref-cache_fix_heron_brook_disclosure)). An independent catalog of the binary’s strings describes the section the same way: “a server-controlled prompt-injection slot” ([wtfwhs 2026](#ref-tengu_decoded)).
+**May 2026: the slot appears.** Claude Code 2.1.150 shipped with a changelog entry reading, in full, “Internal infrastructure improvements (no user-facing changes)” ([Anthropic 2026o](#ref-claude_code_changelog)). Within days a user reported that the build added a function reading a string from two network-backed sources — the `client_data` field of the `/api/claude_cli/bootstrap` response, and a GrowthBook feature flag named `tengu_heron_brook` that refreshes every 60 seconds — and inserting it verbatim as a system-prompt section ([anthropics/claude-code contributors 2026a](#ref-claude_code_issue_62061)). The same finding reached Hacker News under the title “Claude Code now allows Anthropic to remotely inject system prompts” ([matheusmoreira 2026](#ref-hn_claude_code_remote_prompts)). An Anthropic engineer replied on the issue that the company “sometimes run\[s\] experiments on changes to our system prompt so that we can evaluate how a change impacts quality before fully rolling it out”, that users can opt out with `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1` and `DISABLE_GROWTHBOOK=1`, and that Claude Code should not be used through an untrusted proxy ([anthropics/claude-code contributors 2026a](#ref-claude_code_issue_62061)). The issue was closed. A separate HackerOne report on the same channel was closed as *Informative*, with Anthropic’s security team stating that TLS is the integrity boundary and no response signing is planned ([cnighswonger 2026](#ref-cache_fix_heron_brook_disclosure)). An independent catalog of the binary’s strings describes the section the same way: “a server-controlled prompt-injection slot” ([wtfwhs 2026](#ref-tengu_decoded)).
 
-**July 2026: the slot gets a hard-coded default.** Claude Code 2.1.219 was the release that added Opus 5 ([Anthropic 2026n](#ref-claude_code_changelog)). Users on that model noticed their sessions had stopped delegating to subagents, and the model, when asked, quoted two lines it said it had been given:
+**July 2026: the slot gets a hard-coded default.** Claude Code 2.1.219 was the release that added Opus 5 ([Anthropic 2026o](#ref-claude_code_changelog)). Users on that model noticed their sessions had stopped delegating to subagents, and the model, when asked, quoted two lines it said it had been given:
 
 > Do not call the `AgentTool` unless the user requested it Do not use workflows or deep-research unless the user requested it
 
@@ -84,16 +84,16 @@ The canonical report ([anthropics/claude-code contributors 2026b](#ref-claude_co
 
 Four consequences are reported across that issue and its siblings:
 
-- **It overrides user configuration silently.** Users whose `CLAUDE.md` *requires* delegation — including several with mandatory review-by-subagent gates — saw zero subagent dispatches for whole sessions, and one fleet operator measured Opus 5 sessions taking 2.5 times as many assistant turns as Opus 4.8 on the same work, which they attributed to serial work that had previously fanned out ([anthropics/claude-code contributors 2026b](#ref-claude_code_issue_80988)). The documentation says delegation is driven by each subagent’s `description` ([Anthropic 2026q](#ref-claude_code_subagents)); a separate report argues the directive contradicts that documented behaviour ([anthropics/claude-code contributors 2026e](#ref-claude_code_issue_82456)).
+- **It overrides user configuration silently.** Users whose `CLAUDE.md` *requires* delegation — including several with mandatory review-by-subagent gates — saw zero subagent dispatches for whole sessions, and one fleet operator measured Opus 5 sessions taking 2.5 times as many assistant turns as Opus 4.8 on the same work, which they attributed to serial work that had previously fanned out ([anthropics/claude-code contributors 2026b](#ref-claude_code_issue_80988)). The documentation says delegation is driven by each subagent’s `description` ([Anthropic 2026s](#ref-claude_code_subagents)); a separate report argues the directive contradicts that documented behaviour ([anthropics/claude-code contributors 2026e](#ref-claude_code_issue_82456)).
 - **The model attributes the line to you.** Because the section arrives in the same voice as everything else, and because `CLAUDE.md` is a *user* message that appears earlier, the model reads “unless the user requested it” as the user’s own standing rule and tells users their configuration forbids delegation when it says the opposite ([anthropics/claude-code contributors 2026d](#ref-claude_code_issue_87635)). A related report frames the underlying gap: there is no defined precedence between an Anthropic-authored prompt section and a user-authored `CLAUDE.md`, and no way to observe from inside a session which sections are active ([anthropics/claude-code contributors 2026c](#ref-claude_code_issue_80998)).
-- **The documented opt-outs do not reach it.** `DISABLE_GROWTHBOOK=1` disables flag *fetching*, so every flag takes its code default ([Anthropic 2026s](#ref-claude_code_env_vars)) — and the kill switch’s default is off, so blocking the flag source guarantees the hard-coded text is used. `--bare` removes the `Agent` tool along with the prompt section. Six sibling sections in the same Opus 5 bundle reportedly have dedicated `CLAUDE_CODE_*` environment variables; `heron_brook` and its kill switch do not ([anthropics/claude-code contributors 2026b](#ref-claude_code_issue_80988)). Session transcripts under `~/.claude/projects/` do not record the system prompt, so the injection leaves no trace to search for afterwards.
+- **The documented opt-outs do not reach it.** `DISABLE_GROWTHBOOK=1` disables flag *fetching*, so every flag takes its code default ([Anthropic 2026u](#ref-claude_code_env_vars)) — and the kill switch’s default is off, so blocking the flag source guarantees the hard-coded text is used. `--bare` removes the `Agent` tool along with the prompt section. Six sibling sections in the same Opus 5 bundle reportedly have dedicated `CLAUDE_CODE_*` environment variables; `heron_brook` and its kill switch do not ([anthropics/claude-code contributors 2026b](#ref-claude_code_issue_80988)). Session transcripts under `~/.claude/projects/` do not record the system prompt, so the injection leaves no trace to search for afterwards.
 - **It persisted.** Comments on the issue confirm the same constant, gate, and behaviour in every build examined from 2.1.219 through at least 2.1.245 (2026-08-26), across macOS, Windows, and Linux, with no maintainer response on the thread ([anthropics/claude-code contributors 2026b](#ref-claude_code_issue_80988)).
 
 What is documented, and what is not, about `heron_brook` as of 2026-09-09:
 
 | Claim | Status |
 |----|----|
-| Anthropic runs server-side system-prompt experiments and offers two environment variables to opt out of flag fetching | Documented, by an Anthropic engineer’s comment ([anthropics/claude-code contributors 2026a](#ref-claude_code_issue_62061)) and the environment-variable reference ([Anthropic 2026s](#ref-claude_code_env_vars)) |
+| Anthropic runs server-side system-prompt experiments and offers two environment variables to opt out of flag fetching | Documented, by an Anthropic engineer’s comment ([anthropics/claude-code contributors 2026a](#ref-claude_code_issue_62061)) and the environment-variable reference ([Anthropic 2026u](#ref-claude_code_env_vars)) |
 | A prompt section named `heron_brook` reads its text from the bootstrap response, then a GrowthBook flag, then a compiled-in fallback | Inferred from binary analysis, reproduced independently by many reporters on three platforms |
 | The fallback text tells the model not to call the `Agent` tool unless the user requested it | Inferred; the two strings are verifiable with `grep -a -c` on the installed executable |
 | The gate is Opus 5’s `opus_5_prompt_bundle` capability plus a `tengu_fennel_godwit` kill switch | Inferred from the compiled code; not documented anywhere |
@@ -107,7 +107,7 @@ The lab’s own [ai-config](https://github.com/Morrison-Lab/ai-config) leans hea
 
 #### Permission modes and settings layers (documented)
 
-Permission rules “are enforced by Claude Code, not by the model” ([Anthropic 2026p](#ref-claude_code_permissions)), which makes them the first layer that the prompt controversy above cannot reach. A prompt can change what the model *tries*; only a rule changes what the harness *allows*. Six modes are documented ([Anthropic 2026p](#ref-claude_code_permissions)):
+Permission rules “are enforced by Claude Code, not by the model” ([Anthropic 2026r](#ref-claude_code_permissions)), which makes them the first layer that the prompt controversy above cannot reach. A prompt can change what the model *tries*; only a rule changes what the harness *allows*. Six modes are documented ([Anthropic 2026r](#ref-claude_code_permissions)):
 
 - `default` (labeled Manual): prompts on first use of each tool.
 - `acceptEdits`: auto-accepts file edits and common filesystem commands inside the working directory.
@@ -116,27 +116,61 @@ Permission rules “are enforced by Claude Code, not by the model” ([Anthropic
 - `dontAsk`: auto-denies anything not pre-approved by an allow rule.
 - `bypassPermissions`: skips prompts except for a short list no mode auto-approves.
 
-Rules and the mode live in settings files that layer from managed policy through user, project, and local scope, with `permissions.deny` in managed settings as the enforcement an organization cannot have overridden ([Anthropic 2026x](#ref-claude_code_memory)). One inferred caveat belongs here: the `heron_brook` thread cites a separate report that GrowthBook flags can override `permissions.defaultMode` from the server ([anthropics/claude-code contributors 2026b](#ref-claude_code_issue_80988)), so even this layer may have a remotely controlled input. That report is cited second-hand and was not verified for this section.
+Rules and the mode live in settings files that layer from managed policy through user, project, and local scope, with `permissions.deny` in managed settings as the enforcement an organization cannot have overridden ([Anthropic 2026z](#ref-claude_code_memory)). One inferred caveat belongs here: the `heron_brook` thread cites a separate report that GrowthBook flags can override `permissions.defaultMode` from the server ([anthropics/claude-code contributors 2026b](#ref-claude_code_issue_80988)), so even this layer may have a remotely controlled input. That report is cited second-hand and was not verified for this section.
+
+#### Worked example: letting auto mode merge under `mwc`
+
+The lab grants merge authority one session at a time, with the `mwc` (“merge when confident”) grant from [ai-config](https://github.com/Morrison-Lab/ai-config/blob/main/skills/mwc/SKILL.md). In auto mode, the classifier reviews a `gh pr merge` like any other action. On 2026-10-05 it blocked the merge of [Morrison-Lab/mds#140](https://github.com/Morrison-Lab/mds/pull/140) as “Merge Without Review”, although all of these held:
+
+- the maintainer had typed `mwc` earlier in the session;
+- CI was green;
+- the lab’s fully-clean check had passed on the pull request’s head commit.
+
+Three findings explain the block and the fix (measured 2026-10-06).
+
+**A one-word grant is not an approval the classifier can match.** An approval stated in conversation clears a block only when it names the action and the specific thing that makes it dangerous, and it covers one action unless it was granted as standing; to approve a routine pattern, the documented route is an `autoMode.allow` rule ([Anthropic 2026n](#ref-claude_code_permission_modes)). A bare `mwc` names neither the merge nor the pull request.
+
+**The classifier does not read `autoMode` from a repository.** It reads `autoMode` from user settings (`~/.claude/settings.json`), managed settings, and `--settings` or the Agent SDK, but not from `.claude/settings.json` or `.claude/settings.local.json`, so that a checked-in repository cannot add its own allow rules ([Anthropic 2026q](#ref-claude_code_auto_mode_config)). [Morrison-Lab/mds#104](https://github.com/Morrison-Lab/mds/pull/104) had put an `mwc` rule in the repository’s `.claude/settings.json`, where it never applied; [Morrison-Lab/mds#165](https://github.com/Morrison-Lab/mds/pull/165) removes it. The rule belongs in user settings. A cloud session has no user settings file, so there the rule would have to come from managed settings or `--settings`.
+
+**A `permissions.allow` rule is the wrong fix.** A rule such as `Bash(gh pr merge:*)` approves every merge before the classifier sees it, and auto mode keeps narrow rules like it in effect; it drops only broad rules that grant arbitrary code execution ([Anthropic 2026n](#ref-claude_code_permission_modes)). That would leave only the ai-config merge hooks between an `mwc` grant and a merge, and in Claude Code neither of them checks the pull request:
+
+- `no-unauthorized-merge.py` checks only that the session holds an `mwc` grant;
+- `enforce-mwc-review-gate.py`, the hook that does check for a clean review on the head commit, is wired up only for Antigravity, so it never runs in Claude Code.
+
+The classifier reads the conversation, so it can still refuse a merge over a failing check or an open review finding. Keeping it in the path costs an occasional manual approval, which is cheaper than an unreviewed merge.
+
+The rule now in the maintainer’s `~/.claude/settings.json` names the grant’s forms and the evidence to look for, after the built-in rules (`$defaults`):
+
+``` json
+"autoMode": {
+  "allow": [
+    "$defaults",
+    "Merging a pull request in a Morrison-Lab repository with `gh pr merge`, when all of these hold: (1) earlier in this session the user granted merge-when-confident, which they may do with the bare word `mwc`, `/mwc`, `maw`, \"merge when confident\" or \"merge at will\"; (2) in this session, `check-pr-fully-clean.py` reported that PR FULLY CLEAN on its current head commit, meaning CI green, the automated review verdict clean and no unresolved review threads; (3) the merge command pins that same head SHA with `--match-head-commit`. Block it if any of these is missing, or if anything after the clean check (a new push, a new review finding) suggests the PR may no longer be clean."
+  ]
+}
+```
+
+The rule is a prose description the classifier weighs, not a hard gate, and it had not yet been tested on a merge when this section was written. If the classifier still blocks a merge, leave auto mode and answer the permission prompt ([Anthropic 2026n](#ref-claude_code_permission_modes)).
 
 #### Hooks (documented)
 
-Hooks are the harness’s event system: shell commands, HTTP endpoints, MCP tool calls, single-turn prompts, or spawned subagents that run at fixed lifecycle points ([Anthropic 2026v](#ref-claude_code_hooks_reference)). The reference lists more than thirty events, grouped as session (`SessionStart`, `SessionEnd`), per-turn (`UserPromptSubmit`, `Stop`), tool execution (`PreToolUse`, `PostToolUse`, `PermissionRequest`), agent (`SubagentStart`, `SubagentStop`), context (`InstructionsLoaded`, `PreCompact`, `PostCompact`), and several more. A `PreToolUse` hook that exits with code 2 blocks the call, and a hook’s JSON output can deny, add context, or rewrite the tool’s input. This is the mechanism [customizing an agent](../chapters/agent-customization.llms.md#sec-ai-customization) calls “the part the model cannot talk its way around”, and it is the right home for any rule that must hold regardless of what the prompt says — including a rule that the prompt itself has been told to contradict. `InstructionsLoaded` is also the only documented way to log exactly which instruction files a session loaded and when ([Anthropic 2026x](#ref-claude_code_memory)).
+Hooks are the harness’s event system: shell commands, HTTP endpoints, MCP tool calls, single-turn prompts, or spawned subagents that run at fixed lifecycle points ([Anthropic 2026x](#ref-claude_code_hooks_reference)). The reference lists more than thirty events, grouped as session (`SessionStart`, `SessionEnd`), per-turn (`UserPromptSubmit`, `Stop`), tool execution (`PreToolUse`, `PostToolUse`, `PermissionRequest`), agent (`SubagentStart`, `SubagentStop`), context (`InstructionsLoaded`, `PreCompact`, `PostCompact`), and several more. A `PreToolUse` hook that exits with code 2 blocks the call, and a hook’s JSON output can deny, add context, or rewrite the tool’s input. This is the mechanism [customizing an agent](../chapters/agent-customization.llms.md#sec-ai-customization) calls “the part the model cannot talk its way around”, and it is the right home for any rule that must hold regardless of what the prompt says — including a rule that the prompt itself has been told to contradict. `InstructionsLoaded` is also the only documented way to log exactly which instruction files a session loaded and when ([Anthropic 2026z](#ref-claude_code_memory)).
 
 #### Subagents (documented)
 
-The `Agent` tool spawns a subagent: a fresh instance of the same loop with its own context window, its own system prompt, a restricted tool list, and independent permissions ([Anthropic 2026q](#ref-claude_code_subagents)). Built-in subagents include `Explore` and `Plan` (read-only; they skip `CLAUDE.md` and git status to stay cheap) and `general-purpose`; custom ones are markdown files with front matter in `.claude/agents/` or `~/.claude/agents/`, as [Section 4](#sec-ai-harness-construction) illustrates, and plugins can ship more. The harness watches those directories and picks up edits without a restart. Delegation is documented as description-driven: “Claude uses each subagent’s description to decide when to delegate tasks”, and the combined descriptions are capped at 15,000 tokens before a startup warning ([Anthropic 2026q](#ref-claude_code_subagents)). Delegation can be removed entirely by denying the `Agent` tool in `permissions.deny`. That is the documented, user-controlled way to stop subagent use; `heron_brook` is the undocumented, server-controlled one.
+The `Agent` tool spawns a subagent: a fresh instance of the same loop with its own context window, its own system prompt, a restricted tool list, and independent permissions ([Anthropic 2026s](#ref-claude_code_subagents)). Built-in subagents include `Explore` and `Plan` (read-only; they skip `CLAUDE.md` and git status to stay cheap) and `general-purpose`; custom ones are markdown files with front matter in `.claude/agents/` or `~/.claude/agents/`, as [Section 4](#sec-ai-harness-construction) illustrates, and plugins can ship more. The harness watches those directories and picks up edits without a restart. Delegation is documented as description-driven: “Claude uses each subagent’s description to decide when to delegate tasks”, and the combined descriptions are capped at 15,000 tokens before a startup warning ([Anthropic 2026s](#ref-claude_code_subagents)). Delegation can be removed entirely by denying the `Agent` tool in `permissions.deny`. That is the documented, user-controlled way to stop subagent use; `heron_brook` is the undocumented, server-controlled one.
 
 #### Skills and plugins (documented)
 
-A skill is a `SKILL.md` with front matter and a body, run through the built-in `Skill` tool rather than as a tool of its own ([Anthropic 2026y](#ref-claude_code_tools_reference)). Only skill *descriptions* sit in the startup context; the body loads when the skill is invoked, and a skill marked `disable-model-invocation: true` stays out of context entirely until you type its slash command ([Anthropic 2026u](#ref-claude_code_context_window)). [Agent Skills](../chapters/agent-customization.llms.md#sec-ai-agent-skills) covers the format. A plugin bundles skills, agents, hooks, MCP and LSP server configurations, background monitors, and default settings into one directory with a `.claude-plugin/plugin.json` manifest, namespaces its skills as `/plugin-name:skill`, and can be loaded from a marketplace, from a local path with `--plugin-dir`, or from the user’s skills directory ([Anthropic 2026r](#ref-claude_code_plugins)). [Plugins deep dive](../chapters/agent-customization.llms.md#sec-ai-plugins-deep-dive) dissects the bundle, and [how config reaches a machine](../chapters/agent-customization.llms.md#sec-ai-config-install) describes how the lab’s own plugin reaches a machine.
+A skill is a `SKILL.md` with front matter and a body, run through the built-in `Skill` tool rather than as a tool of its own ([Anthropic 2026aa](#ref-claude_code_tools_reference)). Only skill *descriptions* sit in the startup context; the body loads when the skill is invoked, and a skill marked `disable-model-invocation: true` stays out of context entirely until you type its slash command ([Anthropic 2026w](#ref-claude_code_context_window)). [Agent Skills](../chapters/agent-customization.llms.md#sec-ai-agent-skills) covers the format. A plugin bundles skills, agents, hooks, MCP and LSP server configurations, background monitors, and default settings into one directory with a `.claude-plugin/plugin.json` manifest, namespaces its skills as `/plugin-name:skill`, and can be loaded from a marketplace, from a local path with `--plugin-dir`, or from the user’s skills directory ([Anthropic 2026t](#ref-claude_code_plugins)). [Plugins deep dive](../chapters/agent-customization.llms.md#sec-ai-plugins-deep-dive) dissects the bundle, and [how config reaches a machine](../chapters/agent-customization.llms.md#sec-ai-config-install) describes how the lab’s own plugin reaches a machine.
 
 #### MCP servers (documented)
 
-An MCP server adds tools to the registry without changing the loop. By default the harness lists only the server’s tool *names* at startup and defers the full schemas, loading each on demand through `ToolSearch`; `ENABLE_TOOL_SEARCH=false` loads everything up front ([Anthropic 2026u](#ref-claude_code_context_window)). That deferral is why a session can carry dozens of servers without paying their schema cost on every turn. Two dedicated tools, `ListMcpResourcesTool` and `ReadMcpResourceTool`, expose server resources as well as tools ([Anthropic 2026y](#ref-claude_code_tools_reference)). [MCP server setup](../chapters/agent-customization.llms.md#sec-ai-mcp-server-setup) covers registration and its failure modes.
+An MCP server adds tools to the registry without changing the loop. By default the harness lists only the server’s tool *names* at startup and defers the full schemas, loading each on demand through `ToolSearch`; `ENABLE_TOOL_SEARCH=false` loads everything up front ([Anthropic 2026w](#ref-claude_code_context_window)). That deferral is why a session can carry dozens of servers without paying their schema cost on every turn. Two dedicated tools, `ListMcpResourcesTool` and `ReadMcpResourceTool`, expose server resources as well as tools ([Anthropic 2026aa](#ref-claude_code_tools_reference)). [MCP server setup](../chapters/agent-customization.llms.md#sec-ai-mcp-server-setup) covers registration and its failure modes.
 
 #### Memory and `CLAUDE.md` loading (documented)
 
-Two mechanisms carry knowledge across sessions ([Anthropic 2026x](#ref-claude_code_memory)):
+Two mechanisms carry knowledge across sessions ([Anthropic 2026z](#ref-claude_code_memory)):
 
 - **`CLAUDE.md` files**, loaded in a fixed order: managed policy, then `~/.claude/CLAUDE.md`, then every `CLAUDE.md` and `CLAUDE.local.md` from the filesystem root down to the working directory, concatenated rather than overriding each other. Files in subdirectories load on demand when the model reads files there. `@path` imports expand at launch to a depth of four, `.claude/rules/*.md` files load alongside, with `paths:` front matter scoping a rule to matching files, and block-level HTML comments are stripped before injection. A file over `4 MiB` is skipped.
 - **Auto memory**, notes the model writes itself under `~/.claude/projects/<project>/memory/`, of which the first 200 lines or 25 KB of `MEMORY.md` load every session and topic files load on demand.
@@ -145,7 +179,7 @@ Two mechanisms carry knowledge across sessions ([Anthropic 2026x](#ref-claude_co
 
 #### Compaction (documented)
 
-When the context window nears its limit, the harness summarizes the conversation and replaces it; `/compact` does the same on demand, optionally with a focus instruction, and `/autocompact <tokens>` moves the threshold ([Anthropic 2026u](#ref-claude_code_context_window)). What survives is specific:
+When the context window nears its limit, the harness summarizes the conversation and replaces it; `/compact` does the same on demand, optionally with a focus instruction, and `/autocompact <tokens>` moves the threshold ([Anthropic 2026w](#ref-claude_code_context_window)). What survives is specific:
 
 - the system prompt and output style are unchanged, because they were never in message history;
 - project-root `CLAUDE.md`, rules without a `paths:` field, auto memory, and a plan-mode plan are re-injected from disk;
@@ -153,7 +187,7 @@ When the context window nears its limit, the harness summarizes the conversation
 - up to five recently modified files are re-read;
 - invoked skill bodies are re-injected, capped at 5,000 tokens each and 25,000 total;
 - context that hooks added earlier is summarized away, unless a `SessionStart` hook matching the `compact` source re-adds it;
-- the skill *listing* is not reloaded ([Anthropic 2026u](#ref-claude_code_context_window)).
+- the skill *listing* is not reloaded ([Anthropic 2026w](#ref-claude_code_context_window)).
 
 The lab’s `compress-session` practice exists because the automatic summary guesses what matters; running `/compact` with a focus before it triggers keeps that choice with you.
 
@@ -790,7 +824,7 @@ The repository named after Claude Code, second in the table only to `skills` by 
 The repository holds five things the lab can use:
 
 - **`CHANGELOG.md`** is the only authoritative per-release changelog. It is the file to read when a behavior changes between versions, and its entries are detailed enough to diagnose regressions (the entry for 2.1.266, for example, names the gateway environment variable, `CLAUDE_CODE_USE_GATEWAY`, that 2.1.265 had started honoring on its own, and says no configuration change is needed; read 2026-09-09) ([Anthropic 2026f](#ref-anthropics_claude_code_changelog)).
-- **`plugins/`** holds thirteen first-party plugins and a `.claude-plugin/marketplace.json` that publishes them as the `claude-code-plugins` marketplace ([Anthropic 2026o](#ref-anthropics_claude_code_plugins_readme)). Several map directly onto lab workflows: `code-review` (five parallel review agents with confidence scoring), `pr-review-toolkit` (six specialist review agents, including a `silent-failure-hunter`), `commit-commands`, `hookify` (generates hooks from observed misbehavior), `ralph-wiggum` (a `Stop`-hook loop that keeps re-running one task), and `security-guidance` (a `PreToolUse` hook watching nine patterns). `plugin-dev` is the toolkit for writing more.
+- **`plugins/`** holds thirteen first-party plugins and a `.claude-plugin/marketplace.json` that publishes them as the `claude-code-plugins` marketplace ([Anthropic 2026p](#ref-anthropics_claude_code_plugins_readme)). Several map directly onto lab workflows: `code-review` (five parallel review agents with confidence scoring), `pr-review-toolkit` (six specialist review agents, including a `silent-failure-hunter`), `commit-commands`, `hookify` (generates hooks from observed misbehavior), `ralph-wiggum` (a `Stop`-hook loop that keeps re-running one task), and `security-guidance` (a `PreToolUse` hook watching nine patterns). `plugin-dev` is the toolkit for writing more.
 - **`examples/`** holds the reference configurations that the documentation describes in prose: `settings/` (strict, lax, and bash-sandbox profiles), `hooks/` (a Bash command validation hook), `mdm/` (managed settings for macOS and Windows fleets), and `gateway/` (AWS and GCP gateway setups).
 - **`.devcontainer/`** is the container Anthropic uses for its own sandboxed sessions, including `init-firewall.sh`, the allowlist firewall that [firewall configuration](../chapters/coding-agents.llms.md#sec-ai-firewall) discusses.
 - **`.github/workflows/`** is a live example of running the action against a very large issue tracker: `claude.yml` (the `@claude` agent), `claude-issue-triage.yml`, `claude-dedupe-issues.yml`, and `auto-close-duplicates.yml`, with the TypeScript behind them in `scripts/`. The repository had 12,563 open issues (measured 2026-09-09), which is why that automation exists.
@@ -801,7 +835,7 @@ So the honest description is “issue tracker plus plugins plus example configs�
 
 `claude-code-action` is genuinely open source (MIT), and the whole action is readable: `src/` holds the entry points, the GitHub client, an in-process MCP server for file operations, and the two execution modes; `test/` has a test file per concern (comment sanitizing, branch validation, permissions, public-comment redaction, SSH signing) ([Anthropic 2026g](#ref-anthropics_claude_code_action_repo)).
 
-[Claude Code Action review](../chapters/pr-workflow-with-agents.llms.md#sec-ai-claude-code-action-review) already explains that review is a prompt, not a separate action. The general form of that observation is the mode detector in `src/modes/detector.ts`, documented in `docs/experimental.md` ([Anthropic 2026t](#ref-anthropics_claude_code_action_experimental)):
+[Claude Code Action review](../chapters/pr-workflow-with-agents.llms.md#sec-ai-claude-code-action-review) already explains that review is a prompt, not a separate action. The general form of that observation is the mode detector in `src/modes/detector.ts`, documented in `docs/experimental.md` ([Anthropic 2026v](#ref-anthropics_claude_code_action_experimental)):
 
 1.  If the workflow supplies a `prompt` input, the action runs in **agent mode**: it executes the prompt directly on whatever event fired, which is how scheduled maintenance, issue triage, and one-shot review work.
 2.  If there is no `prompt` but the event carries an `@claude` mention, an assignment, or the trigger label, it runs in **tag mode**: it posts a tracking comment with progress checkboxes and runs an open-ended session that can push code.
@@ -869,29 +903,33 @@ Anthropic. 2026l. *Anthropics/Sandbox-Runtime*. Software. <https://github.com/an
 
 Anthropic. 2026m. *Anthropics/Skills*. Software. <https://github.com/anthropics/skills>.
 
-Anthropic. 2026n. *Claude Code Changelog*. Documentation. <https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md>.
+Anthropic. 2026n. *Choose a Permission Mode*. Documentation. <https://code.claude.com/docs/en/permission-modes>.
 
-Anthropic. 2026o. *Claude Code Plugins*. Documentation. <https://github.com/anthropics/claude-code/blob/main/plugins/README.md>.
+Anthropic. 2026o. *Claude Code Changelog*. Documentation. <https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md>.
 
-Anthropic. 2026p. *Configure Permissions*. Documentation. <https://code.claude.com/docs/en/permissions>.
+Anthropic. 2026p. *Claude Code Plugins*. Documentation. <https://github.com/anthropics/claude-code/blob/main/plugins/README.md>.
 
-Anthropic. 2026q. *Create Custom Subagents*. Documentation. <https://code.claude.com/docs/en/sub-agents>.
+Anthropic. 2026q. *Configure Auto Mode*. Documentation. <https://code.claude.com/docs/en/auto-mode-config>.
 
-Anthropic. 2026r. *Create Plugins*. Documentation. <https://code.claude.com/docs/en/plugins>.
+Anthropic. 2026r. *Configure Permissions*. Documentation. <https://code.claude.com/docs/en/permissions>.
 
-Anthropic. 2026s. *Environment Variables*. Documentation. <https://code.claude.com/docs/en/env-vars>.
+Anthropic. 2026s. *Create Custom Subagents*. Documentation. <https://code.claude.com/docs/en/sub-agents>.
 
-Anthropic. 2026t. *Experimental Features*. Documentation. <https://github.com/anthropics/claude-code-action/blob/main/docs/experimental.md>.
+Anthropic. 2026t. *Create Plugins*. Documentation. <https://code.claude.com/docs/en/plugins>.
 
-Anthropic. 2026u. *Explore the Context Window*. Documentation. <https://code.claude.com/docs/en/context-window>.
+Anthropic. 2026u. *Environment Variables*. Documentation. <https://code.claude.com/docs/en/env-vars>.
 
-Anthropic. 2026v. *Hooks Reference*. Documentation. <https://code.claude.com/docs/en/hooks>.
+Anthropic. 2026v. *Experimental Features*. Documentation. <https://github.com/anthropics/claude-code-action/blob/main/docs/experimental.md>.
 
-Anthropic. 2026w. *How Claude Code Works*. Documentation. <https://code.claude.com/docs/en/how-claude-code-works>.
+Anthropic. 2026w. *Explore the Context Window*. Documentation. <https://code.claude.com/docs/en/context-window>.
 
-Anthropic. 2026x. *How Claude Remembers Your Project*. Documentation. <https://code.claude.com/docs/en/memory>.
+Anthropic. 2026x. *Hooks Reference*. Documentation. <https://code.claude.com/docs/en/hooks>.
 
-Anthropic. 2026y. *Tools Reference*. Documentation. <https://code.claude.com/docs/en/tools-reference>.
+Anthropic. 2026y. *How Claude Code Works*. Documentation. <https://code.claude.com/docs/en/how-claude-code-works>.
+
+Anthropic. 2026z. *How Claude Remembers Your Project*. Documentation. <https://code.claude.com/docs/en/memory>.
+
+Anthropic. 2026aa. *Tools Reference*. Documentation. <https://code.claude.com/docs/en/tools-reference>.
 
 anthropics/claude-code contributors. 2026a. *\[BUG\] V2.1.150 Adds Server-Side System Prompt Injection via Tengu_heron_brook Feature Flag*. GitHub issue \#62061, anthropics/claude-code. <https://github.com/anthropics/claude-code/issues/62061>.
 
