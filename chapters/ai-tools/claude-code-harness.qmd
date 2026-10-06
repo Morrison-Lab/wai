@@ -222,6 +222,82 @@ the `heron_brook` thread cites a separate report that GrowthBook flags can overr
 so even this layer may have a remotely controlled input.
 That report is cited second-hand and was not verified for this section.
 
+#### Worked example: letting auto mode merge under `mwc` {#sec-ai-auto-mode-mwc}
+
+The lab grants merge authority one session at a time,
+with the `mwc` ("merge when confident") grant from
+[ai-config](https://github.com/Morrison-Lab/ai-config/blob/main/skills/mwc/SKILL.md).
+In auto mode,
+the classifier reviews a `gh pr merge` like any other action.
+On 2026-10-05 it blocked the merge of
+[Morrison-Lab/mds#140](https://github.com/Morrison-Lab/mds/pull/140)
+as "Merge Without Review",
+although all of these held:
+
+- the maintainer had typed `mwc` earlier in the session;
+- CI was green;
+- the lab's fully-clean check had passed on the pull request's head commit.
+
+Three findings explain the block and the fix
+(measured 2026-10-06).
+
+**A one-word grant is not an approval the classifier can match.**
+An approval stated in conversation clears a block
+only when it names the action and the specific thing that makes it dangerous,
+and it covers one action unless it was granted as standing;
+to approve a routine pattern,
+the documented route is an `autoMode.allow` rule [@claude_code_permission_modes].
+A bare `mwc` names neither the merge nor the pull request.
+
+**The classifier does not read `autoMode` from a repository.**
+It reads `autoMode` from user settings (`~/.claude/settings.json`),
+managed settings,
+and `--settings` or the Agent SDK,
+but not from `.claude/settings.json` or `.claude/settings.local.json`,
+so that a checked-in repository cannot add its own allow rules [@claude_code_auto_mode_config].
+[Morrison-Lab/mds#104](https://github.com/Morrison-Lab/mds/pull/104)
+had put an `mwc` rule in the repository's `.claude/settings.json`,
+where it never applied;
+[Morrison-Lab/mds#165](https://github.com/Morrison-Lab/mds/pull/165) removes it.
+The rule belongs in user settings.
+A cloud session has no user settings file,
+so there the rule would have to come from managed settings or `--settings`.
+
+**A `permissions.allow` rule is the wrong fix.**
+A rule such as `Bash(gh pr merge:*)` approves every merge before the classifier sees it,
+and auto mode keeps narrow rules like it in effect;
+it drops only broad rules that grant arbitrary code execution [@claude_code_permission_modes].
+That would leave only the ai-config merge hooks between an `mwc` grant and a merge,
+and in Claude Code neither of them checks the pull request:
+
+- `no-unauthorized-merge.py` checks only that the session holds an `mwc` grant;
+- `enforce-mwc-review-gate.py`, the hook that does check for a clean review on the head commit,
+  is wired up only for Antigravity, so it never runs in Claude Code.
+
+The classifier reads the conversation,
+so it can still refuse a merge over a failing check or an open review finding.
+Keeping it in the path costs an occasional manual approval,
+which is cheaper than an unreviewed merge.
+
+The rule now in the maintainer's `~/.claude/settings.json`
+names the grant's forms and the evidence to look for,
+after the built-in rules (`$defaults`):
+
+```json
+"autoMode": {
+  "allow": [
+    "$defaults",
+    "Merging a pull request in a Morrison-Lab repository with `gh pr merge`, when all of these hold: (1) earlier in this session the user granted merge-when-confident, which they may do with the bare word `mwc`, `/mwc`, `maw`, \"merge when confident\" or \"merge at will\"; (2) in this session, `check-pr-fully-clean.py` reported that PR FULLY CLEAN on its current head commit, meaning CI green, the automated review verdict clean and no unresolved review threads; (3) the merge command pins that same head SHA with `--match-head-commit`. Block it if any of these is missing, or if anything after the clean check (a new push, a new review finding) suggests the PR may no longer be clean."
+  ]
+}
+```
+
+The rule is a prose description the classifier weighs,
+not a hard gate,
+and it had not yet been tested on a merge when this section was written.
+If the classifier still blocks a merge,
+leave auto mode and answer the permission prompt [@claude_code_permission_modes].
+
 #### Hooks (documented)
 
 Hooks are the harness's event system:
