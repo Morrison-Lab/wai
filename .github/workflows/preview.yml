@@ -1,238 +1,57 @@
-name: Quarto Preview
+# Build half of the PR-preview family: renders the site in the (possibly fork)
+# PR context and uploads it + PR metadata as an artifact. The deploy half
+# (preview-deploy.yml) publishes it to gh-pages. This job is read-only
+# (contents: read) -- it must never write to the base repo.
+#
+# IMPORTANT: keep this workflow's `name:` in sync with the `workflows:` list in
+# preview-deploy.yml -- that's how the deploy half finds this run.
+#
+# Do NOT name a `concurrency:` group `gh-pages` in this caller (deadlock,
+# https://github.com/Morrison-Lab/gha/issues/809). The reusable workflow
+# already cancels a superseded preview build for the same ref.
+name: Quarto Preview Build
 
 on:
   pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - closed
-      - labeled
-      - unlabeled
-
-# Cancel an in-progress preview build when a newer event supersedes it on
-# the same ref — otherwise a fresh push queues behind the stale build and
-# the up-to-date preview is delayed until the obsolete one finishes (see
-# d-morrison/rme#812). `github.ref` is stable across a PR's events, so all
-# of a PR's preview runs share one group.
-concurrency:
-  group: preview-${{ github.ref }}
-  cancel-in-progress: true
-
-# This workflow only *builds* the preview; it never touches `gh-pages`. On a
-# `pull_request` event from a fork GitHub hands out a read-only `GITHUB_TOKEN`
-# no matter what `permissions:` asks for, so deploying from here 403s for any
-# external contributor. The rendered site is uploaded as an artifact instead,
-# and `preview-deploy.yml` (a `workflow_run` workflow, which does get a write
-# token) publishes it.
-permissions:
-  contents: read
+    types: [opened, reopened, synchronize, labeled, unlabeled, closed]
 
 jobs:
-  # Records what the deploy workflow should do. Split out from `build` so that
-  # a `closed` event can request preview removal without paying for a full
-  # Quarto render first, and so the label filter lives in exactly one place —
-  # `build` inherits it via `needs`, since a skipped dependency skips dependents.
-  metadata:
-    if: |
-      (github.event.action != 'labeled' && github.event.action != 'unlabeled') ||
-      contains(fromJson('["revealjs","pdf","docx","no-preview-highlights","clear-freezer"]'), github.event.label.name)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Record preview metadata
-        env:
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          EVENT_ACTION: ${{ github.event.action }}
-        run: |
-          mkdir -p preview-metadata
-          printf '%s\n' "$PR_NUMBER" > preview-metadata/pr-number
-          if [ "$EVENT_ACTION" = 'closed' ]; then
-            printf 'remove\n' > preview-metadata/deployment-action
-          else
-            printf 'deploy\n' > preview-metadata/deployment-action
-          fi
-
-      - name: Upload preview metadata
-        uses: actions/upload-artifact@v7
-        with:
-          name: pr-preview-metadata
-          path: preview-metadata/
-          if-no-files-found: error
-          retention-days: 1
-
   build:
-    needs: metadata
-    if: github.event.action != 'closed'
-    runs-on: ubuntu-latest
-    env:
-      TZ: America/Los_Angeles
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0  # Fetch full history for git diff
-          submodules: recursive
-
-      - name: Set up Quarto
-        uses: quarto-dev/quarto-actions/setup@v2
-        with:
-          tinytex: true
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
-      - uses: r-lib/actions/setup-r@v2
-        with:
-          use-public-rspm: true
-
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          packages: |
-            any::knitr
-            any::rmarkdown
-            any::tibble
-
-      - name: Set timezone to Pacific Time
-        run: echo "TZ=America/Los_Angeles" >> $GITHUB_ENV
-
-      - name: Restore Quarto freezer
-        if: ${{ !contains(github.event.pull_request.labels.*.name, 'clear-freezer') }}
-        id: quarto-freezer-cache
-        uses: actions/cache/restore@v6
-        with:
-          path: _freeze
-          key: ${{ runner.os }}-quarto-freezer-${{ github.event.pull_request.head.sha }}-${{ github.run_attempt }}
-          restore-keys: |
-            ${{ runner.os }}-quarto-freezer-${{ github.event.pull_request.head.sha }}-
-            ${{ runner.os }}-quarto-freezer-main-
-            ${{ runner.os }}-quarto-freezer-
-
-      # By default, clear the restored freezer only for pages whose own source
-      # or included subfiles changed in this PR, so those pages re-execute
-      # while everything else reuses its cached freeze. Quarto's `freeze: auto`
-      # only re-runs a page when its *own* file hash changes, so without this a
-      # page that pulls in a changed `{{< include >}}` subfile would render
-      # stale. Skipped when the 'clear-freezer' label is set, since that path
-      # already skips the restore above and rebuilds the whole freezer.
-      - name: Clear freezer for changed pages
-        if: ${{ !contains(github.event.pull_request.labels.*.name, 'clear-freezer') }}
-        run: python3 .github/scripts/clear-changed-freezer.py
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-
-      - name: Render HTML
-        uses: quarto-dev/quarto-actions/render@v2
-        with:
-          to: html
-
-      # Detect which chapters have changed and optionally disable highlighting
-      # based on the 'no-preview-highlights' PR label
-      - name: Detect changed chapters (based on rendered files)
-        run: python3 .github/scripts/detect-changed-chapters.py
-        env:
-          HTML_DIR: ./_site
-          # Set to 'true' if PR has 'no-preview-highlights' label
-          DISABLE_PREVIEW_HIGHLIGHTS: ${{ contains(github.event.pull_request.labels.*.name, 'no-preview-highlights') }}
-
-      - name: Inject preview metadata
-        if: env.PREVIEW_SHOW_HIGHLIGHTS == 'true'
-        run: python3 .github/scripts/inject-preview-metadata.py
-
-      - name: Re-render with metadata
-        if: env.PREVIEW_SHOW_HIGHLIGHTS == 'true'
-        uses: quarto-dev/quarto-actions/render@v2
-        with:
-          to: html
-
-      - name: Collect QMD files for optional renders
-        id: optional-render-files
-        run: |
-          files=()
-          if [ -f index.qmd ]; then
-            files+=(index.qmd)
-          fi
-          if [ -d chapters ]; then
-            while IFS= read -r chapter_file; do
-              files+=("$chapter_file")
-            done < <(find chapters -maxdepth 1 -type f -name '*.qmd' | sort)
-          fi
-          if [ ${#files[@]} -eq 0 ]; then
-            echo "has_files=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          {
-            echo "files<<EOF"
-            printf '%s\n' "${files[@]}"
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
-          echo "has_files=true" >> "$GITHUB_OUTPUT"
-
-      - name: Render Reveal.js slides
-        if: contains(github.event.pull_request.labels.*.name, 'revealjs') && steps.optional-render-files.outputs.has_files == 'true'
-        run: |
-          while IFS= read -r file; do
-            [ -n "$file" ] || continue
-            echo "Rendering Reveal.js for $file"
-            quarto render "$file" --to revealjs
-          done <<< "${{ steps.optional-render-files.outputs.files }}"
-
-      - name: Render PDF
-        if: contains(github.event.pull_request.labels.*.name, 'pdf') && steps.optional-render-files.outputs.has_files == 'true'
-        run: |
-          while IFS= read -r file; do
-            [ -n "$file" ] || continue
-            echo "Rendering PDF for $file"
-            quarto render "$file" --to pdf
-          done <<< "${{ steps.optional-render-files.outputs.files }}"
-
-      - name: Render DOCX
-        if: contains(github.event.pull_request.labels.*.name, 'docx') && steps.optional-render-files.outputs.has_files == 'true'
-        run: |
-          while IFS= read -r file; do
-            [ -n "$file" ] || continue
-            echo "Rendering DOCX for $file"
-            quarto render "$file" --to docx
-          done <<< "${{ steps.optional-render-files.outputs.files }}"
-
-      - name: Install python-docx for DOCX comparison
-        if: contains(github.event.pull_request.labels.*.name, 'docx')
-        run: pip install python-docx
-
-      - name: Highlight HTML content changes
-        if: env.PREVIEW_SHOW_HIGHLIGHTS == 'true'
-        run: |
-          echo "Changed chapters:"
-          echo "${{ env.PREVIEW_CHANGED_CHAPTERS }}"
-          python3 .github/scripts/highlight-html-changes.py
-        env:
-          HTML_DIR: ./_site
-          PREVIEW_CHANGED_CHAPTERS: ${{ env.PREVIEW_CHANGED_CHAPTERS }}
-
-      - name: Create DOCX with tracked changes
-        if: contains(github.event.pull_request.labels.*.name, 'docx')
-        run: python3 .github/scripts/create-docx-tracked-changes.py
-        env:
-          DOCX_DIR: ./_site
-
-      - name: Add home page banner
-        run: python3 .github/scripts/add-home-banner.py
-        env:
-          HTML_DIR: ./_site
-          PREVIEW_CHANGED_CHAPTERS: ${{ env.PREVIEW_CHANGED_CHAPTERS }}
-
-      - name: Save Quarto freezer
-        uses: actions/cache/save@v6
-        with:
-          path: _freeze
-          key: ${{ runner.os }}-quarto-freezer-${{ github.event.pull_request.head.sha }}-${{ github.run_attempt }}
-
-      - name: Upload rendered site
-        uses: actions/upload-artifact@v7
-        with:
-          name: pr-preview-site
-          path: _site/
-          # Quarto writes dotfiles such as `.nojekyll` into `_site`, and the
-          # default upload skips hidden files.
-          include-hidden-files: true
-          if-no-files-found: error
-          retention-days: 1
+    permissions:
+      contents: read
+    uses: Morrison-Lab/gha/.github/workflows/preview.yml@v3
+    with:
+      # Non-renv repo: install the packages the pages' chunks load.
+      use-renv: false
+      r-packages: |
+        any::knitr
+        any::rmarkdown
+        any::tibble
+      # This repo has a DESCRIPTION for lintr and tooling, but pages do not
+      # call its functions, and the old workflow never installed it.
+      install-package: false
+      apt-packages: ''
+      setup-chrome: false
+      # The default render below includes the PDF format, so TinyTeX is always needed.
+      tinytex: true
+      # `_quarto.yml` already selects the `website` profile by default.
+      render-profile: ''
+      # One bare `quarto render` of every format the project declares (html,
+      # revealjs, pdf, docx), so slide decks are built in every preview. Never
+      # leave this empty: empty selects a legacy branch that renders html plus
+      # only the formats requested by `preview:*` labels.
+      formats: default
+      timezone: America/Los_Angeles
+      # Rebuild when this label is added or removed (it toggles highlighting below).
+      extra-preview-labels: '["no-preview-highlights"]'
+      # Compare against the published render: banner on the home page naming the
+      # changed pages, highlighted changed text, and Word files with tracked
+      # changes. Highlighting is off while the PR carries the
+      # `no-preview-highlights` label.
+      changed-chapters-banner: true
+      highlight-changes: ${{ !contains(github.event.pull_request.labels.*.name, 'no-preview-highlights') }}
+      docx-tracked-changes: true
+      # The home page plus chapters/, and the slide decks that sit beside them
+      # (gha's default `chapters/*.html` and `chapters/*.docx` would miss index).
+      changed-chapters-glob: '**/*.html'
+      docx-tracked-changes-glob: '**/*.docx'
