@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-10 12:05:21 (PDT)
+Last modified: 2026-10-10 12:21:20 (PDT)
 
 This site collects the UCD-SERG lab’s notes on working responsibly and effectively with AI coding assistants: what they are, how to use them, and the policies lab members follow when using them. It was migrated out of the [UCD-SERG Lab Manual](https://ucd-serg.github.io/lab-manual/)’s “Working with AI” chapter, which had grown large enough to deserve a dedicated site. For the lab’s broader coding, reproducibility, and collaboration conventions, see the lab manual itself.
 
@@ -38,7 +38,7 @@ The notes are available in multiple formats:
 
 This website is built with [Quarto](https://quarto.org/), an open-source scientific and technical publishing system, from the [UCD-SERG `qwt` (Quarto Website Template)](https://github.com/Morrison-Lab/qwt).
 
-That template’s structure comes from the [UCD-SERG Lab Manual](https://ucd-serg.github.io/lab-manual/), which is in turn adapted from the [Benjamin-Chung Lab Manual](https://jadebc.github.io/lab-manual/index.html). This site’s own content also began in the UCD-SERG Lab Manual, in its “Working with AI” chapter.
+That template’s structure comes from the [UCD-SERG Lab Manual](https://ucd-serg.github.io/lab-manual/), which is in turn adapted from the [Benjamin-Chung Lab Manual](https://jadebc.github.io/lab-manual/index.html). This site’s own content also began as the “Working with AI” chapter of the UCD-SERG Lab Manual.
 
 ## 3 Building the website
 

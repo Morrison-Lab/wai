@@ -18,7 +18,7 @@
     "href": "index.html#about-this-website",
     "title": "Working with AI",
     "section": "2 About this website",
-    "text": "2 About this website\nThis website is built with Quarto, an open-source scientific and technical publishing system, from the UCD-SERG qwt (Quarto Website Template).\nThat template’s structure comes from the UCD-SERG Lab Manual, which is in turn adapted from the Benjamin-Chung Lab Manual. This site’s own content also began in the UCD-SERG Lab Manual, in its “Working with AI” chapter."
+    "text": "2 About this website\nThis website is built with Quarto, an open-source scientific and technical publishing system, from the UCD-SERG qwt (Quarto Website Template).\nThat template’s structure comes from the UCD-SERG Lab Manual, which is in turn adapted from the Benjamin-Chung Lab Manual. This site’s own content also began as the “Working with AI” chapter of the UCD-SERG Lab Manual."
   },
   {
     "objectID": "index.html#building-the-website",
