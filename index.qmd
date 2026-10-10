@@ -86,8 +86,8 @@ That template's structure comes from the
 [UCD-SERG Lab Manual](https://ucd-serg.github.io/lab-manual/),
 which is in turn adapted from the
 [Benjamin-Chung Lab Manual](https://jadebc.github.io/lab-manual/index.html).
-This site's own content also began in the UCD-SERG Lab Manual,
-in its "Working with AI" chapter.
+This site's own content also began as
+the "Working with AI" chapter of the UCD-SERG Lab Manual.
 
 ## Building the website
 
