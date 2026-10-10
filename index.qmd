@@ -82,6 +82,13 @@ The notes are available in multiple formats:
 This website is built with [Quarto](https://quarto.org/), an open-source scientific and technical publishing system, from the
 [UCD-SERG `qwt` (Quarto Website Template)](https://github.com/Morrison-Lab/qwt).
 
+That template's structure comes from the
+[UCD-SERG Lab Manual](https://ucd-serg.github.io/lab-manual/),
+which is in turn adapted from the
+[Benjamin-Chung Lab Manual](https://jadebc.github.io/lab-manual/index.html).
+This site's own content also began in the UCD-SERG Lab Manual,
+in its "Working with AI" chapter.
+
 ## Building the website
 
 To render the website locally:
