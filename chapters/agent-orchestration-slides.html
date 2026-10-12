@@ -262,7 +262,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-10-11 00:50:44 (PDT)</p>
+  <p class="date">Last modified: 2026-10-12 00:37:16 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -306,7 +306,7 @@
 <p>Our lab already orchestrates agents, using <a href="https://www.anthropic.com/claude-code">Claude Code</a> plus the conventions in our <a href="https://github.com/Morrison-Lab/ai-config"><code>ai-config</code></a> repository. The pieces are:</p>
 <ul>
 <li><strong>Subagents</strong>: a session spawns focused helper agents for search, review, or verification. Each has its own context window and reports its result back to the main session.</li>
-<li><strong>The <code>Workflow</code> fan-out tool</strong>: a deterministic script that spreads work across many agents in parallel (for example, one reviewer per dimension of a pull request), with token budgets and verification stages built in.</li>
+<li><strong>The <code>Workflow</code> fan-out tool</strong>: a deterministic script that spreads work across many agents in parallel (for example, one reviewer per dimension of a pull request), with token budgets and verification stages built in (see Claude Code’s <a href="https://code.claude.com/docs/en/workflows">dynamic workflows documentation</a>).</li>
 <li><strong>Git worktrees</strong>: isolated checkouts that let parallel sessions edit a repository without clobbering each other.</li>
 <li><strong>Hooks and permissions</strong>: guardrails that gate risky actions, scope tool access, and enforce lab rules mechanically.</li>
 <li><strong>Reusable GitHub Actions workflows</strong> (in <a href="https://github.com/Morrison-Lab/gha"><code>Morrison-Lab/gha</code></a>): the automated review-and-merge workflow for pull requests.</li>

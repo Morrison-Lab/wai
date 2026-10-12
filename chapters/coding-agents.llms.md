@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-11 00:50:44 (PDT)
+Last modified: 2026-10-12 00:37:16 (PDT)
 
 We recommend working with **[AI coding agents](https://github.com/features/copilot/agents)** to [help you code](https://en.wikipedia.org/wiki/AI-assisted_software_development).
 
@@ -235,7 +235,7 @@ While modern AI agents demonstrate impressive capabilities, they remain fundamen
 
 - **Human dependency**: These agents require human developers to: review their work, provide direction, validate correctness, and make final decisions about their outputs.
 
-- **No recursive self-improvement**: Current AI agents cannot fundamentally redesign themselves or create more advanced versions of themselves autonomously. Any improvements to AI systems still require human researchers and engineers.
+- **No recursive self-improvement**: Current AI agents cannot fundamentally redesign themselves or create more advanced versions of themselves autonomously. Any improvements to AI systems still require human researchers and engineers. Anthropic’s [When AI builds itself](https://www.anthropic.com/institute/recursive-self-improvement) says it is not there yet, while describing how much of its own AI development it already delegates to AI systems, and argues that recursive self-improvement could come sooner than institutions are prepared for.
 
 - **Controlled development environment**: AI coding agents work in sandboxed environments with explicit permissions and constraints. They cannot independently acquire resources, modify their own constraints, or operate without human authorization.
 

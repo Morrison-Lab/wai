@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-11 00:50:44 (PDT)
+Last modified: 2026-10-12 00:37:16 (PDT)
 
 Coding agents adapt to a project through configuration files, instruction prompts, tool definitions, and plugins. This chapter explains how to configure agent environments, install project-level instructions, author and share Agent Skills (`SKILL.md`), connect external capabilities via the Model Context Protocol (MCP), structure agent plugins, and use advanced developer extensions like Magic Context, Conductor, and the Antigravity Python SDK.
 
@@ -1822,7 +1822,7 @@ A leading `*.` matches subdomains only:
 >
 > Claude Code on the web (and the cloud environments it relies on) is a research-preview feature, available to Pro, Max, and Team users (and Enterprise users with eligible seats). Availability and behavior may change.
 
-For details, see the [Claude Code on the web documentation](https://code.claude.com/docs/en/claude-code-on-the-web) and the [slash command reference](https://code.claude.com/docs/en/commands).
+For details, see the [Claude Code on the web documentation](https://code.claude.com/docs/en/claude-code-on-the-web) and the [slash command reference](https://code.claude.com/docs/en/commands). The same documentation covers [auto-fixing pull requests](https://code.claude.com/docs/en/claude-code-on-the-web#auto-fix-pull-requests), where a cloud session watches a pull request’s failing checks and review comments, pushes the fixes it is confident in, and asks before acting on ambiguous requests.
 
 #### Network access for local sessions
 

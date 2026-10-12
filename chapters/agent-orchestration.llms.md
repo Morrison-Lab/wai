@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-11 00:50:44 (PDT)
+Last modified: 2026-10-12 00:37:16 (PDT)
 
 A single coding agent works one problem at a time. *Orchestration* is the step up from that: running several agents at once and coordinating their work. This chapter explains when orchestration is worth the added cost, describes what our lab already uses for it, evaluates three outside “agent orchestrator” projects that lab members have asked about, and surveys the general-purpose orchestration frameworks a lab could build its own agent systems on.
 
@@ -27,7 +27,7 @@ Orchestration is not free. Every extra agent has its own context window and spen
 Our lab already orchestrates agents, using [Claude Code](https://www.anthropic.com/claude-code) plus the conventions in our [`ai-config`](https://github.com/Morrison-Lab/ai-config) repository. The pieces are:
 
 - **Subagents**: a session spawns focused helper agents for search, review, or verification. Each has its own context window and reports its result back to the main session.
-- **The `Workflow` fan-out tool**: a deterministic script that spreads work across many agents in parallel (for example, one reviewer per dimension of a pull request), with token budgets and verification stages built in.
+- **The `Workflow` fan-out tool**: a deterministic script that spreads work across many agents in parallel (for example, one reviewer per dimension of a pull request), with token budgets and verification stages built in (see Claude Code’s [dynamic workflows documentation](https://code.claude.com/docs/en/workflows)).
 - **Git worktrees**: isolated checkouts that let parallel sessions edit a repository without clobbering each other.
 - **Hooks and permissions**: guardrails that gate risky actions, scope tool access, and enforce lab rules mechanically.
 - **Reusable GitHub Actions workflows** (in [`Morrison-Lab/gha`](https://github.com/Morrison-Lab/gha)): the automated review-and-merge workflow for pull requests.

@@ -330,7 +330,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">Last modified: 2026-10-11 00:50:44 (PDT)</p>
+  <p class="date">Last modified: 2026-10-12 00:37:16 (PDT)</p>
 </section>
 <section class="slide level2">
 
@@ -2449,7 +2449,7 @@ connect - HTTP 400: ... Authorization header is badly formatted</code></pre>
 </div>
 </div>
 </div>
-<p>For details, see the <a href="https://code.claude.com/docs/en/claude-code-on-the-web">Claude Code on the web documentation</a> and the <a href="https://code.claude.com/docs/en/commands">slash command reference</a>.</p>
+<p>For details, see the <a href="https://code.claude.com/docs/en/claude-code-on-the-web">Claude Code on the web documentation</a> and the <a href="https://code.claude.com/docs/en/commands">slash command reference</a>. The same documentation covers <a href="https://code.claude.com/docs/en/claude-code-on-the-web#auto-fix-pull-requests">auto-fixing pull requests</a>, where a cloud session watches a pull request’s failing checks and review comments, pushes the fixes it is confident in, and asks before acting on ambiguous requests.</p>
 <h4 id="sec-claude-local-network">Network access for local sessions</h4>
 <p>Unlike a cloud session, a local Claude Code session has no network allowlist by default. What protects it is you: in the default permission mode, Claude Code asks before each shell command, apart from a built-in set of read-only commands, and before each web fetch to a domain outside a built-in set of approved documentation sites <span class="citation" data-cites="claude_code_permissions">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026e</a>)</span>. That protection lasts only while someone answers the prompts; a cloud session, which can run with no one watching, relies on its allowlist instead.</p>
 <p>A local session that runs without prompts, such as in auto mode, where a classifier reviews actions instead of you <span class="citation" data-cites="claude_code_permissions">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026e</a>)</span>, needs a network boundary of its own. Claude Code’s sandbox provides one for shell commands, but it is off by default <span class="citation" data-cites="claude_code_sandboxing">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026f</a>)</span>. To turn it on for every project, with the lab’s list, edit your user settings, <code>~/.claude/settings.json</code> <span class="citation" data-cites="claude_code_sandboxing">(<a href="#/references" role="doc-biblioref" onclick="">Anthropic 2026f</a>)</span>:</p>
