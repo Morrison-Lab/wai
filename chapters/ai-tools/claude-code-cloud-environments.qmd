@@ -131,6 +131,11 @@ Availability and behavior may change.
 For details,
 see the [Claude Code on the web documentation](https://code.claude.com/docs/en/claude-code-on-the-web)
 and the [slash command reference](https://code.claude.com/docs/en/commands).
+The same documentation covers
+[auto-fixing pull requests](https://code.claude.com/docs/en/claude-code-on-the-web#auto-fix-pull-requests),
+where a cloud session watches a pull request's failing checks and review comments,
+pushes the fixes it is confident in,
+and asks before acting on ambiguous requests.
 
 #### Network access for local sessions {#sec-claude-local-network}
 

@@ -26,7 +26,7 @@ Authoritative style guide: [UCD-SERG Lab Manual](https://ucd-serg.github.io/lab-
 - `styles.css` --- website styling; `styles-reveal.scss`, `qwt-reveal-toggle.html`, and the `revealjs-*.lua` filters drive the reveal.js slide output
 - `assets/`, `images/` --- static image and asset files (site pages, docs, CI/PR screenshots)
 - `.github/workflows/` --- CI workflow definitions
-- `.github/scripts/` --- helper scripts used by workflows
+- `.github/scripts/` --- helper scripts used by workflows (spell check, ruleset application)
 - `.github/instructions/` --- path-scoped Copilot rules that attach by file glob (see `.github/copilot-instructions.md`)
 - `CONTRIBUTING.md` --- contributor guide
 - `_site/`, `_freeze/`, `.quarto/` --- build artifacts (do not edit by hand)
