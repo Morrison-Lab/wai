@@ -70,7 +70,8 @@ The pieces are:
 - **The `Workflow` fan-out tool**:
   a deterministic script that spreads work across many agents in parallel
   (for example, one reviewer per dimension of a pull request),
-  with token budgets and verification stages built in.
+  with token budgets and verification stages built in
+  (see Claude Code's [dynamic workflows documentation](https://code.claude.com/docs/en/workflows)).
 - **Git worktrees**:
   isolated checkouts that let parallel sessions edit a repository
   without clobbering each other.
