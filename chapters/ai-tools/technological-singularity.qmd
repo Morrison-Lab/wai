@@ -44,6 +44,10 @@ and make final decisions about their outputs.
 Current AI agents cannot fundamentally redesign themselves
 or create more advanced versions of themselves autonomously.
 Any improvements to AI systems still require human researchers and engineers.
+Anthropic's [When AI builds itself](https://www.anthropic.com/institute/recursive-self-improvement)
+says it is not there yet,
+while describing how much of its own AI development it already delegates to AI systems,
+and argues that recursive self-improvement could come sooner than institutions are prepared for.
 
 - **Controlled development environment**:
 AI coding agents work in sandboxed environments
