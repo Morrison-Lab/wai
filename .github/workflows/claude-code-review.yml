@@ -43,7 +43,8 @@ jobs:
       id-token: write       # required by claude-code-action for the App-token
                             # exchange it performs even with OAuth auth
       actions: read          # lets the reviewer read CI/check-run status
-    uses: Morrison-Lab/gha/.github/workflows/claude-code-review.yml@v2
+      checks: read           # required by the @v3 callee (gha#830)
+    uses: Morrison-Lab/gha/.github/workflows/claude-code-review.yml@v3
     secrets:
       CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}   # empty; this repo uses OAuth
