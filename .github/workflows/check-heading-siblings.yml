@@ -20,4 +20,4 @@ jobs:
     uses: Morrison-Lab/gha/.github/workflows/check-heading-siblings.yml@v3
     with:
       whole-tree: ${{ github.event_name == 'workflow_dispatch' }}
-      paths-ignore: '_extensions/**,**/outtakes/**,latex-macros/**'
+      paths-ignore: '_extensions/**,**/outtakes/**,macros/**'
