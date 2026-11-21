@@ -30,7 +30,7 @@ jobs:
           use-public-rspm: true
 
       - name: Install lintr and dependencies
-        run: install.packages(c("lintr", "gh", "purrr", "withr"))
+        run: install.packages(c("lintr", "gh", "purrr", "withr"), repos = Sys.getenv("RSPM"))
         shell: Rscript {0}
 
       # No need to set options(lintr.linter_file): lintr auto-detects `.lintr.R`

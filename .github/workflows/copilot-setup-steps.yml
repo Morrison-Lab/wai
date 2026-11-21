@@ -127,7 +127,8 @@ jobs:
         if: steps.check_label.outputs.skip != 'true'
         run: |
           install.packages(
-            c("lintr", "rmarkdown")
+            c("lintr", "rmarkdown"),
+            repos = Sys.getenv("RSPM")
           )
         shell: Rscript {0}
       

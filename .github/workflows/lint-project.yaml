@@ -22,7 +22,7 @@ jobs:
           use-public-rspm: true
 
       - name: Install lintr and dependencies
-        run: install.packages(c("lintr", "withr"))
+        run: install.packages(c("lintr", "withr"), repos = Sys.getenv("RSPM"))
         shell: Rscript {0}
 
       - name: Lint root directory
