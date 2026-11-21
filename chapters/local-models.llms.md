@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-26 23:12:31 (PDT)
+Last modified: 2026-11-20 22:30:48 (PST)
 
 Cloud model providers offer state-of-the-art capability, but privacy constraints, HIPAA data handling, air-gapped environments, and cost considerations often require running models locally or offline. This chapter covers running coding agents without outside network calls, connecting open harnesses to local Ollama and OpenRouter endpoints, steering Claude Code with non-Anthropic models, and evaluating small local models for autonomous coding loops.
 
@@ -724,9 +724,9 @@ Prefer a model explicitly trained for **tool calling and agentic use** over a ge
 
 | Family | Sizes worth running locally | License | Best for |
 |----|----|----|----|
-| [Llama 3.2](https://ollama.com/library/llama3.2) | 3B (2.0 GB), 1B (1.3 GB) dense | Llama 3.2 Community License | High-speed local subagents (\\\<1\text{s}\\ action turnaround); native structured tool calling |
+| [Llama 3.2](https://ollama.com/library/llama3.2) | 3B (2.0 GB), 1B (1.3 GB) dense | Llama 3.2 Community License | High-speed local subagents ($<1\text{s}$ action turnaround); native structured tool calling |
 | [Qwen3-Coder](https://ollama.com/library/qwen3-coder) | 30B-A3B mixture-of-experts (smallest tag, 19 GB) | Apache 2.0 | General-purpose agentic coding across languages |
-| [Qwen2.5-Coder](https://ollama.com/library/qwen2.5-coder) | 1.5B, 3B, 7B, 14B, 32B dense | Apache 2.0 | Fast code generation (3B at \\\sim 45\text{ tok/s}\\). Verify tool-call formatting in your harness |
+| [Qwen2.5-Coder](https://ollama.com/library/qwen2.5-coder) | 1.5B, 3B, 7B, 14B, 32B dense | Apache 2.0 | Fast code generation (3B at $\sim 45\text{ tok/s}$). Verify tool-call formatting in your harness |
 | [Phi-4-mini](https://ollama.com/library/phi4-mini) | 3.8B (2.4 GB) dense | MIT | Strong multi-step reasoning in a compact footprint |
 | [Granite 4](https://ollama.com/library/granite4) | 7B-A1B mixture-of-experts (4.2 GB), 32B-A9B | Apache 2.0 | A small, fast tool-caller that fits where the tiers above do not |
 | [Granite 3.2](https://ollama.com/library/granite3.2) | 2B (1.5 GB) dense | Apache 2.0 | Ultra-lightweight IBM tool-calling model for single-task triage |
@@ -781,17 +781,17 @@ These are rough guides, not guarantees: VRAM headroom for context length matters
 
 When designing an interactive agent or subagent workflow, **turn turnaround time** dictates whether the tool feels responsive or unusable. In an autonomous or semi-autonomous loop, latency per action is governed by two phases:
 
-\\\text{Action Latency} = \text{Time to First Token (Prompt Ingestion)} + \text{Tool-Call Generation (Decode)}\\
+$$\text{Action Latency} = \text{Time to First Token (Prompt Ingestion)} + \text{Tool-Call Generation (Decode)}$$
 
-On consumer unified memory hardware (such as Apple M-series chips with \\\sim 100\text{ GB/s}\\ memory bandwidth), the memory bus sets a hard theoretical ceiling on token generation speeds:
+On consumer unified memory hardware (such as Apple M-series chips with $\sim 100\text{ GB/s}$ memory bandwidth), the memory bus sets a hard theoretical ceiling on token generation speeds:
 
-- **14B Dense Models (4-bit, \\\sim 9\text{ GB}\\ weights)**: Decode is physically capped at \\\sim 10\text{--}11\text{ tokens/s}\\. Generating a modest 60-token tool call takes \\6\text{ seconds}\\ on decode alone. Combined with multi-turn prompt evaluation (\\3\text{--}8\text{ seconds}\\ on long conversation histories), the total turn latency exceeds **\\10\text{--}16+\text{ seconds}\\ per action**, which is too sluggish for tight iterative tool loops.
-- **7B–8B Models (4-bit, \\\sim 4.5\text{ GB}\\ weights)**: Decode reaches \\\sim 20\text{--}25\text{ tokens/s}\\, producing action turnarounds in the **\\4\text{--}7\text{ second}\\** range.
-- **1.5B–4B Small Language Models (4-bit, \\\sim 1\text{--}2.5\text{ GB}\\ weights)**: Decode runs at **\\40\text{--}90+\text{ tokens/s}\\**, and prompt ingestion finishes in \\\<500\text{ ms}\\ with prefix cache reuse. Total action turnaround drops to **\\1\text{--}3\text{ seconds}\\**, making fast, real-time subagent action loops practical on laptop hardware.
+- **14B Dense Models (4-bit,** $\sim 9\text{ GB}$ weights): Decode is physically capped at $\sim 10\text{--}11\text{ tokens/s}$. Generating a modest 60-token tool call takes $6\text{ seconds}$ on decode alone. Combined with multi-turn prompt evaluation ($3\text{--}8\text{ seconds}$ on long conversation histories), the total turn latency exceeds $10\text{--}16+\text{ seconds}$ per action, which is too sluggish for tight iterative tool loops.
+- **7B–8B Models (4-bit,** $\sim 4.5\text{ GB}$ weights): Decode reaches $\sim 20\text{--}25\text{ tokens/s}$, producing action turnarounds in the $4\text{--}7\text{ second}$ range.
+- **1.5B–4B Small Language Models (4-bit,** $\sim 1\text{--}2.5\text{ GB}$ weights): Decode runs at $40\text{--}90+\text{ tokens/s}$, and prompt ingestion finishes in $<500\text{ ms}$ with prefix cache reuse. Total action turnaround drops to $1\text{--}3\text{ seconds}$, making fast, real-time subagent action loops practical on laptop hardware.
 
 > **NOTE:**
 >
-> In a multi-turn agent loop, the system prompt and accumulated history are resent on every iteration. Ensuring the inference server keeps the model resident in memory (`keep_alive: -1` in Ollama) and maintains prompt KV-cache reuse drops Time-To-First-Token on subsequent turns from several seconds to under \\50\text{ ms}\\.
+> In a multi-turn agent loop, the system prompt and accumulated history are resent on every iteration. Ensuring the inference server keeps the model resident in memory (`keep_alive: -1` in Ollama) and maintains prompt KV-cache reuse drops Time-To-First-Token on subsequent turns from several seconds to under $50\text{ ms}$.
 
 #### An interactive chat REPL is not an agent harness
 
@@ -813,7 +813,7 @@ An agent requires a **harness** (such as `aider` or a programmatic tool runner) 
 
 #### Baking deterministic agent presets with Modelfiles
 
-Default local model tags are configured for open-ended conversation (temperature \\0.8\\, small \\4\text{k}\\ context). For agentic tool use, bake a dedicated model tag via a `Modelfile` to enforce deterministic schema compliance:
+Default local model tags are configured for open-ended conversation (temperature $0.8$, small $4\text{k}$ context). For agentic tool use, bake a dedicated model tag via a `Modelfile` to enforce deterministic schema compliance:
 
 ``` dockerfile
 # Modelfile.llama3.2-agent

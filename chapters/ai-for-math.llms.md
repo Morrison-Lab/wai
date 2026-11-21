@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-26 23:12:31 (PDT)
+Last modified: 2026-11-20 22:30:48 (PST)
 
 This chapter collects notes on language models applied to mathematical and statistical reasoning, which is the part of an AI assistant’s work a statistics lab leans on most when a derivation, a proof step, or a numerical check is at stake.
 

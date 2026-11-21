@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-10-26 23:12:31 (PDT)
+Last modified: 2026-11-20 22:30:48 (PST)
 
 Coding agents adapt to a project through configuration files, instruction prompts, tool definitions, and plugins. This chapter explains how to configure agent environments, install project-level instructions, author and share Agent Skills (`SKILL.md`), connect external capabilities via the Model Context Protocol (MCP), structure agent plugins, and use advanced developer extensions like Magic Context, Conductor, and the Antigravity Python SDK.
 
@@ -336,7 +336,7 @@ The context and delay columns are one setting expressed twice, so changing eithe
 
 A workspace admits `ITPM` input tokens per minute. The extension advertises `context_length` minus `max_tokens` as the model’s input budget, and the delay sets how often a request can be sent. Sustained work therefore needs
 
-\\\text{input budget} \times \text{requests per minute} \le \text{ITPM}\\
+$$\text{input budget} \times \text{requests per minute} \le \text{ITPM}$$
 
 The Claude row is tuned to sit just under that ceiling. A 15,000 ms delay allows four requests per minute, and each request carries the 48,000-token input budget derived above, so a busy client draws about 192,000 against a 200,000 ITPM tier. That is roughly 96 percent of the allowance, which is why the 64,000 value looks conservative and is not.
 
