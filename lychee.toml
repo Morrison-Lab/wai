@@ -58,5 +58,9 @@ exclude = [
   # browser (redirects to Tricentis); linked from
   # chapters/ai-tools/ai-harness-landscape.qmd.
   "^https://(?:www\\.)?tabnine\\.com/?$",
+  # Cursor's site answers lychee's HTTP/2 probe with the same protocol error
+  # on every run since 2026-11-16; linked from
+  # chapters/ai-tools/useful-plugins.qmd.
+  "^https://cursor\\.com/marketplace/?$",
 ]
 
