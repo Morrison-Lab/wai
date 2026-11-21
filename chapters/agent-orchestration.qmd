@@ -274,7 +274,7 @@ If any Microsoft framework is worth watching, it is the successor.
 
 ## Microsoft Agent Framework {#sec-orch-maf}
 
-The [Microsoft Agent Framework](https://github.com/microsoft/agent-framework)
+The [Microsoft Agent Framework](https://learn.microsoft.com/en-us/agent-framework/)
 [@microsoft_agent_framework]
 merges AutoGen with Semantic Kernel, Microsoft's earlier .NET-first library,
 into one production-oriented framework for Python and .NET,

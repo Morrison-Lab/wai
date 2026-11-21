@@ -150,7 +150,7 @@ The general agent-framework layer settled into three tiers:
   the production default for stateful, auditable, human-in-the-loop workflows, and Mastra for TypeScript.
 - **Role-based multi-agent:** [CrewAI](https://github.com/crewAIInc/crewAI),
   and AutoGen, now merged with Semantic Kernel into the
-  [Microsoft Agent Framework](https://github.com/microsoft/agent-framework).
+  [Microsoft Agent Framework](https://learn.microsoft.com/en-us/agent-framework/).
 - **Lab SDKs:** the OpenAI Agents SDK, Anthropic's Claude Agent SDK, and Google's ADK.
 
 MCP and the Agent-to-Agent protocol moved to Linux Foundation stewardship,
