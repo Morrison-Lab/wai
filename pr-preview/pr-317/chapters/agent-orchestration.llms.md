@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-11-20 15:27:56 (PST)
+Last modified: 2026-11-20 22:38:28 (PST)
 
 A single coding agent works one problem at a time. *Orchestration* is the step up from that: running several agents at once and coordinating their work. This chapter explains when orchestration is worth the added cost, describes what our lab already uses for it, evaluates three outside “agent orchestrator” projects that lab members have asked about, and surveys the general-purpose orchestration frameworks a lab could build its own agent systems on.
 
@@ -126,7 +126,7 @@ The decisive fact is on its own README (measured 2026-09-09): AutoGen is in **ma
 
 ## 7.2 Microsoft Agent Framework
 
-The [Microsoft Agent Framework](https://github.com/microsoft/agent-framework) ([Microsoft 2026d](#ref-microsoft_agent_framework)) merges AutoGen with Semantic Kernel, Microsoft’s earlier .NET-first library, into one production-oriented framework for Python and .NET, with a separate Go SDK. Orchestration is expressed as **graph-based workflows** with built-in sequential, concurrent, handoff, and group-collaboration patterns, plus checkpoints, streaming, human-in-the-loop steps, and `OpenTelemetry` tracing. Agents can also be declared in YAML. It is under the **MIT** license, has about 13,400 stars, and released `python-1.17.0` on 2026-09-03 (measured 2026-09-09).
+The [Microsoft Agent Framework](https://learn.microsoft.com/en-us/agent-framework/) ([Microsoft 2026d](#ref-microsoft_agent_framework)) merges AutoGen with Semantic Kernel, Microsoft’s earlier .NET-first library, into one production-oriented framework for Python and .NET, with a separate Go SDK. Orchestration is expressed as **graph-based workflows** with built-in sequential, concurrent, handoff, and group-collaboration patterns, plus checkpoints, streaming, human-in-the-loop steps, and `OpenTelemetry` tracing. Agents can also be declared in YAML. It is under the **MIT** license, has about 13,400 stars, and released `python-1.17.0` on 2026-09-03 (measured 2026-09-09).
 
 > **NOTE:**
 >
@@ -236,7 +236,7 @@ Microsoft. 2026b. *AutoGen Documentation*. Documentation. <https://microsoft.git
 
 Microsoft. 2026c. *AutoGen: A Framework for Building AI Agents and Applications*. Software. <https://github.com/microsoft/autogen>.
 
-Microsoft. 2026d. *Microsoft Agent Framework*. Software. <https://github.com/microsoft/agent-framework>.
+Microsoft. 2026d. *Microsoft Agent Framework*. Documentation. <https://learn.microsoft.com/en-us/agent-framework/>.
 
 OpenAI. 2026. *OpenAI Agents SDK*. Software. <https://github.com/openai/openai-agents-python>.
 
