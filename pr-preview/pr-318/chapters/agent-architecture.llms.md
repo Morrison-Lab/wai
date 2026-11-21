@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-11-20 15:28:06 (PST)
+Last modified: 2026-11-20 22:31:27 (PST)
 
 Behind every coding agent is a system architecture: a model, an execution loop, tool definitions, and a *harness* that manages context, permissions, and session state. This chapter covers how coding agents and harnesses are structured, how they run under the hood, and how the open and commercial harness landscape looks in 2026.
 
@@ -469,7 +469,7 @@ Local coding has matured to the point where the strongest open-weight models com
 The general agent-framework layer settled into three tiers:
 
 - **Graph-based orchestration:** [LangGraph](https://github.com/langchain-ai/langgraph), the production default for stateful, auditable, human-in-the-loop workflows, and Mastra for TypeScript.
-- **Role-based multi-agent:** [CrewAI](https://github.com/crewAIInc/crewAI), and AutoGen, now merged with Semantic Kernel into the [Microsoft Agent Framework](https://github.com/microsoft/agent-framework).
+- **Role-based multi-agent:** [CrewAI](https://github.com/crewAIInc/crewAI), and AutoGen, now merged with Semantic Kernel into the [Microsoft Agent Framework](https://learn.microsoft.com/en-us/agent-framework/).
 - **Lab SDKs:** the OpenAI Agents SDK, Anthropic’s Claude Agent SDK, and Google’s ADK.
 
 MCP and the Agent-to-Agent protocol moved to Linux Foundation stewardship, and `AGENTS.md` and `SKILL.md` have become cross-tool standards in practice. The practitioner warning that recurs in production surveys is that most deployed agents are short-horizon and single-agent, so the prevailing advice is to start single-agent; [when orchestration helps](../chapters/agent-orchestration.llms.md#sec-orch-when) makes the same case for this lab’s own use.
