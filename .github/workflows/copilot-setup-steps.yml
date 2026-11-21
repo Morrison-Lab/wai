@@ -128,7 +128,7 @@ jobs:
         run: |
           install.packages(
             c("lintr", "rmarkdown"),
-            repos = "https://packagemanager.posit.co/cran/__linux__/noble/latest"
+            repos = Sys.getenv("RSPM")
           )
         shell: Rscript {0}
       
