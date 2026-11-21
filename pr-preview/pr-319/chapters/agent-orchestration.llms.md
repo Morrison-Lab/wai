@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-11-20 22:11:49 (PST)
+Last modified: 2026-11-20 22:22:47 (PST)
 
 A single coding agent works one problem at a time. *Orchestration* is the step up from that: running several agents at once and coordinating their work. This chapter explains when orchestration is worth the added cost, describes what our lab already uses for it, evaluates three outside “agent orchestrator” projects that lab members have asked about, and surveys the general-purpose orchestration frameworks a lab could build its own agent systems on.
 
@@ -236,7 +236,7 @@ Microsoft. 2026b. *AutoGen Documentation*. Documentation. <https://microsoft.git
 
 Microsoft. 2026c. *AutoGen: A Framework for Building AI Agents and Applications*. Software. <https://github.com/microsoft/autogen>.
 
-Microsoft. 2026d. *Microsoft Agent Framework*. Software. <https://learn.microsoft.com/en-us/agent-framework/>.
+Microsoft. 2026d. *Microsoft Agent Framework*. Documentation. <https://learn.microsoft.com/en-us/agent-framework/>.
 
 OpenAI. 2026. *OpenAI Agents SDK*. Software. <https://github.com/openai/openai-agents-python>.
 
