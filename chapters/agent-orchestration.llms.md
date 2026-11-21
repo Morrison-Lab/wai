@@ -4,7 +4,7 @@ Code
 
 Published
 
-Last modified: 2026-11-20 22:30:48 (PST)
+Last modified: 2026-11-20 22:40:22 (PST)
 
 A single coding agent works one problem at a time. *Orchestration* is the step up from that: running several agents at once and coordinating their work. This chapter explains when orchestration is worth the added cost, describes what our lab already uses for it, evaluates three outside “agent orchestrator” projects that lab members have asked about, and surveys the general-purpose orchestration frameworks a lab could build its own agent systems on.
 
