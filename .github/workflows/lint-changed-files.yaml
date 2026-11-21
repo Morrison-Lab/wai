@@ -30,7 +30,7 @@ jobs:
           use-public-rspm: true
 
       - name: Install lintr and dependencies
-        run: install.packages(c("lintr", "gh", "purrr", "withr"), repos = "https://packagemanager.posit.co/cran/__linux__/noble/latest")
+        run: install.packages(c("lintr", "gh", "purrr", "withr"))
         shell: Rscript {0}
 
       # No need to set options(lintr.linter_file): lintr auto-detects `.lintr.R`
